@@ -1,595 +1,504 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>СПУ-52-3 — расчёт</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>СПУ-52-3 — расчёт передаточных чисел</title>
+
+  <!-- MathJax (формулы как в CodePen: дроби, Δ, индексы) -->
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['\\(','\\)'],['$','$']]}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
   <style>
     :root{
-      --bg1:#ffd04a;  /* yellow */
-      --bg2:#0a4bff;  /* blue */
+      --blue:#0057b7;
+      --yellow:#ffd700;
       --glass: rgba(255,255,255,.14);
       --glass2: rgba(255,255,255,.10);
-      --stroke: rgba(255,255,255,.18);
+      --stroke: rgba(255,255,255,.22);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
-      --danger: #ff5a6a;
-      --ok: #41d17f;
-      --shadow: 0 18px 55px rgba(0,0,0,.35);
+      --good: rgba(40, 210, 140, .95);
+      --bad: rgba(255, 80, 80, .95);
+      --warn: rgba(255, 200, 60, .95);
+      --shadow: 0 18px 45px rgba(0,0,0,.35);
       --shadow2: 0 10px 25px rgba(0,0,0,.25);
       --radius: 18px;
-      --radius2: 14px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: var(--sans);
-      color: var(--text);
+      font-family:var(--sans);
+      color:var(--text);
       min-height:100vh;
-      overflow-x:hidden;
       background:
-        radial-gradient(1100px 650px at 15% 18%, rgba(255,255,255,.22), transparent 55%),
-        radial-gradient(900px 520px at 82% 30%, rgba(0,0,0,.18), transparent 60%),
-        linear-gradient(180deg, var(--bg1) 0%, var(--bg1) 48%, var(--bg2) 52%, var(--bg2) 100%);
-      position: relative;
+        radial-gradient(1200px 700px at 15% 10%, rgba(255,255,255,.22), transparent 60%),
+        radial-gradient(900px 500px at 85% 25%, rgba(255,255,255,.16), transparent 60%),
+        linear-gradient(to bottom, var(--blue) 0%, var(--yellow) 100%);
     }
-
-    /* 3D shading / "codepen" vibe */
-    body::before{
+    .wrap{max-width:1200px;margin:0 auto;padding:20px 14px 34px}
+    header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+    h1{margin:0;font-size:22px;font-weight:900;letter-spacing:.2px;text-shadow:0 2px 10px rgba(0,0,0,.25)}
+    .subtitle{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.35}
+    .ua-badge{
+      width:52px;height:52px;border-radius:999px;
+      background: linear-gradient(to bottom, #0057b7 0 50%, #ffd700 50% 100%);
+      position:relative;
+      box-shadow: 0 14px 26px rgba(0,0,0,.38), inset 0 2px 2px rgba(255,255,255,.35), inset 0 -8px 14px rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.25);
+    }
+    .ua-badge:before{
       content:"";
-      position:fixed;
-      inset:-40px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.18), transparent 35%),
-        linear-gradient(315deg, rgba(0,0,0,.14), transparent 45%),
-        radial-gradient(900px 520px at 50% 60%, rgba(255,255,255,.10), transparent 55%);
-      filter: blur(0.2px);
-      pointer-events:none;
+      position:absolute; left:10px; right:10px; top:7px; height:16px;
+      border-radius:999px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.55), rgba(255,255,255,0));
       opacity:.85;
     }
 
-    .wrap{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 26px 16px 44px;
-    }
-
-    .topbar{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom: 18px;
-    }
-
-    .title{
-      font-weight: 800;
-      letter-spacing:.2px;
-      font-size: clamp(18px, 2.3vw, 26px);
-      margin:0;
-      text-shadow: 0 6px 18px rgba(0,0,0,.28);
-    }
-
-    .badges{
-      display:flex; gap:8px; flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .badge{
-      padding:8px 10px;
-      border-radius: 999px;
-      background: var(--glass2);
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow2);
-      font-size: 12px;
-      color: var(--muted);
-      backdrop-filter: blur(10px);
-    }
-    .badge b{ color: var(--text); font-weight:700; }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    @media (max-width: 920px){
-      .grid{ grid-template-columns: 1fr; }
-    }
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
 
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      padding: 16px 14px 14px;
-      position: relative;
+      background:linear-gradient(180deg,var(--glass),var(--glass2));
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+      padding:14px;
+      position:relative;
       overflow:hidden;
     }
-
-    .card::after{
+    .card:before{
       content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(700px 220px at 18% 0%, rgba(255,255,255,.20), transparent 55%),
-        radial-gradient(520px 260px at 90% 20%, rgba(0,0,0,.18), transparent 60%);
+      position:absolute; inset:-2px;
+      background: radial-gradient(500px 180px at 10% 0%, rgba(255,255,255,.18), transparent 60%);
       pointer-events:none;
-      opacity:.7;
     }
-
-    .card > *{ position:relative; z-index:1; }
-
-    .card h2{
-      margin:0 0 6px 0;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing:.2px;
-    }
-    .card p{
-      margin: 0 0 12px 0;
-      color: var(--muted);
-      font-size: 12.5px;
-      line-height: 1.35;
-    }
-
-    .form{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .form.onecol{ grid-template-columns: 1fr; }
-
-    .field{
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.16);
-      border-radius: var(--radius2);
-      padding: 10px 10px 9px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
-    }
-    .label{
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
+    .card h2{margin:0 0 10px;font-size:16px;font-weight:850}
+    .hint{color:var(--muted);font-size:12.5px;line-height:1.35;margin:0 0 10px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:520px){.row{grid-template-columns:1fr}}
+    label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--muted)}
     input{
       width:100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-size: 14px;
-      font-family: var(--mono);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(10,10,10,.18);
+      color:var(--text);
+      outline:none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
     }
-    input::placeholder{ color: rgba(255,255,255,.42); }
-
-    .row{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top: 10px;
-      align-items:center;
-    }
-    button{
-      border:none;
-      cursor:pointer;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-weight: 700;
-      color: rgba(10,10,10,.92);
-      background: rgba(255,255,255,.86);
-      box-shadow: 0 10px 25px rgba(0,0,0,.28);
-      transition: transform .08s ease, opacity .08s ease;
-    }
-    button:active{ transform: translateY(1px); opacity:.95; }
-    button.secondary{
-      background: rgba(255,255,255,.22);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,.22);
-    }
-
-    .out{
-      margin-top: 10px;
-      background: rgba(0,0,0,.20);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: var(--radius2);
-      padding: 10px 10px;
-      font-family: var(--mono);
-      font-size: 12px;
-      white-space: pre-wrap;
-      color: rgba(255,255,255,.88);
-    }
-
-    .status{
-      margin-top: 10px;
-      padding: 10px 10px;
-      border-radius: var(--radius2);
-      border: 1px solid rgba(255,255,255,.14);
+    input::placeholder{color:rgba(255,255,255,.55)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.20);
       background: rgba(0,0,0,.16);
-      font-size: 12px;
-      color: var(--muted);
+      font-size:12px;color:var(--muted);
+      box-shadow: var(--shadow2);
+      white-space:nowrap;
     }
-    .status.ok{ border-color: rgba(65,209,127,.35); color: rgba(220,255,235,.92); }
-    .status.bad{ border-color: rgba(255,90,106,.45); color: rgba(255,220,225,.92); }
-
-    .foot{
-      margin-top: 14px;
-      color: rgba(255,255,255,.72);
-      font-size: 12px;
+    .topbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .kpi{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px
     }
-    .foot code{ font-family: var(--mono); color: rgba(255,255,255,.90); }
+    @media (max-width:520px){.kpi{grid-template-columns:1fr}}
+    .box{
+      border:1px solid rgba(255,255,255,.20);
+      background: rgba(0,0,0,.12);
+      border-radius:14px;
+      padding:10px 12px;
+      box-shadow: var(--shadow2);
+      min-height:44px;
+    }
+    .box .t{font-size:11.5px;color:var(--muted);margin:0 0 6px}
+    .box .v{font-family:var(--mono);font-size:15px;margin:0}
+    .status{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-top:10px;padding:10px 12px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.20);
+      background: rgba(0,0,0,.12);
+      box-shadow: var(--shadow2);
+    }
+    .badge{
+      padding:6px 10px;border-radius:999px;
+      font-weight:800;font-size:12px;color:#081018;
+      background:rgba(255,255,255,.75);
+    }
+    .badge.good{background:var(--good)}
+    .badge.bad{background:var(--bad)}
+    .badge.warn{background:var(--warn)}
+    .formula{
+      margin-top:10px;
+      border:1px dashed rgba(255,255,255,.25);
+      background: rgba(0,0,0,.10);
+      border-radius:14px;
+      padding:10px 12px;
+      color:rgba(255,255,255,.86);
+      font-size:13px;
+    }
+    .mini{margin-top:10px;color:rgba(255,255,255,.72);font-size:12px;line-height:1.35}
+    .mini code{font-family:var(--mono);font-size:12px}
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <h1 class="title">СПУ-52-3 — расчёт передаточных чисел</h1>
-      <div class="badges">
-        <div class="badge">Данные гипсометрии: <b>spu52.json</b></div>
-        <div class="badge">Округление: <b>3 знака</b></div>
-      </div>
+<div class="wrap">
+  <header>
+    <div class="title">
+      <h1>СПУ-52-3 — расчёт передаточных чисел</h1>
+      <p class="subtitle">
+        Авто-расчёт при вводе (как в CodePen): давление по гипсометрии и температура по R-T таблице.
+        Подсветка “норма/не норма” включена.
+      </p>
     </div>
+    <div class="ua-badge" title="Украина: синий сверху, жёлтый снизу"></div>
+  </header>
 
-    <div class="grid">
-
-      <!-- PRESSURE -->
-      <section class="card" id="cardPressure">
-        <h2>Давление по гипсометрической таблице</h2>
-        <p>
-          Логика: берём табличные <code>Pтаб(1000)</code> и <code>Pтаб(H)</code>, считаем
-          <code>ΔPтаб = Pтаб(1000) − Pтаб(H)</code>, затем
-          <code>P(H) = P(1000) − ΔPтаб</code>. Для H между точками — линейная интерполяция.
-        </p>
-
-        <div class="form">
-          <div class="field">
-            <div class="label">P(1000) по прибору, мм рт.ст.</div>
-            <input id="p1000" inputmode="decimal" placeholder="например 674" />
-          </div>
-          <div class="field">
-            <div class="label">H, м (промежуточная отметка)</div>
-            <input id="h" inputmode="decimal" placeholder="например 1200" />
-          </div>
-
-          <div class="field">
-            <div class="label">Pтаб(1000), мм рт.ст. (из таблицы)</div>
-            <input id="ptab1000" readonly />
-          </div>
-          <div class="field">
-            <div class="label">Pтаб(H), мм рт.ст. (интерполяция)</div>
-            <input id="ptabh" readonly />
-          </div>
-
-          <div class="field">
-            <div class="label">ΔPтаб = Pтаб(1000) − Pтаб(H)</div>
-            <input id="dptab" readonly />
-          </div>
-          <div class="field">
-            <div class="label">P(H) = P(1000) − ΔPтаб</div>
-            <input id="ph" readonly />
-          </div>
-
-          <div class="field">
-            <div class="label">iP = 33.3 / ΔP (по давлению)</div>
-            <input id="ip" readonly />
-          </div>
-          <div class="field">
-            <div class="label">Статус</div>
-            <input id="pStatus" readonly />
-          </div>
-        </div>
-
-        <div class="row">
-          <button id="btnP">Рассчитать (давление)</button>
-          <button class="secondary" id="btnPReset">Сброс</button>
-        </div>
-
-        <div class="status" id="pLoad">Загрузка данных из <code>spu52.json</code>…</div>
-        <div class="out" id="pDebug">—</div>
-      </section>
-
-      <!-- TEMPERATURE -->
-      <section class="card" id="cardTemp">
-        <h2>Температура (R → T → ΔT → iT)</h2>
-        <p>
-          Таблица берётся из <code>spu52.json → temp_table</code>.
-          Вводишь сопротивления <code>R1</code> и <code>R2</code> (Ом) — получаем <code>T1</code>, <code>T2</code> интерполяцией,
-          затем <code>ΔT1 = T1 − 7</code>, <code>ΔT2 = T2 − 7</code> и <code>iT = 33.3 / ΔT</code>.
-        </p>
-
-        <div class="form">
-          <div class="field">
-            <div class="label">R1, Ом</div>
-            <input id="r1" inputmode="decimal" placeholder="например 90.26" />
-          </div>
-          <div class="field">
-            <div class="label">R2, Ом</div>
-            <input id="r2" inputmode="decimal" placeholder="например 104.86" />
-          </div>
-
-          <div class="field">
-            <div class="label">T1 (по таблице), °C</div>
-            <input id="t1" readonly />
-          </div>
-          <div class="field">
-            <div class="label">T2 (по таблице), °C</div>
-            <input id="t2" readonly />
-          </div>
-
-          <div class="field">
-            <div class="label">ΔT1 = T1 − 7</div>
-            <input id="dt1" readonly />
-          </div>
-          <div class="field">
-            <div class="label">ΔT2 = T2 − 7</div>
-            <input id="dt2" readonly />
-          </div>
-
-          <div class="field">
-            <div class="label">iT1 = 33.3 / ΔT1</div>
-            <input id="it1" readonly />
-          </div>
-          <div class="field">
-            <div class="label">iT2 = 33.3 / ΔT2</div>
-            <input id="it2" readonly />
-          </div>
-
-          <div class="field">
-            <div class="label">Статус</div>
-            <input id="tStatus" readonly />
-          </div>
-          <div class="field">
-            <div class="label">Подсказка</div>
-            <input value="Температурная таблица из spu52.json → temp_table" readonly />
-          </div>
-        </div>
-
-        <div class="row">
-          <button id="btnT">Рассчитать (температура)</button>
-          <button class="secondary" id="btnTReset">Сброс</button>
-        </div>
-
-        <div class="status" id="tLoad">Ожидание данных…</div>
-        <div class="out" id="tDebug">—</div>
-      </section>
-
-    </div>
-
-    <div class="foot">
-      Если снова увидишь <code>Unexpected non-whitespace character after JSON</code> — значит <code>spu52.json</code> битый.
-      Открой его в GitHub и проверь места около строки, которую пишет ошибка.
-    </div>
+  <div class="topbar">
+    <span class="pill">Гипсометрия: встроена (0…3000 м)</span>
+    <span class="pill">Температура: встроена (−40…+130 °C)</span>
+    <span class="pill">Округление: <b>3 знака</b></span>
+    <span class="pill">Формулы: MathJax (дроби)</span>
   </div>
 
+  <div class="grid">
+    <!-- PRESSURE -->
+    <section class="card" id="cardP">
+      <h2>Давление по гипсометрической таблице</h2>
+      <p class="hint">
+        Вводишь <b>P(1000)</b> (по прибору, мм рт.ст.) и <b>H</b> (промежуточная отметка, м) — получаешь
+        \(\Delta P_{таб}\), \(P(H)\) и \(i_P\).
+      </p>
+
+      <div class="row">
+        <label> P(1000) по прибору, мм рт.ст.
+          <input id="p_p1000" type="number" step="0.001" placeholder="например 674" value="674.115">
+        </label>
+        <label> H, м (промежуточная отметка)
+          <input id="p_h" type="number" step="1" placeholder="например 200" value="200">
+        </label>
+      </div>
+
+      <div class="kpi">
+        <div class="box">
+          <p class="t">Pтаб(1000), мм рт.ст.</p>
+          <p class="v" id="p_ptab1000">—</p>
+        </div>
+        <div class="box">
+          <p class="t">Pтаб(H), мм рт.ст.</p>
+          <p class="v" id="p_ptabh">—</p>
+        </div>
+        <div class="box">
+          <p class="t">\(\Delta P_{таб} = Pтаб(1000) - Pтаб(H)\)</p>
+          <p class="v" id="p_dptab">—</p>
+        </div>
+        <div class="box">
+          <p class="t">P(H) = P(1000) − \(\Delta P_{таб}\)</p>
+          <p class="v" id="p_ph">—</p>
+        </div>
+        <div class="box">
+          <p class="t">Передаточное число \(i_P = \frac{33.3}{\Delta P_{таб}}\)</p>
+          <p class="v" id="p_ip">—</p>
+        </div>
+        <div class="box">
+          <p class="t">Статус</p>
+          <p class="v" id="p_note">—</p>
+        </div>
+      </div>
+
+      <div class="status">
+        <div>
+          <div style="font-weight:850">Оценка (по \(i_P\))</div>
+          <div class="mini">Норма: \(0.32 \pm 0.06\) → диапазон <code>[0.26; 0.38]</code></div>
+        </div>
+        <span class="badge" id="p_badge">—</span>
+      </div>
+
+      <div class="formula" id="p_formula">
+        \[
+          \Delta P_{таб} = P_{таб}(1000) - P_{таб}(H), \quad
+          P(H) = P(1000) - \Delta P_{таб}, \quad
+          i_P = \frac{33.3}{\Delta P_{таб}}
+        \]
+      </div>
+    </section>
+
+    <!-- TEMPERATURE -->
+    <section class="card" id="cardT">
+      <h2>Температура (R → T → ΔT → iT)</h2>
+      <p class="hint">
+        Вводишь сопротивление (Ом) имитатора/приёмника → по таблице получаем температуру \(T\),
+        затем \(\Delta T = T - 7\) и \(i_T = \frac{33.3}{\Delta T}\).
+      </p>
+
+      <div class="row">
+        <label> R1, Ом
+          <input id="t_r1" type="number" step="0.01" placeholder="например 90.26" value="105">
+        </label>
+        <label> R2, Ом
+          <input id="t_r2" type="number" step="0.01" placeholder="например 104.86" value="105">
+        </label>
+      </div>
+
+      <div class="kpi">
+        <div class="box">
+          <p class="t">T1 по таблице, °C</p>
+          <p class="v" id="t_t1">—</p>
+        </div>
+        <div class="box">
+          <p class="t">T2 по таблице, °C</p>
+          <p class="v" id="t_t2">—</p>
+        </div>
+        <div class="box">
+          <p class="t">\(\Delta T_1 = T_1 - 7\)</p>
+          <p class="v" id="t_dt1">—</p>
+        </div>
+        <div class="box">
+          <p class="t">\(\Delta T_2 = T_2 - 7\)</p>
+          <p class="v" id="t_dt2">—</p>
+        </div>
+        <div class="box">
+          <p class="t">\(i_{T1} = \frac{33.3}{\Delta T_1}\)</p>
+          <p class="v" id="t_it1">—</p>
+        </div>
+        <div class="box">
+          <p class="t">\(i_{T2} = \frac{33.3}{\Delta T_2}\)</p>
+          <p class="v" id="t_it2">—</p>
+        </div>
+      </div>
+
+      <div class="status">
+        <div>
+          <div style="font-weight:850">Оценка (по \(i_T\))</div>
+          <div class="mini">Норма: \(0.85 \pm 0.17\) → диапазон <code>[0.68; 1.02]</code></div>
+        </div>
+        <span class="badge" id="t_badge">—</span>
+      </div>
+
+      <div class="formula" id="t_formula">
+        \[
+          T = f(R), \quad
+          \Delta T = T - 7, \quad
+          i_T = \frac{33.3}{\Delta T}
+        \]
+      </div>
+
+      <div class="mini">
+        Подсказка: просто вводи <code>R</code> — всё пересчитывается сразу (как ты хотел: “ввел 105 → сразу вижу \(i_T\)”).
+      </div>
+    </section>
+  </div>
+</div>
+
 <script>
-(() => {
-  const round3 = (x) => (Number.isFinite(x) ? (Math.round(x * 1000) / 1000) : NaN);
+  // ===== DATA (вшито, чтобы НИЧЕГО не ломалось из-за JSON) =====
 
-  // Парсер чисел: допускаем запятую в вводе, но В JSON должны быть точки!
-  const toNum = (v) => {
-    if (v == null) return NaN;
-    const s = String(v).trim().replace(',', '.');
-    const n = Number(s);
-    return Number.isFinite(n) ? n : NaN;
-  };
+  // Гипсометрия (мм рт.ст.) из твоих данных
+  const pressTable = [
+    {H:0, P:760.000},
+    {H:20, P:758.200},
+    {H:40, P:756.403},
+    {H:60, P:754.609},
+    {H:100, P:751.033},
+    {H:200, P:742.151},
+    {H:300, P:733.355},
+    {H:400, P:724.643},
+    {H:500, P:716.015},
+    {H:600, P:707.471},
+    {H:700, P:699.009},
+    {H:800, P:690.630},
+    {H:900, P:682.332},
+    {H:1000, P:674.115},
+    {H:1100, P:665.978},
+    {H:1200, P:657.921},
+    {H:1300, P:649.943},
+    {H:1400, P:642.044},
+    {H:1500, P:634.222},
+    {H:1600, P:626.478},
+    {H:1700, P:618.811},
+    {H:1800, P:611.219},
+    {H:1900, P:603.704},
+    {H:2000, P:596.263},
+    {H:2100, P:588.897},
+    {H:2200, P:581.605},
+    {H:2300, P:574.385},
+    {H:2400, P:567.239},
+    {H:2500, P:560.165},
+    {H:2600, P:553.162},
+    {H:2700, P:546.231},
+    {H:2800, P:539.370},
+    {H:2900, P:532.579},
+    {H:3000, P:525.857},
+  ].sort((a,b)=>a.H-b.H);
 
-  const el = (id) => document.getElementById(id);
+  // Температура (Ом) из твоей таблицы на фото (Tabl.1)
+  // Температура: -40 -30 -20 -10 0 +10 +20 +30 +40 +50 +60 +70 +80 +90 +100 +110 +120 +130
+  // Сопротивление: 76.86 79.96 83.16 86.56 90.26 93.76 97.36 101.06 104.86 108.81 112.78 116.96 121.22 125.56 130.00 134.41 138.96 143.56
+  const tempTable = [
+    {T:-40, R:76.86},
+    {T:-30, R:79.96},
+    {T:-20, R:83.16},
+    {T:-10, R:86.56},
+    {T:0,   R:90.26},
+    {T:10,  R:93.76},
+    {T:20,  R:97.36},
+    {T:30,  R:101.06},
+    {T:40,  R:104.86},
+    {T:50,  R:108.81},
+    {T:60,  R:112.78},
+    {T:70,  R:116.96},
+    {T:80,  R:121.22},
+    {T:90,  R:125.56},
+    {T:100, R:130.00},
+    {T:110, R:134.41},
+    {T:120, R:138.96},
+    {T:130, R:143.56},
+  ].sort((a,b)=>a.R-b.R);
 
-  const setStatus = (id, text, kind) => {
-    const n = el(id);
-    n.textContent = text;
-    n.classList.remove('ok','bad');
-    if (kind === 'ok') n.classList.add('ok');
-    if (kind === 'bad') n.classList.add('bad');
-  };
+  // ===== HELPERS =====
+  const round3 = (x)=> Number.isFinite(x) ? (Math.round(x*1000)/1000).toFixed(3) : "—";
+  const round2 = (x)=> Number.isFinite(x) ? (Math.round(x*100)/100).toFixed(2) : "—";
 
-  // Линейная интерполяция по массиву точек [{x, y}, ...] по x
-  function lerp(x, x1, y1, x2, y2){
-    if (x2 === x1) return y1;
-    return y1 + ( (x - x1) * (y2 - y1) ) / (x2 - x1);
+  function lerp(x1,y1,x2,y2,x){
+    if (x2===x1) return y1;
+    return y1 + (y2-y1)*((x-x1)/(x2-x1));
   }
 
-  // Для давления: points = [{H, p}]
-  function interpP(points, H){
-    const arr = points.slice().sort((a,b)=>a.H-b.H);
-    if (H <= arr[0].H) return arr[0].p;
-    if (H >= arr[arr.length-1].H) return arr[arr.length-1].p;
-    for (let i=0; i<arr.length-1; i++){
-      const a = arr[i], b = arr[i+1];
-      if (H >= a.H && H <= b.H){
-        return lerp(H, a.H, a.p, b.H, b.p);
+  // линейная интерполяция P по H
+  function pByH(H){
+    if (!Number.isFinite(H)) return NaN;
+    if (H<=pressTable[0].H) return pressTable[0].P;
+    if (H>=pressTable[pressTable.length-1].H) return pressTable[pressTable.length-1].P;
+    for(let i=0;i<pressTable.length-1;i++){
+      const a=pressTable[i], b=pressTable[i+1];
+      if (H>=a.H && H<=b.H){
+        return lerp(a.H,a.P,b.H,b.P,H);
       }
     }
     return NaN;
   }
 
-  // Для температуры: table = [{t, r}] (r монотонно растёт)
-  function interpT(tempTable, R){
-    const arr = tempTable.slice().sort((a,b)=>a.r-b.r);
-    if (R <= arr[0].r) return arr[0].t;
-    if (R >= arr[arr.length-1].r) return arr[arr.length-1].t;
-    for (let i=0; i<arr.length-1; i++){
-      const a = arr[i], b = arr[i+1];
-      if (R >= a.r && R <= b.r){
-        return lerp(R, a.r, a.t, b.r, b.t);
+  // интерполяция T по R (таблица монотонная по R)
+  function tByR(R){
+    if (!Number.isFinite(R)) return NaN;
+    if (R<=tempTable[0].R) return tempTable[0].T;
+    if (R>=tempTable[tempTable.length-1].R) return tempTable[tempTable.length-1].T;
+    for(let i=0;i<tempTable.length-1;i++){
+      const a=tempTable[i], b=tempTable[i+1];
+      if (R>=a.R && R<=b.R){
+        return lerp(a.R,a.T,b.R,b.T,R);
       }
     }
     return NaN;
   }
 
-  let DATA = null;
-
-  async function loadData(){
-    setStatus('pLoad', 'Загрузка данных из spu52.json…', null);
-    setStatus('tLoad', 'Загрузка данных из spu52.json…', null);
-
-    try{
-      // cache-bust, чтобы GitHub Pages не отдавал старую версию
-      const res = await fetch('spu52.json?v=' + Date.now(), { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status} при загрузке spu52.json`);
-      const json = await res.json(); // если json битый — упадёт тут
-      if (!json || !Array.isArray(json.table) || json.table.length < 2){
-        throw new Error('В spu52.json нет массива "table" или он слишком короткий.');
-      }
-      if (!Array.isArray(json.temp_table) || json.temp_table.length < 2){
-        throw new Error('В spu52.json нет массива "temp_table" или он слишком короткий.');
-      }
-
-      // normalize
-      const pTable = json.table.map(o => ({ H: toNum(o.H), p: toNum(o.p) }))
-                              .filter(o => Number.isFinite(o.H) && Number.isFinite(o.p));
-
-      const tTable = json.temp_table.map(o => ({ t: toNum(o.t), r: toNum(o.r) }))
-                                   .filter(o => Number.isFinite(o.t) && Number.isFinite(o.r));
-
-      if (pTable.length < 2) throw new Error('После фильтрации table пустая/битая (проверь точки в числах).');
-      if (tTable.length < 2) throw new Error('После фильтрации temp_table пустая/битая (проверь точки в числах).');
-
-      DATA = { pTable, tTable };
-
-      // Pтаб(1000)
-      const p1000tab = interpP(pTable, 1000);
-      el('ptab1000').value = round3(p1000tab).toFixed(3);
-
-      setStatus('pLoad', 'Данные давления загружены OK.', 'ok');
-      setStatus('tLoad', 'Данные температуры загружены OK.', 'ok');
-
-      el('pDebug').textContent = `OK: table=${pTable.length} точек; temp_table=${tTable.length} точек\nPтаб(1000)=${round3(p1000tab)}`;
-      el('tDebug').textContent = `OK: temp_table=${tTable.length} точек\nRmin=${tTable.slice().sort((a,b)=>a.r-b.r)[0].r}, Rmax=${tTable.slice().sort((a,b)=>a.r-b.r).at(-1).r}`;
-
-    } catch (e){
-      DATA = null;
-      const msg = (e && e.message) ? e.message : String(e);
-
-      setStatus('pLoad', 'Ошибка загрузки данных: ' + msg, 'bad');
-      setStatus('tLoad', 'Ошибка загрузки данных: ' + msg, 'bad');
-
-      el('pDebug').textContent = 'ОШИБКА: ' + msg + '\n\nПроверь spu52.json: никаких запятых в конце, никаких "…", только точки в числах.';
-      el('tDebug').textContent = 'ОШИБКА: ' + msg + '\n\nПроверь spu52.json: структура и валидность JSON.';
-    }
+  function setBadge(el, kind, text){
+    el.className = "badge" + (kind ? " "+kind : "");
+    el.textContent = text;
   }
 
-  // PRESSURE calc
+  // ===== CALC =====
   function calcPressure(){
-    if (!DATA){
-      el('pStatus').value = 'Нет данных (spu52.json не загружен)';
-      return;
-    }
+    const P1000 = parseFloat(document.getElementById("p_p1000").value);
+    const H = parseFloat(document.getElementById("p_h").value);
 
-    const P1000 = toNum(el('p1000').value);
-    const H = toNum(el('h').value);
-
-    if (!Number.isFinite(P1000) || !Number.isFinite(H)){
-      el('pStatus').value = 'Заполни P(1000) и H числами';
-      return;
-    }
-
-    const pTab1000 = interpP(DATA.pTable, 1000);
-    const pTabH = interpP(DATA.pTable, H);
-    const dPtab = pTab1000 - pTabH;
+    const Ptab1000 = pByH(1000);
+    const PtabH = pByH(H);
+    const dPtab = Ptab1000 - PtabH;
     const PH = P1000 - dPtab;
+    const iP = 33.3 / dPtab;
 
-    el('ptabh').value = round3(pTabH).toFixed(3);
-    el('dptab').value = round3(dPtab).toFixed(3);
-    el('ph').value = round3(PH).toFixed(3);
+    document.getElementById("p_ptab1000").textContent = round3(Ptab1000);
+    document.getElementById("p_ptabh").textContent = round3(PtabH);
+    document.getElementById("p_dptab").textContent = round3(dPtab);
+    document.getElementById("p_ph").textContent = round3(PH);
+    document.getElementById("p_ip").textContent = round3(iP);
 
-    // iP = 33.3 / ΔP
-    const ip = (dPtab !== 0) ? (33.3 / dPtab) : NaN;
-    el('ip').value = Number.isFinite(ip) ? round3(ip).toFixed(3) : '';
+    // норма iP: 0.32 ± 0.06
+    const lo=0.26, hi=0.38;
+    const badge = document.getElementById("p_badge");
+    const note = document.getElementById("p_note");
 
-    el('pStatus').value = 'OK';
-    el('pDebug').textContent =
-`Ввод:
-P(1000) = ${round3(P1000)}
-H = ${round3(H)}
+    if (!Number.isFinite(iP) || !Number.isFinite(dPtab) || Math.abs(dPtab) < 1e-9){
+      setBadge(badge, "warn", "НЕТ ДАННЫХ");
+      note.textContent = "Проверь ввод H и таблицу.";
+      return;
+    }
 
-Таблица:
-Pтаб(1000) = ${round3(pTab1000)}
-Pтаб(H) = ${round3(pTabH)}
-ΔPтаб = ${round3(dPtab)}
-
-Расчёт:
-P(H) = ${round3(PH)}
-iP = ${Number.isFinite(ip) ? round3(ip) : '—'}`;
-  }
-
-  function resetPressure(){
-    ['p1000','h','ptabh','dptab','ph','ip','pStatus'].forEach(id => el(id).value = '');
-    el('pDebug').textContent = '—';
-    if (DATA){
-      const pTab1000 = interpP(DATA.pTable, 1000);
-      el('ptab1000').value = round3(pTab1000).toFixed(3);
+    // если ΔP отрицательная — это физически может быть (если H<1000), но iP тогда отрицательное.
+    // Подсветим это как "не норма".
+    if (iP>=lo && iP<=hi){
+      setBadge(badge, "good", "НОРМА");
+      note.textContent = "OK";
+    }else{
+      setBadge(badge, "bad", "НЕ НОРМА");
+      note.textContent = "Проверь режим/условия (iP вне допуска).";
     }
   }
 
-  // TEMP calc
   function calcTemp(){
-    if (!DATA){
-      el('tStatus').value = 'Нет данных (spu52.json не загружен)';
-      return;
-    }
+    const R1 = parseFloat(document.getElementById("t_r1").value);
+    const R2 = parseFloat(document.getElementById("t_r2").value);
 
-    const R1 = toNum(el('r1').value);
-    const R2 = toNum(el('r2').value);
-
-    if (!Number.isFinite(R1) || !Number.isFinite(R2)){
-      el('tStatus').value = 'Заполни R1 и R2 числами';
-      return;
-    }
-
-    const T1 = interpT(DATA.tTable, R1);
-    const T2 = interpT(DATA.tTable, R2);
+    const T1 = tByR(R1);
+    const T2 = tByR(R2);
 
     const dT1 = T1 - 7;
     const dT2 = T2 - 7;
 
-    const iT1 = (dT1 !== 0) ? (33.3 / dT1) : NaN;
-    const iT2 = (dT2 !== 0) ? (33.3 / dT2) : NaN;
+    const iT1 = 33.3 / dT1;
+    const iT2 = 33.3 / dT2;
 
-    el('t1').value = round3(T1).toFixed(3);
-    el('t2').value = round3(T2).toFixed(3);
-    el('dt1').value = round3(dT1).toFixed(3);
-    el('dt2').value = round3(dT2).toFixed(3);
-    el('it1').value = Number.isFinite(iT1) ? round3(iT1).toFixed(3) : '';
-    el('it2').value = Number.isFinite(iT2) ? round3(iT2).toFixed(3) : '';
-    el('tStatus').value = 'OK';
+    document.getElementById("t_t1").textContent  = Number.isFinite(T1) ? round2(T1) : "—";
+    document.getElementById("t_t2").textContent  = Number.isFinite(T2) ? round2(T2) : "—";
+    document.getElementById("t_dt1").textContent = round2(dT1);
+    document.getElementById("t_dt2").textContent = round2(dT2);
+    document.getElementById("t_it1").textContent = round3(iT1);
+    document.getElementById("t_it2").textContent = round3(iT2);
 
-    el('tDebug').textContent =
-`Ввод:
-R1 = ${round3(R1)} Ом
-R2 = ${round3(R2)} Ом
+    // норма iT: 0.85 ± 0.17
+    const lo=0.68, hi=1.02;
+    const badge = document.getElementById("t_badge");
 
-Интерполяция:
-T1 = ${round3(T1)} °C
-T2 = ${round3(T2)} °C
+    const ok1 = Number.isFinite(iT1) && iT1>=lo && iT1<=hi;
+    const ok2 = Number.isFinite(iT2) && iT2>=lo && iT2<=hi;
 
-ΔT:
-ΔT1 = T1 - 7 = ${round3(dT1)}
-ΔT2 = T2 - 7 = ${round3(dT2)}
-
-iT:
-iT1 = ${Number.isFinite(iT1) ? round3(iT1) : '—'}
-iT2 = ${Number.isFinite(iT2) ? round3(iT2) : '—'}`;
+    if (!Number.isFinite(iT1) || !Number.isFinite(iT2)){
+      setBadge(badge, "warn", "НЕТ ДАННЫХ");
+      return;
+    }
+    if (ok1 && ok2){
+      setBadge(badge, "good", "НОРМА");
+    }else{
+      setBadge(badge, "bad", "НЕ НОРМА");
+    }
   }
 
-  function resetTemp(){
-    ['r1','r2','t1','t2','dt1','dt2','it1','it2','tStatus'].forEach(id => el(id).value = '');
-    el('tDebug').textContent = '—';
+  function recalcAll(){
+    calcPressure();
+    calcTemp();
+    if (window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise(); // чтобы формулы всегда красиво перерисовывались
+    }
   }
 
-  // wire buttons
-  el('btnP').addEventListener('click', calcPressure);
-  el('btnPReset').addEventListener('click', resetPressure);
+  // ===== LIVE UPDATES (как в CodePen) =====
+  ["p_p1000","p_h","t_r1","t_r2"].forEach(id=>{
+    const el = document.getElementById(id);
+    el.addEventListener("input", recalcAll);
+    el.addEventListener("change", recalcAll);
+  });
 
-  el('btnT').addEventListener('click', calcTemp);
-  el('btnTReset').addEventListener('click', resetTemp);
-
-  // load once
-  loadData();
-})();
+  // стартовый расчёт
+  recalcAll();
 </script>
 </body>
 </html>
