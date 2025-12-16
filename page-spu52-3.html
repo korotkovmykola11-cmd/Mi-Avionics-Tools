@@ -213,5 +213,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("out").textContent = "Нажми «Рассчитать».";
     });
   </script>
+<script>
+async function loadSPU() {
+  const res = await fetch('spu52.json');
+  const data = await res.json();
+
+  // тест: просто выведем данные
+  document.getElementById('debug').textContent =
+    JSON.stringify(data, null, 2);
+}
+
+document.addEventListener('DOMContentLoaded', loadSPU);
+</script>
 </body>
 </html>
