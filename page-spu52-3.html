@@ -1,130 +1,573 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>СПУ-52-3 — калькулятор</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>СПУ-52-3 — расчёты (давление/температура)</title>
 
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(#f1b44c, #1f5fff);
-    padding: 40px;
-  }
-  .box {
-    background: #ffffffcc;
-    border-radius: 12px;
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
-  }
-  h1 { margin-top: 0; }
-  label { display: block; margin-top: 10px; }
-  input {
-    width: 100%;
-    padding: 6px;
-    font-size: 16px;
-  }
-  button {
-    margin-top: 15px;
-    padding: 8px 16px;
-    font-size: 16px;
-  }
-  pre {
-    background: #eee;
-    padding: 10px;
-    margin-top: 15px;
-    white-space: pre-wrap;
-  }
-</style>
+  <style>
+    :root{
+      --ua-yellow:#f7c843;
+      --ua-blue:#1f5fff;
+      --glass: rgba(255,255,255,.14);
+      --glass2: rgba(255,255,255,.08);
+      --line: rgba(255,255,255,.25);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --shadow2: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+      /* 3D UA flag */
+      background:
+        radial-gradient(1200px 700px at 30% 10%, rgba(255,255,255,.22), rgba(255,255,255,0) 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(0,0,0,.25), rgba(0,0,0,0) 55%),
+        linear-gradient(180deg, var(--ua-yellow) 0%, var(--ua-yellow) 48%, var(--ua-blue) 52%, var(--ua-blue) 100%);
+      background-attachment: fixed;
+      padding: 26px 18px 40px;
+    }
+
+    .wrap{ max-width: 1100px; margin: 0 auto; }
+
+    .topbar{
+      display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+      gap: 12px; margin-bottom: 18px;
+    }
+
+    .title{
+      display:flex; flex-direction:column; gap:4px;
+      text-shadow: 0 6px 18px rgba(0,0,0,.35);
+    }
+    .title h1{ margin:0; font-size: 24px; letter-spacing:.2px; }
+    .title .sub{ color: var(--muted); font-size: 14px; }
+
+    .pill{
+      padding:10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      font-size: 13px;
+      color: var(--text);
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .pill code{ background: rgba(0,0,0,.15); padding:2px 6px; border-radius: 8px; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 16px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      padding: 16px 16px 14px;
+    }
+
+    .card h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .note{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 0 0 12px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 560px){
+      .row{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      display:block;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 10px 0 6px;
+    }
+
+    input{
+      width:100%;
+      padding: 12px 12px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(0,0,0,.16);
+      color: var(--text);
+      outline: none;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.12);
+    }
+    input::placeholder{ color: rgba(255,255,255,.45); }
+    input[readonly]{
+      background: rgba(0,0,0,.10);
+      color: rgba(255,255,255,.88);
+    }
+
+    .buttons{
+      display:flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    button{
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.28);
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.10));
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 15px;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      transition: transform .05s ease;
+    }
+    button:active{ transform: translateY(1px); }
+    .danger{ background: linear-gradient(180deg, rgba(255,60,60,.25), rgba(255,60,60,.12)); }
+
+    .out{
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.28);
+      background: rgba(0,0,0,.14);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: pre-wrap;
+      color: rgba(255,255,255,.92);
+      min-height: 84px;
+    }
+
+    .formula{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.10);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+      font-size: 14px;
+      color: rgba(255,255,255,.92);
+    }
+    .math{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 14px;
+      letter-spacing: .1px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(0,0,0,.14);
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      margin-left: 6px;
+    }
+
+    .ok{ color: #d6ffd6; }
+    .bad{ color: #ffd6d6; }
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>СПУ-52-3 — расчёт передаточных чисел</h1>
+        <div class="sub">Ми-24 • Давление (по гипсометрии из <code>spu52.json</code>) • Температура (по таблице R↔T)</div>
+      </div>
+      <div class="pill">
+        <span>Данные гипсометрии: <code>spu52.json</code></span>
+        <span>Показываем: <b>3 знака</b> после запятой</span>
+      </div>
+    </div>
 
-<div class="box">
-  <h1>СПУ-52-3</h1>
-  <p>Калькулятор по гипсометрической таблице</p>
+    <div class="grid">
+      <!-- LEFT: CALC -->
+      <div class="card">
+        <h2>Давление по гипсометрической таблице</h2>
+        <p class="note">
+          Нулевые условия (по твоей технологии): на высоте <b>1000 м</b> табличное давление ≈ <b>674.115</b>.
+          Вводишь <b>P(1000)</b> по прибору (мм рт.ст.), вводишь <b>H</b> (м) промежуточной отметки —
+          получаешь <b>P(H)</b> и расчёт.
+        </p>
 
-  <label>P(1000), мм рт.ст.</label>
-  <input id="p1000" value="674">
+        <div class="row">
+          <div>
+            <label for="p1000">P(1000) по прибору, мм рт.ст.</label>
+            <input id="p1000" inputmode="decimal" placeholder="например: 674" />
+          </div>
+          <div>
+            <label for="h">H, м (промежуточная отметка)</label>
+            <input id="h" inputmode="decimal" placeholder="например: 1200" />
+          </div>
+        </div>
 
-  <label>H, м</label>
-  <input id="h" value="200">
+        <div class="row">
+          <div>
+            <label for="ptab1000">Pтаб(1000), мм рт.ст. (из таблицы)</label>
+            <input id="ptab1000" readonly />
+          </div>
+          <div>
+            <label for="ptabh">Pтаб(H), мм рт.ст. (из таблицы)</label>
+            <input id="ptabh" readonly />
+          </div>
+        </div>
 
-  <label>P(H), мм рт.ст.</label>
-  <input id="ph" readonly>
+        <div class="row">
+          <div>
+            <label for="dptab">ΔPтаб = Pтаб(1000) − Pтаб(H)</label>
+            <input id="dptab" readonly />
+          </div>
+          <div>
+            <label for="ph">P(H) = P(1000) − ΔPтаб</label>
+            <input id="ph" readonly />
+          </div>
+        </div>
 
-  <button id="calc">Рассчитать</button>
-  <button id="reset">Сброс</button>
+        <div class="formula">
+          <div class="math">i<sub>P</sub> = 33.3 / ΔP</div>
+          <div class="note" style="margin:6px 0 0;">(Если по твоей технологии другая константа/логика для i<sub>P</sub> — поменяем в 1 строке.)</div>
+          <div class="row" style="margin-top:8px;">
+            <div>
+              <label for="ip">Передаточное число по давлению iP</label>
+              <input id="ip" readonly />
+            </div>
+            <div>
+              <label>Статус</label>
+              <div id="ipStatus" class="out" style="min-height:auto;">—</div>
+            </div>
+          </div>
+        </div>
 
-  <pre id="out"></pre>
-</div>
+        <div class="buttons">
+          <button id="calcP">Рассчитать (давление)</button>
+          <button id="resetP" class="danger">Сброс</button>
+        </div>
+
+        <div id="outP" class="out"></div>
+      </div>
+
+      <!-- RIGHT: TEMP -->
+      <div class="card">
+        <h2>Температура (R → T → ΔT → iT)</h2>
+        <p class="note">
+          Вводишь сопротивления (Ом) для двух направлений/отметок (как ты делал раньше):<br>
+          <b>R1</b> и <b>R2</b>. Программа переводит R→T по таблице и считает:
+          <span class="math">ΔT1 = T1 − 7</span>,
+          <span class="math">ΔT2 = T2 − 7</span>,
+          <span class="math">i<sub>T1</sub> = 33.3 / ΔT1</span>,
+          <span class="math">i<sub>T2</sub> = 33.3 / ΔT2</span>.
+        </p>
+
+        <div class="row">
+          <div>
+            <label for="r1">R1, Ом</label>
+            <input id="r1" inputmode="decimal" placeholder="например: 92.6" />
+          </div>
+          <div>
+            <label for="r2">R2, Ом</label>
+            <input id="r2" inputmode="decimal" placeholder="например: 105.0" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="t1">T1 (из таблицы), °C</label>
+            <input id="t1" readonly />
+          </div>
+          <div>
+            <label for="t2">T2 (из таблицы), °C</label>
+            <input id="t2" readonly />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="dt1">ΔT1 = T1 − 7</label>
+            <input id="dt1" readonly />
+          </div>
+          <div>
+            <label for="dt2">ΔT2 = T2 − 7</label>
+            <input id="dt2" readonly />
+          </div>
+        </div>
+
+        <div class="formula">
+          <div class="math">i<sub>T</sub> = 33.3 / ΔT</div>
+          <div class="row" style="margin-top:8px;">
+            <div>
+              <label for="it1">iT1</label>
+              <input id="it1" readonly />
+            </div>
+            <div>
+              <label for="it2">iT2</label>
+              <input id="it2" readonly />
+            </div>
+          </div>
+          <div class="row" style="margin-top:8px;">
+            <div>
+              <label>Статус</label>
+              <div id="itStatus" class="out" style="min-height:auto;">—</div>
+            </div>
+            <div>
+              <label>Подсказка</label>
+              <div class="out" style="min-height:auto;">
+                Таблица температуры берётся из <b>spu52.json</b> → <code>temp_table</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button id="calcT">Рассчитать (температура)</button>
+          <button id="resetT" class="danger">Сброс</button>
+        </div>
+
+        <div id="outT" class="out"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h2>Технология (справка)</h2>
+      <p class="note">
+        Это место оставлено под полный текст технологической карты (как на фото).  
+        Сюда можно вставить текст целиком — я оформлю его “как документ” внутри страницы (колонки, списки, таблицы).
+      </p>
+      <div class="out">
+        Пока не вставлено (чтобы не наделать ошибок текстом). Скажешь — оформлю.
+      </div>
+    </div>
+  </div>
 
 <script>
-(async function () {
+(async function(){
+  // ===== helpers =====
+  const FIX3 = (x) => Number.isFinite(x) ? x.toFixed(3).replace(".", ",") : "—";
+  const num  = (v) => {
+    if (v === null || v === undefined) return NaN;
+    return Number(String(v).replace(",", ".").trim());
+  };
+  const clamp = (x,a,b) => Math.min(b, Math.max(a, x));
 
-  const DATA_URL = "./spu52.json?v=" + Date.now();
+  // ===== DOM =====
+  const $ = (id) => document.getElementById(id);
 
-  const p1000El = document.getElementById("p1000");
-  const hEl     = document.getElementById("h");
-  const phEl    = document.getElementById("ph");
-  const outEl   = document.getElementById("out");
+  // Pressure DOM
+  const p1000 = $("p1000"), h = $("h"),
+        ptab1000 = $("ptab1000"), ptabh = $("ptabh"),
+        dptab = $("dptab"), ph = $("ph"),
+        ip = $("ip"), ipStatus = $("ipStatus"), outP = $("outP");
 
-  let table = [];
+  // Temp DOM
+  const r1 = $("r1"), r2 = $("r2"),
+        t1 = $("t1"), t2 = $("t2"),
+        dt1 = $("dt1"), dt2 = $("dt2"),
+        it1 = $("it1"), it2 = $("it2"),
+        itStatus = $("itStatus"), outT = $("outT");
 
-  try {
-    const r = await fetch(DATA_URL, { cache: "no-store" });
-    const j = await r.json();
-    table = j.table
-      .map(x => ({ H: Number(x.H), P: Number(x.P) }))
-      .sort((a,b) => a.H - b.H);
-  } catch (e) {
-    outEl.textContent = "Ошибка загрузки spu52.json";
+  // ===== Load spu52.json =====
+  let DB = null;
+  try{
+    const r = await fetch("./spu52.json?v=" + Date.now(), { cache:"no-store" });
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    DB = await r.json();
+  }catch(e){
+    outP.textContent = "Ошибка загрузки spu52.json: " + e.message;
+    outT.textContent = "Ошибка загрузки spu52.json: " + e.message;
     return;
   }
 
-  function interpP(H) {
-    if (H <= table[0].H) return table[0].P;
-    if (H >= table[table.length - 1].H) return table[table.length - 1].P;
+  // ===== Hypsometric table =====
+  const hyp = (DB.table || [])
+    .map(x => ({ H: num(x.H), P: num(x.P) }))
+    .filter(x => Number.isFinite(x.H) && Number.isFinite(x.P))
+    .sort((a,b)=>a.H-b.H);
 
-    for (let i = 0; i < table.length - 1; i++) {
-      const a = table[i], b = table[i + 1];
-      if (H >= a.H && H <= b.H) {
-        const k = (H - a.H) / (b.H - a.H);
-        return a.P + k * (b.P - a.P);
+  function interpP(H){
+    if(hyp.length < 2) return NaN;
+    if(H <= hyp[0].H) return hyp[0].P;
+    if(H >= hyp[hyp.length-1].H) return hyp[hyp.length-1].P;
+
+    // find segment
+    for(let i=0;i<hyp.length-1;i++){
+      const a=hyp[i], b=hyp[i+1];
+      if(H>=a.H && H<=b.H){
+        const t=(H-a.H)/(b.H-a.H);
+        return a.P + t*(b.P-a.P);
       }
     }
+    return NaN;
   }
 
-  document.getElementById("calc").onclick = () => {
-    const P1000 = Number(p1000El.value.replace(",", "."));
-    const H = Number(hEl.value.replace(",", "."));
+  // ===== Temperature table (R↔T) =====
+  // ОЖИДАЕМ в spu52.json:
+  // "temp_table": [{"T":-40,"R":...}, {"T":-30,"R":...}, ...]
+  // (или шаг 10°, неважно — интерполяция сделает любой шаг)
+  const tempTable = (DB.temp_table || [])
+    .map(x => ({ T: num(x.T), R: num(x.R) }))
+    .filter(x => Number.isFinite(x.T) && Number.isFinite(x.R))
+    .sort((a,b)=>a.R-b.R); // сортируем по R (обычно R растёт/падает монотонно)
+
+  function interpTfromR(R){
+    if(tempTable.length < 2) return NaN;
+
+    // clamp to range
+    const minR = tempTable[0].R, maxR = tempTable[tempTable.length-1].R;
+    const Rc = clamp(R, Math.min(minR,maxR), Math.max(minR,maxR));
+
+    // find segment by R
+    for(let i=0;i<tempTable.length-1;i++){
+      const a=tempTable[i], b=tempTable[i+1];
+      const rMin = Math.min(a.R,b.R), rMax = Math.max(a.R,b.R);
+      if(Rc>=rMin && Rc<=rMax){
+        const t=(Rc-a.R)/(b.R-a.R);
+        return a.T + t*(b.T-a.T);
+      }
+    }
+    return NaN;
+  }
+
+  // ===== calculations =====
+  function calcPressure(){
+    const P1000 = num(p1000.value);
+    const H = num(h.value);
+
+    if(!Number.isFinite(P1000) || !Number.isFinite(H)){
+      outP.textContent = "Введи P(1000) и H.";
+      return;
+    }
 
     const Ptab1000 = interpP(1000);
     const PtabH = interpP(H);
 
-    const dP = Ptab1000 - PtabH;
-    const PH = P1000 - dP;
+    const dPtab = Ptab1000 - PtabH;         // ΔP табличная
+    const PH = P1000 - dPtab;               // P(H) по прибору/логике
+    const iP = (Number.isFinite(dPtab) && dPtab !== 0) ? (33.3 / dPtab) : NaN;
 
-    phEl.value = PH.toFixed(3);
+    ptab1000.value = FIX3(Ptab1000);
+    ptabh.value    = FIX3(PtabH);
+    dptab.value    = FIX3(dPtab);
+    ph.value       = FIX3(PH);
+    ip.value       = Number.isFinite(iP) ? iP.toFixed(3).replace(".", ",") : "—";
 
-    outEl.textContent =
+    outP.textContent =
       `H = ${H} м\n` +
-      `Pтаб(1000) = ${Ptab1000.toFixed(3)}\n` +
-      `Pтаб(H) = ${PtabH.toFixed(3)}\n` +
-      `ΔP = ${dP.toFixed(3)}\n` +
-      `P(H) = ${PH.toFixed(3)}`;
-  };
+      `Pтаб(1000) = ${Ptab1000.toFixed(3)} мм\n` +
+      `Pтаб(H)    = ${PtabH.toFixed(3)} мм\n` +
+      `ΔPтаб = Pтаб(1000) − Pтаб(H) = ${dPtab.toFixed(3)} мм\n` +
+      `P(H) = P(1000) − ΔPтаб = ${PH.toFixed(3)} мм\n` +
+      `iP = 33.3 / ΔP = ${Number.isFinite(iP) ? iP.toFixed(3) : "—"}`;
 
-  document.getElementById("reset").onclick = () => {
-    p1000El.value = "";
-    hEl.value = "";
-    phEl.value = "";
-    outEl.textContent = "";
-  };
+    ipStatus.textContent = "OK (нормы/допуски добавим по технологии, когда ты скажешь числом).";
+  }
+
+  function calcTemp(){
+    const R1 = num(r1.value);
+    const R2 = num(r2.value);
+
+    if(tempTable.length < 2){
+      outT.textContent =
+        "Нет таблицы температуры.\n" +
+        "Нужно добавить в spu52.json блок temp_table (R↔T).\n" +
+        "После этого температура начнёт считаться автоматически.";
+      t1.value = t2.value = dt1.value = dt2.value = it1.value = it2.value = "—";
+      itStatus.textContent = "Нет temp_table в spu52.json";
+      return;
+    }
+
+    if(!Number.isFinite(R1) && !Number.isFinite(R2)){
+      outT.textContent = "Введи R1 и/или R2.";
+      return;
+    }
+
+    const T1 = Number.isFinite(R1) ? interpTfromR(R1) : NaN;
+    const T2 = Number.isFinite(R2) ? interpTfromR(R2) : NaN;
+
+    const dT1 = Number.isFinite(T1) ? (T1 - 7) : NaN;
+    const dT2 = Number.isFinite(T2) ? (T2 - 7) : NaN;
+
+    const iT1 = (Number.isFinite(dT1) && dT1 !== 0) ? (33.3 / dT1) : NaN;
+    const iT2 = (Number.isFinite(dT2) && dT2 !== 0) ? (33.3 / dT2) : NaN;
+
+    t1.value  = FIX3(T1);
+    t2.value  = FIX3(T2);
+    dt1.value = FIX3(dT1);
+    dt2.value = FIX3(dT2);
+    it1.value = Number.isFinite(iT1) ? iT1.toFixed(3).replace(".", ",") : "—";
+    it2.value = Number.isFinite(iT2) ? iT2.toFixed(3).replace(".", ",") : "—";
+
+    outT.textContent =
+      `R1 = ${Number.isFinite(R1) ? R1 : "—"} Ом → T1 = ${Number.isFinite(T1) ? T1.toFixed(3) : "—"} °C\n` +
+      `ΔT1 = T1 − 7 = ${Number.isFinite(dT1) ? dT1.toFixed(3) : "—"}\n` +
+      `iT1 = 33.3 / ΔT1 = ${Number.isFinite(iT1) ? iT1.toFixed(3) : "—"}\n\n` +
+      `R2 = ${Number.isFinite(R2) ? R2 : "—"} Ом → T2 = ${Number.isFinite(T2) ? T2.toFixed(3) : "—"} °C\n` +
+      `ΔT2 = T2 − 7 = ${Number.isFinite(dT2) ? dT2.toFixed(3) : "—"}\n` +
+      `iT2 = 33.3 / ΔT2 = ${Number.isFinite(iT2) ? iT2.toFixed(3) : "—"}`;
+
+    itStatus.textContent = "OK (нормы/допуски добавим по технологии, когда ты скажешь числом).";
+  }
+
+  function resetPressure(){
+    p1000.value = "";
+    h.value = "";
+    ptab1000.value = ptabh.value = dptab.value = ph.value = ip.value = "";
+    outP.textContent = "";
+    ipStatus.textContent = "—";
+  }
+
+  function resetTemp(){
+    r1.value = "";
+    r2.value = "";
+    t1.value = t2.value = dt1.value = dt2.value = it1.value = it2.value = "";
+    outT.textContent = "";
+    itStatus.textContent = "—";
+  }
+
+  // ===== UI wiring =====
+  $("calcP").addEventListener("click", calcPressure);
+  $("resetP").addEventListener("click", resetPressure);
+
+  $("calcT").addEventListener("click", calcTemp);
+  $("resetT").addEventListener("click", resetTemp);
+
+  // Online calc (без обязаловки заполнять всё)
+  p1000.addEventListener("input", () => { if(p1000.value.trim() || h.value.trim()) calcPressure(); });
+  h.addEventListener("input", () => { if(p1000.value.trim() || h.value.trim()) calcPressure(); });
+
+  r1.addEventListener("input", () => { if(r1.value.trim() || r2.value.trim()) calcTemp(); });
+  r2.addEventListener("input", () => { if(r1.value.trim() || r2.value.trim()) calcTemp(); });
+
+  // Initial fill: show Pтаб(1000) quickly
+  if(hyp.length >= 2){
+    ptab1000.value = FIX3(interpP(1000));
+  }
 
 })();
 </script>
-
 </body>
 </html>
