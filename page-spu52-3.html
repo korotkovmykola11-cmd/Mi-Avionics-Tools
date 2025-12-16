@@ -64,6 +64,31 @@
   </style>
 </head>
 
+<hr>
+
+<label>
+  Ввод (мм):
+  <input type="number" id="nInput" value="1000">
+</label>
+
+<button onclick="calcSPU()">Рассчитать</button>
+
+<pre id="result"></pre>
+
+<script>
+function calcSPU() {
+  const N = Number(document.getElementById('nInput').value);
+  const P1000 = 674;
+  const PH = 649;
+  const dP = P1000 - PH;
+  const i = 33.3 / dP;
+
+  document.getElementById('result').textContent =
+    'N = ' + N + '\n' +
+    'ΔP = ' + dP + '\n' +
+    'i = ' + i.toFixed(4);
+}
+</script>
 <body>
   <div class="page">
     <div class="card">
