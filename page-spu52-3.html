@@ -89,6 +89,48 @@ function calcSPU() {
     'i = ' + i.toFixed(4);
 }
 </script>
+<script>
+let DB = null;
+
+async function loadDB() {
+  const r = await fetch("./data/spu52.json", { cache: "no-store" });
+  if (!r.ok) throw new Error("Не загрузился JSON: " + r.status);
+  DB = await r.json();
+  console.log("DB loaded:", DB);
+}
+
+function nearestRow(H) {
+  if (!DB || !DB.table) return null;
+  // простая логика: ближайшая строка по H (позже сделаем интерполяцию)
+  let best = DB.table[0];
+  let bestDiff = Math.abs(H - best.H);
+  for (const row of DB.table) {
+    const d = Math.abs(H - row.H);
+    if (d < bestDiff) { best = row; bestDiff = d; }
+  }
+  return best;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadDB();
+
+  // кнопка "Рассчитать" должна иметь id="calc"
+  const btn = document.getElementById("calc");
+  const out = document.getElementById("out");
+
+  btn.addEventListener("click", () => {
+    const H = Number(document.getElementById("H").value); // input id="H"
+    const row = nearestRow(H);
+    if (!row) { out.textContent = "Нет таблицы"; return; }
+
+    out.textContent =
+      `H = ${H}\n` +
+      `Выбрана строка: H=${row.H}\n` +
+      `P(1000)=${row.P1000}\n` +
+      `P(H)=${row.PH}\n`;
+  });
+});
+</script>
 <body>
   <div class="page">
     <div class="card">
