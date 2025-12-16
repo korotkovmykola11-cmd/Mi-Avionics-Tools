@@ -1,229 +1,130 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>СПУ-52-3 — калькулятор</title>
+<meta charset="UTF-8">
+<title>СПУ-52-3 — калькулятор</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background: linear-gradient(180deg, #ffb400 0%, #2b66ff 100%);
-      min-height:100vh;
-      color:#111;
-    }
-    .page{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-    .card{
-      background: rgba(255,255,255,0.92);
-      border-radius: 14px;
-      padding: 18px 18px;
-      margin: 14px 0;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.14);
-    }
-    h1{ margin: 0 0 10px 0; font-size: 28px; }
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-    }
-    label{ display:block; font-size: 14px; margin-bottom: 6px; opacity:0.9; }
-    input{
-      width:100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.2);
-      font-size: 16px;
-      outline:none;
-      box-sizing:border-box;
-    }
-    button{
-      padding: 12px 14px;
-      border: 0;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor:pointer;
-    }
-    .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-    pre{
-      white-space: pre-wrap;
-      background:#fff;
-      border-radius: 12px;
-      padding: 12px;
-      border: 1px solid rgba(0,0,0,0.12);
-      margin:0;
-    }
-    .muted{ opacity:0.7; font-size: 13px; margin-top: 8px; }
-    @media (max-width: 820px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-  </style>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#f1b44c, #1f5fff);
+    padding: 40px;
+  }
+  .box {
+    background: #ffffffcc;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+  }
+  h1 { margin-top: 0; }
+  label { display: block; margin-top: 10px; }
+  input {
+    width: 100%;
+    padding: 6px;
+    font-size: 16px;
+  }
+  button {
+    margin-top: 15px;
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+  pre {
+    background: #eee;
+    padding: 10px;
+    margin-top: 15px;
+    white-space: pre-wrap;
+  }
+</style>
 </head>
 
-<hr>
-
-<label>
-  Ввод (мм):
-  <input type="number" id="nInput" value="1000">
-</label>
-
-<button onclick="calcSPU()">Рассчитать</button>
-
-<pre id="result"></pre>
-
-<script>
-function calcSPU() {
-  const N = Number(document.getElementById('nInput').value);
-  const P1000 = 674;
-  const PH = 649;
-  const dP = P1000 - PH;
-  const i = 33.3 / dP;
-
-  document.getElementById('result').textContent =
-    'N = ' + N + '\n' +
-    'ΔP = ' + dP + '\n' +
-    'i = ' + i.toFixed(4);
-}
-</script>
-<script>
-let DB = null;
-
-async function loadDB() {
-  const r = await fetch("./data/spu52.json", { cache: "no-store" });
-  if (!r.ok) throw new Error("Не загрузился JSON: " + r.status);
-  DB = await r.json();
-  console.log("DB loaded:", DB);
-}
-
-function nearestRow(H) {
-  if (!DB || !DB.table) return null;
-  // простая логика: ближайшая строка по H (позже сделаем интерполяцию)
-  let best = DB.table[0];
-  let bestDiff = Math.abs(H - best.H);
-  for (const row of DB.table) {
-    const d = Math.abs(H - row.H);
-    if (d < bestDiff) { best = row; bestDiff = d; }
-  }
-  return best;
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadDB();
-
-  // кнопка "Рассчитать" должна иметь id="calc"
-  const btn = document.getElementById("calc");
-  const out = document.getElementById("out");
-
-  btn.addEventListener("click", () => {
-    const H = Number(document.getElementById("H").value); // input id="H"
-    const row = nearestRow(H);
-    if (!row) { out.textContent = "Нет таблицы"; return; }
-
-    out.textContent =
-      `H = ${H}\n` +
-      `Выбрана строка: H=${row.H}\n` +
-      `P(1000)=${row.P1000}\n` +
-      `P(H)=${row.PH}\n`;
-  });
-});
-</script>
 <body>
-  <div class="page">
-    <div class="card">
-      <h1>СПУ-52-3</h1>
-      <div class="muted">Калькулятор (черновик). Сейчас считаем по твоей тестовой логике: ΔP и i<sub>p</sub>.</div>
-    </div>
 
-    <div class="card">
-      <div class="grid">
-        <div>
-          <label for="p1000">P(1000)</label>
-          <input id="p1000" type="number" value="674" step="0.1" />
-        </div>
+<div class="box">
+  <h1>СПУ-52-3</h1>
+  <p>Калькулятор по гипсометрической таблице</p>
 
-        <div>
-          <label for="ph">P(H)</label>
-          <input id="ph" type="number" value="640" step="0.1" />
-        </div>
+  <label>P(1000), мм рт.ст.</label>
+  <input id="p1000" value="674">
 
-        <div>
-          <label for="h">H (для вывода/журнала)</label>
-          <input id="h" type="number" value="200" step="10" />
-        </div>
-      </div>
+  <label>H, м</label>
+  <input id="h" value="200">
 
-      <div class="btns">
-        <button id="calc">Рассчитать</button>
-        <button id="reset" type="button">Сброс</button>
-      </div>
-    </div>
+  <label>P(H), мм рт.ст.</label>
+  <input id="ph" readonly>
 
-    <div class="card">
-      <pre id="out">Нажми «Рассчитать».</pre>
-    </div>
-  </div>
+  <button id="calc">Рассчитать</button>
+  <button id="reset">Сброс</button>
 
-  <script>
-    function num(id){
-      const el = document.getElementById(id);
-      const v = Number(el.value);
-      return Number.isFinite(v) ? v : NaN;
-    }
+  <pre id="out"></pre>
+</div>
 
-    function fmt(n, digits=3){
-      if (!Number.isFinite(n)) return "—";
-      return Number(n.toFixed(digits));
-    }
-
-    function calc(){
-      const P1000 = num("p1000");
-      const PH    = num("ph");
-      const H     = num("h");
-
-      if (![P1000, PH, H].every(Number.isFinite)){
-        document.getElementById("out").textContent = "Ошибка: проверь, что все поля заполнены числами.";
-        return;
-      }
-
-      const dP = P1000 - PH;         // ΔP
-      const ip = dP !== 0 ? (33.3 / dP) : NaN;  // i_p = 33.3 / ΔP (как в твоём тесте)
-
-      const lines = [];
-      lines.push(`H = ${fmt(H,0)}`);
-      lines.push(`P(1000) = ${fmt(P1000,1)}`);
-      lines.push(`P(H)    = ${fmt(PH,1)}`);
-      lines.push("");
-      lines.push(`ΔP = P(1000) - P(H) = ${fmt(dP,1)}`);
-      lines.push(`i_p = 33.3 / ΔP     = ${fmt(ip,4)}`);
-      lines.push("");
-      lines.push("Если формула/константа 33.3 должна быть другой — скажешь, поменяю под твою таблицу/мануал.");
-
-      document.getElementById("out").textContent = lines.join("\n");
-    }
-
-    document.getElementById("calc").addEventListener("click", calc);
-    document.getElementById("reset").addEventListener("click", () => {
-      document.getElementById("p1000").value = 674;
-      document.getElementById("ph").value = 640;
-      document.getElementById("h").value = 200;
-      document.getElementById("out").textContent = "Нажми «Рассчитать».";
-    });
-  </script>
 <script>
-async function loadSPU() {
-  const res = await fetch('spu52.json');
-  const data = await res.json();
+(async function () {
 
-  // тест: просто выведем данные
-  document.getElementById('debug').textContent =
-    JSON.stringify(data, null, 2);
-}
+  const DATA_URL = "./spu52.json?v=" + Date.now();
 
-document.addEventListener('DOMContentLoaded', loadSPU);
+  const p1000El = document.getElementById("p1000");
+  const hEl     = document.getElementById("h");
+  const phEl    = document.getElementById("ph");
+  const outEl   = document.getElementById("out");
+
+  let table = [];
+
+  try {
+    const r = await fetch(DATA_URL, { cache: "no-store" });
+    const j = await r.json();
+    table = j.table
+      .map(x => ({ H: Number(x.H), P: Number(x.P) }))
+      .sort((a,b) => a.H - b.H);
+  } catch (e) {
+    outEl.textContent = "Ошибка загрузки spu52.json";
+    return;
+  }
+
+  function interpP(H) {
+    if (H <= table[0].H) return table[0].P;
+    if (H >= table[table.length - 1].H) return table[table.length - 1].P;
+
+    for (let i = 0; i < table.length - 1; i++) {
+      const a = table[i], b = table[i + 1];
+      if (H >= a.H && H <= b.H) {
+        const k = (H - a.H) / (b.H - a.H);
+        return a.P + k * (b.P - a.P);
+      }
+    }
+  }
+
+  document.getElementById("calc").onclick = () => {
+    const P1000 = Number(p1000El.value.replace(",", "."));
+    const H = Number(hEl.value.replace(",", "."));
+
+    const Ptab1000 = interpP(1000);
+    const PtabH = interpP(H);
+
+    const dP = Ptab1000 - PtabH;
+    const PH = P1000 - dP;
+
+    phEl.value = PH.toFixed(3);
+
+    outEl.textContent =
+      `H = ${H} м\n` +
+      `Pтаб(1000) = ${Ptab1000.toFixed(3)}\n` +
+      `Pтаб(H) = ${PtabH.toFixed(3)}\n` +
+      `ΔP = ${dP.toFixed(3)}\n` +
+      `P(H) = ${PH.toFixed(3)}`;
+  };
+
+  document.getElementById("reset").onclick = () => {
+    p1000El.value = "";
+    hEl.value = "";
+    phEl.value = "";
+    outEl.textContent = "";
+  };
+
+})();
 </script>
+
 </body>
 </html>
