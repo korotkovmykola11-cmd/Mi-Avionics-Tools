@@ -2,631 +2,797 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>СПУ-52-3 — калькулятор передаточных чисел</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>СПУ-52-3 — расчёт передаточных чисел</title>
+
+  <!-- MathJax: красивые дроби/формулы (как в CodePen) -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <style>
     :root{
-      --bg1:#1b66d4;  /* blue */
-      --bg2:#f3c300;  /* yellow */
-      --card: rgba(255,255,255,.10);
-      --card2: rgba(0,0,0,.18);
-      --stroke: rgba(255,255,255,.18);
+      --glass: rgba(255,255,255,.10);
+      --glass2: rgba(255,255,255,.14);
+      --stroke: rgba(255,255,255,.20);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.72);
-      --good: rgba(35, 192, 104, .95);
-      --bad: rgba(255, 74, 74, .95);
-      --shadow: 0 18px 45px rgba(0,0,0,.35);
-      --r: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --ui: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+      --ok: rgba(36, 197, 134, .22);
+      --bad: rgba(255, 77, 77, .22);
+      --warn: rgba(255, 193, 7, .22);
+
+      --okSolid: #35d39a;
+      --badSolid:#ff4d4d;
+      --warnSolid:#ffc107;
+
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
     }
 
-    /* --- Background: correct UA flag (blue top, yellow bottom) + “3D” texture --- */
-    html,body{height:100%;}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family:var(--ui);
-      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color: var(--text);
       overflow-x:hidden;
-      background:
-        radial-gradient(1200px 700px at 20% 10%, rgba(255,255,255,.25), transparent 55%),
-        radial-gradient(900px 600px at 80% 20%, rgba(0,0,0,.22), transparent 55%),
-        linear-gradient(to bottom, var(--bg1) 0 50%, var(--bg2) 50% 100%);
+      background:#0b2a6f;
     }
-    /* subtle fabric/noise + diagonal sheen */
-    body::before{
-      content:"";
+
+    /* --- ФОН: верх синий / низ желтый + легкая "3D-волна" --- */
+    .bg{
       position:fixed; inset:0;
-      pointer-events:none;
       background:
-        repeating-linear-gradient(135deg,
-          rgba(255,255,255,.06) 0 6px,
-          rgba(0,0,0,.03) 6px 12px
-        );
-      opacity:.22;
-      mix-blend-mode:overlay;
+        linear-gradient(180deg,
+          #0a43c4 0%,
+          #0b4fd7 42%,
+          #0b55e2 49.9%,
+          #f5d51a 50%,
+          #f1cc12 100%);
+      z-index:-3;
     }
-    body::after{
+    .bg::before{
       content:"";
-      position:fixed; inset:-30%;
-      pointer-events:none;
-      background: radial-gradient(circle at 30% 40%, rgba(255,255,255,.18), transparent 45%),
-                  radial-gradient(circle at 70% 60%, rgba(255,255,255,.14), transparent 48%);
-      transform: rotate(-8deg);
-      opacity:.55;
+      position:absolute; inset:-20%;
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(255,255,255,.20), transparent 60%),
+        radial-gradient(900px 500px at 85% 25%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(1100px 650px at 65% 80%, rgba(255,255,255,.10), transparent 60%);
+      filter: blur(6px);
+      opacity:.85;
+      z-index:-2;
+    }
+    .bg::after{
+      /* имитация ткани/волны */
+      content:"";
+      position:absolute; inset:0;
+      background:
+        repeating-linear-gradient(
+          135deg,
+          rgba(255,255,255,.06) 0px,
+          rgba(255,255,255,.06) 2px,
+          rgba(255,255,255,0) 10px,
+          rgba(255,255,255,0) 18px
+        );
+      opacity:.18;
+      transform: translateZ(0);
+      animation: wave 10s ease-in-out infinite;
+      z-index:-1;
+      mix-blend-mode: overlay;
+    }
+    @keyframes wave{
+      0%   { transform: translate(-1%, -1%) skewX(-1deg); filter: blur(.2px); }
+      50%  { transform: translate( 1%,  1%) skewX( 1deg); filter: blur(.6px); }
+      100% { transform: translate(-1%, -1%) skewX(-1deg); filter: blur(.2px); }
     }
 
     .wrap{
-      position:relative;
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 36px 16px 42px;
+      padding: 26px 18px 46px;
     }
 
+    header{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
     .title{
-      font-weight: 800;
-      letter-spacing: .2px;
-      font-size: clamp(22px, 3.2vw, 34px);
-      margin: 0 0 14px;
-      text-shadow: 0 3px 18px rgba(0,0,0,.35);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
     }
-    .sub{
-      margin: 0 0 22px;
+    h1{
+      margin:0;
+      font-size: clamp(20px, 2.8vw, 34px);
+      letter-spacing:.2px;
+      text-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .subtitle{
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.35;
-      max-width: 60ch;
+      font-size: 13px;
+      line-height:1.35;
+      max-width: 62ch;
     }
+
+    .topbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      background: rgba(0,0,0,.14);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 28px rgba(0,0,0,.18);
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      user-select:none;
+    }
+    .chip b{ color: rgba(255,255,255,.95); font-weight: 650; }
 
     .grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      align-items: start;
+      margin-top: 12px;
     }
-    @media (max-width: 960px){
-      .grid{grid-template-columns:1fr;}
-      .sub{max-width: 80ch;}
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+      header{ align-items:flex-start; flex-direction:column; }
+      .topbar{ justify-content:flex-start; }
     }
 
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.14));
-      border: 1px solid var(--stroke);
-      border-radius: var(--r);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.08));
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(14px);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      padding: 16px 16px 14px;
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(1200px 400px at 0% 0%, rgba(255,255,255,.14), transparent 45%),
+        radial-gradient(900px 350px at 100% 0%, rgba(255,255,255,.10), transparent 55%);
+      pointer-events:none;
+      opacity:.85;
     }
 
-    .card h2{
-      margin: 0 0 10px;
-      font-size: 16px;
-      letter-spacing: .2px;
+    .cardHead{
+      position:relative;
+      padding: 14px 16px 10px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .cardHead h2{
+      margin:0;
+      font-size: 15px;
+      letter-spacing:.2px;
+    }
+    .normLine{
+      color: rgba(255,255,255,.80);
+      font-size: 12px;
+      white-space:nowrap;
     }
 
-    .row{
+    .cardBody{
+      position:relative;
+      padding: 12px 16px 16px;
+      display:grid;
+      gap: 12px;
+    }
+
+    .row2{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    @media (max-width: 520px){
-      .row{grid-template-columns:1fr;}
+    @media (max-width: 560px){
+      .row2{ grid-template-columns: 1fr; }
     }
 
     label{
       display:block;
       font-size: 12px;
-      color: var(--muted);
+      color: rgba(255,255,255,.84);
       margin: 0 0 6px;
     }
-
-    input{
-      width:100%;
-      box-sizing:border-box;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.20);
-      color: var(--text);
-      padding: 11px 12px;
-      font-size: 16px;
-      outline: none;
-      transition: border-color .15s ease, background .15s ease, transform .05s ease;
-    }
-    input:focus{
-      border-color: rgba(255,255,255,.45);
-      background: rgba(0,0,0,.26);
-    }
-
-    .formulaBox{
-      margin-top: 10px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
+    .field{
       background: rgba(0,0,0,.16);
-    }
-
-    .kvs{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: var(--radius2);
+      padding: 10px 10px;
+      display:flex;
+      align-items:center;
       gap: 10px;
-      margin-top: 10px;
     }
-    @media (max-width: 520px){
-      .kvs{grid-template-columns:1fr;}
+    .field input{
+      width:100%;
+      border:0;
+      outline:none;
+      background: transparent;
+      color: rgba(255,255,255,.96);
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+    .field input::placeholder{ color: rgba(255,255,255,.45); }
+    .unit{
+      color: rgba(255,255,255,.70);
+      font-size: 12px;
+      white-space:nowrap;
     }
 
-    .kv{
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(0,0,0,.16);
-      border: 1px solid rgba(255,255,255,.12);
-      min-height: 58px;
+    .resultBox{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius2);
+      padding: 12px 12px;
+      display:grid;
+      gap: 10px;
     }
-    .kv .k{
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 6px;
+
+    .big{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
     }
-    .kv .v{
-      font-family: var(--mono);
-      font-size: 18px;
-      letter-spacing: .2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .big .value{
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: .3px;
+      text-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+    .big .value small{
+      font-weight: 700;
+      font-size: 15px;
+      opacity:.85;
     }
 
     .badge{
-      margin-top: 10px;
-      border-radius: 14px;
-      padding: 12px 12px;
-      font-weight: 800;
-      text-align:center;
-      letter-spacing:.5px;
+      padding: 8px 10px;
+      border-radius: 999px;
       border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing:.2px;
       user-select:none;
+      white-space:nowrap;
     }
-    .badge.good{background: var(--good); color: rgba(0,0,0,.88);}
-    .badge.bad{background: var(--bad); color: rgba(255,255,255,.96);}
+    .badge.ok{ background: var(--ok); color: #d7fff1; border-color: rgba(53,211,154,.35); }
+    .badge.bad{ background: var(--bad); color: #ffe1e1; border-color: rgba(255,77,77,.35); }
+    .badge.na{ background: rgba(255,255,255,.08); color: rgba(255,255,255,.72); }
 
-    .hint{
-      margin-top: 10px;
-      color: var(--muted);
+    .kv{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 10px;
       font-size: 12px;
-      line-height: 1.35;
+      color: rgba(255,255,255,.86);
     }
-
-    .tiny{
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 8px;
-    }
-
-    /* --- “Fractions” like in CodePen (no external libs) --- */
-    .eq{
+    .kv div{
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      min-height: 36px;
       display:flex;
       align-items:center;
-      gap: 8px;
-      flex-wrap: wrap;
-      font-size: 15px;
-      color: rgba(255,255,255,.92);
+      justify-content:space-between;
+      gap:10px;
     }
-    .sym{font-family: var(--mono); opacity:.95;}
-    .frac{
-      display:inline-grid;
-      grid-template-rows:auto auto;
-      align-items:center;
-      justify-items:center;
-      line-height:1.05;
-      transform: translateY(-1px);
-      font-family: var(--mono);
-      padding: 0 4px;
-    }
-    .frac .top{padding: 0 6px;}
-    .frac .bar{
-      width:100%;
-      height: 1px;
-      background: rgba(255,255,255,.70);
-      margin: 2px 0 2px;
-    }
-    .frac .bot{padding: 0 6px;}
-    .eqSmall{
-      margin-top: 6px;
-      color: rgba(255,255,255,.78);
+    .kv span{ color: rgba(255,255,255,.72); }
+
+    .formula{
+      background: rgba(0,0,0,.14);
+      border: 1px dashed rgba(255,255,255,.16);
+      border-radius: var(--radius2);
+      padding: 10px 12px;
+      color: rgba(255,255,255,.90);
       font-size: 13px;
+      overflow:auto;
     }
 
-    .sep{height:10px;}
+    details{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.10);
+      padding: 8px 10px;
+    }
+    summary{
+      cursor:pointer;
+      color: rgba(255,255,255,.86);
+      font-size: 12px;
+      user-select:none;
+    }
+    .miniTable{
+      width:100%;
+      border-collapse:collapse;
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+      overflow:hidden;
+      border-radius: 12px;
+    }
+    .miniTable th, .miniTable td{
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      padding: 8px 10px;
+      text-align:left;
+    }
+    .miniTable th{
+      color: rgba(255,255,255,.88);
+      background: rgba(255,255,255,.06);
+      font-weight: 700;
+    }
+
+    .hint{
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      line-height: 1.35;
+      margin-top: -6px;
+    }
+
+    .dangerText{ color: #ffd0d0; }
+    .okText{ color: #d7fff1; }
+    .muted{ color: rgba(255,255,255,.72); }
+
+    .footerNote{
+      margin-top: 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,.70);
+      text-shadow: 0 8px 18px rgba(0,0,0,.25);
+    }
   </style>
 </head>
 
 <body>
+  <div class="bg"></div>
+
   <div class="wrap">
-    <h1 class="title">СПУ-52-3 — калькулятор передаточных чисел</h1>
-    <p class="sub">
-      Вводишь значения — расчёт обновляется сразу. Норма:
-      по давлению <b>0.32 ± 0.06</b> (диапазон <b>0.26…0.38</b>),
-      по температуре <b>0.85 ± 0.17</b> (диапазон <b>0.68…1.02</b>).
-    </p>
-
-    <div class="grid">
-
-      <!-- PRESSURE -->
-      <section class="card" id="cardP">
-        <h2>Давление (по высоте)</h2>
-
-        <div class="row">
-          <div>
-            <label for="p1000">P(1000), мм рт.ст.</label>
-            <input id="p1000" inputmode="decimal" placeholder="например 674.115" />
-          </div>
-          <div>
-            <label for="h">H, м</label>
-            <input id="h" inputmode="decimal" placeholder="например 2430" />
-          </div>
+    <header>
+      <div class="title">
+        <h1>СПУ-52-3 — расчёт передаточных чисел</h1>
+        <div class="subtitle">
+          Калькулятор под требования технологической карты: давление (по гипсометрии) и температура (по таблице \(R(\Omega)\rightarrow T(^{\circ}C)\)).
+          Расчёт выполняется <b>автоматически при вводе</b>.
         </div>
+      </div>
 
-        <div class="formulaBox">
-          <div class="eq">
-            <span class="sym">ΔPтаб</span>
-            <span class="sym">=</span>
-            <span class="sym">Pтаб(1000)</span>
-            <span class="sym">−</span>
-            <span class="sym">Pтаб(H)</span>
-            <span class="sym">,&nbsp;&nbsp;</span>
-            <span class="sym">iₚ</span>
-            <span class="sym">=</span>
-            <span class="frac">
-              <span class="top">33.3</span>
-              <span class="bar"></span>
-              <span class="bot">ΔPтаб</span>
-            </span>
-          </div>
-          <div class="eqSmall">
-            Дополнительно: <span class="sym">P(H) = P(1000) − ΔPтаб</span>
-          </div>
-        </div>
+      <div class="topbar">
+        <div class="chip">Округление: <b id="roundChip">3</b> знака</div>
+        <div class="chip">Норма по \(i_P\): <b>0.26…0.38</b></div>
+        <div class="chip">Норма по \(i_T\): <b>0.68…1.02</b></div>
+      </div>
+    </header>
 
-        <div class="kvs">
-          <div class="kv">
-            <div class="k">Pтаб(1000), мм рт.ст.</div>
-            <div class="v" id="ptab1000">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">Pтаб(H), мм рт.ст.</div>
-            <div class="v" id="ptabh">—</div>
-          </div>
-
-          <div class="kv">
-            <div class="k">ΔPтаб, мм рт.ст.</div>
-            <div class="v" id="dptab">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">P(H), мм рт.ст.</div>
-            <div class="v" id="ph">—</div>
-          </div>
-
-          <div class="kv" style="grid-column:1/-1">
-            <div class="k">iₚ</div>
-            <div class="v" id="ip">—</div>
-          </div>
-        </div>
-
-        <div class="badge" id="badgeP">—</div>
-        <div class="tiny">Подсветка: зелёный — в норме, красный — вне допуска.</div>
-      </section>
+    <section class="grid">
 
       <!-- TEMPERATURE -->
-      <section class="card" id="cardT">
-        <h2>Температура (R → T → ΔT → iT)</h2>
-
-        <div class="row">
-          <div>
-            <label for="r1">R1, Ом</label>
-            <input id="r1" inputmode="decimal" placeholder="например 92.6" />
-          </div>
-          <div>
-            <label for="r2">R2, Ом</label>
-            <input id="r2" inputmode="decimal" placeholder="например 105" />
-          </div>
+      <div class="card" id="tempCard">
+        <div class="cardHead">
+          <h2>Температура</h2>
+          <div class="normLine">Норма: \(i_T = 0.85 \pm 0.17\)</div>
         </div>
 
-        <div class="formulaBox">
-          <div class="eq">
-            <span class="sym">T = f(R)</span>
-            <span class="sym">,&nbsp;&nbsp;</span>
-            <span class="sym">ΔT = T − 7</span>
-            <span class="sym">,&nbsp;&nbsp;</span>
-            <span class="sym">iT</span>
-            <span class="sym">=</span>
-            <span class="frac">
-              <span class="top">33.3</span>
-              <span class="bar"></span>
-              <span class="bot">|ΔT|</span>
-            </span>
+        <div class="cardBody">
+          <div class="row2">
+            <div>
+              <label for="r1">R1 (ом)</label>
+              <div class="field">
+                <input id="r1" inputmode="decimal" placeholder="например 110" autocomplete="off" />
+                <div class="unit">Ω</div>
+              </div>
+            </div>
+            <div>
+              <label for="r2">R2 (ом)</label>
+              <div class="field">
+                <input id="r2" inputmode="decimal" placeholder="например 82" autocomplete="off" />
+                <div class="unit">Ω</div>
+              </div>
+            </div>
           </div>
-          <div class="eqSmall">
-            Важно: берём <b>|ΔT|</b>, поэтому iT всегда положительное.
+
+          <div class="hint">
+            Таблица берётся из документа (фото): интерполяция линейная. Далее \(\Delta T = |T - 7|\), поэтому \(i_T\) всегда положительный.
+          </div>
+
+          <div class="resultBox">
+            <div class="big">
+              <div class="value"><span id="itOut">—</span> <small>\(i_T\)</small></div>
+              <div class="badge na" id="itBadge">—</div>
+            </div>
+
+            <div class="kv">
+              <div><span>T1 по таблице</span><b id="t1Out">—</b></div>
+              <div><span>T2 по таблице</span><b id="t2Out">—</b></div>
+              <div><span>\(\Delta T_1 = |T_1 - 7|\)</span><b id="dt1Out">—</b></div>
+              <div><span>\(\Delta T_2 = |T_2 - 7|\)</span><b id="dt2Out">—</b></div>
+            </div>
+
+            <div class="formula" id="tempFormula">
+              \(\displaystyle
+                T=f(R),\quad \Delta T = |T-7|,\quad i_T=\frac{33.3}{\Delta T}
+              \)
+            </div>
+
+            <details>
+              <summary>Показать таблицу \(R(\Omega)\rightarrow T(^{\circ}C)\)</summary>
+              <table class="miniTable" id="tempTable"></table>
+            </details>
           </div>
         </div>
+      </div>
 
-        <div class="kvs">
-          <div class="kv">
-            <div class="k">T1, °C</div>
-            <div class="v" id="t1">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">T2, °C</div>
-            <div class="v" id="t2">—</div>
-          </div>
-
-          <div class="kv">
-            <div class="k">ΔT1 = T1 − 7</div>
-            <div class="v" id="dt1">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">ΔT2 = T2 − 7</div>
-            <div class="v" id="dt2">—</div>
-          </div>
-
-          <div class="kv">
-            <div class="k">iT1</div>
-            <div class="v" id="it1">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">iT2</div>
-            <div class="v" id="it2">—</div>
-          </div>
-
-          <div class="kv" style="grid-column:1/-1">
-            <div class="k">iT (контроль по двум точкам): если введены оба — показываем худший (вне допуска)</div>
-            <div class="v" id="itFinal">—</div>
-          </div>
+      <!-- PRESSURE -->
+      <div class="card" id="pressCard">
+        <div class="cardHead">
+          <h2>Давление (по высоте)</h2>
+          <div class="normLine">Норма: \(i_P = 0.32 \pm 0.06\)</div>
         </div>
 
-        <div class="badge" id="badgeT">—</div>
-        <div class="tiny">Таблица R(Ω)↔T(°C) встроена в файл (как на твоём фото).</div>
-      </section>
+        <div class="cardBody">
+          <div class="row2">
+            <div>
+              <label for="p1000">P(1000) по прибору (мм рт.ст.)</label>
+              <div class="field">
+                <input id="p1000" inputmode="decimal" placeholder="например 674.115" autocomplete="off" />
+                <div class="unit">mmHg</div>
+              </div>
+            </div>
+            <div>
+              <label for="h">H (м, промежуточная отметка)</label>
+              <div class="field">
+                <input id="h" inputmode="decimal" placeholder="например 2430" autocomplete="off" />
+                <div class="unit">m</div>
+              </div>
+            </div>
+          </div>
 
+          <div class="hint">
+            Используем гипсометрическую таблицу: берём \(P_{таб}(1000)\) и \(P_{таб}(H)\) (с интерполяцией).<br/>
+            \(\Delta P_{таб}=P_{таб}(1000)-P_{таб}(H)\), затем \(i_P=\dfrac{33.3}{\Delta P_{таб}}\).
+          </div>
+
+          <div class="resultBox">
+            <div class="big">
+              <div class="value"><span id="ipOut">—</span> <small>\(i_P\)</small></div>
+              <div class="badge na" id="ipBadge">—</div>
+            </div>
+
+            <div class="kv">
+              <div><span>\(P_{таб}(1000)\)</span><b id="pt1000Out">—</b></div>
+              <div><span>\(P_{таб}(H)\)</span><b id="pthOut">—</b></div>
+              <div><span>\(\Delta P_{таб}\)</span><b id="dpOut">—</b></div>
+              <div><span>\(P(H)\) (по прибору)</span><b id="pHOut">—</b></div>
+            </div>
+
+            <div class="formula" id="pressFormula">
+              \(\displaystyle
+                \Delta P_{таб}=P_{таб}(1000)-P_{таб}(H),\quad
+                P(H)=P(1000)-\Delta P_{таб},\quad
+                i_P=\frac{33.3}{\Delta P_{таб}}
+              \)
+            </div>
+
+            <details>
+              <summary>Показать таблицу гипсометрии (фрагмент)</summary>
+              <div class="muted" style="font-size:12px;margin-top:8px;">
+                Встроен диапазон 0…3000 м (как ты прислал). Если у тебя есть полный набор — скажи, добавлю до нужной высоты.
+              </div>
+              <table class="miniTable" id="pressTable"></table>
+            </details>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="footerNote">
+      Подсветка: зелёный — в норме, красный — вне допуска. Если какое-то поле пустое/некорректное — результат “—”.
     </div>
   </div>
 
   <script>
-    // -------- Helpers --------
+    // ====== НОРМЫ ======
+    const NORM_IP = { min: 0.26, max: 0.38, nominal: 0.32, tol: 0.06 };
+    const NORM_IT = { min: 0.68, max: 1.02, nominal: 0.85, tol: 0.17 };
+
+    // ====== ОКРУГЛЕНИЕ ======
+    const ROUND = 3;
+    document.getElementById('roundChip').textContent = String(ROUND);
+
+    // ====== ДАННЫЕ: гипсометрия (как прислал) ======
+    // ВАЖНО: точку/запятую в данных держим как числа JS.
+    const PRESS_TAB = [
+      { H:   0, P: 760.000 },
+      { H:  20, P: 758.200 },
+      { H:  40, P: 756.403 },
+      { H:  60, P: 754.609 },
+      { H: 100, P: 751.033 },
+      { H: 200, P: 742.151 },
+      { H: 300, P: 733.355 },
+      { H: 400, P: 724.643 },
+      { H: 500, P: 716.015 },
+      { H: 600, P: 707.471 },
+      { H: 700, P: 699.009 },
+      { H: 800, P: 690.630 },
+      { H: 900, P: 682.332 },
+      { H:1000, P: 674.115 },
+      { H:1100, P: 665.978 },
+      { H:1200, P: 657.921 },
+      { H:1300, P: 649.943 },
+      { H:1400, P: 642.044 },
+      { H:1500, P: 634.222 },
+      { H:1600, P: 626.478 },
+      { H:1700, P: 618.811 },
+      { H:1800, P: 611.219 },
+      { H:1900, P: 603.704 },
+      { H:2000, P: 596.263 },
+      { H:2100, P: 588.897 },
+      { H:2200, P: 581.605 },
+      { H:2300, P: 574.385 },
+      { H:2400, P: 567.239 },
+      { H:2500, P: 560.165 },
+      { H:2600, P: 553.162 },
+      { H:2700, P: 546.231 },
+      { H:2800, P: 539.370 },
+      { H:2900, P: 532.579 },
+      { H:3000, P: 525.857 }
+    ].sort((a,b)=>a.H-b.H);
+
+    // ====== ДАННЫЕ: температура R(Ω) -> T(°C) (из твоего фото) ======
+    // ВНИМАНИЕ: это именно R->T, поэтому таблица отсортирована по R и интерполяция идёт по R.
+    const RT_TAB = [
+      { T:-40, R:  76.86 },
+      { T:-30, R:  79.96 },
+      { T:-20, R:  83.16 },
+      { T:-10, R:  86.56 },
+      { T:  0, R:  90.26 },
+      { T: 10, R:  93.76 },
+      { T: 20, R:  97.36 },
+      { T: 30, R: 101.06 },
+      { T: 40, R: 104.86 },
+      { T: 50, R: 108.81 },
+      { T: 60, R: 112.78 },
+      { T: 70, R: 116.96 },
+      { T: 80, R: 121.22 },
+      { T: 90, R: 125.56 },
+      { T:110, R: 134.41 },
+      { T:120, R: 138.96 },
+      { T:130, R: 143.56 }
+    ].sort((a,b)=>a.R-b.R);
+
+    // ====== УТИЛИТЫ ======
     const $ = (id)=>document.getElementById(id);
 
-    function parseNum(x){
-      if (x == null) return NaN;
-      const s = String(x).trim().replace(',', '.');
-      if (!s) return NaN;
-      return Number(s);
+    function toNumberLoose(s){
+      if (s == null) return NaN;
+      // допускаем запятую как десятичный разделитель
+      const v = String(s).trim().replace(/\s+/g,'').replace(',', '.');
+      if (!v) return NaN;
+      return Number(v);
     }
 
-    function fmt(n, digits=3){
-      if (!isFinite(n)) return "—";
-      return n.toFixed(digits);
+    function fmt(x, digits=ROUND){
+      if (!isFinite(x)) return '—';
+      return x.toFixed(digits);
     }
 
-    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+    function clamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
 
-    // -------- Data: Pressure table (H[m] -> Ptab[mmHg]) from your list --------
-    // NOTE: keep decimals with dot in code; user may input with comma – parseNum handles it.
-    const P_TAB = [
-      {H:0,    P:760.000},
-      {H:20,   P:758.200},
-      {H:40,   P:756.403},
-      {H:60,   P:754.609},
-      {H:100,  P:751.033},
-      {H:200,  P:742.151},
-      {H:300,  P:733.355},
-      {H:400,  P:724.643},
-      {H:500,  P:716.015},
-      {H:600,  P:707.471},
-      {H:700,  P:699.009},
-      {H:800,  P:690.630},
-      {H:900,  P:682.332},
-      {H:1000, P:674.115},
-      {H:1100, P:665.978},
-      {H:1200, P:657.921},
-      {H:1300, P:649.943},
-      {H:1400, P:642.044},
-      {H:1500, P:634.222},
-      {H:1600, P:626.478},
-      {H:1700, P:618.811},
-      {H:1800, P:611.219},
-      {H:1900, P:603.704},
-      {H:2000, P:596.263},
-      {H:2100, P:588.897},
-      {H:2200, P:581.605},
-      {H:2300, P:574.385},
-      {H:2400, P:567.239},
-      {H:2500, P:560.165},
-      {H:2600, P:553.162},
-      {H:2700, P:546.231},
-      {H:2800, P:539.370},
-      {H:2900, P:532.579},
-      {H:3000, P:525.857},
-    ];
-
-    // -------- Data: Temperature table from your photo --------
-    // (There was a duplicated "+50" line in the photo; it is actually +60 for R=112.78)
-    const RT_TAB = [
-      {T:-40, R:76.86},
-      {T:-30, R:79.96},
-      {T:-20, R:83.16},
-      {T:-10, R:86.56},
-      {T:  0, R:90.26},
-      {T: 10, R:93.76},
-      {T: 20, R:97.36},
-      {T: 30, R:101.06},
-      {T: 40, R:104.86},
-      {T: 50, R:108.81},
-      {T: 60, R:112.78},
-      {T: 70, R:116.96},
-      {T: 80, R:121.22},
-      {T: 90, R:125.56},
-      {T:110, R:134.41},
-      {T:120, R:138.96},
-      {T:130, R:143.56},
-    ];
-
-    // -------- Interpolation helpers --------
+    // Линейная интерполяция Y по X: table отсортирована по xKey
     function interpByX(table, xKey, yKey, x){
-      // table sorted by xKey ascending
       if (!isFinite(x)) return NaN;
       const n = table.length;
+      if (n < 2) return NaN;
+
       if (x <= table[0][xKey]) return table[0][yKey];
       if (x >= table[n-1][xKey]) return table[n-1][yKey];
 
-      for (let i=0; i<n-1; i++){
-        const x1 = table[i][xKey], x2 = table[i+1][xKey];
-        if (x >= x1 && x <= x2){
-          const y1 = table[i][yKey], y2 = table[i+1][yKey];
-          const t = (x - x1) / (x2 - x1);
-          return y1 + (y2 - y1) * t;
-        }
+      // бинарный поиск
+      let lo = 0, hi = n - 1;
+      while (hi - lo > 1){
+        const mid = (lo + hi) >> 1;
+        if (table[mid][xKey] <= x) lo = mid;
+        else hi = mid;
       }
-      return NaN;
+      const x1 = table[lo][xKey], y1 = table[lo][yKey];
+      const x2 = table[hi][xKey], y2 = table[hi][yKey];
+      const t = (x - x1) / (x2 - x1);
+      return y1 + t * (y2 - y1);
     }
 
-    function TfromR(R){
-      // RT_TAB is monotonic increasing in R
-      if (!isFinite(R)) return NaN;
-      // Build a view sorted by R
-      const tab = RT_TAB.slice().sort((a,b)=>a.R-b.R);
-      if (R <= tab[0].R) return tab[0].T;
-      if (R >= tab[tab.length-1].R) return tab[tab.length-1].T;
-
-      for (let i=0; i<tab.length-1; i++){
-        const r1 = tab[i].R, r2 = tab[i+1].R;
-        if (R >= r1 && R <= r2){
-          const t1 = tab[i].T, t2 = tab[i+1].T;
-          const k = (R - r1) / (r2 - r1);
-          return t1 + (t2 - t1) * k;
-        }
-      }
-      return NaN;
-    }
-
-    // -------- Limits (from your regulation screenshots) --------
-    const P_NORM = {center:0.32, tol:0.06}; // 0.26..0.38
-    const T_NORM = {center:0.85, tol:0.17}; // 0.68..1.02
-
-    function inRange(v, center, tol){
-      if (!isFinite(v)) return null;
-      return (v >= (center - tol) && v <= (center + tol));
-    }
-
-    // -------- Calculations --------
-    function calcPressure(){
-      const P1000 = parseNum($("p1000").value);
-      const H = parseNum($("h").value);
-
-      const ptab1000 = interpByX(P_TAB, "H", "P", 1000);
-      const ptabH = interpByX(P_TAB, "H", "P", H);
-
-      $("ptab1000").textContent = fmt(ptab1000, 3);
-      $("ptabh").textContent = fmt(ptabH, 3);
-
-      const dPtab = (isFinite(ptab1000) && isFinite(ptabH)) ? (ptab1000 - ptabH) : NaN;
-      $("dptab").textContent = fmt(dPtab, 3);
-
-      const PH = (isFinite(P1000) && isFinite(dPtab)) ? (P1000 - dPtab) : NaN;
-      $("ph").textContent = fmt(PH, 3);
-
-      const ip = (isFinite(dPtab) && dPtab !== 0) ? (33.3 / dPtab) : NaN;
-      $("ip").textContent = fmt(ip, 3);
-
-      const ok = inRange(ip, P_NORM.center, P_NORM.tol);
-      const badge = $("badgeP");
-      if (ok === null){
-        badge.className = "badge";
-        badge.textContent = "—";
-      } else if (ok){
-        badge.className = "badge good";
-        badge.textContent = "НОРМА";
+    function setBadge(badgeEl, status){
+      badgeEl.classList.remove('ok','bad','na');
+      if (status === 'OK'){
+        badgeEl.classList.add('ok');
+        badgeEl.textContent = 'НОРМА';
+      } else if (status === 'BAD'){
+        badgeEl.classList.add('bad');
+        badgeEl.textContent = 'НЕ НОРМА';
       } else {
-        badge.className = "badge bad";
-        badge.textContent = "НЕ НОРМА";
+        badgeEl.classList.add('na');
+        badgeEl.textContent = '—';
       }
     }
 
-    function calcTempOne(R){
-      const T = TfromR(R);
-      const dT = isFinite(T) ? (T - 7) : NaN;
-      const it = (isFinite(dT) && dT !== 0) ? (33.3 / Math.abs(dT)) : NaN; // always positive
-      return {T, dT, it};
+    function inRange(x, min, max){
+      return isFinite(x) && x >= min && x <= max;
     }
 
-    function calcTemperature(){
-      const R1 = parseNum($("r1").value);
-      const R2 = parseNum($("r2").value);
+    // ====== РЕНДЕР ТАБЛИЦ ======
+    function renderTempTable(){
+      const t = $('tempTable');
+      const rows = RT_TAB.slice().sort((a,b)=>a.T-b.T);
+      t.innerHTML = `
+        <thead><tr><th>T, °C</th><th>R, Ω</th></tr></thead>
+        <tbody>
+          ${rows.map(r=>`<tr><td>${r.T}</td><td>${fmt(r.R,2)}</td></tr>`).join('')}
+        </tbody>
+      `;
+    }
 
-      const a = calcTempOne(R1);
-      const b = calcTempOne(R2);
+    function renderPressTable(){
+      const t = $('pressTable');
+      t.innerHTML = `
+        <thead><tr><th>H, м</th><th>P, мм рт.ст.</th></tr></thead>
+        <tbody>
+          ${PRESS_TAB.map(r=>`<tr><td>${r.H}</td><td>${fmt(r.P,3)}</td></tr>`).join('')}
+        </tbody>
+      `;
+    }
 
-      $("t1").textContent = fmt(a.T, 2);
-      $("t2").textContent = fmt(b.T, 2);
-      $("dt1").textContent = fmt(a.dT, 2);
-      $("dt2").textContent = fmt(b.dT, 2);
-      $("it1").textContent = fmt(a.it, 3);
-      $("it2").textContent = fmt(b.it, 3);
+    // ====== РАСЧЁТ ТЕМПЕРАТУРЫ ======
+    function calcTemp(){
+      const r1 = toNumberLoose($('r1').value);
+      const r2 = toNumberLoose($('r2').value);
 
-      // Final decision:
-      // - if both present: show the one that is OUT of range (worst case),
-      //   else show the one that is present.
-      let itFinal = NaN;
+      // считаем T по R (правильное направление!)
+      const t1 = interpByX(RT_TAB, 'R', 'T', r1);
+      const t2 = interpByX(RT_TAB, 'R', 'T', r2);
 
-      const aOk = inRange(a.it, T_NORM.center, T_NORM.tol);
-      const bOk = inRange(b.it, T_NORM.center, T_NORM.tol);
+      $('t1Out').textContent = isFinite(t1) ? `${fmt(t1,2)} °C` : '—';
+      $('t2Out').textContent = isFinite(t2) ? `${fmt(t2,2)} °C` : '—';
 
-      const aHas = isFinite(a.it);
-      const bHas = isFinite(b.it);
+      // ΔT = |T - 7| (требование: iT должен быть положительным)
+      const dt1 = isFinite(t1) ? Math.abs(t1 - 7) : NaN;
+      const dt2 = isFinite(t2) ? Math.abs(t2 - 7) : NaN;
 
-      if (aHas && bHas){
-        // prefer out-of-range value if any; else show average (optional)
-        if (aOk === false && bOk !== false) itFinal = a.it;
-        else if (bOk === false && aOk !== false) itFinal = b.it;
-        else itFinal = (a.it + b.it) / 2; // both OK or both not OK -> average for display
-      } else if (aHas){
-        itFinal = a.it;
-      } else if (bHas){
-        itFinal = b.it;
+      $('dt1Out').textContent = isFinite(dt1) ? fmt(dt1,2) : '—';
+      $('dt2Out').textContent = isFinite(dt2) ? fmt(dt2,2) : '—';
+
+      // iT показываем “для введённой отметки”:
+      // если введено одно значение — считаем по нему; если оба — показываем для R2 (как чаще делают на практике),
+      // но можно легко поменять на среднее/первое.
+      let it = NaN;
+      let pick = null;
+      if (isFinite(r2)) pick = { t:t2, dt:dt2 };
+      else if (isFinite(r1)) pick = { t:t1, dt:dt1 };
+
+      if (pick && isFinite(pick.dt) && pick.dt > 0){
+        it = 33.3 / pick.dt;
       }
 
-      $("itFinal").textContent = fmt(itFinal, 3);
+      $('itOut').textContent = isFinite(it) ? fmt(it,3) : '—';
 
-      const ok = inRange(itFinal, T_NORM.center, T_NORM.tol);
-      const badge = $("badgeT");
-      if (ok === null){
-        badge.className = "badge";
-        badge.textContent = "—";
-      } else if (ok){
-        badge.className = "badge good";
-        badge.textContent = "НОРМА";
+      if (isFinite(it)){
+        setBadge($('itBadge'), inRange(it, NORM_IT.min, NORM_IT.max) ? 'OK' : 'BAD');
       } else {
-        badge.className = "badge bad";
-        badge.textContent = "НЕ НОРМА";
+        setBadge($('itBadge'), 'NA');
       }
+
+      // обновляем формулу (MathJax перерисует)
+      // Покажем, что именно подставлено.
+      const showT = pick && isFinite(pick.t) ? fmt(pick.t,2) : '—';
+      const showDT = pick && isFinite(pick.dt) ? fmt(pick.dt,2) : '—';
+      const which = isFinite(r2) ? '2' : (isFinite(r1) ? '1' : '—');
+
+      $('tempFormula').innerHTML =
+        `\\(\\displaystyle
+          T_${which}=f(R_${which}),\\quad
+          \\Delta T_${which}=|T_${which}-7|,\\quad
+          i_T=\\frac{33.3}{\\Delta T_${which}}
+        \\) <br/>
+         <span class="muted">Подстановка:</span>
+         \\(\\displaystyle T_${which}=${showT}^{\\circ}C,\\; \\Delta T_${which}=${showDT}\\Rightarrow i_T=${isFinite(it)?fmt(it,3):'—'}\\)`;
+
+      if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise();
     }
 
-    function recalcAll(){
-      calcPressure();
-      calcTemperature();
+    // ====== РАСЧЁТ ДАВЛЕНИЯ ======
+    function calcPress(){
+      const p1000 = toNumberLoose($('p1000').value);
+      const h = toNumberLoose($('h').value);
+
+      const ptab1000 = interpByX(PRESS_TAB, 'H', 'P', 1000);
+      const ptabH = interpByX(PRESS_TAB, 'H', 'P', h);
+
+      $('pt1000Out').textContent = isFinite(ptab1000) ? fmt(ptab1000,3) : '—';
+      $('pthOut').textContent = isFinite(ptabH) ? fmt(ptabH,3) : '—';
+
+      // ΔPтаб = Pтаб(1000) - Pтаб(H)
+      const dp = (isFinite(ptab1000) && isFinite(ptabH)) ? (ptab1000 - ptabH) : NaN;
+      $('dpOut').textContent = isFinite(dp) ? `${fmt(dp,3)} мм` : '—';
+
+      // P(H) по прибору = P(1000) - ΔPтаб (как в твоих формулах)
+      const pH = (isFinite(p1000) && isFinite(dp)) ? (p1000 - dp) : NaN;
+      $('pHOut').textContent = isFinite(pH) ? fmt(pH,3) : '—';
+
+      // iP = 33.3 / ΔPтаб
+      const ip = (isFinite(dp) && dp !== 0) ? (33.3 / dp) : NaN;
+      $('ipOut').textContent = isFinite(ip) ? fmt(ip,3) : '—';
+
+      if (isFinite(ip)){
+        setBadge($('ipBadge'), inRange(ip, NORM_IP.min, NORM_IP.max) ? 'OK' : 'BAD');
+      } else {
+        setBadge($('ipBadge'), 'NA');
+      }
+
+      $('pressFormula').innerHTML =
+        `\\(\\displaystyle
+          \\Delta P_{таб}=P_{таб}(1000)-P_{таб}(H),\\quad
+          P(H)=P(1000)-\\Delta P_{таб},\\quad
+          i_P=\\frac{33.3}{\\Delta P_{таб}}
+        \\) <br/>
+        <span class="muted">Подстановка:</span>
+        \\(\\displaystyle
+          P_{таб}(1000)=${isFinite(ptab1000)?fmt(ptab1000,3):'—'},\\;
+          P_{таб}(H)=${isFinite(ptabH)?fmt(ptabH,3):'—'},\\;
+          \\Delta P_{таб}=${isFinite(dp)?fmt(dp,3):'—'}\\Rightarrow i_P=${isFinite(ip)?fmt(ip,3):'—'}
+        \\)`;
+
+      if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise();
     }
 
-    // -------- Live update on input --------
-    ["p1000","h","r1","r2"].forEach(id=>{
-      $(id).addEventListener("input", recalcAll);
-      $(id).addEventListener("change", recalcAll);
+    // ====== АВТО-ОБНОВЛЕНИЕ (debounce) ======
+    function debounce(fn, ms){
+      let t;
+      return (...args)=>{
+        clearTimeout(t);
+        t = setTimeout(()=>fn(...args), ms);
+      };
+    }
+
+    const updateAll = debounce(()=>{
+      calcTemp();
+      calcPress();
+    }, 60);
+
+    ['r1','r2','p1000','h'].forEach(id=>{
+      $(id).addEventListener('input', updateAll);
+      $(id).addEventListener('change', updateAll);
     });
 
-    // sensible defaults (optional – remove if you don’t want)
-    // $("p1000").value = "674.115";
-    // $("h").value = "2430";
-
-    recalcAll();
+    // init
+    renderTempTable();
+    renderPressTable();
+    calcTemp();
+    calcPress();
+    if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise();
   </script>
 </body>
 </html>
