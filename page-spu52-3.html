@@ -2,689 +2,631 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>СПУ-52-3 — Передаточные числа</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>СПУ-52-3 — калькулятор передаточных чисел</title>
+
   <style>
     :root{
-      --ua-blue:#1a5fff;
-      --ua-yellow:#ffd500;
-
-      --card: rgba(10, 16, 32, .42);
-      --card2: rgba(10, 16, 32, .30);
-      --stroke: rgba(255,255,255,.14);
-
-      --text: rgba(255,255,255,.94);
+      --bg1:#1b66d4;  /* blue */
+      --bg2:#f3c300;  /* yellow */
+      --card: rgba(255,255,255,.10);
+      --card2: rgba(0,0,0,.18);
+      --stroke: rgba(255,255,255,.18);
+      --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.72);
-
-      --ok: #22c55e;
-      --bad:#ef4444;
-
+      --good: rgba(35, 192, 104, .95);
+      --bad: rgba(255, 74, 74, .95);
+      --shadow: 0 18px 45px rgba(0,0,0,.35);
       --r: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --ui: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    *{ box-sizing:border-box; }
+    /* --- Background: correct UA flag (blue top, yellow bottom) + “3D” texture --- */
+    html,body{height:100%;}
     body{
       margin:0;
-      min-height:100vh;
-      font-family: var(--sans);
-      color: var(--text);
+      font-family:var(--ui);
+      color:var(--text);
+      overflow-x:hidden;
       background:
-        radial-gradient(1200px 700px at 18% 8%, rgba(255,255,255,.18), transparent 60%),
-        radial-gradient(900px 600px at 82% 14%, rgba(0,0,0,.26), transparent 58%),
-        linear-gradient(180deg, var(--ua-blue) 0%, var(--ua-blue) 49%, var(--ua-yellow) 51%, var(--ua-yellow) 100%);
-      padding: 22px 14px 36px;
+        radial-gradient(1200px 700px at 20% 10%, rgba(255,255,255,.25), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(0,0,0,.22), transparent 55%),
+        linear-gradient(to bottom, var(--bg1) 0 50%, var(--bg2) 50% 100%);
+    }
+    /* subtle fabric/noise + diagonal sheen */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background:
+        repeating-linear-gradient(135deg,
+          rgba(255,255,255,.06) 0 6px,
+          rgba(0,0,0,.03) 6px 12px
+        );
+      opacity:.22;
+      mix-blend-mode:overlay;
+    }
+    body::after{
+      content:"";
+      position:fixed; inset:-30%;
+      pointer-events:none;
+      background: radial-gradient(circle at 30% 40%, rgba(255,255,255,.18), transparent 45%),
+                  radial-gradient(circle at 70% 60%, rgba(255,255,255,.14), transparent 48%);
+      transform: rotate(-8deg);
+      opacity:.55;
     }
 
     .wrap{
-      max-width: 1120px;
+      position:relative;
+      max-width: 1100px;
       margin: 0 auto;
+      padding: 36px 16px 42px;
     }
 
-    header{
-      display:flex;
-      gap:12px;
-      align-items:flex-end;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
-    }
-
-    h1{
-      margin:0;
-      font-weight:800;
-      letter-spacing:.2px;
+    .title{
+      font-weight: 800;
+      letter-spacing: .2px;
       font-size: clamp(22px, 3.2vw, 34px);
-      line-height:1.05;
-      text-shadow: 0 10px 30px rgba(0,0,0,.25);
+      margin: 0 0 14px;
+      text-shadow: 0 3px 18px rgba(0,0,0,.35);
     }
-
     .sub{
-      margin:6px 0 0;
+      margin: 0 0 22px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
+      line-height: 1.35;
+      max-width: 60ch;
     }
 
     .grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 960px){
+      .grid{grid-template-columns:1fr;}
+      .sub{max-width: 80ch;}
     }
 
     .card{
-      background: var(--card);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.14));
       border: 1px solid var(--stroke);
       border-radius: var(--r);
-      box-shadow: 0 24px 60px rgba(0,0,0,.28);
-      overflow:hidden;
-    }
-
-    .card .head{
-      padding: 14px 16px 10px;
-      background: linear-gradient(180deg, rgba(255,255,255,.07), transparent);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-
-    .titleRow{
-      display:flex;
-      gap:10px;
-      align-items:baseline;
-      justify-content:space-between;
-      flex-wrap:wrap;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      padding: 16px 16px 14px;
     }
 
     .card h2{
-      margin:0;
+      margin: 0 0 10px;
       font-size: 16px;
-      letter-spacing:.2px;
-    }
-
-    .norm{
-      font-family: var(--mono);
-      font-size: 12.5px;
-      color: rgba(255,255,255,.80);
-      opacity:.95;
-      white-space:nowrap;
-    }
-
-    .body{
-      padding: 14px 16px 16px;
-      background: var(--card2);
+      letter-spacing: .2px;
     }
 
     .row{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 12px;
     }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
+    @media (max-width: 520px){
+      .row{grid-template-columns:1fr;}
     }
 
     label{
-      font-size: 12.5px;
-      color: rgba(255,255,255,.82);
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 6px;
     }
 
     input{
       width:100%;
-      padding: 12px 12px;
+      box-sizing:border-box;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
       background: rgba(0,0,0,.20);
-      color: #fff;
+      color: var(--text);
+      padding: 11px 12px;
       font-size: 16px;
       outline: none;
+      transition: border-color .15s ease, background .15s ease, transform .05s ease;
     }
-
-    input::placeholder{ color: rgba(255,255,255,.45); }
-
-    .resultBox{
-      margin-top: 10px;
-      padding: 14px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
+    input:focus{
+      border-color: rgba(255,255,255,.45);
       background: rgba(0,0,0,.26);
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 12px;
-      align-items:stretch;
     }
 
-    .big{
-      border-radius: 14px;
+    .formulaBox{
+      margin-top: 10px;
       padding: 12px 12px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      min-height: 88px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.16);
     }
 
-    .big .k{
+    .kvs{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 520px){
+      .kvs{grid-template-columns:1fr;}
+    }
+
+    .kv{
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.16);
+      border: 1px solid rgba(255,255,255,.12);
+      min-height: 58px;
+    }
+    .kv .k{
+      color: var(--muted);
       font-size: 12px;
-      color: rgba(255,255,255,.78);
       margin-bottom: 6px;
     }
-
-    .big .v{
+    .kv .v{
       font-family: var(--mono);
-      font-weight: 800;
-      font-size: clamp(22px, 3.0vw, 30px);
+      font-size: 18px;
       letter-spacing: .2px;
-      line-height:1.1;
-    }
-
-    .big .v small{
-      font-weight:700;
-      font-size: 65%;
-      opacity:.92;
-    }
-
-    .status{
-      border-radius: 14px;
-      padding: 12px 12px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      min-height: 88px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .badge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border-radius: 999px;
-      padding: 8px 10px;
+      margin-top: 10px;
+      border-radius: 14px;
+      padding: 12px 12px;
       font-weight: 800;
-      letter-spacing:.4px;
-      text-transform: uppercase;
-      font-size: 12px;
-      color:#fff;
-      width: fit-content;
+      text-align:center;
+      letter-spacing:.5px;
+      border: 1px solid rgba(255,255,255,.18);
+      user-select:none;
     }
-    .badge.ok{ background: rgba(34,197,94,.92); }
-    .badge.bad{ background: rgba(239,68,68,.92); }
-    .badge.off{ background: rgba(255,255,255,.14); color: rgba(255,255,255,.85); }
+    .badge.good{background: var(--good); color: rgba(0,0,0,.88);}
+    .badge.bad{background: var(--bad); color: rgba(255,255,255,.96);}
 
     .hint{
-      margin-top:10px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px dashed rgba(255,255,255,.18);
-      color: rgba(255,255,255,.78);
-      font-size: 12.5px;
-      line-height:1.35;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
     }
 
-    /* Простая “дробь” (без KaTeX) — всегда влезает */
-    .formula{
-      margin-top: 12px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.12);
+    .tiny{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* --- “Fractions” like in CodePen (no external libs) --- */
+    .eq{
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
       align-items:center;
-      justify-content:space-between;
-    }
-
-    .frac{
-      display:inline-flex;
-      flex-direction:column;
-      align-items:center;
-      line-height:1.05;
-      font-family: var(--mono);
-      font-weight: 800;
+      gap: 8px;
+      flex-wrap: wrap;
       font-size: 15px;
-      min-width: 130px;
+      color: rgba(255,255,255,.92);
     }
-    .frac .top{ padding: 0 6px 4px; }
-    .frac .bar{ height: 2px; width: 100%; background: rgba(255,255,255,.65); border-radius: 2px; }
-    .frac .bot{ padding: 4px 6px 0; }
-
-    .mono{
+    .sym{font-family: var(--mono); opacity:.95;}
+    .frac{
+      display:inline-grid;
+      grid-template-rows:auto auto;
+      align-items:center;
+      justify-items:center;
+      line-height:1.05;
+      transform: translateY(-1px);
       font-family: var(--mono);
-      font-size: 13px;
-      color: rgba(255,255,255,.86);
+      padding: 0 4px;
     }
-
-    .smallLine{
-      margin-top:8px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:space-between;
+    .frac .top{padding: 0 6px;}
+    .frac .bar{
+      width:100%;
+      height: 1px;
+      background: rgba(255,255,255,.70);
+      margin: 2px 0 2px;
+    }
+    .frac .bot{padding: 0 6px;}
+    .eqSmall{
+      margin-top: 6px;
       color: rgba(255,255,255,.78);
-      font-size: 12.5px;
+      font-size: 13px;
     }
 
-    .btnRow{
-      display:flex;
-      gap:10px;
-      margin-top:12px;
-      flex-wrap:wrap;
-    }
-    button{
-      cursor:pointer;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.18);
-      color:#fff;
-      padding: 11px 12px;
-      border-radius: 12px;
-      font-weight: 700;
-    }
-    button:hover{ background: rgba(0,0,0,.24); }
-
-    @media (max-width: 920px){
-      .grid{ grid-template-columns: 1fr; }
-      .resultBox{ grid-template-columns: 1fr; }
-      .row{ grid-template-columns: 1fr; }
-    }
+    .sep{height:10px;}
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <header>
-      <div>
-        <h1>СПУ-52-3 — передаточные числа</h1>
-        <p class="sub">Нулевые условия: 92.6 Ω = +7 °C; H=1000 м → 674.115 мм рт.ст.</p>
-      </div>
-    </header>
+    <h1 class="title">СПУ-52-3 — калькулятор передаточных чисел</h1>
+    <p class="sub">
+      Вводишь значения — расчёт обновляется сразу. Норма:
+      по давлению <b>0.32 ± 0.06</b> (диапазон <b>0.26…0.38</b>),
+      по температуре <b>0.85 ± 0.17</b> (диапазон <b>0.68…1.02</b>).
+    </p>
 
     <div class="grid">
 
-      <!-- Температура -->
-      <section class="card" aria-label="Температура">
-        <div class="head">
-          <div class="titleRow">
-            <h2>Температура</h2>
-            <div class="norm">Норма iT: 0.680 … 1.020</div>
+      <!-- PRESSURE -->
+      <section class="card" id="cardP">
+        <h2>Давление (по высоте)</h2>
+
+        <div class="row">
+          <div>
+            <label for="p1000">P(1000), мм рт.ст.</label>
+            <input id="p1000" inputmode="decimal" placeholder="например 674.115" />
+          </div>
+          <div>
+            <label for="h">H, м</label>
+            <input id="h" inputmode="decimal" placeholder="например 2430" />
           </div>
         </div>
 
-        <div class="body">
-          <div class="row">
-            <div class="field">
-              <label>R1, Ω (отметка 1)</label>
-              <input id="r1" inputmode="decimal" placeholder="например: 105" />
-            </div>
-            <div class="field">
-              <label>R2, Ω (отметка 2)</label>
-              <input id="r2" inputmode="decimal" placeholder="например: 82" />
-            </div>
+        <div class="formulaBox">
+          <div class="eq">
+            <span class="sym">ΔPтаб</span>
+            <span class="sym">=</span>
+            <span class="sym">Pтаб(1000)</span>
+            <span class="sym">−</span>
+            <span class="sym">Pтаб(H)</span>
+            <span class="sym">,&nbsp;&nbsp;</span>
+            <span class="sym">iₚ</span>
+            <span class="sym">=</span>
+            <span class="frac">
+              <span class="top">33.3</span>
+              <span class="bar"></span>
+              <span class="bot">ΔPтаб</span>
+            </span>
           </div>
-
-          <div class="resultBox">
-            <div class="big">
-              <div class="k">iT (для введённой отметки)</div>
-              <div class="v" id="it_big">—</div>
-            </div>
-
-            <div class="status">
-              <div class="k">Статус</div>
-              <div class="badge off" id="it_badge">—</div>
-              <div class="mono" id="it_detail">ΔT: —</div>
-            </div>
-          </div>
-
-          <div class="formula">
-            <div class="mono">Формула:</div>
-            <div class="frac" aria-label="iT=33.3/|ΔT|">
-              <div class="top">33.3</div>
-              <div class="bar"></div>
-              <div class="bot">|ΔT|</div>
-            </div>
-            <div class="mono">ΔT = T − 7</div>
-          </div>
-
-          <div class="smallLine">
-            <div class="mono" id="t_line">T: —</div>
-            <div class="mono" id="rt_line">R→T: —</div>
-          </div>
-
-          <div class="btnRow">
-            <button type="button" id="t_reset">Сброс</button>
+          <div class="eqSmall">
+            Дополнительно: <span class="sym">P(H) = P(1000) − ΔPтаб</span>
           </div>
         </div>
+
+        <div class="kvs">
+          <div class="kv">
+            <div class="k">Pтаб(1000), мм рт.ст.</div>
+            <div class="v" id="ptab1000">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Pтаб(H), мм рт.ст.</div>
+            <div class="v" id="ptabh">—</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">ΔPтаб, мм рт.ст.</div>
+            <div class="v" id="dptab">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">P(H), мм рт.ст.</div>
+            <div class="v" id="ph">—</div>
+          </div>
+
+          <div class="kv" style="grid-column:1/-1">
+            <div class="k">iₚ</div>
+            <div class="v" id="ip">—</div>
+          </div>
+        </div>
+
+        <div class="badge" id="badgeP">—</div>
+        <div class="tiny">Подсветка: зелёный — в норме, красный — вне допуска.</div>
       </section>
 
-      <!-- Давление -->
-      <section class="card" aria-label="Давление">
-        <div class="head">
-          <div class="titleRow">
-            <h2>Давление (по высоте)</h2>
-            <div class="norm">Норма iP: 0.260 … 0.420</div>
+      <!-- TEMPERATURE -->
+      <section class="card" id="cardT">
+        <h2>Температура (R → T → ΔT → iT)</h2>
+
+        <div class="row">
+          <div>
+            <label for="r1">R1, Ом</label>
+            <input id="r1" inputmode="decimal" placeholder="например 92.6" />
+          </div>
+          <div>
+            <label for="r2">R2, Ом</label>
+            <input id="r2" inputmode="decimal" placeholder="например 105" />
           </div>
         </div>
 
-        <div class="body">
-          <div class="row">
-            <div class="field">
-              <label>Высота, м (отметка)</label>
-              <input id="h1" inputmode="decimal" placeholder="например: 200" />
-            </div>
-            <div class="field">
-              <label>Высота, м (доп. отметка, необязательно)</label>
-              <input id="h2" inputmode="decimal" placeholder="например: 1500" />
-            </div>
+        <div class="formulaBox">
+          <div class="eq">
+            <span class="sym">T = f(R)</span>
+            <span class="sym">,&nbsp;&nbsp;</span>
+            <span class="sym">ΔT = T − 7</span>
+            <span class="sym">,&nbsp;&nbsp;</span>
+            <span class="sym">iT</span>
+            <span class="sym">=</span>
+            <span class="frac">
+              <span class="top">33.3</span>
+              <span class="bar"></span>
+              <span class="bot">|ΔT|</span>
+            </span>
           </div>
-
-          <div class="resultBox">
-            <div class="big">
-              <div class="k">iP (для введённой отметки)</div>
-              <div class="v" id="ip_big">—</div>
-            </div>
-
-            <div class="status">
-              <div class="k">Статус</div>
-              <div class="badge off" id="ip_badge">—</div>
-              <div class="mono" id="ip_detail">ΔP: —</div>
-            </div>
-          </div>
-
-          <div class="formula">
-            <div class="mono">Формула:</div>
-            <div class="frac" aria-label="iP=33.3/|ΔP|">
-              <div class="top">33.3</div>
-              <div class="bar"></div>
-              <div class="bot">|ΔP|</div>
-            </div>
-            <div class="mono">ΔP = P(1000) − P(H)</div>
-          </div>
-
-          <div class="smallLine">
-            <div class="mono" id="p_line">P(H): —</div>
-            <div class="mono" id="hp_line">H→P: —</div>
-          </div>
-
-          <div class="btnRow">
-            <button type="button" id="p_reset">Сброс</button>
+          <div class="eqSmall">
+            Важно: берём <b>|ΔT|</b>, поэтому iT всегда положительное.
           </div>
         </div>
+
+        <div class="kvs">
+          <div class="kv">
+            <div class="k">T1, °C</div>
+            <div class="v" id="t1">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">T2, °C</div>
+            <div class="v" id="t2">—</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">ΔT1 = T1 − 7</div>
+            <div class="v" id="dt1">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">ΔT2 = T2 − 7</div>
+            <div class="v" id="dt2">—</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">iT1</div>
+            <div class="v" id="it1">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">iT2</div>
+            <div class="v" id="it2">—</div>
+          </div>
+
+          <div class="kv" style="grid-column:1/-1">
+            <div class="k">iT (контроль по двум точкам): если введены оба — показываем худший (вне допуска)</div>
+            <div class="v" id="itFinal">—</div>
+          </div>
+        </div>
+
+        <div class="badge" id="badgeT">—</div>
+        <div class="tiny">Таблица R(Ω)↔T(°C) встроена в файл (как на твоём фото).</div>
       </section>
 
     </div>
   </div>
 
-<script>
-/* ===========================
-   НАСТРОЙКИ ДОПУСКОВ
-   =========================== */
-const IT_MIN = 0.680, IT_MAX = 1.020;
-// Если допуск по давлению другой — скажешь, поменяем только эти 2 числа:
-const IP_MIN = 0.260, IP_MAX = 0.420;
+  <script>
+    // -------- Helpers --------
+    const $ = (id)=>document.getElementById(id);
 
-const BASE_T = 7.0;        // +7 °C
-const BASE_H = 1000;       // 1000 м
-const BASE_P = 674.115;    // мм рт.ст. при 1000 м (по твоей таблице)
+    function parseNum(x){
+      if (x == null) return NaN;
+      const s = String(x).trim().replace(',', '.');
+      if (!s) return NaN;
+      return Number(s);
+    }
 
-/* ===========================
-   ГИПСОМЕТРИЧЕСКАЯ ТАБЛИЦА (вшита)
-   (то, что ты прислал)
-   =========================== */
-const hypso = [
-  {h:0, p:760.000},
-  {h:20, p:758.200},
-  {h:40, p:756.403},
-  {h:60, p:754.609},
-  {h:100, p:751.033},
-  {h:200, p:742.151},
-  {h:300, p:733.355},
-  {h:400, p:724.643},
-  {h:500, p:716.015},
-  {h:600, p:707.471},
-  {h:700, p:699.009},
-  {h:800, p:690.630},
-  {h:900, p:682.332},
-  {h:1000, p:674.115},
-  {h:1100, p:665.978},
-  {h:1200, p:657.921},
-  {h:1300, p:649.943},
-  {h:1400, p:642.044},
-  {h:1500, p:634.222},
-  {h:1600, p:626.478},
-  {h:1700, p:618.811},
-  {h:1800, p:611.219},
-  {h:1900, p:603.704},
-  {h:2000, p:596.263},
-  {h:2100, p:588.897},
-  {h:2200, p:581.605},
-  {h:2300, p:574.385},
-  {h:2400, p:567.239},
-  {h:2500, p:560.165},
-  {h:2600, p:553.162},
-  {h:2700, p:546.231},
-  {h:2800, p:539.370},
-  {h:2900, p:532.579},
-  {h:3000, p:525.857}
-];
+    function fmt(n, digits=3){
+      if (!isFinite(n)) return "—";
+      return n.toFixed(digits);
+    }
 
-/* ===========================
-   ТАБЛИЦА R→T (вшита, шаг 10°)
-   Если пришлёшь “полную” — заменим массивом побольше.
-   =========================== */
-const r2t = [
-  {t:-40, r:76.86},
-  {t:-30, r:83.16},
-  {t:-20, r:90.26},
-  {t:-10, r:97.36},
-  {t:  0, r:104.86},
-  {t: 10, r:112.78},
-  {t: 20, r:121.22}
-];
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
 
-/* ===========================
-   УТИЛИТЫ
-   =========================== */
-function parseNum(v){
-  if (v == null) return null;
-  const s = String(v).trim().replace(",", ".");
-  if (!s) return null;
-  const n = Number(s);
-  return Number.isFinite(n) ? n : null;
-}
-function fmt3(x){ return (Math.round(x*1000)/1000).toFixed(3); }
-function clampTable(tbl, key){
-  return tbl.slice().sort((a,b)=>a[key]-b[key]);
-}
-function interpByKey(tbl, x, key){
-  const t = clampTable(tbl, key);
-  if (x < t[0][key] || x > t[t.length-1][key]) return null;
-  for (let i=0;i<t.length-1;i++){
-    const a = t[i], b = t[i+1];
-    if (x === a[key]) return a;
-    if (x >= a[key] && x <= b[key]){
-      const k = (x - a[key]) / (b[key] - a[key]);
-      // линейная интерполяция всех числовых полей, кроме key
-      const out = {};
-      out[key] = x;
-      for (const p in a){
-        if (p === key) continue;
-        if (typeof a[p] === "number" && typeof b[p] === "number"){
-          out[p] = a[p] + k*(b[p]-a[p]);
+    // -------- Data: Pressure table (H[m] -> Ptab[mmHg]) from your list --------
+    // NOTE: keep decimals with dot in code; user may input with comma – parseNum handles it.
+    const P_TAB = [
+      {H:0,    P:760.000},
+      {H:20,   P:758.200},
+      {H:40,   P:756.403},
+      {H:60,   P:754.609},
+      {H:100,  P:751.033},
+      {H:200,  P:742.151},
+      {H:300,  P:733.355},
+      {H:400,  P:724.643},
+      {H:500,  P:716.015},
+      {H:600,  P:707.471},
+      {H:700,  P:699.009},
+      {H:800,  P:690.630},
+      {H:900,  P:682.332},
+      {H:1000, P:674.115},
+      {H:1100, P:665.978},
+      {H:1200, P:657.921},
+      {H:1300, P:649.943},
+      {H:1400, P:642.044},
+      {H:1500, P:634.222},
+      {H:1600, P:626.478},
+      {H:1700, P:618.811},
+      {H:1800, P:611.219},
+      {H:1900, P:603.704},
+      {H:2000, P:596.263},
+      {H:2100, P:588.897},
+      {H:2200, P:581.605},
+      {H:2300, P:574.385},
+      {H:2400, P:567.239},
+      {H:2500, P:560.165},
+      {H:2600, P:553.162},
+      {H:2700, P:546.231},
+      {H:2800, P:539.370},
+      {H:2900, P:532.579},
+      {H:3000, P:525.857},
+    ];
+
+    // -------- Data: Temperature table from your photo --------
+    // (There was a duplicated "+50" line in the photo; it is actually +60 for R=112.78)
+    const RT_TAB = [
+      {T:-40, R:76.86},
+      {T:-30, R:79.96},
+      {T:-20, R:83.16},
+      {T:-10, R:86.56},
+      {T:  0, R:90.26},
+      {T: 10, R:93.76},
+      {T: 20, R:97.36},
+      {T: 30, R:101.06},
+      {T: 40, R:104.86},
+      {T: 50, R:108.81},
+      {T: 60, R:112.78},
+      {T: 70, R:116.96},
+      {T: 80, R:121.22},
+      {T: 90, R:125.56},
+      {T:110, R:134.41},
+      {T:120, R:138.96},
+      {T:130, R:143.56},
+    ];
+
+    // -------- Interpolation helpers --------
+    function interpByX(table, xKey, yKey, x){
+      // table sorted by xKey ascending
+      if (!isFinite(x)) return NaN;
+      const n = table.length;
+      if (x <= table[0][xKey]) return table[0][yKey];
+      if (x >= table[n-1][xKey]) return table[n-1][yKey];
+
+      for (let i=0; i<n-1; i++){
+        const x1 = table[i][xKey], x2 = table[i+1][xKey];
+        if (x >= x1 && x <= x2){
+          const y1 = table[i][yKey], y2 = table[i+1][yKey];
+          const t = (x - x1) / (x2 - x1);
+          return y1 + (y2 - y1) * t;
         }
       }
-      return out;
+      return NaN;
     }
-  }
-  return null;
-}
 
-// P(H) по гипсометрии
-function pressureAtH(H){
-  const out = interpByKey(hypso, H, "h");
-  return out ? out.p : null;
-}
+    function TfromR(R){
+      // RT_TAB is monotonic increasing in R
+      if (!isFinite(R)) return NaN;
+      // Build a view sorted by R
+      const tab = RT_TAB.slice().sort((a,b)=>a.R-b.R);
+      if (R <= tab[0].R) return tab[0].T;
+      if (R >= tab[tab.length-1].R) return tab[tab.length-1].T;
 
-// T(R) по таблице
-function tempAtR(R){
-  // интерполируем по R (монотонная)
-  const tbl = clampTable(r2t, "r");
-  if (R < tbl[0].r || R > tbl[tbl.length-1].r) return null;
-  for (let i=0;i<tbl.length-1;i++){
-    const a = tbl[i], b = tbl[i+1];
-    if (R === a.r) return a.t;
-    if (R >= a.r && R <= b.r){
-      const k = (R - a.r) / (b.r - a.r);
-      return a.t + k*(b.t - a.t);
+      for (let i=0; i<tab.length-1; i++){
+        const r1 = tab[i].R, r2 = tab[i+1].R;
+        if (R >= r1 && R <= r2){
+          const t1 = tab[i].T, t2 = tab[i+1].T;
+          const k = (R - r1) / (r2 - r1);
+          return t1 + (t2 - t1) * k;
+        }
+      }
+      return NaN;
     }
-  }
-  return null;
-}
 
-function setBadge(el, state){
-  // state: "ok" | "bad" | "off"
-  el.className = "badge " + state;
-  el.textContent = (state==="ok") ? "Норма" : (state==="bad") ? "Не норма" : "—";
-}
+    // -------- Limits (from your regulation screenshots) --------
+    const P_NORM = {center:0.32, tol:0.06}; // 0.26..0.38
+    const T_NORM = {center:0.85, tol:0.17}; // 0.68..1.02
 
-/* ===========================
-   ТЕМПЕРАТУРА: iT = 33.3 / |ΔT|
-   ΔT = T - 7
-   =========================== */
-const r1 = document.getElementById("r1");
-const r2 = document.getElementById("r2");
-const it_big = document.getElementById("it_big");
-const it_badge = document.getElementById("it_badge");
-const it_detail = document.getElementById("it_detail");
-const t_line = document.getElementById("t_line");
-const rt_line = document.getElementById("rt_line");
+    function inRange(v, center, tol){
+      if (!isFinite(v)) return null;
+      return (v >= (center - tol) && v <= (center + tol));
+    }
 
-function calcTemp(){
-  const R1 = parseNum(r1.value);
-  const R2 = parseNum(r2.value);
+    // -------- Calculations --------
+    function calcPressure(){
+      const P1000 = parseNum($("p1000").value);
+      const H = parseNum($("h").value);
 
-  // показываем результат по последнему заполненному (приоритет R2, потом R1)
-  const R = (R2 !== null) ? R2 : (R1 !== null) ? R1 : null;
-  if (R === null){
-    it_big.textContent = "—";
-    it_detail.textContent = "ΔT: —";
-    t_line.textContent = "T: —";
-    rt_line.textContent = "R→T: —";
-    setBadge(it_badge, "off");
-    return;
-  }
+      const ptab1000 = interpByX(P_TAB, "H", "P", 1000);
+      const ptabH = interpByX(P_TAB, "H", "P", H);
 
-  const T = tempAtR(R);
-  if (T === null){
-    it_big.textContent = "—";
-    it_detail.textContent = "ΔT: —";
-    t_line.textContent = "T: —";
-    rt_line.textContent = "R→T: вне диапазона";
-    setBadge(it_badge, "off");
-    return;
-  }
+      $("ptab1000").textContent = fmt(ptab1000, 3);
+      $("ptabh").textContent = fmt(ptabH, 3);
 
-  const dT = (T - BASE_T);            // со знаком
-  const absDT = Math.abs(dT);         // по модулю для iT
-  if (absDT === 0){
-    it_big.textContent = "—";
-    it_detail.textContent = "ΔT: 0";
-    t_line.textContent = `T: ${fmt3(T)} °C`;
-    rt_line.textContent = `R→T: ${fmt3(R)} Ω → ${fmt3(T)} °C`;
-    setBadge(it_badge, "off");
-    return;
-  }
+      const dPtab = (isFinite(ptab1000) && isFinite(ptabH)) ? (ptab1000 - ptabH) : NaN;
+      $("dptab").textContent = fmt(dPtab, 3);
 
-  const iT = 33.3 / absDT;            // всегда положительное
+      const PH = (isFinite(P1000) && isFinite(dPtab)) ? (P1000 - dPtab) : NaN;
+      $("ph").textContent = fmt(PH, 3);
 
-  it_big.innerHTML = `${fmt3(iT)} <small>iT</small>`;
-  it_detail.textContent = `ΔT: ${fmt3(T)} − ${fmt3(BASE_T)} = ${fmt3(dT)}`;
-  t_line.textContent = `T: ${fmt3(T)} °C`;
-  rt_line.textContent = `R→T: ${fmt3(R)} Ω → ${fmt3(T)} °C`;
+      const ip = (isFinite(dPtab) && dPtab !== 0) ? (33.3 / dPtab) : NaN;
+      $("ip").textContent = fmt(ip, 3);
 
-  const ok = (iT >= IT_MIN && iT <= IT_MAX);
-  setBadge(it_badge, ok ? "ok" : "bad");
-}
+      const ok = inRange(ip, P_NORM.center, P_NORM.tol);
+      const badge = $("badgeP");
+      if (ok === null){
+        badge.className = "badge";
+        badge.textContent = "—";
+      } else if (ok){
+        badge.className = "badge good";
+        badge.textContent = "НОРМА";
+      } else {
+        badge.className = "badge bad";
+        badge.textContent = "НЕ НОРМА";
+      }
+    }
 
-/* ===========================
-   ДАВЛЕНИЕ: iP = 33.3 / |ΔP|
-   ΔP = P(1000) - P(H)
-   =========================== */
-const h1 = document.getElementById("h1");
-const h2 = document.getElementById("h2");
-const ip_big = document.getElementById("ip_big");
-const ip_badge = document.getElementById("ip_badge");
-const ip_detail = document.getElementById("ip_detail");
-const p_line = document.getElementById("p_line");
-const hp_line = document.getElementById("hp_line");
+    function calcTempOne(R){
+      const T = TfromR(R);
+      const dT = isFinite(T) ? (T - 7) : NaN;
+      const it = (isFinite(dT) && dT !== 0) ? (33.3 / Math.abs(dT)) : NaN; // always positive
+      return {T, dT, it};
+    }
 
-function calcPress(){
-  const H1 = parseNum(h1.value);
-  const H2 = parseNum(h2.value);
+    function calcTemperature(){
+      const R1 = parseNum($("r1").value);
+      const R2 = parseNum($("r2").value);
 
-  // результат по последнему заполненному (приоритет H2, потом H1)
-  const H = (H2 !== null) ? H2 : (H1 !== null) ? H1 : null;
+      const a = calcTempOne(R1);
+      const b = calcTempOne(R2);
 
-  if (H === null){
-    ip_big.textContent = "—";
-    ip_detail.textContent = "ΔP: —";
-    p_line.textContent = "P(H): —";
-    hp_line.textContent = "H→P: —";
-    setBadge(ip_badge, "off");
-    return;
-  }
+      $("t1").textContent = fmt(a.T, 2);
+      $("t2").textContent = fmt(b.T, 2);
+      $("dt1").textContent = fmt(a.dT, 2);
+      $("dt2").textContent = fmt(b.dT, 2);
+      $("it1").textContent = fmt(a.it, 3);
+      $("it2").textContent = fmt(b.it, 3);
 
-  const P = pressureAtH(H);
-  if (P === null){
-    ip_big.textContent = "—";
-    ip_detail.textContent = "ΔP: —";
-    p_line.textContent = "P(H): —";
-    hp_line.textContent = "H→P: вне диапазона";
-    setBadge(ip_badge, "off");
-    return;
-  }
+      // Final decision:
+      // - if both present: show the one that is OUT of range (worst case),
+      //   else show the one that is present.
+      let itFinal = NaN;
 
-  const dP = (BASE_P - P);         // со знаком
-  const absDP = Math.abs(dP);      // модуль для iP
-  if (absDP === 0){
-    ip_big.textContent = "—";
-    ip_detail.textContent = "ΔP: 0";
-    p_line.textContent = `P(H): ${fmt3(P)} мм рт.ст.`;
-    hp_line.textContent = `H→P: ${fmt3(H)} м → ${fmt3(P)} мм`;
-    setBadge(ip_badge, "off");
-    return;
-  }
+      const aOk = inRange(a.it, T_NORM.center, T_NORM.tol);
+      const bOk = inRange(b.it, T_NORM.center, T_NORM.tol);
 
-  const iP = 33.3 / absDP;         // всегда положительное
+      const aHas = isFinite(a.it);
+      const bHas = isFinite(b.it);
 
-  ip_big.innerHTML = `${fmt3(iP)} <small>iP</small>`;
-  ip_detail.textContent = `ΔP: ${fmt3(BASE_P)} − ${fmt3(P)} = ${fmt3(dP)}`;
-  p_line.textContent = `P(H): ${fmt3(P)} мм рт.ст.`;
-  hp_line.textContent = `H→P: ${fmt3(H)} м → ${fmt3(P)} мм`;
+      if (aHas && bHas){
+        // prefer out-of-range value if any; else show average (optional)
+        if (aOk === false && bOk !== false) itFinal = a.it;
+        else if (bOk === false && aOk !== false) itFinal = b.it;
+        else itFinal = (a.it + b.it) / 2; // both OK or both not OK -> average for display
+      } else if (aHas){
+        itFinal = a.it;
+      } else if (bHas){
+        itFinal = b.it;
+      }
 
-  const ok = (iP >= IP_MIN && iP <= IP_MAX);
-  setBadge(ip_badge, ok ? "ok" : "bad");
-}
+      $("itFinal").textContent = fmt(itFinal, 3);
 
-/* ===========================
-   СОБЫТИЯ: авторасчёт при вводе
-   =========================== */
-[r1, r2].forEach(el => el.addEventListener("input", calcTemp));
-[h1, h2].forEach(el => el.addEventListener("input", calcPress));
+      const ok = inRange(itFinal, T_NORM.center, T_NORM.tol);
+      const badge = $("badgeT");
+      if (ok === null){
+        badge.className = "badge";
+        badge.textContent = "—";
+      } else if (ok){
+        badge.className = "badge good";
+        badge.textContent = "НОРМА";
+      } else {
+        badge.className = "badge bad";
+        badge.textContent = "НЕ НОРМА";
+      }
+    }
 
-document.getElementById("t_reset").addEventListener("click", () => {
-  r1.value = "";
-  r2.value = "";
-  calcTemp();
-});
-document.getElementById("p_reset").addEventListener("click", () => {
-  h1.value = "";
-  h2.value = "";
-  calcPress();
-});
+    function recalcAll(){
+      calcPressure();
+      calcTemperature();
+    }
 
-// Старт: пустые поля → прочерки
-calcTemp();
-calcPress();
-</script>
+    // -------- Live update on input --------
+    ["p1000","h","r1","r2"].forEach(id=>{
+      $(id).addEventListener("input", recalcAll);
+      $(id).addEventListener("change", recalcAll);
+    });
+
+    // sensible defaults (optional – remove if you don’t want)
+    // $("p1000").value = "674.115";
+    // $("h").value = "2430";
+
+    recalcAll();
+  </script>
 </body>
 </html>
