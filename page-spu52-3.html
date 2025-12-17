@@ -1,231 +1,690 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>СПУ-52-3 — расчёт передаточных чисел</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>СПУ-52-3 — Передаточные числа</title>
+  <style>
+    :root{
+      --ua-blue:#1a5fff;
+      --ua-yellow:#ffd500;
 
-<!-- Math rendering -->
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+      --card: rgba(10, 16, 32, .42);
+      --card2: rgba(10, 16, 32, .30);
+      --stroke: rgba(255,255,255,.14);
 
-<style>
-:root{
-  --blue:#0057b7;
-  --yellow:#ffd700;
-  --glass:rgba(255,255,255,0.18);
-  --border:rgba(255,255,255,0.35);
-  --ok:#27ae60;
-  --bad:#e74c3c;
-}
+      --text: rgba(255,255,255,.94);
+      --muted: rgba(255,255,255,.72);
 
-*{box-sizing:border-box;font-family:Inter,Segoe UI,Arial,sans-serif}
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-    linear-gradient(180deg,var(--blue) 0%,var(--blue) 45%,var(--yellow) 55%,var(--yellow) 100%);
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:40px;
-  color:#fff;
-}
+      --ok: #22c55e;
+      --bad:#ef4444;
 
-.container{
-  width:100%;
-  max-width:1200px;
-}
+      --r: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+    }
 
-h1{
-  margin:0 0 20px;
-  font-weight:700;
-  letter-spacing:.4px;
-}
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 18% 8%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(900px 600px at 82% 14%, rgba(0,0,0,.26), transparent 58%),
+        linear-gradient(180deg, var(--ua-blue) 0%, var(--ua-blue) 49%, var(--ua-yellow) 51%, var(--ua-yellow) 100%);
+      padding: 22px 14px 36px;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
-}
+    .wrap{
+      max-width: 1120px;
+      margin: 0 auto;
+    }
 
-.card{
-  background:var(--glass);
-  backdrop-filter:blur(16px);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:22px;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
-}
+    header{
+      display:flex;
+      gap:12px;
+      align-items:flex-end;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
+    }
 
-.card h2{
-  margin:0 0 16px;
-  font-size:18px;
-}
+    h1{
+      margin:0;
+      font-weight:800;
+      letter-spacing:.2px;
+      font-size: clamp(22px, 3.2vw, 34px);
+      line-height:1.05;
+      text-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
 
-.field{
-  margin-bottom:12px;
-}
-.field label{
-  display:block;
-  font-size:13px;
-  opacity:.85;
-  margin-bottom:4px;
-}
-.field input{
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:none;
-  outline:none;
-  font-size:15px;
-}
+    .sub{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
 
-.result{
-  margin-top:14px;
-  padding:12px;
-  border-radius:12px;
-  background:rgba(0,0,0,.25);
-}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
 
-.formula{
-  margin-top:10px;
-  padding:10px;
-  background:rgba(0,0,0,.2);
-  border-radius:10px;
-}
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--r);
+      box-shadow: 0 24px 60px rgba(0,0,0,.28);
+      overflow:hidden;
+    }
 
-.status{
-  margin-top:12px;
-  padding:10px;
-  border-radius:12px;
-  font-weight:600;
-  text-align:center;
-}
+    .card .head{
+      padding: 14px 16px 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), transparent);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
 
-.ok{background:rgba(39,174,96,.85)}
-.bad{background:rgba(231,76,60,.85)}
+    .titleRow{
+      display:flex;
+      gap:10px;
+      align-items:baseline;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
 
-.small{
-  font-size:13px;
-  opacity:.85;
-  margin-top:6px;
-}
+    .card h2{
+      margin:0;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
 
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
-}
-</style>
+    .norm{
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: rgba(255,255,255,.80);
+      opacity:.95;
+      white-space:nowrap;
+    }
+
+    .body{
+      padding: 14px 16px 16px;
+      background: var(--card2);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+
+    label{
+      font-size: 12.5px;
+      color: rgba(255,255,255,.82);
+    }
+
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input::placeholder{ color: rgba(255,255,255,.45); }
+
+    .resultBox{
+      margin-top: 10px;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.26);
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 12px;
+      align-items:stretch;
+    }
+
+    .big{
+      border-radius: 14px;
+      padding: 12px 12px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      min-height: 88px;
+    }
+
+    .big .k{
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      margin-bottom: 6px;
+    }
+
+    .big .v{
+      font-family: var(--mono);
+      font-weight: 800;
+      font-size: clamp(22px, 3.0vw, 30px);
+      letter-spacing: .2px;
+      line-height:1.1;
+    }
+
+    .big .v small{
+      font-weight:700;
+      font-size: 65%;
+      opacity:.92;
+    }
+
+    .status{
+      border-radius: 14px;
+      padding: 12px 12px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height: 88px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-weight: 800;
+      letter-spacing:.4px;
+      text-transform: uppercase;
+      font-size: 12px;
+      color:#fff;
+      width: fit-content;
+    }
+    .badge.ok{ background: rgba(34,197,94,.92); }
+    .badge.bad{ background: rgba(239,68,68,.92); }
+    .badge.off{ background: rgba(255,255,255,.14); color: rgba(255,255,255,.85); }
+
+    .hint{
+      margin-top:10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,.18);
+      color: rgba(255,255,255,.78);
+      font-size: 12.5px;
+      line-height:1.35;
+    }
+
+    /* Простая “дробь” (без KaTeX) — всегда влезает */
+    .formula{
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .frac{
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      line-height:1.05;
+      font-family: var(--mono);
+      font-weight: 800;
+      font-size: 15px;
+      min-width: 130px;
+    }
+    .frac .top{ padding: 0 6px 4px; }
+    .frac .bar{ height: 2px; width: 100%; background: rgba(255,255,255,.65); border-radius: 2px; }
+    .frac .bot{ padding: 4px 6px 0; }
+
+    .mono{
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,255,255,.86);
+    }
+
+    .smallLine{
+      margin-top:8px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      color: rgba(255,255,255,.78);
+      font-size: 12.5px;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+    button{
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.18);
+      color:#fff;
+      padding: 11px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    button:hover{ background: rgba(0,0,0,.24); }
+
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
+      .resultBox{ grid-template-columns: 1fr; }
+      .row{ grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="container">
-<h1>СПУ-52-3 — расчёт передаточных чисел</h1>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>СПУ-52-3 — передаточные числа</h1>
+        <p class="sub">Нулевые условия: 92.6 Ω = +7 °C; H=1000 м → 674.115 мм рт.ст.</p>
+      </div>
+    </header>
 
-<div class="grid">
+    <div class="grid">
 
-<!-- PRESSURE -->
-<div class="card">
-<h2>Давление (по высоте)</h2>
+      <!-- Температура -->
+      <section class="card" aria-label="Температура">
+        <div class="head">
+          <div class="titleRow">
+            <h2>Температура</h2>
+            <div class="norm">Норма iT: 0.680 … 1.020</div>
+          </div>
+        </div>
 
-<div class="field">
-<label>P(1000), мм рт.ст.</label>
-<input id="p1000" value="674.115">
-</div>
+        <div class="body">
+          <div class="row">
+            <div class="field">
+              <label>R1, Ω (отметка 1)</label>
+              <input id="r1" inputmode="decimal" placeholder="например: 105" />
+            </div>
+            <div class="field">
+              <label>R2, Ω (отметка 2)</label>
+              <input id="r2" inputmode="decimal" placeholder="например: 82" />
+            </div>
+          </div>
 
-<div class="field">
-<label>H, м</label>
-<input id="h" value="2430">
-</div>
+          <div class="resultBox">
+            <div class="big">
+              <div class="k">iT (для введённой отметки)</div>
+              <div class="v" id="it_big">—</div>
+            </div>
 
-<div class="result" id="pRes"></div>
-<div class="formula" id="pFormula"></div>
-<div class="status" id="pStatus"></div>
-</div>
+            <div class="status">
+              <div class="k">Статус</div>
+              <div class="badge off" id="it_badge">—</div>
+              <div class="mono" id="it_detail">ΔT: —</div>
+            </div>
+          </div>
 
-<!-- TEMPERATURE -->
-<div class="card">
-<h2>Температура</h2>
+          <div class="formula">
+            <div class="mono">Формула:</div>
+            <div class="frac" aria-label="iT=33.3/|ΔT|">
+              <div class="top">33.3</div>
+              <div class="bar"></div>
+              <div class="bot">|ΔT|</div>
+            </div>
+            <div class="mono">ΔT = T − 7</div>
+          </div>
 
-<div class="field">
-<label>R1, Ом</label>
-<input id="r1" value="98.6">
-</div>
+          <div class="smallLine">
+            <div class="mono" id="t_line">T: —</div>
+            <div class="mono" id="rt_line">R→T: —</div>
+          </div>
 
-<div class="field">
-<label>R2, Ом</label>
-<input id="r2" value="105">
-</div>
+          <div class="btnRow">
+            <button type="button" id="t_reset">Сброс</button>
+          </div>
+        </div>
+      </section>
 
-<div class="result" id="tRes"></div>
-<div class="formula" id="tFormula"></div>
-<div class="status" id="tStatus"></div>
+      <!-- Давление -->
+      <section class="card" aria-label="Давление">
+        <div class="head">
+          <div class="titleRow">
+            <h2>Давление (по высоте)</h2>
+            <div class="norm">Норма iP: 0.260 … 0.420</div>
+          </div>
+        </div>
 
-<div class="small">Норма: i<sub>T</sub> = 0.85 ± 0.17</div>
-</div>
+        <div class="body">
+          <div class="row">
+            <div class="field">
+              <label>Высота, м (отметка)</label>
+              <input id="h1" inputmode="decimal" placeholder="например: 200" />
+            </div>
+            <div class="field">
+              <label>Высота, м (доп. отметка, необязательно)</label>
+              <input id="h2" inputmode="decimal" placeholder="например: 1500" />
+            </div>
+          </div>
 
-</div>
-</div>
+          <div class="resultBox">
+            <div class="big">
+              <div class="k">iP (для введённой отметки)</div>
+              <div class="v" id="ip_big">—</div>
+            </div>
+
+            <div class="status">
+              <div class="k">Статус</div>
+              <div class="badge off" id="ip_badge">—</div>
+              <div class="mono" id="ip_detail">ΔP: —</div>
+            </div>
+          </div>
+
+          <div class="formula">
+            <div class="mono">Формула:</div>
+            <div class="frac" aria-label="iP=33.3/|ΔP|">
+              <div class="top">33.3</div>
+              <div class="bar"></div>
+              <div class="bot">|ΔP|</div>
+            </div>
+            <div class="mono">ΔP = P(1000) − P(H)</div>
+          </div>
+
+          <div class="smallLine">
+            <div class="mono" id="p_line">P(H): —</div>
+            <div class="mono" id="hp_line">H→P: —</div>
+          </div>
+
+          <div class="btnRow">
+            <button type="button" id="p_reset">Сброс</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
 
 <script>
-// ===== TABLES (REGULATED, STATIC) =====
-const pressureTable = [
- {h:1000,p:674.115},{h:2000,p:596.263},{h:3000,p:525.857}
+/* ===========================
+   НАСТРОЙКИ ДОПУСКОВ
+   =========================== */
+const IT_MIN = 0.680, IT_MAX = 1.020;
+// Если допуск по давлению другой — скажешь, поменяем только эти 2 числа:
+const IP_MIN = 0.260, IP_MAX = 0.420;
+
+const BASE_T = 7.0;        // +7 °C
+const BASE_H = 1000;       // 1000 м
+const BASE_P = 674.115;    // мм рт.ст. при 1000 м (по твоей таблице)
+
+/* ===========================
+   ГИПСОМЕТРИЧЕСКАЯ ТАБЛИЦА (вшита)
+   (то, что ты прислал)
+   =========================== */
+const hypso = [
+  {h:0, p:760.000},
+  {h:20, p:758.200},
+  {h:40, p:756.403},
+  {h:60, p:754.609},
+  {h:100, p:751.033},
+  {h:200, p:742.151},
+  {h:300, p:733.355},
+  {h:400, p:724.643},
+  {h:500, p:716.015},
+  {h:600, p:707.471},
+  {h:700, p:699.009},
+  {h:800, p:690.630},
+  {h:900, p:682.332},
+  {h:1000, p:674.115},
+  {h:1100, p:665.978},
+  {h:1200, p:657.921},
+  {h:1300, p:649.943},
+  {h:1400, p:642.044},
+  {h:1500, p:634.222},
+  {h:1600, p:626.478},
+  {h:1700, p:618.811},
+  {h:1800, p:611.219},
+  {h:1900, p:603.704},
+  {h:2000, p:596.263},
+  {h:2100, p:588.897},
+  {h:2200, p:581.605},
+  {h:2300, p:574.385},
+  {h:2400, p:567.239},
+  {h:2500, p:560.165},
+  {h:2600, p:553.162},
+  {h:2700, p:546.231},
+  {h:2800, p:539.370},
+  {h:2900, p:532.579},
+  {h:3000, p:525.857}
 ];
 
-const tempTable = [
- {r:76.86,t:-40},{r:83.16,t:-30},{r:90.26,t:-20},{r:97.36,t:-10},
- {r:104.86, t:0},{r:112.78,t:10},{r:121.22,t:20}
+/* ===========================
+   ТАБЛИЦА R→T (вшита, шаг 10°)
+   Если пришлёшь “полную” — заменим массивом побольше.
+   =========================== */
+const r2t = [
+  {t:-40, r:76.86},
+  {t:-30, r:83.16},
+  {t:-20, r:90.26},
+  {t:-10, r:97.36},
+  {t:  0, r:104.86},
+  {t: 10, r:112.78},
+  {t: 20, r:121.22}
 ];
 
-// ===== HELPERS =====
-function interp(x,a,b,xa,xb){
- return a+(x-xa)*(b-a)/(xb-xa);
+/* ===========================
+   УТИЛИТЫ
+   =========================== */
+function parseNum(v){
+  if (v == null) return null;
+  const s = String(v).trim().replace(",", ".");
+  if (!s) return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
 }
-function TfromR(R){
- for(let i=0;i<tempTable.length-1;i++){
-  let A=tempTable[i],B=tempTable[i+1];
-  if(R>=A.r && R<=B.r)
-   return interp(R,A.t,B.t,A.r,B.r);
- }
- return null;
+function fmt3(x){ return (Math.round(x*1000)/1000).toFixed(3); }
+function clampTable(tbl, key){
+  return tbl.slice().sort((a,b)=>a[key]-b[key]);
+}
+function interpByKey(tbl, x, key){
+  const t = clampTable(tbl, key);
+  if (x < t[0][key] || x > t[t.length-1][key]) return null;
+  for (let i=0;i<t.length-1;i++){
+    const a = t[i], b = t[i+1];
+    if (x === a[key]) return a;
+    if (x >= a[key] && x <= b[key]){
+      const k = (x - a[key]) / (b[key] - a[key]);
+      // линейная интерполяция всех числовых полей, кроме key
+      const out = {};
+      out[key] = x;
+      for (const p in a){
+        if (p === key) continue;
+        if (typeof a[p] === "number" && typeof b[p] === "number"){
+          out[p] = a[p] + k*(b[p]-a[p]);
+        }
+      }
+      return out;
+    }
+  }
+  return null;
 }
 
-// ===== PRESSURE CALC =====
-function calcPressure(){
- let P1000=+p1000.value,H=+h.value;
- let Ptab=interp(H,674.115,565.117,1000,2430);
- let dP=P1000-Ptab;
- let ip=33.3/dP;
-
- pRes.innerHTML=`ΔP = ${dP.toFixed(3)} мм<br>i<sub>P</sub> = ${ip.toFixed(3)}`;
- katex.render("\\displaystyle i_P=\\frac{33.3}{\\Delta P}",pFormula);
-
- pStatus.className="status "+(ip>=0.26&&ip<=0.38?"ok":"bad");
- pStatus.innerText=ip>=0.26&&ip<=0.38?"НОРМА":"НЕ НОРМА";
+// P(H) по гипсометрии
+function pressureAtH(H){
+  const out = interpByKey(hypso, H, "h");
+  return out ? out.p : null;
 }
 
-// ===== TEMP CALC =====
+// T(R) по таблице
+function tempAtR(R){
+  // интерполируем по R (монотонная)
+  const tbl = clampTable(r2t, "r");
+  if (R < tbl[0].r || R > tbl[tbl.length-1].r) return null;
+  for (let i=0;i<tbl.length-1;i++){
+    const a = tbl[i], b = tbl[i+1];
+    if (R === a.r) return a.t;
+    if (R >= a.r && R <= b.r){
+      const k = (R - a.r) / (b.r - a.r);
+      return a.t + k*(b.t - a.t);
+    }
+  }
+  return null;
+}
+
+function setBadge(el, state){
+  // state: "ok" | "bad" | "off"
+  el.className = "badge " + state;
+  el.textContent = (state==="ok") ? "Норма" : (state==="bad") ? "Не норма" : "—";
+}
+
+/* ===========================
+   ТЕМПЕРАТУРА: iT = 33.3 / |ΔT|
+   ΔT = T - 7
+   =========================== */
+const r1 = document.getElementById("r1");
+const r2 = document.getElementById("r2");
+const it_big = document.getElementById("it_big");
+const it_badge = document.getElementById("it_badge");
+const it_detail = document.getElementById("it_detail");
+const t_line = document.getElementById("t_line");
+const rt_line = document.getElementById("rt_line");
+
 function calcTemp(){
- let R1=+r1.value,R2=+r2.value;
- let T1=TfromR(R1),T2=TfromR(R2);
- let dT1=T1-7,dT2=T2-7;
- let iT=33.3/Math.abs(dT2);
+  const R1 = parseNum(r1.value);
+  const R2 = parseNum(r2.value);
 
- tRes.innerHTML=
- `T1=${T1.toFixed(2)} °C<br>T2=${T2.toFixed(2)} °C<br>i<sub>T</sub>=${iT.toFixed(3)}`;
+  // показываем результат по последнему заполненному (приоритет R2, потом R1)
+  const R = (R2 !== null) ? R2 : (R1 !== null) ? R1 : null;
+  if (R === null){
+    it_big.textContent = "—";
+    it_detail.textContent = "ΔT: —";
+    t_line.textContent = "T: —";
+    rt_line.textContent = "R→T: —";
+    setBadge(it_badge, "off");
+    return;
+  }
 
- katex.render("\\displaystyle i_T=\\frac{33.3}{\\Delta T}",tFormula);
+  const T = tempAtR(R);
+  if (T === null){
+    it_big.textContent = "—";
+    it_detail.textContent = "ΔT: —";
+    t_line.textContent = "T: —";
+    rt_line.textContent = "R→T: вне диапазона";
+    setBadge(it_badge, "off");
+    return;
+  }
 
- tStatus.className="status "+(iT>=0.68&&iT<=1.02?"ok":"bad");
- tStatus.innerText=iT>=0.68&&iT<=1.02?"НОРМА":"НЕ НОРМА";
+  const dT = (T - BASE_T);            // со знаком
+  const absDT = Math.abs(dT);         // по модулю для iT
+  if (absDT === 0){
+    it_big.textContent = "—";
+    it_detail.textContent = "ΔT: 0";
+    t_line.textContent = `T: ${fmt3(T)} °C`;
+    rt_line.textContent = `R→T: ${fmt3(R)} Ω → ${fmt3(T)} °C`;
+    setBadge(it_badge, "off");
+    return;
+  }
+
+  const iT = 33.3 / absDT;            // всегда положительное
+
+  it_big.innerHTML = `${fmt3(iT)} <small>iT</small>`;
+  it_detail.textContent = `ΔT: ${fmt3(T)} − ${fmt3(BASE_T)} = ${fmt3(dT)}`;
+  t_line.textContent = `T: ${fmt3(T)} °C`;
+  rt_line.textContent = `R→T: ${fmt3(R)} Ω → ${fmt3(T)} °C`;
+
+  const ok = (iT >= IT_MIN && iT <= IT_MAX);
+  setBadge(it_badge, ok ? "ok" : "bad");
 }
 
-// LIVE
-[p1000,h].forEach(e=>e.oninput=calcPressure);
-[r1,r2].forEach(e=>e.oninput=calcTemp);
+/* ===========================
+   ДАВЛЕНИЕ: iP = 33.3 / |ΔP|
+   ΔP = P(1000) - P(H)
+   =========================== */
+const h1 = document.getElementById("h1");
+const h2 = document.getElementById("h2");
+const ip_big = document.getElementById("ip_big");
+const ip_badge = document.getElementById("ip_badge");
+const ip_detail = document.getElementById("ip_detail");
+const p_line = document.getElementById("p_line");
+const hp_line = document.getElementById("hp_line");
 
-calcPressure();
+function calcPress(){
+  const H1 = parseNum(h1.value);
+  const H2 = parseNum(h2.value);
+
+  // результат по последнему заполненному (приоритет H2, потом H1)
+  const H = (H2 !== null) ? H2 : (H1 !== null) ? H1 : null;
+
+  if (H === null){
+    ip_big.textContent = "—";
+    ip_detail.textContent = "ΔP: —";
+    p_line.textContent = "P(H): —";
+    hp_line.textContent = "H→P: —";
+    setBadge(ip_badge, "off");
+    return;
+  }
+
+  const P = pressureAtH(H);
+  if (P === null){
+    ip_big.textContent = "—";
+    ip_detail.textContent = "ΔP: —";
+    p_line.textContent = "P(H): —";
+    hp_line.textContent = "H→P: вне диапазона";
+    setBadge(ip_badge, "off");
+    return;
+  }
+
+  const dP = (BASE_P - P);         // со знаком
+  const absDP = Math.abs(dP);      // модуль для iP
+  if (absDP === 0){
+    ip_big.textContent = "—";
+    ip_detail.textContent = "ΔP: 0";
+    p_line.textContent = `P(H): ${fmt3(P)} мм рт.ст.`;
+    hp_line.textContent = `H→P: ${fmt3(H)} м → ${fmt3(P)} мм`;
+    setBadge(ip_badge, "off");
+    return;
+  }
+
+  const iP = 33.3 / absDP;         // всегда положительное
+
+  ip_big.innerHTML = `${fmt3(iP)} <small>iP</small>`;
+  ip_detail.textContent = `ΔP: ${fmt3(BASE_P)} − ${fmt3(P)} = ${fmt3(dP)}`;
+  p_line.textContent = `P(H): ${fmt3(P)} мм рт.ст.`;
+  hp_line.textContent = `H→P: ${fmt3(H)} м → ${fmt3(P)} мм`;
+
+  const ok = (iP >= IP_MIN && iP <= IP_MAX);
+  setBadge(ip_badge, ok ? "ok" : "bad");
+}
+
+/* ===========================
+   СОБЫТИЯ: авторасчёт при вводе
+   =========================== */
+[r1, r2].forEach(el => el.addEventListener("input", calcTemp));
+[h1, h2].forEach(el => el.addEventListener("input", calcPress));
+
+document.getElementById("t_reset").addEventListener("click", () => {
+  r1.value = "";
+  r2.value = "";
+  calcTemp();
+});
+document.getElementById("p_reset").addEventListener("click", () => {
+  h1.value = "";
+  h2.value = "";
+  calcPress();
+});
+
+// Старт: пустые поля → прочерки
 calcTemp();
+calcPress();
 </script>
 </body>
 </html>
