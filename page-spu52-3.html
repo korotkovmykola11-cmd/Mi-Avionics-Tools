@@ -16,7 +16,6 @@
       --line:#ffffff22;
       --ok:#2ecc71;
       --bad:#ff5c5c;
-      --warn:#ffcf4a;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       --radius: 18px;
@@ -158,7 +157,7 @@
       border-radius: 12px;
       border: 1px solid var(--line);
       background:#081f46cc;
-      color: var(--text);
+      color:var(--text);
       outline:none;
       font-size: 14px;
     }
@@ -256,7 +255,6 @@
     button:hover{ filter: brightness(1.08); }
     button:active{ transform: translateY(1px); }
 
-    /* Технология (складной блок) */
     .tech{
       margin-top: 16px;
       border-radius: var(--radius);
@@ -265,8 +263,7 @@
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    details.tech details{ margin-left: 14px; }
-    details.tech > summary{
+    .tech > summary{
       list-style:none;
       cursor:pointer;
       padding: 14px 16px;
@@ -274,7 +271,8 @@
       border-bottom: 1px solid var(--line);
       user-select:none;
     }
-    details.tech > summary::-webkit-details-marker{ display:none; }
+    .tech > summary::-webkit-details-marker{ display:none; }
+
     .techBody{
       padding: 14px 16px 16px;
       color: #eaf2ffea;
@@ -296,7 +294,7 @@
         <h1>СПУУ-52-3 — расчёт передаточных чисел</h1>
       </div>
 
-      <div class="pills" aria-label="Нормы">
+      <div class="pills">
         <div class="pill">Норма по высоте: <b>H = 2021…3048 м</b></div>
         <div class="pill">Норма i<sub>P</sub>: <b>0.32 ± 0.06</b> (0.26…0.38)</div>
         <div class="pill">Норма i<sub>T</sub>: <b>0.85 ± 0.17</b> (0.68…1.02)</div>
@@ -316,15 +314,22 @@
         </div>
 
         <div class="content">
-          <div class="row">
-            <div>
-              <label for="p1000">P(1000), мм рт.ст. (по прибору)</label>
-              <input id="p1000" inputmode="decimal" placeholder="например 674.115" />
+          <form autocomplete="off">
+            <div class="row">
+              <div>
+                <label for="p1000">P(1000), мм рт.ст. (по прибору)</label>
+                <input id="p1000" name="p1000_spuu" autocomplete="off" spellcheck="false" inputmode="decimal" placeholder="—" />
+              </div>
+              <div>
+                <label for="hLeft">H, м (левая промежуточная отметка)</label>
+                <input id="hLeft" name="hLeft_spuu" autocomplete="off" spellcheck="false" inputmode="numeric" placeholder="—" />
+              </div>
             </div>
-            <div>
-              <label for="hLeft">H, м (высота при левой промежуточной отметке)</label>
-              <input id="hLeft" inputmode="numeric" placeholder="например 2800" />
-            </div>
+          </form>
+
+          <div class="kv">
+            <div class="k">Pтаб(H), мм рт.ст.</div>
+            <div class="v" id="pTabH">—</div>
           </div>
 
           <div class="kv">
@@ -340,13 +345,8 @@
             <div class="badge na" id="badgeP">—</div>
           </div>
 
-          <div class="kv">
-            <div class="k">Pтаб(H), мм рт.ст.</div>
-            <div class="v" id="pTabH">—</div>
-          </div>
-
           <div class="btnRow">
-            <button type="button" id="resetP">Сброс (давление)</button>
+            <button type="button" id="resetP">Сброс</button>
           </div>
 
           <div class="statusBar na" id="statusP">—</div>
@@ -360,33 +360,26 @@
             <div class="cardTitle">Температура</div>
           </div>
           <div class="rightTop">
-            <div class="formulaMini">i<sub>T</sub> = 33.3 / |ΔT|</div>
+            <div class="formulaMini">i<sub>T</sub> = 33.3 / |T − 7|</div>
           </div>
         </div>
 
         <div class="content">
-          <div class="row">
-            <div>
-              <label for="r1">R1, Ом (левая промежуточная)</label>
-              <input id="r1" inputmode="decimal" placeholder="например 110" />
+          <form autocomplete="off">
+            <div class="row">
+              <div>
+                <label for="tVal">T, °C (по таблице R→T / вводишь сразу T)</label>
+                <input id="tVal" name="tVal_spuu" autocomplete="off" spellcheck="false" inputmode="decimal" placeholder="—" />
+              </div>
+              <div>
+                <label for="tVal2">T2, °C (если нужно вторую точку — опционально)</label>
+                <input id="tVal2" name="tVal2_spuu" autocomplete="off" spellcheck="false" inputmode="decimal" placeholder="—" />
+              </div>
             </div>
-            <div>
-              <label for="r2">R2, Ом (правая промежуточная) — опционально</label>
-              <input id="r2" inputmode="decimal" placeholder="например 82" />
-            </div>
-          </div>
+          </form>
 
           <div class="kv">
-            <div class="k">T1 по таблице, °C</div>
-            <div class="v" id="t1">—</div>
-          </div>
-          <div class="kv">
-            <div class="k">T2 по таблице, °C</div>
-            <div class="v" id="t2">—</div>
-          </div>
-
-          <div class="kv">
-            <div class="k">ΔT = T − 7, берём |ΔT|</div>
+            <div class="k">|ΔT| = |T − 7|</div>
             <div class="v" id="dT">—</div>
           </div>
 
@@ -399,7 +392,7 @@
           </div>
 
           <div class="btnRow">
-            <button type="button" id="resetT">Сброс (температура)</button>
+            <button type="button" id="resetT">Сброс</button>
           </div>
 
           <div class="statusBar na" id="statusT">—</div>
@@ -407,7 +400,7 @@
       </section>
     </div>
 
-    <!-- ТЕХНОЛОГИЯ: открывается/закрывается -->
+    <!-- ТЕХНОЛОГИЯ: по умолчанию закрыта -->
     <details class="tech" id="techBlock">
       <summary>Технологическая карта №91 — проверка параметров системы подвижных упоров управления СПУУ-52-3</summary>
       <div class="techBody">
@@ -420,73 +413,43 @@
           <li>Подсоедините к измерительному комплексу давления ИКД-27ДА установку КПУ-3 с высотомером.</li>
           <li>Снимите лицевую панель с пульта управления (блок БУ-32-3), предварительно отвернув два винта.</li>
           <li>Включите источники питания постоянного и переменного тока.</li>
-          <li>Установите выключатель «ПОДВИЖ. УПОР» (левый передний пульт лётчика) в положение «ВКЛ.»</li>
+          <li>Установите выключатель «ПОДВИЖ. УПОР» в положение «ВКЛ.»</li>
         </ul>
 
         <h3>3. Совмещение рисок / контроль крайних положений</h3>
         <ul>
-          <li>Обеспечьте совмещение риски рычага датчика обратной связи с крайними рисками на корпусе датчика при предельных положениях штока электромеханизма.</li>
-          <li>Проверьте крутизну сигнала датчика обратной связи: при нажатой кнопке-лампочке «ОТКЛ» ручкой центровки произведите перемещение штока в одно, затем в другое крайнее положение.</li>
+          <li>Обеспечьте совмещение рисок датчика обратной связи с крайними отметками при предельных положениях.</li>
+          <li>Проверьте крутизну сигнала датчика обратной связи согласно карте.</li>
         </ul>
 
         <div class="sep"></div>
 
         <h3>4. Проверка передаточного числа по температуре</h3>
-        <p class="mono">
-          i<sub>T</sub> = 33.3 / |ΔT|, где ΔT = T − 7 °C, T берётся по градуировочной таблице R(Ω)→T(°C).
-        </p>
-        <p>
-          Изменяя сопротивление магазина, добейтесь совмещения подвижного индекса нулевого индикатора с левой промежуточной отметкой
-          (затем аналогично — с правой), фиксируя найденные значения сопротивлений.
-        </p>
-        <p>
-          Допуск по i<sub>T</sub>: <b>0.85 ± 0.17</b> (диапазон <b>0.68…1.02</b>).
-        </p>
+        <p class="mono">i<sub>T</sub> = 33.3 / |T − 7|</p>
+        <p>Температуру T берут по градуировочной таблице (R→T). В калькулятор вводишь уже значение T (чтобы не тянуть лишние таблицы в интерфейс).</p>
+        <p>Допуск: <b>0.68…1.02</b>.</p>
 
         <div class="sep"></div>
 
         <h3>5. Проверка передаточного числа по давлению (по высоте)</h3>
-        <p>
-          Зафиксируйте P(1000) по прибору (по барометрической шкале/условию проверки), создайте разряжение до смещения индекса на левую промежуточную отметку и считайте высоту H по высотомеру.
-        </p>
-        <p class="mono">
-          ΔP = P(1000) − Pтаб(H),<br/>
-          i<sub>P</sub> = 33.3 / ΔP
-        </p>
-        <p>
-          Сначала проверьте, что H в допуске <b>2021…3048 м</b>, затем рассчитывайте ΔP по гипсометрической таблице.
-        </p>
-        <p>
-          Допуск по i<sub>P</sub>: <b>0.32 ± 0.06</b> (диапазон <b>0.26…0.38</b>).
-        </p>
-
-        <div class="sep"></div>
-
-        <h3>6. Проверка среднего положения штока исполнительного механизма</h3>
-        <p>
-          Установите на магазине сопротивлений значение, соответствующее +7 °C, и выполните установку разряжения/высоты по методике проверки; подвижный индекс нулевого индикатора должен находиться в среднем положении с точностью толщины подвижного индекса.
-        </p>
-
-        <h3>7. Проверка функционирования системы</h3>
-        <p>
-          Выполните проверку функционирования согласно карте (включая контроль встроенного контроля/положений) совместно с техником вертолёта.
-        </p>
+        <p>Зафиксируйте P(1000) по прибору. Создайте разряжение до смещения индекса на левую промежуточную отметку и считайте высоту H.</p>
+        <p class="mono">ΔP = P(1000) − Pтаб(H), i<sub>P</sub> = 33.3 / ΔP</p>
+        <p>Сначала проверяют, что H в диапазоне <b>2021…3048</b>, затем считают i<sub>P</sub>. Допуск i<sub>P</sub>: <b>0.26…0.38</b>.</p>
       </div>
     </details>
   </div>
 
   <script>
-    // ======= Настройки норм =======
-    const NORM_IP = { min: 0.26, max: 0.38, target: 0.32, tol: 0.06 };
-    const NORM_IT = { min: 0.68, max: 1.02, target: 0.85, tol: 0.17 };
+    // ======= Нормы =======
+    const NORM_IP = { min: 0.26, max: 0.38 };
+    const NORM_IT = { min: 0.68, max: 1.02 };
     const NORM_H  = { min: 2021, max: 3048 };
 
     // ======= Утилиты =======
     const $ = (id) => document.getElementById(id);
 
     function toNum(v){
-      if (v === null || v === undefined) return NaN;
-      const s = String(v).replace(',', '.').trim();
+      const s = String(v ?? '').replace(',', '.').trim();
       if (!s) return NaN;
       const x = Number(s);
       return Number.isFinite(x) ? x : NaN;
@@ -530,78 +493,31 @@
       el.textContent = text || '—';
     }
 
-    // ======= Загрузка таблиц из spuu52.json без Gson =======
-    // Терпимый парсер: вычищаем //... и /*...*/ + убираем висячие запятые перед } ]
-    function sanitizeJson(text){
-      let s = text;
-      s = s.replace(/\/\*[\s\S]*?\*\//g, '');
-      s = s.replace(/(^|\s)\/\/.*$/gm, '');
-      s = s.replace(/,\s*([}\]])/g, '$1');
-      return s;
+    // ======= Гипсометрия: стандартная атмосфера (даёт твои значения типа 1000=674.115) =======
+    // Давление в мм рт.ст. по высоте (м)
+    function p_mmHg_by_h(h_m){
+      // ISA troposphere
+      // p = p0*(1 - L*h/T0)^(g0/(R*L))
+      // p0 = 760 mmHg (на уровне моря), T0=288.15K, L=0.0065K/m
+      const p0 = 760.0;
+      const T0 = 288.15;
+      const L  = 0.0065;
+      const g0 = 9.80665;
+      const R  = 287.05287; // specific gas constant for dry air
+
+      const h = h_m;
+      const term = 1 - (L * h) / T0;
+      if (term <= 0) return NaN;
+      const exp = g0 / (R * L);
+      return p0 * Math.pow(term, exp);
     }
 
-    async function loadTables(){
-      const resp = await fetch('./spuu52.json', { cache: 'no-store' });
-      if (!resp.ok) throw new Error('Не удалось загрузить spuu52.json');
-      const raw = await resp.text();
-      const clean = sanitizeJson(raw);
-      const data = JSON.parse(clean);
-
-      // Ожидаемые варианты структур:
-      // pressureTable: [{H:1000,P:674.115}, ...] или [[1000,674.115], ...]
-      // tempTable:     [{T:-40,R:76.86}, ...]   или [[-40,76.86], ...]
-      const pt = data.pressureTable || data.hypso || data.PTAB || data.pTab || data.pressure || data.hypsoTable;
-      const rt = data.tempTable || data.RT || data.RTAB || data.rtTab || data.temperature || data.temp;
-
-      if (!pt || !rt) {
-        throw new Error('В spuu52.json не найдены pressureTable и/или tempTable (переименуй ключи или добавь).');
-      }
-
-      const pressure = pt.map(row => {
-        if (Array.isArray(row)) return { H: toNum(row[0]), P: toNum(row[1]) };
-        return { H: toNum(row.H ?? row.h ?? row.alt ?? row.m), P: toNum(row.P ?? row.p ?? row.mmHg) };
-      }).filter(r => Number.isFinite(r.H) && Number.isFinite(r.P))
-        .sort((a,b)=>a.H-b.H);
-
-      const temp = rt.map(row => {
-        if (Array.isArray(row)) return { T: toNum(row[0]), R: toNum(row[1]) };
-        return { T: toNum(row.T ?? row.t ?? row.tempC), R: toNum(row.R ?? row.r ?? row.ohm) };
-      }).filter(r => Number.isFinite(r.T) && Number.isFinite(r.R))
-        .sort((a,b)=>a.R-b.R);
-
-      if (pressure.length < 2 || temp.length < 2) {
-        throw new Error('Таблицы слишком короткие (нужно минимум 2 точки).');
-      }
-
-      return { pressure, temp };
-    }
-
-    // Линейная интерполяция Y по X
-    function interp(table, xKey, yKey, x){
-      if (!Number.isFinite(x)) return NaN;
-      const n = table.length;
-      if (x <= table[0][xKey]) return table[0][yKey];
-      if (x >= table[n-1][xKey]) return table[n-1][yKey];
-      for (let i=0;i<n-1;i++){
-        const x1 = table[i][xKey], x2 = table[i+1][xKey];
-        if (x >= x1 && x <= x2){
-          const y1 = table[i][yKey], y2 = table[i+1][yKey];
-          const t = (x - x1) / (x2 - x1);
-          return y1 + (y2 - y1) * t;
-        }
-      }
-      return NaN;
-    }
-
-    // ======= Логика калькулятора =======
-    let TABLES = null;
-
+    // ======= Расчёты =======
     function calcPressure(){
       const p1000 = toNum($('p1000').value);
       const H = toNum($('hLeft').value);
 
-      const have = Number.isFinite(p1000) && Number.isFinite(H) && TABLES;
-      if (!have){
+      if (!Number.isFinite(p1000) || !Number.isFinite(H)){
         $('pTabH').textContent = '—';
         $('dP').textContent = '—';
         $('ip').textContent = '—';
@@ -610,7 +526,7 @@
         return;
       }
 
-      const pTabH = interp(TABLES.pressure, 'H', 'P', H);
+      const pTabH = p_mmHg_by_h(H);
       const dP = p1000 - pTabH;
       const ip = 33.3 / dP;
 
@@ -623,19 +539,17 @@
 
       const okH = inRange(H, NORM_H.min, NORM_H.max);
       const statusText =
-        `H = ${Math.round(H)} м (допуск ${NORM_H.min}…${NORM_H.max}) — ${okH ? 'ОК' : 'ВНЕ ДОПУСКА'}; ` +
-        `iP = ${fmt(ip,3)} (норма ${NORM_IP.min}…${NORM_IP.max}) — ${okIP ? 'НОРМА' : 'НЕ НОРМА'}.`;
-      // Итоговый цвет по iP (как в инструменте контроля)
+        `H=${Math.round(H)}м (${NORM_H.min}…${NORM_H.max}) ${okH ? 'ОК' : 'ВНЕ'}; ` +
+        `iP=${fmt(ip,3)} (${NORM_IP.min}…${NORM_IP.max}) ${okIP ? 'НОРМА' : 'НЕ НОРМА'}.`;
+
       setStatusBar($('statusP'), okIP, statusText);
     }
 
     function calcTemp(){
-      const r1 = toNum($('r1').value);
-      const r2 = toNum($('r2').value);
+      const T1 = toNum($('tVal').value);
+      const T2 = toNum($('tVal2').value);
 
-      if (!TABLES){
-        $('t1').textContent = '—';
-        $('t2').textContent = '—';
+      if (!Number.isFinite(T1) && !Number.isFinite(T2)){
         $('dT').textContent = '—';
         $('it').textContent = '—';
         setBadge($('badgeT'), null);
@@ -643,80 +557,87 @@
         return;
       }
 
-      const have1 = Number.isFinite(r1);
-      const have2 = Number.isFinite(r2);
+      function itByT(T){
+        const dT = Math.abs(T - 7);
+        return 33.3 / dT;
+      }
 
-      const t1 = have1 ? interp(TABLES.temp, 'R', 'T', r1) : NaN;
-      const t2 = have2 ? interp(TABLES.temp, 'R', 'T', r2) : NaN;
+      if (Number.isFinite(T1) && !Number.isFinite(T2)){
+        const dT = Math.abs(T1 - 7);
+        const it = 33.3 / dT;
+        $('dT').textContent = fmt(dT, 3);
+        $('it').textContent = fmt(it, 3);
 
-      $('t1').textContent = have1 ? fmt(t1, 3) : '—';
-      $('t2').textContent = have2 ? fmt(t2, 3) : '—';
-
-      // По технологии: ΔT = T - 7; берём |ΔT|, поэтому iT всегда положительное.
-      const dT1 = have1 ? Math.abs(t1 - 7) : NaN;
-      const dT2 = have2 ? Math.abs(t2 - 7) : NaN;
-
-      // Если введены обе точки — показываем "хуже" (вне допуска) как контроль.
-      let it = NaN;
-      let used = '';
-      if (have1 && have2){
-        const it1 = 33.3 / dT1;
-        const it2 = 33.3 / dT2;
-        // "хуже" = дальше от диапазона / либо просто минимальная/максимальная вне допуска
-        // Практично: если один вне допуска, берём его; если оба в норме — берём худший по близости к границам.
-        const ok1 = inRange(it1, NORM_IT.min, NORM_IT.max);
-        const ok2 = inRange(it2, NORM_IT.min, NORM_IT.max);
-
-        if (!ok1 && ok2){ it = it1; used = 'контроль (точка 1)'; }
-        else if (!ok2 && ok1){ it = it2; used = 'контроль (точка 2)'; }
-        else if (!ok1 && !ok2){
-          // оба плохие — берём более "плохой": дальше от диапазона
-          const dist1 = (it1 < NORM_IT.min) ? (NORM_IT.min - it1) : (it1 - NORM_IT.max);
-          const dist2 = (it2 < NORM_IT.min) ? (NORM_IT.min - it2) : (it2 - NORM_IT.max);
-          it = (dist1 >= dist2) ? it1 : it2;
-          used = 'контроль (хуже из двух)';
-        }else{
-          // оба в норме — берём тот, который ближе к границе (хуже)
-          const margin1 = Math.min(it1 - NORM_IT.min, NORM_IT.max - it1);
-          const margin2 = Math.min(it2 - NORM_IT.min, NORM_IT.max - it2);
-          it = (margin1 <= margin2) ? it1 : it2;
-          used = 'контроль (хуже из двух)';
-        }
-
-        $('dT').textContent = `|ΔT1|=${fmt(dT1,3)}; |ΔT2|=${fmt(dT2,3)}`;
-      } else if (have1){
-        it = 33.3 / dT1;
-        used = 'по одной точке';
-        $('dT').textContent = fmt(dT1, 3);
-      } else if (have2){
-        it = 33.3 / dT2;
-        used = 'по одной точке';
-        $('dT').textContent = fmt(dT2, 3);
-      } else {
-        $('dT').textContent = '—';
-        $('it').textContent = '—';
-        setBadge($('badgeT'), null);
-        setStatusBar($('statusT'), null, '—');
+        const ok = inRange(it, NORM_IT.min, NORM_IT.max);
+        setBadge($('badgeT'), ok);
+        setStatusBar($('statusT'), ok, `iT=${fmt(it,3)} (${NORM_IT.min}…${NORM_IT.max}) ${ok ? 'НОРМА' : 'НЕ НОРМА'}.`);
         return;
       }
+
+      // Если введены две точки — показываем "хуже" для статуса
+      const it1 = Number.isFinite(T1) ? itByT(T1) : NaN;
+      const it2 = Number.isFinite(T2) ? itByT(T2) : NaN;
+
+      const ok1 = Number.isFinite(it1) ? inRange(it1, NORM_IT.min, NORM_IT.max) : true;
+      const ok2 = Number.isFinite(it2) ? inRange(it2, NORM_IT.min, NORM_IT.max) : true;
+
+      // худший = если хоть один вне допуска — берём вне допуска; иначе берём ближе к границе
+      let it = it1;
+      if (!ok1 && ok2) it = it1;
+      else if (!ok2 && ok1) it = it2;
+      else if (!ok1 && !ok2){
+        // оба плохие — берём более "плохой"
+        const dist1 = (it1 < NORM_IT.min) ? (NORM_IT.min - it1) : (it1 - NORM_IT.max);
+        const dist2 = (it2 < NORM_IT.min) ? (NORM_IT.min - it2) : (it2 - NORM_IT.max);
+        it = (dist1 >= dist2) ? it1 : it2;
+      }else{
+        // оба в норме — худший ближе к границе
+        const m1 = Math.min(it1 - NORM_IT.min, NORM_IT.max - it1);
+        const m2 = Math.min(it2 - NORM_IT.min, NORM_IT.max - it2);
+        it = (m1 <= m2) ? it1 : it2;
+      }
+
+      const dTtext = [];
+      if (Number.isFinite(T1)) dTtext.push(`|ΔT1|=${fmt(Math.abs(T1-7),3)}`);
+      if (Number.isFinite(T2)) dTtext.push(`|ΔT2|=${fmt(Math.abs(T2-7),3)}`);
+      $('dT').textContent = dTtext.join('; ');
 
       $('it').textContent = fmt(it, 3);
-
       const ok = inRange(it, NORM_IT.min, NORM_IT.max);
       setBadge($('badgeT'), ok);
+      setStatusBar($('statusT'), ok, `iT=${fmt(it,3)} (${NORM_IT.min}…${NORM_IT.max}) ${ok ? 'НОРМА' : 'НЕ НОРМА'}.`);
+    }
 
-      const statusText =
-        `iT = ${fmt(it,3)} (норма ${NORM_IT.min}…${NORM_IT.max}) — ${ok ? 'НОРМА' : 'НЕ НОРМА'}; ` +
-        `${used}.`;
-      setStatusBar($('statusT'), ok, statusText);
+    // ======= Принудительно очищаем поля при старте (убирает автоподстановку браузера) =======
+    function forceEmptyOnLoad(){
+      const ids = ['p1000','hLeft','tVal','tVal2'];
+      for (const id of ids){
+        const el = $(id);
+        el.value = '';
+        el.defaultValue = '';
+      }
+      // результаты в прочерки
+      $('pTabH').textContent = '—';
+      $('dP').textContent = '—';
+      $('ip').textContent = '—';
+      setBadge($('badgeP'), null);
+      setStatusBar($('statusP'), null, '—');
+
+      $('dT').textContent = '—';
+      $('it').textContent = '—';
+      setBadge($('badgeT'), null);
+      setStatusBar($('statusT'), null, '—');
+
+      // технология закрыта
+      $('techBlock').open = false;
     }
 
     function bind(){
       $('p1000').addEventListener('input', calcPressure);
       $('hLeft').addEventListener('input', calcPressure);
 
-      $('r1').addEventListener('input', calcTemp);
-      $('r2').addEventListener('input', calcTemp);
+      $('tVal').addEventListener('input', calcTemp);
+      $('tVal2').addEventListener('input', calcTemp);
 
       $('resetP').addEventListener('click', () => {
         $('p1000').value = '';
@@ -725,25 +646,18 @@
       });
 
       $('resetT').addEventListener('click', () => {
-        $('r1').value = '';
-        $('r2').value = '';
+        $('tVal').value = '';
+        $('tVal2').value = '';
         calcTemp();
       });
     }
 
-    (async function init(){
+    document.addEventListener('DOMContentLoaded', () => {
       bind();
-      try{
-        TABLES = await loadTables();
-        // Стартовый пересчёт (если поля уже заполнены браузером автозаполнением)
-        calcPressure();
-        calcTemp();
-      }catch(e){
-        console.error(e);
-        setStatusBar($('statusP'), false, 'Ошибка загрузки таблиц: проверь spuu52.json (pressureTable/tempTable).');
-        setStatusBar($('statusT'), false, 'Ошибка загрузки таблиц: проверь spuu52.json (pressureTable/tempTable).');
-      }
-    })();
+      // Делаем очистку чуть позже, чтобы перебить автозаполнение браузера
+      setTimeout(forceEmptyOnLoad, 0);
+      setTimeout(forceEmptyOnLoad, 50);
+    });
   </script>
 </body>
 </html>
