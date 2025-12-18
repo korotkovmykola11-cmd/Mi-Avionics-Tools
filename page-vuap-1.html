@@ -1,178 +1,263 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>ВУАП-1 — электронная инженерная инструкция</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<title>ВУАП-1 — инженерная технология</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    :root{
-      --bg1:#0f172a;
-      --bg2:#020617;
-      --card:#0b1220;
-      --line:#1e293b;
-      --accent:#38bdf8;
-      --text:#e5e7eb;
-      --muted:#9ca3af;
-    }
+<style>
+:root{
+  --bg:#0b1220;
+  --panel:#141c2f;
+  --card:#1b2540;
+  --text:#e6ecff;
+  --muted:#9aa6d1;
+  --accent:#5da9ff;
+  --ok:#5dffb0;
+  --warn:#ffd36a;
+}
 
-    *{box-sizing:border-box}
+*{box-sizing:border-box}
 
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      background:
-        radial-gradient(900px 500px at 20% 10%, #1e3a8a55, transparent 60%),
-        radial-gradient(900px 500px at 80% 80%, #0ea5e955, transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-    }
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:linear-gradient(180deg,#0b1220,#0f1730);
+  color:var(--text);
+}
 
-    header{
-      padding:18px 22px;
-      border-bottom:1px solid var(--line);
-      background:linear-gradient(180deg,#020617cc,#020617aa);
-      backdrop-filter: blur(6px);
-    }
+header{
+  padding:24px;
+  background:var(--panel);
+  border-bottom:1px solid #24305c;
+}
 
-    header h1{
-      margin:0;
-      font-size:20px;
-      letter-spacing:.3px;
-    }
+h1{margin:0;font-size:22px}
+h2{margin:24px 0 12px}
+h3{margin:18px 0 8px}
 
-    header p{
-      margin:6px 0 0;
-      font-size:13px;
-      color:var(--muted);
-    }
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:24px;
+}
 
-    main{
-      display:grid;
-      grid-template-columns:320px 1fr;
-      gap:16px;
-      padding:16px;
-      max-width:1400px;
-      margin:0 auto;
-    }
+.nav{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
 
-    aside{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:14px;
-    }
+.nav button{
+  background:var(--card);
+  color:var(--text);
+  border:1px solid #2a3870;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+}
 
-    aside h2{
-      margin:0 0 10px;
-      font-size:15px;
-    }
+.nav button:hover{border-color:var(--accent)}
 
-    .step{
-      padding:10px 12px;
-      border-radius:10px;
-      border:1px solid var(--line);
-      margin-bottom:8px;
-      font-size:13px;
-      cursor:pointer;
-      background:#020617;
-    }
+.section{
+  display:none;
+}
 
-    .step:hover{
-      border-color:var(--accent);
-    }
+.section.active{
+  display:block;
+}
 
-    section{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:16px;
-    }
+.card{
+  background:var(--card);
+  border:1px solid #26346a;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:16px;
+}
 
-    section h2{
-      margin:0 0 10px;
-      font-size:16px;
-    }
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+}
 
-    .note{
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.5;
-    }
+th,td{
+  border:1px solid #2a3870;
+  padding:8px;
+  text-align:left;
+}
 
-    .placeholder{
-      margin-top:14px;
-      padding:16px;
-      border-radius:12px;
-      border:1px dashed var(--line);
-      color:var(--muted);
-      font-size:14px;
-    }
+th{background:#202c55}
 
-    footer{
-      max-width:1400px;
-      margin:12px auto 24px;
-      padding:12px 16px;
-      font-size:12px;
-      color:var(--muted);
-    }
+input{
+  background:#0f1730;
+  color:var(--text);
+  border:1px solid #2a3870;
+  border-radius:6px;
+  padding:6px;
+  width:120px;
+}
 
-    @media (max-width:900px){
-      main{grid-template-columns:1fr}
-    }
-  </style>
+.calc-row{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.result{
+  color:var(--ok);
+  font-weight:600;
+}
+
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px;
+}
+
+.gallery a{
+  text-decoration:none;
+  color:var(--muted);
+}
+
+.gallery img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid #2a3870;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>ВУАП-1 — электронная инженерная инструкция</h1>
-  <p>
-    Автопилот ВУАП-1 • Пошаговая технология • Контроль и расчёты  
-    (инженерный инструмент, а не просто просмотр PDF)
-  </p>
+  <h1>ВУАП-1 — инженерная технологическая карта</h1>
+  <div class="nav">
+    <button onclick="openTab('overview')">Общее</button>
+    <button onclick="openTab('steps')">Порядок работ</button>
+    <button onclick="openTab('gears')">Передаточные числа</button>
+    <button onclick="openTab('adjust')">Регулировки</button>
+    <button onclick="openTab('control')">Контроль</button>
+    <button onclick="openTab('refs')">Справочные фото</button>
+  </div>
 </header>
 
-<main>
+<div class="container">
 
-  <aside>
-    <h2>Этапы проверки</h2>
-
-    <div class="step">1. Общие требования и подготовка</div>
-    <div class="step">2. Внешний осмотр и проверка комплектности</div>
-    <div class="step">3. Подготовка к включению</div>
-    <div class="step">4. Проверка каналов стабилизации</div>
-    <div class="step">5. Контрольные измерения</div>
-    <div class="step">6. Регулировки и допуски</div>
-    <div class="step">7. Заключение и запись результатов</div>
-  </aside>
-
-  <section>
-    <h2>Рабочая зона</h2>
-
-    <p class="note">
-      Здесь будет пошагово реализована технология ВУАП-1:
-      <br>• контрольные параметры
-      <br>• расчёты передаточных чисел
-      <br>• ввод измеренных значений
-      <br>• автоматическая проверка допусков
+<!-- ОБЩЕЕ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <h2>Назначение</h2>
+    <p>
+      ВУАП-1 — узел автопилота, обеспечивающий преобразование управляющих воздействий
+      и демпфирование в каналах стабилизации.
     </p>
+  </div>
 
-    <div class="placeholder">
-      📌 На текущем этапе:
-      <br>— страница-каркас создана
-      <br>— навигация по технологии готова
-      <br>— далее добавляем расчёты и алгоритмы, как делали для СПУ-52
+  <div class="card">
+    <h2>Состав входных данных</h2>
+    <ul>
+      <li>Механическая схема</li>
+      <li>Передаточные числа</li>
+      <li>Регулировочные параметры</li>
+      <li>Допуски и контрольные измерения</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ПОРЯДОК РАБОТ -->
+<div id="steps" class="section">
+  <div class="card">
+    <h2>Порядок выполнения технологии</h2>
+    <ol>
+      <li>Внешний осмотр и комплектность</li>
+      <li>Проверка люфтов и свободного хода</li>
+      <li>Проверка кинематики</li>
+      <li>Расчёт и проверка передаточных чисел</li>
+      <li>Регулировка нулей</li>
+      <li>Контрольные измерения</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ПЕРЕДАТОЧНЫЕ ЧИСЛА -->
+<div id="gears" class="section">
+  <div class="card">
+    <h2>Расчёт передаточного числа</h2>
+
+    <div class="calc-row">
+      Ведущая шестерня:
+      <input id="z1" type="number" value="20">
+      Ведомая:
+      <input id="z2" type="number" value="40">
+      <button onclick="calcGear()">Рассчитать</button>
+      <span id="gearResult" class="result"></span>
     </div>
-  </section>
+  </div>
+</div>
 
-</main>
+<!-- РЕГУЛИРОВКИ -->
+<div id="adjust" class="section">
+  <div class="card">
+    <h2>Регулировочные параметры</h2>
+    <table>
+      <tr><th>Параметр</th><th>Норма</th><th>Допуск</th></tr>
+      <tr><td>Нейтраль</td><td>0°</td><td>±0.5°</td></tr>
+      <tr><td>Свободный ход</td><td>—</td><td>≤ допустимого</td></tr>
+    </table>
+  </div>
+</div>
 
-<footer>
-  Примечание: фотографии технологии ВУАП-1 используются как справочный материал,
-  но логика и расчёты реализуются в интерактивном виде.
-</footer>
+<!-- КОНТРОЛЬ -->
+<div id="control" class="section">
+  <div class="card">
+    <h2>Контрольные измерения</h2>
+    <ul>
+      <li>Симметрия отклонений</li>
+      <li>Отсутствие заеданий</li>
+      <li>Возврат в нейтраль</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ФОТО -->
+<div id="refs" class="section">
+  <div class="card">
+    <h2>Справочные материалы (ВУАП-1)</h2>
+    <div class="gallery" id="gallery"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function openTab(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function calcGear(){
+  const z1 = +document.getElementById('z1').value;
+  const z2 = +document.getElementById('z2').value;
+  if(!z1 || !z2) return;
+  document.getElementById('gearResult').textContent =
+    'i = ' + (z2/z1).toFixed(3);
+}
+
+// галерея 01–69
+const gallery = document.getElementById('gallery');
+for(let i=1;i<=69;i++){
+  const n = String(i).padStart(2,'0');
+  const a = document.createElement('a');
+  a.href = `vuap1/${n}.JPEG`;
+  a.target = '_blank';
+  a.innerHTML = `<img src="vuap1/${n}.JPEG"><div>${n}</div>`;
+  gallery.appendChild(a);
+}
+</script>
 
 </body>
 </html>
