@@ -1,1 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ВУАП-1 — технология</title>
+  <style>
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#0b1020;color:#fff}
+    header{position:sticky;top:0;background:#0b1020cc;backdrop-filter:blur(6px);padding:12px 16px;border-bottom:1px solid #ffffff22}
+    .wrap{max-width:1100px;margin:0 auto}
+    h1{margin:0;font-size:18px}
+    .hint{opacity:.85;font-size:13px;margin-top:4px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;padding:14px 16px}
+    .card{background:#ffffff10;border:1px solid #ffffff1f;border-radius:12px;overflow:hidden}
+    .num{padding:8px 10px;font-size:12px;opacity:.85;border-bottom:1px solid #ffffff1a}
+    img{display:block;width:100%;height:auto;background:#111}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>ВУАП-1 — фото технологии</h1>
+      <div class="hint">Подтягиваем изображения из папки <b>vuap1</b> (01…69).</div>
+    </div>
+  </header>
 
+  <main class="wrap">
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <script>
+    // ВАЖНО: у тебя файлы называются 01.JPEG, 02.JPEG ... (регистр важен!)
+    const EXT = "JPEG";
+    const TOTAL = 69;
+
+    const grid = document.getElementById("grid");
+
+    function pad2(n){ return String(n).padStart(2,"0"); }
+
+    for(let i=1;i<=TOTAL;i++){
+      const name = `${pad2(i)}.${EXT}`;
+      const src  = `./vuap1/${name}`;
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const num = document.createElement("div");
+      num.className = "num";
+      num.textContent = name;
+
+      const img = document.createElement("img");
+      img.loading = "lazy";
+      img.src = src;
+      img.alt = name;
+
+      card.appendChild(num);
+      card.appendChild(img);
+      grid.appendChild(card);
+    }
+  </script>
+</body>
+</html>
