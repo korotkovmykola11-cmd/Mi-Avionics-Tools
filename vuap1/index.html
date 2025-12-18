@@ -1,1 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ВУАП-1 — фото (69)</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:18px;background:#0b1020;color:#e9eefc}
+    h1{margin:0 0 10px;font-size:18px}
+    .top{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+    .btn{display:inline-block;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.08);color:#e9eefc;text-decoration:none;border:1px solid rgba(255,255,255,.12)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden}
+    .thumb{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:#111}
+    .cap{padding:8px 10px;font-size:12px;opacity:.9;display:flex;justify-content:space-between;gap:10px}
+    .cap code{opacity:.9}
+    .note{opacity:.75;font-size:12px;margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="top">
+    <h1>ВУАП-1 — фото (01…69)</h1>
+    <a class="btn" href="../index.html">← На главную</a>
+  </div>
 
+  <div id="grid" class="grid"></div>
+
+  <div class="note">
+    Подсказка: клик по картинке откроет оригинал в новой вкладке.
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+
+    // Если у тебя не 69 — меняешь тут число:
+    const TOTAL = 69;
+
+    // Файлы у тебя называются 01.JPEG, 02.JPEG … (с заглавными буквами)
+    function name(i){
+      const n = String(i).padStart(2,'0');
+      return `${n}.JPEG`;
+    }
+
+    for(let i=1;i<=TOTAL;i++){
+      const file = name(i);
+
+      const a = document.createElement('a');
+      a.href = file;
+      a.target = "_blank";
+      a.rel = "noopener";
+
+      const card = document.createElement('div');
+      card.className = "card";
+
+      const img = document.createElement('img');
+      img.className = "thumb";
+      img.loading = "lazy";
+      img.src = file;
+      img.alt = file;
+
+      const cap = document.createElement('div');
+      cap.className = "cap";
+      cap.innerHTML = `<span>Фото #${String(i).padStart(2,'0')}</span><code>${file}</code>`;
+
+      card.appendChild(img);
+      card.appendChild(cap);
+      a.appendChild(card);
+      grid.appendChild(a);
+    }
+  </script>
+</body>
+</html>
