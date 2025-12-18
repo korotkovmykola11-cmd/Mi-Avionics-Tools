@@ -1,6 +1,3 @@
-<h1 style="color:red; font-size:48px;">
-TEST PAGE IS WORKING
-</h1>
 <!doctype html>
 <html lang="ru">
 <head>
@@ -9,11 +6,9 @@ TEST PAGE IS WORKING
   <title>Mi Avionics Tools</title>
   <style>
     :root{
-      --ukr-blue:#1e6cff;
-      --ukr-yellow:#ffd400;
       --ink:#0b1020;
-      --card:#ffffffcc;
-      --stroke:#ffffff55;
+      --card:rgba(255,255,255,.86);
+      --stroke:rgba(255,255,255,.35);
     }
     *{box-sizing:border-box}
     body{
@@ -21,126 +16,74 @@ TEST PAGE IS WORKING
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#0a0f1f;
       min-height:100vh;
+
+      /* Красивый фон (не флаг) */
       background:
-        radial-gradient(1200px 600px at 15% 10%, #ffffff55, transparent 55%),
-        radial-gradient(900px 500px at 80% 30%, #ffffff40, transparent 55%),
-        linear-gradient(180deg, var(--ukr-blue) 0%, var(--ukr-blue) 49.5%, var(--ukr-yellow) 50.5%, var(--ukr-yellow) 100%);
+        radial-gradient(1100px 600px at 10% 10%, rgba(255,255,255,.18), transparent 55%),
+        radial-gradient(900px 520px at 85% 25%, rgba(255,255,255,.12), transparent 55%),
+        linear-gradient(180deg, #0b1a2a 0%, #153a5a 45%, #1a4b3f 100%);
       background-attachment: fixed;
     }
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:24px 16px 40px;
-    }
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:18px;
-    }
+
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px;}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
     .brand{
-      display:flex; flex-direction:column; gap:6px;
-      padding:14px 16px;
-      border-radius:16px;
-      background:linear-gradient(180deg,#ffffffcc,#ffffffaa);
+      display:flex;flex-direction:column;gap:6px;
+      padding:14px 16px;border-radius:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
       border:1px solid var(--stroke);
-      box-shadow: 0 16px 30px #00000020;
+      box-shadow:0 18px 34px rgba(0,0,0,.22);
       backdrop-filter: blur(6px);
     }
-    .brand h1{
-      margin:0;
-      font-size:18px;
-      letter-spacing:.2px;
-      color:var(--ink);
-    }
-    .brand p{
-      margin:0;
-      font-size:13px;
-      opacity:.9;
-    }
+    .brand h1{margin:0;font-size:18px;letter-spacing:.2px;color:var(--ink);}
+    .brand p{margin:0;font-size:13px;opacity:.92;}
     .badge{
-      padding:10px 12px;
-      border-radius:999px;
-      background:#ffffffcc;
+      padding:10px 12px;border-radius:999px;
+      background:rgba(255,255,255,.80);
       border:1px solid var(--stroke);
-      box-shadow: 0 10px 18px #00000018;
-      font-size:12px;
-      white-space:nowrap;
+      box-shadow:0 10px 18px rgba(0,0,0,.18);
+      font-size:12px;white-space:nowrap;
     }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(12,1fr);
-      gap:14px;
-    }
+
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;}
     .card{
       grid-column: span 6;
-      background:linear-gradient(180deg,#ffffffd8,#ffffffb8);
+      background:linear-gradient(180deg, rgba(255,255,255,.90), rgba(255,255,255,.78));
       border:1px solid var(--stroke);
-      border-radius:18px;
-      padding:16px;
-      box-shadow: 0 18px 34px #00000022;
+      border-radius:18px;padding:16px;
+      box-shadow:0 18px 34px rgba(0,0,0,.22);
       backdrop-filter: blur(6px);
-      position:relative;
-      overflow:hidden;
+      position:relative;overflow:hidden;
     }
     .card:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(600px 180px at 20% 0%, #ffffff60, transparent 60%);
+      content:"";position:absolute;inset:-2px;
+      background: radial-gradient(600px 180px at 20% 0%, rgba(255,255,255,.35), transparent 60%);
       pointer-events:none;
     }
-    .card h2{
-      margin:0 0 8px 0;
-      font-size:16px;
-      color:var(--ink);
-      position:relative;
-    }
-    .meta{
-      margin:0 0 14px 0;
-      font-size:13px;
-      line-height:1.35;
-      opacity:.92;
-      position:relative;
-    }
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      position:relative;
-    }
+    .card h2{margin:0 0 8px 0;font-size:16px;color:var(--ink);position:relative;}
+    .meta{margin:0 0 14px 0;font-size:13px;line-height:1.35;opacity:.92;position:relative;}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;position:relative;}
     a.btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 12px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:700;
-      font-size:13px;
-      border:1px solid #00000012;
-      box-shadow: 0 10px 16px #00000018;
-      color:var(--ink);
-      background:#fff;
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 12px;border-radius:12px;text-decoration:none;
+      font-weight:800;font-size:13px;
+      border:1px solid rgba(0,0,0,.10);
+      box-shadow:0 10px 16px rgba(0,0,0,.18);
+      color:var(--ink);background:#fff;
     }
-    a.btn.primary{
-      background:linear-gradient(180deg,#ffffff,#f6f7ff);
-    }
+    a.btn.primary{background:linear-gradient(180deg,#ffffff,#f4f7ff);}
     a.btn:active{transform:translateY(1px)}
     .foot{
-      margin-top:16px;
-      font-size:12px;
-      opacity:.9;
-      background:#ffffffbb;
+      margin-top:16px;font-size:12px;opacity:.92;
+      background:rgba(255,255,255,.80);
       border:1px solid var(--stroke);
-      border-radius:14px;
-      padding:12px 14px;
-      box-shadow:0 14px 26px #0000001c;
+      border-radius:14px;padding:12px 14px;
+      box-shadow:0 14px 26px rgba(0,0,0,.18);
       backdrop-filter: blur(6px);
     }
+
     @media (max-width:900px){
       .card{grid-column: span 12;}
-      .top{flex-direction:column; align-items:stretch;}
       .badge{align-self:flex-start;}
     }
   </style>
@@ -159,41 +102,29 @@ TEST PAGE IS WORKING
       <section class="card">
         <h2>СПУУ-52-3 — расчёт передаточных чисел</h2>
         <p class="meta">
-          Инструмент для проверки по технологии: температура (ΔT) и разряжение/высота по гипсометрической таблице.
-          Версия: существующая (не трогаем).
+          Температура (ΔT) и разряжение/высота по гипсометрической таблице.
+          (Текущая страница СПУУ — не ломаем.)
         </p>
         <div class="actions">
-          <!-- ВАЖНО: здесь укажи точное имя твоего файла СПУУ -->
           <a class="btn primary" href="./page-spu52-3.html">Открыть</a>
         </div>
       </section>
 
       <section class="card">
-        <h2>ВУАП-1 — электронная инженерная инструкция</h2>
+        <h2>ВУАП-1 — инженерная инструкция</h2>
         <p class="meta">
-          Пошаговая проверка по регламенту с полями ввода, расчётами и контролем допусков.
-          Страница будет добавлена отдельно.
+          Пошаговая проверка по регламенту с полями ввода и контролем допусков.
+          (Пока создаём каркас.)
         </p>
         <div class="actions">
-          <!-- пока файла нет — кнопка ведёт на пустую страницу; создадим дальше -->
-          <a class="btn primary" href="./page-vuap-1.html">Открыть</a>
+          <a class="btn primary" href="./vuap1/">Открыть</a>
         </div>
       </section>
     </div>
 
     <div class="foot">
-      Примечание: если при открытии “404”, значит имя файла не совпадает. Тогда переименуем ссылку в кнопке под твой реальный файл.
+      Если кнопка “Открыть” ведёт на 404 — значит имя файла/папки не совпало. Тогда ты просто скажешь, что именно 404, и я дам ровно одну правку в ссылке.
     </div>
-  </div><!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <title>Mi-Avionics-Tools</title>
-</head>
-<body style="font-family: Arial, sans-serif;">
-  <h1>Mi-Avionics-Tools</h1>
-  <p>GitHub Pages работает.</p>
-</body>
-</html>
+  </div>
 </body>
 </html>
