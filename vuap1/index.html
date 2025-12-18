@@ -33,7 +33,8 @@
     const grid = document.getElementById('grid');
 
     // Если у тебя не 69 — меняешь тут число:
-    const TOTAL = 69;
+    const TOTAL = 1;
+    const END=20;
 
     // Файлы у тебя называются 01.JPEG, 02.JPEG … (с заглавными буквами)
     function name(i){
@@ -41,7 +42,7 @@
       return `${n}.JPEG`;
     }
 
-    for(let i=1;i<=TOTAL;i++){
+    for(let i=START;i<=END;i++){
       const file = name(i);
 
       const a = document.createElement('a');
