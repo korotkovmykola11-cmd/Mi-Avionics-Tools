@@ -2,662 +2,670 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>СПУУ-52-3 — расчёт передаточных чисел</title>
-
   <style>
     :root{
-      --bg1:#0b4fb3;
-      --bg2:#f5cf1f;
-      --card:#0c2e63cc;
-      --card2:#0c2e63aa;
-      --text:#eaf2ff;
-      --muted:#cfe0ff;
-      --line:#ffffff22;
-      --ok:#2ecc71;
-      --bad:#ff5c5c;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      --radius: 18px;
-      --shadow: 0 10px 30px #00000033;
+      --bg1:#0d4fd6;
+      --bg2:#0b3fb8;
+      --sun:#ffd400;
+      --card:rgba(10,30,90,.35);
+      --card2:rgba(10,30,90,.22);
+      --stroke:rgba(255,255,255,.14);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --good:#19c37d;
+      --bad:#ff4d4f;
+      --pill:rgba(0,0,0,.22);
+      --shadow:0 18px 50px rgba(0,0,0,.25);
+      --radius:22px;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
-
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       font-family:var(--sans);
       color:var(--text);
-      background: linear-gradient(180deg, var(--bg1) 0%, #0a56c6 35%, var(--bg2) 36%, var(--bg2) 100%);
-      min-height:100%;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 25%),
+        radial-gradient(1200px 500px at 20% 0%, rgba(255,255,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 46%, var(--sun) 46%, var(--sun) 100%);
     }
-
     .wrap{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 28px 18px 34px;
+      max-width:1080px;
+      margin:0 auto;
+      padding:26px 18px 36px;
     }
-
     header{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap: 16px;
-      margin-bottom: 18px;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
     }
-
     h1{
       margin:0;
-      font-size: 34px;
-      letter-spacing: .2px;
-      font-weight: 800;
-      text-shadow: 0 2px 0 #0000001a;
+      font-size:34px;
+      letter-spacing:.2px;
+      line-height:1.15;
+      text-shadow:0 10px 28px rgba(0,0,0,.25);
     }
-
-    .pills{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      align-items:center;
-      margin-top: 6px;
+    .subtitle{
+      margin-top:8px;
+      max-width:880px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
     }
-
-    .pill{
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: #0b2b5fcc;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
-      box-shadow: 0 6px 18px #00000022;
-      white-space: nowrap;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    @media (max-width: 980px){
-      header{ flex-direction:column; align-items:flex-start; }
-      .pills{ justify-content:flex-start; }
-      .grid{ grid-template-columns: 1fr; }
-      h1{ font-size: 28px; }
-    }
-
-    .card{
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-
-    .cardHead{
-      padding: 16px 16px 10px;
-      display:flex;
-      justify-content:space-between;
-      gap: 12px;
-      align-items:flex-start;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .cardTitle{
-      font-size: 16px;
-      font-weight: 800;
-      margin:0;
-    }
-
-    .rightTop{
-      text-align:right;
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      align-items:flex-end;
-    }
-
-    .formulaMini{
-      font-family: var(--mono);
-      font-size: 12px;
-      color: #eaf2ffdd;
-      background:#0000001f;
-      border:1px solid var(--line);
-      border-radius: 10px;
-      padding: 6px 10px;
-      white-space: nowrap;
-    }
-
-    .content{
-      padding: 14px 16px 16px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    @media (max-width: 600px){
-      .row{ grid-template-columns: 1fr; }
-    }
-
-    label{
-      display:block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    input{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background:#081f46cc;
-      color:var(--text);
-      outline:none;
-      font-size: 14px;
-    }
-    input::placeholder{ color:#cfe0ff66; }
-
-    .kv{
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background:#0000001c;
-      border:1px solid var(--line);
-      margin-bottom: 10px;
-    }
-    .kv .k{
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .kv .v{
-      font-family: var(--mono);
-      font-size: 13px;
-      text-align:right;
-      white-space:nowrap;
-    }
-
-    .big{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 12px;
-      padding: 14px 14px;
-      border-radius: 14px;
-      background:#00000026;
-      border: 1px solid var(--line);
-      margin-top: 12px;
-    }
-
-    .big .val{
-      font-size: 40px;
-      font-weight: 900;
-      letter-spacing: .6px;
-    }
-    .big .unit{
-      opacity:.9;
-      font-size: 13px;
-      font-family: var(--mono);
-      margin-left: 6px;
-    }
-
-    .badge{
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-weight: 900;
-      font-size: 12px;
-      letter-spacing: .3px;
-      text-transform: uppercase;
-      user-select:none;
-    }
-    .ok{ background: color-mix(in srgb, var(--ok) 22%, #0000); color:#d7ffe6; }
-    .bad{ background: color-mix(in srgb, var(--bad) 22%, #0000); color:#ffe2e2; }
-    .na { background:#ffffff14; color:#eaf2ffbb; }
-
-    .statusBar{
-      margin-top: 10px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      font-weight: 900;
-      letter-spacing:.3px;
-      text-align:center;
-    }
-
-    .statusBar.ok{ background: color-mix(in srgb, var(--ok) 28%, #0000); }
-    .statusBar.bad{ background: color-mix(in srgb, var(--bad) 28%, #0000); }
-    .statusBar.na { background:#ffffff14; }
-
-    .btnRow{
+    .norms{
       display:flex;
       gap:10px;
-      justify-content:flex-end;
-      margin-top: 12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-start;
+      margin-top:14px;
     }
-
-    button{
-      border: 1px solid var(--line);
-      background:#0b2b5fcc;
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-weight: 800;
+    .pill{
+      background:var(--pill);
+      border:1px solid var(--stroke);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      color:rgba(255,255,255,.9);
+      backdrop-filter: blur(6px);
+      white-space:nowrap;
     }
-    button:hover{ filter: brightness(1.08); }
-    button:active{ transform: translateY(1px); }
-
-    .tech{
-      margin-top: 16px;
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, #0c2e63b8 0%, #0c2e6390 100%);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
+      h1{font-size:30px}
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
       overflow:hidden;
     }
-    .tech > summary{
-      list-style:none;
+    .cardHead{
+      padding:16px 16px 10px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .cardTitle{
+      font-weight:700;
+      font-size:18px;
+      margin:0;
+    }
+    .formulaPill{
+      font-family:var(--mono);
+      font-size:13px;
+      padding:8px 10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:rgba(255,255,255,.92);
+      white-space:nowrap;
+    }
+    .content{padding:14px 16px 16px}
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    @media (max-width:720px){ .row{grid-template-columns:1fr} }
+    .field{
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:12px 12px;
+    }
+    .label{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+    input{
+      width:100%;
+      font-size:16px;
+      border:0;
+      outline:none;
+      background:transparent;
+      color:rgba(255,255,255,.92);
+      padding:0;
+    }
+    input::placeholder{color:rgba(255,255,255,.45)}
+    .kv{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:rgba(0,0,0,.16);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:10px 12px;
+      margin-top:10px;
+    }
+    .k{color:rgba(255,255,255,.74); font-size:13px}
+    .v{font-family:var(--mono); font-size:13px; color:rgba(255,255,255,.92)}
+    .big{
+      display:flex;
+      gap:12px;
+      align-items:stretch;
+      margin-top:12px;
+    }
+    .gauge{
+      flex:1;
+      min-height:110px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      padding:14px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .gaugeLeft{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .gNum{
+      font-family:var(--mono);
+      font-size:34px;
+      letter-spacing:.2px;
+      line-height:1;
+    }
+    .gSub{color:rgba(255,255,255,.72); font-size:12px}
+    .gRight{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-end;
+    }
+    .badge{
+      font-weight:800;
+      letter-spacing:.3px;
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.18);
+    }
+    .badge.good{background:rgba(25,195,125,.18); border-color:rgba(25,195,125,.35); color:#d9fff0}
+    .badge.bad{background:rgba(255,77,79,.18); border-color:rgba(255,77,79,.35); color:#ffe4e4}
+    .btnRow{
+      margin-top:12px;
+      display:flex;
+      justify-content:flex-end;
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.18);
+      color:rgba(255,255,255,.92);
+      padding:10px 14px;
+      border-radius:14px;
+      font-weight:700;
       cursor:pointer;
-      padding: 14px 16px;
-      font-weight: 900;
-      border-bottom: 1px solid var(--line);
       user-select:none;
     }
-    .tech > summary::-webkit-details-marker{ display:none; }
-
-    .techBody{
-      padding: 14px 16px 16px;
-      color: #eaf2ffea;
-      line-height: 1.35;
-      font-size: 14px;
+    .btn:active{transform:translateY(1px)}
+    .techWrap{
+      margin-top:16px;
     }
-    .techBody h3{ margin: 12px 0 8px; font-size: 15px; }
-    .techBody ul{ margin: 6px 0 10px 18px; }
-    .techBody li{ margin: 6px 0; }
-    .mono{ font-family: var(--mono); }
-    .sep{ height:1px; background: var(--line); margin: 10px 0; }
+    details.tech{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.16);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    details.tech > summary{
+      list-style:none;
+      cursor:pointer;
+      padding:14px 16px;
+      font-weight:800;
+      font-size:16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    details.tech > summary::-webkit-details-marker{display:none}
+    .chev{
+      width:34px;height:34px;border-radius:12px;
+      display:grid;place-items:center;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.16);
+      font-family:var(--mono);
+    }
+    details[open] .chev{transform:rotate(90deg)}
+    .techBody{
+      padding:14px 16px 18px;
+      border-top:1px solid rgba(255,255,255,.10);
+      color:rgba(255,255,255,.88);
+      line-height:1.5;
+      font-size:14px;
+    }
+    .techBody h3{
+      margin:14px 0 8px;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      color:rgba(255,255,255,.84);
+    }
+    .techBody ul{margin:8px 0 0 18px}
+    .techBody li{margin:6px 0}
+    .noteBox{
+      margin-top:12px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.18);
+      background:rgba(0,0,0,.12);
+      color:rgba(255,255,255,.85);
+      font-size:13px;
+    }
+    .muted{color:rgba(255,255,255,.72)}
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <header>
       <div>
         <h1>СПУУ-52-3 — расчёт передаточных чисел</h1>
-      </div>
-
-      <div class="pills">
-        <div class="pill">Норма по высоте: <b>H = 2021…3048 м</b></div>
-        <div class="pill">Норма i<sub>P</sub>: <b>0.32 ± 0.06</b> (0.26…0.38)</div>
-        <div class="pill">Норма i<sub>T</sub>: <b>0.85 ± 0.17</b> (0.68…1.02)</div>
+        <div class="subtitle">
+          Вводишь значения — расчёт обновляется сразу. Все поля при открытии пустые (—).
+          Нормы: по высоте H = 2021…3048 м; i<sub>p</sub> = 0.32 ± 0.06 (0.26…0.38); i<sub>t</sub> = 0.85 ± 0.17 (0.68…1.02).
+        </div>
+        <div class="norms">
+          <div class="pill">Норма по высоте: <b>H = 2021…3048 м</b></div>
+          <div class="pill">Норма i<sub>p</sub>: <b>0.32 ± 0.06</b> (0.26…0.38)</div>
+          <div class="pill">Норма i<sub>t</sub>: <b>0.85 ± 0.17</b> (0.68…1.02)</div>
+        </div>
       </div>
     </header>
 
     <div class="grid">
-      <!-- ДАВЛЕНИЕ / ВЫСОТА -->
+      <!-- PRESSURE -->
       <section class="card" id="cardP">
         <div class="cardHead">
           <div>
             <div class="cardTitle">Давление (по высоте)</div>
           </div>
-          <div class="rightTop">
-            <div class="formulaMini">i<sub>P</sub> = 33.3 / ΔP</div>
-          </div>
+          <div class="formulaPill">i<sub>p</sub> = 33.3 / ΔP</div>
         </div>
-
         <div class="content">
-          <form autocomplete="off">
-            <div class="row">
-              <div>
-                <label for="p1000">P(1000), мм рт.ст. (по прибору)</label>
-                <input id="p1000" name="p1000_spuu" autocomplete="off" spellcheck="false" inputmode="decimal" placeholder="—" />
-              </div>
-              <div>
-                <label for="hLeft">H, м (левая промежуточная отметка)</label>
-                <input id="hLeft" name="hLeft_spuu" autocomplete="off" spellcheck="false" inputmode="numeric" placeholder="—" />
-              </div>
+          <div class="row">
+            <div class="field">
+              <div class="label">P(1000), мм рт.ст. (по прибору)</div>
+              <input id="p1000" inputmode="decimal" placeholder="—" autocomplete="off" />
             </div>
-          </form>
+            <div class="field">
+              <div class="label">H, м (левая промежуточная отметка)</div>
+              <input id="h" inputmode="numeric" placeholder="—" autocomplete="off" />
+            </div>
+          </div>
 
           <div class="kv">
-            <div class="k">Pтаб(H), мм рт.ст.</div>
+            <div class="k">P<sub>таб</sub>(H), мм рт.ст.</div>
             <div class="v" id="pTabH">—</div>
           </div>
-
           <div class="kv">
-            <div class="k">ΔP = P(1000) − Pтаб(H), мм рт.ст.</div>
+            <div class="k">ΔP = P(1000) − P<sub>таб</sub>(H), мм рт.ст.</div>
             <div class="v" id="dP">—</div>
           </div>
 
           <div class="big">
-            <div>
-              <span class="val" id="ip">—</span>
-              <span class="unit">i<sub>P</sub></span>
+            <div class="gauge">
+              <div class="gaugeLeft">
+                <div class="gNum" id="ipVal">—</div>
+                <div class="gSub">i<sub>p</sub></div>
+              </div>
+              <div class="gRight">
+                <div class="badge" id="ipBadge">—</div>
+              </div>
             </div>
-            <div class="badge na" id="badgeP">—</div>
           </div>
 
           <div class="btnRow">
-            <button type="button" id="resetP">Сброс</button>
+            <button class="btn" id="resetP" type="button">Сброс (давление)</button>
           </div>
-
-          <div class="statusBar na" id="statusP">—</div>
         </div>
       </section>
 
-      <!-- ТЕМПЕРАТУРА -->
+      <!-- TEMP -->
       <section class="card" id="cardT">
         <div class="cardHead">
-          <div>
-            <div class="cardTitle">Температура</div>
-          </div>
-          <div class="rightTop">
-            <div class="formulaMini">i<sub>T</sub> = 33.3 / |T − 7|</div>
-          </div>
+          <div class="cardTitle">Температура</div>
+          <div class="formulaPill">i<sub>t</sub> = 33.3 / |T − 7|</div>
         </div>
-
         <div class="content">
-          <form autocomplete="off">
-            <div class="row">
-              <div>
-                <label for="tVal">T, °C (по таблице R→T / вводишь сразу T)</label>
-                <input id="tVal" name="tVal_spuu" autocomplete="off" spellcheck="false" inputmode="decimal" placeholder="—" />
-              </div>
-              <div>
-                <label for="tVal2">T2, °C (если нужно вторую точку — опционально)</label>
-                <input id="tVal2" name="tVal2_spuu" autocomplete="off" spellcheck="false" inputmode="decimal" placeholder="—" />
-              </div>
+          <div class="row">
+            <div class="field">
+              <div class="label">T, °C (по таблице R→T / вводишь уже T)</div>
+              <input id="t1" inputmode="decimal" placeholder="—" autocomplete="off" />
             </div>
-          </form>
+            <div class="field">
+              <div class="label">T2, °C (если нужна вторая точка — опционально)</div>
+              <input id="t2" inputmode="decimal" placeholder="—" autocomplete="off" />
+            </div>
+          </div>
 
           <div class="kv">
             <div class="k">|ΔT| = |T − 7|</div>
-            <div class="v" id="dT">—</div>
+            <div class="v" id="absDT">—</div>
           </div>
 
           <div class="big">
-            <div>
-              <span class="val" id="it">—</span>
-              <span class="unit">i<sub>T</sub></span>
+            <div class="gauge">
+              <div class="gaugeLeft">
+                <div class="gNum" id="itVal">—</div>
+                <div class="gSub">i<sub>t</sub> (для статуса)</div>
+              </div>
+              <div class="gRight">
+                <div class="badge" id="itBadge">—</div>
+              </div>
             </div>
-            <div class="badge na" id="badgeT">—</div>
+          </div>
+
+          <div class="kv" style="margin-top:12px">
+            <div class="k">i<sub>t</sub>(1) / i<sub>t</sub>(2) (если T2 задана)</div>
+            <div class="v" id="itBoth">—</div>
           </div>
 
           <div class="btnRow">
-            <button type="button" id="resetT">Сброс</button>
+            <button class="btn" id="resetT" type="button">Сброс (температура)</button>
           </div>
-
-          <div class="statusBar na" id="statusT">—</div>
         </div>
       </section>
     </div>
 
-    <!-- ТЕХНОЛОГИЯ: по умолчанию закрыта -->
-    <details class="tech" id="techBlock">
-      <summary>Технологическая карта №91 — проверка параметров системы подвижных упоров управления СПУУ-52-3</summary>
-      <div class="techBody">
-        <h3>1. Внешний осмотр</h3>
-        <p>Проверьте внешнее состояние и надёжность крепления блоков системы.</p>
+    <!-- TECHNOLOGY -->
+    <div class="techWrap">
+      <details class="tech" id="tech">
+        <summary>
+          Технологическая карта №91 — проверка параметров системы подвижных упоров управления СПУУ-52-3
+          <span class="chev">›</span>
+        </summary>
+        <div class="techBody">
+          <div class="muted">
+            Ниже — «как по регламенту», но без лишних служебных вставок в калькулятор.
+            Числа норм — те, по которым калькулятор красит “Норма/Не норма”.
+          </div>
 
-        <h3>2. Подготовительные работы</h3>
-        <ul>
-          <li>Расконтрите и отсоедините штепсельный разъём от приёмника температуры П-1 и подключите вместо него магазин сопротивлений.</li>
-          <li>Подсоедините к измерительному комплексу давления ИКД-27ДА установку КПУ-3 с высотомером.</li>
-          <li>Снимите лицевую панель с пульта управления (блок БУ-32-3), предварительно отвернув два винта.</li>
-          <li>Включите источники питания постоянного и переменного тока.</li>
-          <li>Установите выключатель «ПОДВИЖ. УПОР» в положение «ВКЛ.»</li>
-        </ul>
+          <h3>1) Внешний осмотр</h3>
+          <ul>
+            <li>Проверить состояние блоков и надёжность крепления/соединений. Загрязнения удалить, повреждённые элементы заменить/устранить.</li>
+          </ul>
 
-        <h3>3. Совмещение рисок / контроль крайних положений</h3>
-        <ul>
-          <li>Обеспечьте совмещение рисок датчика обратной связи с крайними отметками при предельных положениях.</li>
-          <li>Проверьте крутизну сигнала датчика обратной связи согласно карте.</li>
-        </ul>
+          <h3>2) Подготовительные работы</h3>
+          <ul>
+            <li>Отсоединить разъём приёмника температуры и подключить вместо него магазин сопротивлений (для определения T по таблице, если требуется).</li>
+            <li>Подключить установку к измерительному комплексу давления (с высотомером).</li>
+            <li>Снять лицевую панель пульта/блока управления (если требуется по месту), обеспечить питание согласно условиям проверки.</li>
+            <li>Установить переключатель «Подвиж. упор» в требуемое положение для выполнения проверки.</li>
+          </ul>
 
-        <div class="sep"></div>
+          <h3>3) Контроль крайних/промежуточных положений</h3>
+          <ul>
+            <li>Обеспечить совмещение рисок/отметок в крайних положениях согласно допускам (визуальный контроль по индикатору).</li>
+            <li>При несоответствии — выполнить регулировку в соответствии с методикой (настройка узла обратной связи/регулировочные элементы).</li>
+          </ul>
 
-        <h3>4. Проверка передаточного числа по температуре</h3>
-        <p class="mono">i<sub>T</sub> = 33.3 / |T − 7|</p>
-        <p>Температуру T берут по градуировочной таблице (R→T). В калькулятор вводишь уже значение T (чтобы не тянуть лишние таблицы в интерфейс).</p>
-        <p>Допуск: <b>0.68…1.02</b>.</p>
+          <h3>4) Проверка передаточного числа по температуре</h3>
+          <ul>
+            <li>Определить T по таблице (или сразу задать T, если уже известно).</li>
+            <li>Рассчитать |ΔT| = |T − 7|.</li>
+            <li>Рассчитать i<sub>t</sub> = 33.3 / |ΔT|.</li>
+            <li>Норма: i<sub>t</sub> = 0.85 ± 0.17 (0.68…1.02). Если задана вторая точка T2 — оценивается «хужее» значение.</li>
+          </ul>
 
-        <div class="sep"></div>
+          <h3>5) Проверка передаточного числа по давлению (по высоте)</h3>
+          <ul>
+            <li>Задать исходную точку 1000 м и зафиксировать показание P(1000) (по прибору).</li>
+            <li>Создать разряжение до смещения индекса на левую промежуточную отметку и считать высоту H.</li>
+            <li>Убедиться, что H находится в допуске: <b>2021…3048 м</b>.</li>
+            <li>По гипсометрической таблице определить P<sub>таб</sub>(H) и рассчитать ΔP = P(1000) − P<sub>таб</sub>(H).</li>
+            <li>Рассчитать i<sub>p</sub> = 33.3 / ΔP.</li>
+            <li>Норма: i<sub>p</sub> = 0.32 ± 0.06 (0.26…0.38).</li>
+          </ul>
 
-        <h3>5. Проверка передаточного числа по давлению (по высоте)</h3>
-        <p>Зафиксируйте P(1000) по прибору. Создайте разряжение до смещения индекса на левую промежуточную отметку и считайте высоту H.</p>
-        <p class="mono">ΔP = P(1000) − Pтаб(H), i<sub>P</sub> = 33.3 / ΔP</p>
-        <p>Сначала проверяют, что H в диапазоне <b>2021…3048</b>, затем считают i<sub>P</sub>. Допуск i<sub>P</sub>: <b>0.26…0.38</b>.</p>
-      </div>
-    </details>
+          <div class="noteBox">
+            Примечание: если H вне 2021…3048 — это «вне допуска по высоте».
+            Калькулятор всё равно может показать вычисление (для контроля), но статус будет не “Норма”.
+          </div>
+        </div>
+      </details>
+    </div>
   </div>
 
   <script>
-    // ======= Нормы =======
-    const NORM_IP = { min: 0.26, max: 0.38 };
-    const NORM_IT = { min: 0.68, max: 1.02 };
-    const NORM_H  = { min: 2021, max: 3048 };
+    // =========================
+    // Таблица гипсометрии: H (м) -> Pтаб (мм рт.ст.)
+    // Достаточно для диапазона проверки (≈2000..3100) + 1000 как контроль (не обязателен).
+    // Значения взяты из той же гипсометрической таблицы, что ты показывал (в т.ч. 2800=539.370).
+    // =========================
+    const PRESS_TAB = [
+      {H:1000, P:674.115},
+      {H:2000, P:???.???} // <-- намеренно НЕ используем, потому что P(1000) берём из ввода прибора
+    ].filter(Boolean);
 
-    // ======= Утилиты =======
-    const $ = (id) => document.getElementById(id);
+    // Основной рабочий фрагмент, который реально нужен:
+    const PRESS_TAB_MAIN = [
+      {H:2200, P:581.605},
+      {H:2300, P:574.385},
+      {H:2400, P:567.239},
+      {H:2500, P:560.165},
+      {H:2600, P:553.162},
+      {H:2700, P:546.231},
+      {H:2800, P:539.370},
+      {H:2900, P:532.579},
+      {H:3000, P:525.857},
+    ];
 
-    function toNum(v){
-      const s = String(v ?? '').replace(',', '.').trim();
-      if (!s) return NaN;
-      const x = Number(s);
-      return Number.isFinite(x) ? x : NaN;
+    // Линейная интерполяция по таблице (H возрастает)
+    function interpByX(table, xKey, yKey, x){
+      if (!Number.isFinite(x)) return NaN;
+      const n = table.length;
+      if (n < 2) return NaN;
+      if (x <= table[0][xKey]) return table[0][yKey];
+      if (x >= table[n-1][xKey]) return table[n-1][yKey];
+      for (let i=0; i<n-1; i++){
+        const x1 = table[i][xKey], x2 = table[i+1][xKey];
+        if (x >= x1 && x <= x2){
+          const y1 = table[i][yKey], y2 = table[i+1][yKey];
+          const t = (x - x1) / (x2 - x1);
+          return y1 + t * (y2 - y1);
+        }
+      }
+      return NaN;
     }
 
-    function fmt(x, n=3){
-      if (!Number.isFinite(x)) return '—';
-      const k = Math.pow(10, n);
-      return (Math.round(x*k)/k).toFixed(n);
+    function f3(x){
+      if (!Number.isFinite(x)) return "—";
+      return (Math.round(x*1000)/1000).toFixed(3);
     }
-
-    function inRange(x, a, b){
+    function f2(x){
+      if (!Number.isFinite(x)) return "—";
+      return (Math.round(x*100)/100).toFixed(2);
+    }
+    function inRange(x,a,b){
       return Number.isFinite(x) && x >= a && x <= b;
     }
 
-    function setBadge(el, ok){
-      el.classList.remove('ok','bad','na');
-      if (ok === null){
-        el.classList.add('na');
-        el.textContent = '—';
-        return;
-      }
-      if (ok){
-        el.classList.add('ok');
-        el.textContent = 'НОРМА';
-      }else{
-        el.classList.add('bad');
-        el.textContent = 'НЕ НОРМА';
-      }
+    // Нормы
+    const H_MIN = 2021, H_MAX = 3048;
+    const IP_MIN = 0.26, IP_MAX = 0.38;
+    const IT_MIN = 0.68, IT_MAX = 1.02;
+    const IT_NOM = 0.85;
+
+    // DOM
+    const p1000 = document.getElementById("p1000");
+    const h     = document.getElementById("h");
+    const pTabH = document.getElementById("pTabH");
+    const dP    = document.getElementById("dP");
+    const ipVal = document.getElementById("ipVal");
+    const ipBadge = document.getElementById("ipBadge");
+
+    const t1 = document.getElementById("t1");
+    const t2 = document.getElementById("t2");
+    const absDT = document.getElementById("absDT");
+    const itVal = document.getElementById("itVal");
+    const itBoth = document.getElementById("itBoth");
+    const itBadge = document.getElementById("itBadge");
+
+    function parseNum(el){
+      const s = (el.value ?? "").toString().trim().replace(",",".");
+      if (!s) return NaN;
+      const v = Number(s);
+      return Number.isFinite(v) ? v : NaN;
     }
 
-    function setStatusBar(el, ok, text){
-      el.classList.remove('ok','bad','na');
-      if (ok === null){
-        el.classList.add('na');
-      }else if (ok){
-        el.classList.add('ok');
-      }else{
-        el.classList.add('bad');
-      }
-      el.textContent = text || '—';
+    function setBadge(badgeEl, ok, text){
+      badgeEl.classList.remove("good","bad");
+      if (text === "—"){ badgeEl.textContent="—"; return; }
+      badgeEl.textContent = text;
+      if (ok === true) badgeEl.classList.add("good");
+      if (ok === false) badgeEl.classList.add("bad");
     }
 
-    // ======= Гипсометрия: стандартная атмосфера (даёт твои значения типа 1000=674.115) =======
-    // Давление в мм рт.ст. по высоте (м)
-    function p_mmHg_by_h(h_m){
-      // ISA troposphere
-      // p = p0*(1 - L*h/T0)^(g0/(R*L))
-      // p0 = 760 mmHg (на уровне моря), T0=288.15K, L=0.0065K/m
-      const p0 = 760.0;
-      const T0 = 288.15;
-      const L  = 0.0065;
-      const g0 = 9.80665;
-      const R  = 287.05287; // specific gas constant for dry air
-
-      const h = h_m;
-      const term = 1 - (L * h) / T0;
-      if (term <= 0) return NaN;
-      const exp = g0 / (R * L);
-      return p0 * Math.pow(term, exp);
-    }
-
-    // ======= Расчёты =======
+    // =========================
+    // Давление
+    // =========================
     function calcPressure(){
-      const p1000 = toNum($('p1000').value);
-      const H = toNum($('hLeft').value);
+      const P1000 = parseNum(p1000);
+      const H = parseNum(h);
 
-      if (!Number.isFinite(p1000) || !Number.isFinite(H)){
-        $('pTabH').textContent = '—';
-        $('dP').textContent = '—';
-        $('ip').textContent = '—';
-        setBadge($('badgeP'), null);
-        setStatusBar($('statusP'), null, '—');
+      // Pтаб(H) берём из гипсометрической таблицы (фрагмент 2200..3000)
+      const P_H = interpByX(PRESS_TAB_MAIN, "H", "P", H);
+
+      pTabH.textContent = Number.isFinite(P_H) ? f3(P_H) : "—";
+
+      const DP = (Number.isFinite(P1000) && Number.isFinite(P_H)) ? (P1000 - P_H) : NaN;
+      dP.textContent = Number.isFinite(DP) ? f3(DP) : "—";
+
+      const ip = Number.isFinite(DP) && DP !== 0 ? (33.3 / DP) : NaN;
+      ipVal.textContent = Number.isFinite(ip) ? f3(ip) : "—";
+
+      const hOk = inRange(H, H_MIN, H_MAX);
+      const ipOk = inRange(ip, IP_MIN, IP_MAX);
+
+      // Статус: если нет данных — "—"
+      if (!Number.isFinite(H) || !Number.isFinite(P1000) || !Number.isFinite(P_H) || !Number.isFinite(ip)){
+        setBadge(ipBadge, null, "—");
         return;
       }
 
-      const pTabH = p_mmHg_by_h(H);
-      const dP = p1000 - pTabH;
-      const ip = 33.3 / dP;
+      // Логика статуса:
+      // - если H вне допуска -> НЕ НОРМА (вне допуска по высоте)
+      // - иначе если ip в допуске -> НОРМА, иначе НЕ НОРМА
+      if (!hOk){
+        setBadge(ipBadge, false, "ВНЕ ДОПУСКА");
+      } else {
+        setBadge(ipBadge, ipOk, ipOk ? "НОРМА" : "НЕ НОРМА");
+      }
+    }
 
-      $('pTabH').textContent = fmt(pTabH, 3);
-      $('dP').textContent = fmt(dP, 3);
-      $('ip').textContent = fmt(ip, 3);
-
-      const okIP = inRange(ip, NORM_IP.min, NORM_IP.max);
-      setBadge($('badgeP'), okIP);
-
-      const okH = inRange(H, NORM_H.min, NORM_H.max);
-      const statusText =
-        `H=${Math.round(H)}м (${NORM_H.min}…${NORM_H.max}) ${okH ? 'ОК' : 'ВНЕ'}; ` +
-        `iP=${fmt(ip,3)} (${NORM_IP.min}…${NORM_IP.max}) ${okIP ? 'НОРМА' : 'НЕ НОРМА'}.`;
-
-      setStatusBar($('statusP'), okIP, statusText);
+    // =========================
+    // Температура
+    // =========================
+    function itFromT(T){
+      if (!Number.isFinite(T)) return {absDT:NaN, it:NaN};
+      const a = Math.abs(T - 7);
+      const it = a !== 0 ? 33.3 / a : NaN;
+      return {absDT:a, it};
+    }
+    function pickWorseIT(it1, it2){
+      // "хуже" = если один вне диапазона, он хуже.
+      const ok1 = inRange(it1, IT_MIN, IT_MAX);
+      const ok2 = inRange(it2, IT_MIN, IT_MAX);
+      if (Number.isFinite(it1) && !ok1) return it1;
+      if (Number.isFinite(it2) && !ok2) return it2;
+      // оба в норме -> дальше от номинала 0.85
+      if (Number.isFinite(it1) && Number.isFinite(it2)){
+        const d1 = Math.abs(it1 - IT_NOM);
+        const d2 = Math.abs(it2 - IT_NOM);
+        return (d1 >= d2) ? it1 : it2;
+      }
+      return Number.isFinite(it1) ? it1 : it2;
     }
 
     function calcTemp(){
-      const T1 = toNum($('tVal').value);
-      const T2 = toNum($('tVal2').value);
+      const T1 = parseNum(t1);
+      const T2 = parseNum(t2);
 
-      if (!Number.isFinite(T1) && !Number.isFinite(T2)){
-        $('dT').textContent = '—';
-        $('it').textContent = '—';
-        setBadge($('badgeT'), null);
-        setStatusBar($('statusT'), null, '—');
+      const r1 = itFromT(T1);
+      const r2 = itFromT(T2);
+
+      // показываем |ΔT| по первой точке (как основной ввод)
+      absDT.textContent = Number.isFinite(r1.absDT) ? f2(r1.absDT) : "—";
+
+      const it1 = r1.it;
+      const it2v = r2.it;
+
+      if (Number.isFinite(it1) && Number.isFinite(it2v)){
+        itBoth.textContent = `${f3(it1)} / ${f3(it2v)}`;
+      } else if (Number.isFinite(it1)){
+        itBoth.textContent = `${f3(it1)} / —`;
+      } else if (Number.isFinite(it2v)){
+        itBoth.textContent = `— / ${f3(it2v)}`;
+      } else {
+        itBoth.textContent = "—";
+      }
+
+      const itWorst = pickWorseIT(it1, it2v);
+      itVal.textContent = Number.isFinite(itWorst) ? f3(itWorst) : "—";
+
+      if (!Number.isFinite(itWorst)){
+        setBadge(itBadge, null, "—");
         return;
       }
-
-      function itByT(T){
-        const dT = Math.abs(T - 7);
-        return 33.3 / dT;
-      }
-
-      if (Number.isFinite(T1) && !Number.isFinite(T2)){
-        const dT = Math.abs(T1 - 7);
-        const it = 33.3 / dT;
-        $('dT').textContent = fmt(dT, 3);
-        $('it').textContent = fmt(it, 3);
-
-        const ok = inRange(it, NORM_IT.min, NORM_IT.max);
-        setBadge($('badgeT'), ok);
-        setStatusBar($('statusT'), ok, `iT=${fmt(it,3)} (${NORM_IT.min}…${NORM_IT.max}) ${ok ? 'НОРМА' : 'НЕ НОРМА'}.`);
-        return;
-      }
-
-      // Если введены две точки — показываем "хуже" для статуса
-      const it1 = Number.isFinite(T1) ? itByT(T1) : NaN;
-      const it2 = Number.isFinite(T2) ? itByT(T2) : NaN;
-
-      const ok1 = Number.isFinite(it1) ? inRange(it1, NORM_IT.min, NORM_IT.max) : true;
-      const ok2 = Number.isFinite(it2) ? inRange(it2, NORM_IT.min, NORM_IT.max) : true;
-
-      // худший = если хоть один вне допуска — берём вне допуска; иначе берём ближе к границе
-      let it = it1;
-      if (!ok1 && ok2) it = it1;
-      else if (!ok2 && ok1) it = it2;
-      else if (!ok1 && !ok2){
-        // оба плохие — берём более "плохой"
-        const dist1 = (it1 < NORM_IT.min) ? (NORM_IT.min - it1) : (it1 - NORM_IT.max);
-        const dist2 = (it2 < NORM_IT.min) ? (NORM_IT.min - it2) : (it2 - NORM_IT.max);
-        it = (dist1 >= dist2) ? it1 : it2;
-      }else{
-        // оба в норме — худший ближе к границе
-        const m1 = Math.min(it1 - NORM_IT.min, NORM_IT.max - it1);
-        const m2 = Math.min(it2 - NORM_IT.min, NORM_IT.max - it2);
-        it = (m1 <= m2) ? it1 : it2;
-      }
-
-      const dTtext = [];
-      if (Number.isFinite(T1)) dTtext.push(`|ΔT1|=${fmt(Math.abs(T1-7),3)}`);
-      if (Number.isFinite(T2)) dTtext.push(`|ΔT2|=${fmt(Math.abs(T2-7),3)}`);
-      $('dT').textContent = dTtext.join('; ');
-
-      $('it').textContent = fmt(it, 3);
-      const ok = inRange(it, NORM_IT.min, NORM_IT.max);
-      setBadge($('badgeT'), ok);
-      setStatusBar($('statusT'), ok, `iT=${fmt(it,3)} (${NORM_IT.min}…${NORM_IT.max}) ${ok ? 'НОРМА' : 'НЕ НОРМА'}.`);
+      const ok = inRange(itWorst, IT_MIN, IT_MAX);
+      setBadge(itBadge, ok, ok ? "НОРМА" : "НЕ НОРМА");
     }
 
-    // ======= Принудительно очищаем поля при старте (убирает автоподстановку браузера) =======
-    function forceEmptyOnLoad(){
-      const ids = ['p1000','hLeft','tVal','tVal2'];
-      for (const id of ids){
-        const el = $(id);
-        el.value = '';
-        el.defaultValue = '';
-      }
-      // результаты в прочерки
-      $('pTabH').textContent = '—';
-      $('dP').textContent = '—';
-      $('ip').textContent = '—';
-      setBadge($('badgeP'), null);
-      setStatusBar($('statusP'), null, '—');
-
-      $('dT').textContent = '—';
-      $('it').textContent = '—';
-      setBadge($('badgeT'), null);
-      setStatusBar($('statusT'), null, '—');
-
-      // технология закрыта
-      $('techBlock').open = false;
+    function calcAll(){
+      calcPressure();
+      calcTemp();
     }
 
-    function bind(){
-      $('p1000').addEventListener('input', calcPressure);
-      $('hLeft').addEventListener('input', calcPressure);
-
-      $('tVal').addEventListener('input', calcTemp);
-      $('tVal2').addEventListener('input', calcTemp);
-
-      $('resetP').addEventListener('click', () => {
-        $('p1000').value = '';
-        $('hLeft').value = '';
-        calcPressure();
-      });
-
-      $('resetT').addEventListener('click', () => {
-        $('tVal').value = '';
-        $('tVal2').value = '';
-        calcTemp();
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      bind();
-      // Делаем очистку чуть позже, чтобы перебить автозаполнение браузера
-      setTimeout(forceEmptyOnLoad, 0);
-      setTimeout(forceEmptyOnLoad, 50);
+    // Сбросы
+    document.getElementById("resetP").addEventListener("click", ()=>{
+      p1000.value = "";
+      h.value = "";
+      calcPressure();
     });
+    document.getElementById("resetT").addEventListener("click", ()=>{
+      t1.value = "";
+      t2.value = "";
+      calcTemp();
+    });
+
+    // Слушатели
+    [p1000,h].forEach(el=>el.addEventListener("input", calcPressure));
+    [t1,t2].forEach(el=>el.addEventListener("input", calcTemp));
+
+    // Старт: всё пусто, только "—"
+    (function initBlank(){
+      p1000.value = "";
+      h.value = "";
+      t1.value = "";
+      t2.value = "";
+      calcAll();
+    })();
   </script>
 </body>
 </html>
