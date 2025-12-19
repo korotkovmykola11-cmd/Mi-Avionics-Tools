@@ -2,1014 +2,704 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ВУАП-1 — инженерный инструмент</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ВУАП-1 — технологическая карта (пункты 2–5)</title>
   <style>
     :root{
-      --bg0:#070a12;
-      --bg1:#0b1430;
-      --bg2:#102a4a;
-      --card:#0f1b2ee6;
-      --card2:#0b1426cc;
-      --stroke:#ffffff1a;
-      --stroke2:#ffffff12;
-      --text:#eaf1ff;
-      --muted:#bcd0ffcc;
-      --good:#25d18a;
-      --bad:#ff4d6d;
+      --bg1:#050a1a;
+      --bg2:#061026;
+      --card:#0b1a3c;
+      --card2:#0a1634;
+      --line:#1c2f66;
+      --text:#e9eefc;
+      --muted:#b8c6ff;
+      --accent:#7aa2ff;
+      --ok:#4ee08b;
+      --bad:#ff6b6b;
       --warn:#ffd166;
-      --link:#7cc4ff;
-
-      --shadow: 0 18px 45px rgba(0,0,0,.45);
-      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{ box-sizing:border-box; }
     body{
       margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(124,196,255,.25), transparent 55%),
-        radial-gradient(900px 600px at 80% 30%, rgba(37,209,138,.18), transparent 55%),
-        radial-gradient(1100px 700px at 55% 110%, rgba(255,209,102,.14), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1) 55%, var(--bg2));
-      background-attachment: fixed;
+        radial-gradient(1100px 600px at 20% -10%, rgba(122,162,255,.22), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(78,224,139,.16), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
     }
 
-    a{color:var(--link); text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    .app{
-      max-width: 1320px;
+    .wrap{
+      max-width: 1020px;
       margin: 0 auto;
-      padding: 18px 14px 30px;
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:14px;
+      padding: 22px 14px 40px;
     }
 
-    .panel{
-      background: linear-gradient(180deg, var(--card), var(--card2));
-      border:1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .panelHeader{
-      padding:14px 14px 12px;
-      border-bottom:1px solid var(--stroke2);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .panelHeader h1, .panelHeader h2{
-      margin:0;
-      font-weight:800;
+    .title{
+      font-weight: 800;
       letter-spacing:.2px;
+      font-size: clamp(22px, 3.6vw, 34px);
+      margin: 6px 0 14px;
     }
-    .panelHeader h1{font-size:16px}
-    .panelHeader h2{font-size:15px}
+
     .sub{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:12.5px;
-      line-height:1.35;
+      color: var(--muted);
+      margin: 0 0 16px;
+      line-height: 1.35;
+      font-size: 14px;
     }
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.06);
-      color:var(--muted);
-      font-size:12px;
-      white-space:nowrap;
-    }
-
-    .sideBody{padding:12px 12px 14px}
-    .toc{
+    .tabs{
       display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .toc button{
-      text-align:left;
-      width:100%;
-      border:1px solid var(--stroke2);
-      background: rgba(255,255,255,.04);
-      color:var(--text);
-      padding:10px 10px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:750;
-      font-size:13px;
-    }
-    .toc button:hover{background: rgba(255,255,255,.07)}
-    .toc button.active{
-      outline:2px solid rgba(124,196,255,.35);
-      background: rgba(124,196,255,.10);
-    }
-
-    .hint{
-      margin-top:10px;
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid var(--stroke2);
-      background: rgba(0,0,0,.20);
-      color:var(--muted);
-      font-size:12.5px;
-      line-height:1.35;
-    }
-
-    .mainHeader{
-      padding:14px 14px 12px;
-      border-bottom:1px solid var(--stroke2);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .mainHeader .titleBlock h2{
-      margin:0;
-      font-size:16px;
-      font-weight:900;
-    }
-    .mainHeader .titleBlock .sub{margin:6px 0 0}
-    .mainHeader .actions{
-      display:flex;
-      gap:10px;
       flex-wrap:wrap;
-      justify-content:flex-end;
+      gap:10px;
+      margin: 12px 0 18px;
     }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--stroke2);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
+    .tab{
+      border:1px solid var(--line);
+      background: rgba(11,26,60,.45);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
       cursor:pointer;
-      font-weight:800;
-      font-size:13px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.22);
       user-select:none;
+      transition:.15s;
+      font-weight:700;
+      font-size: 14px;
     }
-    .btn:hover{background: rgba(255,255,255,.09)}
-    .btn.primary{
-      border-color: rgba(124,196,255,.28);
-      background: rgba(124,196,255,.14);
+    .tab:hover{ transform: translateY(-1px); }
+    .tab.active{
+      outline: 2px solid rgba(122,162,255,.45);
+      border-color: rgba(122,162,255,.55);
+      background: rgba(122,162,255,.10);
     }
-    .btn.danger{
-      border-color: rgba(255,77,109,.22);
-      background: rgba(255,77,109,.12);
-    }
-
-    .mainBody{padding:12px 12px 14px}
-    .section{
-      display:none;
-      gap:12px;
-    }
-    .section.active{display:grid}
-    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
-    .grid1{display:grid; grid-template-columns: 1fr; gap:12px}
 
     .card{
-      border:1px solid var(--stroke2);
-      background: rgba(255,255,255,.04);
+      background: linear-gradient(180deg, rgba(11,26,60,.72), rgba(10,22,52,.68));
+      border:1px solid var(--line);
       border-radius: var(--radius);
-      padding:12px;
-      box-shadow: 0 12px 24px rgba(0,0,0,.22);
-    }
-    .card h3{
-      margin:0 0 8px 0;
-      font-size:14px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .card p{
-      margin:0;
-      color:var(--muted);
-      font-size:12.8px;
-      line-height:1.4;
+      padding: 18px 16px;
+      box-shadow: var(--shadow);
+      margin: 12px 0;
     }
 
-    .kv{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top:10px;
+    h2{
+      margin: 0 0 10px;
+      font-size: 22px;
+      letter-spacing:.2px;
     }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 860px){
+      .grid.two{ grid-template-columns: 1fr 1fr; }
+    }
+
+    .blockTitle{
+      font-weight:800;
+      color: var(--muted);
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+
+    .p{
+      margin: 0 0 10px;
+      line-height: 1.45;
+      color: var(--text);
+      font-size: 14.5px;
+      white-space: pre-wrap;
+    }
+
+    .tt{
+      border-left: 4px solid rgba(122,162,255,.55);
+      padding-left: 12px;
+      background: rgba(122,162,255,.06);
+      border-radius: 12px;
+      padding: 12px 12px 12px 14px;
+    }
+
+    .note{
+      border-left: 4px solid rgba(255,209,102,.65);
+      padding-left: 12px;
+      background: rgba(255,209,102,.06);
+      border-radius: 12px;
+      padding: 12px 12px 12px 14px;
+    }
+
+    .fields{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+      margin-top: 10px;
+    }
+    @media (min-width: 700px){
+      .fields.two{ grid-template-columns: 1fr 1fr; }
+      .fields.three{ grid-template-columns: 1fr 1fr 1fr; }
+    }
+
     label{
       display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:6px;
-      font-weight:800;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 6px;
+      font-weight: 700;
     }
     input, select{
       width:100%;
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid var(--stroke2);
-      background: rgba(0,0,0,.22);
-      color:var(--text);
-      outline:none;
-      font-weight:800;
-      font-size:13px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(28,47,102,.9);
+      background: rgba(5,10,26,.65);
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
     }
-    input::placeholder{color: rgba(234,241,255,.35)}
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:10px;
+    input:focus, select:focus{
+      border-color: rgba(122,162,255,.7);
+      box-shadow: 0 0 0 3px rgba(122,162,255,.15);
+    }
+
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 800;
+      font-size: 14px;
+      color: #07102a;
+      background: linear-gradient(180deg, #b9d1ff, #7aa2ff);
+      box-shadow: 0 10px 22px rgba(122,162,255,.18);
+      transition:.15s;
+    }
+    button:hover{ transform: translateY(-1px); }
+    .btn2{
+      background: rgba(11,26,60,.45);
+      color: var(--text);
+      border: 1px solid var(--line);
+      box-shadow: none;
     }
 
     .result{
-      margin-top:10px;
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid var(--stroke2);
-      background: rgba(0,0,0,.20);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      font-weight:900;
+      margin-top: 10px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(5,10,26,.45);
+      padding: 12px 12px;
+      line-height: 1.4;
+      font-size: 14px;
     }
-    .badgeGood{color:var(--good)}
-    .badgeBad{color:var(--bad)}
-    .badgeWarn{color:var(--warn)}
-    .small{font-size:12px; color:var(--muted); font-weight:800}
+    .badge{
+      display:inline-block;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-right: 8px;
+      font-size: 12px;
+      letter-spacing:.06em;
+    }
+    .ok{ background: rgba(78,224,139,.15); color: var(--ok); border:1px solid rgba(78,224,139,.35); }
+    .bad{ background: rgba(255,107,107,.12); color: var(--bad); border:1px solid rgba(255,107,107,.35); }
+    .warn{ background: rgba(255,209,102,.12); color: var(--warn); border:1px solid rgba(255,209,102,.35); }
 
-    .formula{
-      margin-top:10px;
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid var(--stroke2);
-      background: rgba(255,255,255,.03);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .frac{
-      display:inline-grid;
-      grid-template-rows:auto auto;
-      align-items:center;
-      justify-items:center;
-      padding:0 8px;
-      font-weight:950;
-      letter-spacing:.2px;
-    }
-    .frac .top{border-bottom:2px solid rgba(234,241,255,.55); padding:0 6px 2px}
-    .frac .bot{padding:2px 6px 0}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .hidden{ display:none; }
 
-    details{
-      border:1px solid var(--stroke2);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.03);
-      overflow:hidden;
+    .foot{
+      color: rgba(184,198,255,.75);
+      font-size: 12px;
+      margin-top: 18px;
+      line-height: 1.35;
     }
-    summary{
-      cursor:pointer;
-      padding:12px 12px;
-      font-weight:950;
-      list-style:none;
-    }
-    summary::-webkit-details-marker{display:none}
-    .detailsBody{padding:0 12px 12px}
-    .note{
-      margin-top:8px;
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid var(--stroke2);
-      background: rgba(0,0,0,.18);
-      color:var(--muted);
-      font-size:12.6px;
-      line-height:1.4;
-    }
-
-    /* Gallery */
-    .galleryTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-      flex-wrap:wrap;
-    }
-    .galleryInfo{color:var(--muted); font-size:12.5px; font-weight:800}
-    .thumbs{
-      display:grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap:8px;
-    }
-    .thumb{
-      border-radius:14px;
-      overflow:hidden;
-      border:1px solid var(--stroke2);
-      background: rgba(0,0,0,.18);
-      cursor:pointer;
-      aspect-ratio: 3 / 4;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-    }
-    .thumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      filter: contrast(1.05) saturate(1.05);
-    }
-    .thumb .n{
-      position:absolute;
-      left:8px; top:8px;
-      font-weight:950;
-      font-size:12px;
-      padding:6px 8px;
-      border-radius:999px;
-      border:1px solid var(--stroke2);
-      background: rgba(0,0,0,.35);
-      color:var(--text);
-      backdrop-filter: blur(6px);
-    }
-
-    .modal{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.72);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:14px;
-      z-index:50;
-    }
-    .modal.open{display:flex}
-    .modalBox{
-      max-width: 980px;
-      width:100%;
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.20);
-      background: rgba(10,14,25,.92);
-      box-shadow: 0 30px 90px rgba(0,0,0,.6);
-    }
-    .modalBar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 12px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      color:var(--muted);
-      font-weight:900;
-      font-size:12.5px;
-    }
-    .modalBar .barBtns{display:flex; gap:8px; flex-wrap:wrap}
-    .modalImg{
-      width:100%;
-      max-height: 78vh;
-      object-fit: contain;
-      display:block;
-      background: rgba(0,0,0,.25);
-    }
-
-    @media (max-width: 1100px){
-      .app{grid-template-columns: 1fr; }
-      .thumbs{grid-template-columns: repeat(4, 1fr);}
-    }
-    @media (max-width: 520px){
-      .thumbs{grid-template-columns: repeat(3, 1fr);}
-      .grid2{grid-template-columns: 1fr;}
-    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
   </style>
 </head>
 
 <body>
-  <div class="app">
+  <div class="wrap">
+    <div class="title">ВУАП-1 — технологическая карта (пункты 2–5)</div>
+    <p class="sub">
+      Формат: <b>технология → ввод → расчёт/контроль по ТТ</b>. Никаких “додумок”.<br>
+      Обозначения — как договорились: <b>САУ В-24-1</b>, <b>ДИСС-15</b>.
+    </p>
 
-    <!-- LEFT: navigation -->
-    <aside class="panel">
-      <div class="panelHeader">
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-tab="p2">П.2 Коэффициент усиления</div>
+      <div class="tab" data-tab="p3">П.3 Крутизна датчика угла (КР)</div>
+      <div class="tab" data-tab="p4">П.4 Крутизна сигнала ОС</div>
+      <div class="tab" data-tab="p5">П.5 Скорость согласования</div>
+    </div>
+
+    <!-- ===================== П2 ===================== -->
+    <section class="card" id="p2">
+      <h2>2. Проверка коэффициента усиления</h2>
+
+      <div class="grid two">
         <div>
-          <h1>ВУАП-1</h1>
-          <div class="sub">Электронная инженерная инструкция + расчёты</div>
-        </div>
-        <div class="pill">Mi Avionics Tools</div>
-      </div>
+          <div class="blockTitle">Содержание операций (по документу)</div>
+          <div class="p">
+а) Канал направления
+При нажатой кнопке-табло «ОТКЛ» на пульте управления канала направления поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение
+(здесь и далее стрелка индикатора должна быть совмещена с нулевой отметкой).
+Не отпуская кнопку-табло «ОТКЛ», нажать на пульте управления кнопку-табло «ВКЛ»
+и, удерживая обе кнопки в нажатом состоянии, заметить положение стрелки индикатора нулевого.
 
-      <div class="sideBody">
-        <div class="toc" id="toc">
-          <button class="active" data-target="sec-intro">1) Вход и условия</button>
-          <button data-target="sec-checks">2) Проверки и расчёты</button>
-          <button data-target="sec-reg">3) Регулировка</button>
-          <button data-target="sec-gallery">4) Технология (фото)</button>
-        </div>
+б) Каналы крена и тангажа
+Проделать аналогичную каналу направления проверку.
 
-        <div class="hint">
-          Здесь всё работает как приложение: выбрал раздел слева → работаешь справа.
+в) Канал высоты
+(аналогично, с установкой стрелки индикатора нулевого в среднее положение и фиксацией отклонения при удержании «ОТКЛ» + «ВКЛ»).
+          </div>
         </div>
 
-        <div class="hint">
-          <b>Назад в меню:</b> <a href="./index.html">главная</a>
-        </div>
-      </div>
-    </aside>
+        <div class="tt">
+          <div class="blockTitle">Технические требования (ТТ)</div>
+          <div class="p">
+Для всех каналов стрелка индикатора нулевого
+(задняя кромка стрелки, если смотреть по направлению её движения)
+НЕ ДОЛЖНА отклоняться далее промежуточной отметки.
+          </div>
 
-    <!-- RIGHT: content -->
-    <main class="panel">
-      <div class="mainHeader">
-        <div class="titleBlock">
-          <h2 id="pageTitle">ВУАП-1 — инженерный инструмент</h2>
-          <div class="sub">Пошагово: условия → проверки → расчёты → решение “допуск/недопуск”.</div>
-        </div>
-        <div class="actions">
-          <button class="btn danger" id="btnResetAll" type="button">Сбросить ввод</button>
-          <button class="btn primary" id="btnOpenTech" type="button">Открыть технологию</button>
-        </div>
-      </div>
+          <div class="blockTitle">Работы при отклонениях от ТТ</div>
+          <div class="p">Заменить пульт управления соответствующего канала на исправный.</div>
 
-      <div class="mainBody">
-
-        <!-- SECTION 1 -->
-        <section class="section active" id="sec-intro">
-          <div class="grid2">
-            <div class="card">
-              <h3>0. Назначение</h3>
-              <p>
-                Этот инструмент — не просто “картинки технологии”.
-                Он предназначен для внесения измерений и автоматического расчёта передаточных/контрольных параметров
-                с оценкой допуска.
-              </p>
-
-              <details style="margin-top:10px" open>
-                <summary>Нулевые условия (заполняется инженером)</summary>
-                <div class="detailsBody">
-                  <div class="kv">
-                    <div>
-                      <label>Температура окружения (°C)</label>
-                      <input id="ambTemp" inputmode="decimal" placeholder="например 20" />
-                    </div>
-                    <div>
-                      <label>Питание / условия стенда</label>
-                      <input id="standCond" placeholder="например питание 27В, стенд …" />
-                    </div>
-                    <div>
-                      <label>Изделие</label>
-                      <input id="unitId" placeholder="серия/№/вертолёт" />
-                    </div>
-                    <div>
-                      <label>Инженер</label>
-                      <input id="engineer" placeholder="ФИО" />
-                    </div>
-                  </div>
-
-                  <div class="note">
-                    Это блок “как в регламенте”: сначала зафиксировать условия, потом — измерения.
-                  </div>
-                </div>
-              </details>
-            </div>
-
-            <div class="card">
-              <h3>1. Как работать</h3>
-              <p>
-                1) Перейди в “Проверки и расчёты”.<br/>
-                2) Выбери тип проверки и введи “вход” и “выход”.<br/>
-                3) Получишь K и статус допуска.<br/>
-                4) Открой “Технология (фото)” и сверяйся с пунктами.
-              </p>
-
-              <div class="formula" title="Общий вид формулы">
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
-                  <span style="font-weight:950">Передаточное число:</span>
-                  <span class="frac" aria-label="K = |Выход| / |Вход|">
-                    <span class="top mono">|Выход|</span>
-                    <span class="bot mono">|Вход|</span>
-                  </span>
-                  <span class="mono">K =</span>
-                  <span class="mono">|Y| / |X|</span>
-                </div>
-                <div class="small">модуль • 3 знака</div>
-              </div>
-
-              <div class="note">
-                ВУАП-1 мы оформляем “как приложение”: структура слева, расчёт справа, технология открывается отдельным блоком.
-              </div>
+          <div class="note" style="margin-top:12px;">
+            <div class="blockTitle">Условия выполнения (зафиксировано ранее)</div>
+            <div class="p">
+Пункты 2, 3, 5 — выполнять с ОТКЛЮЧЕННОЙ гидросистемой (как ты ранее зафиксировал).
+Включить взаимодействующие системы с САУ В-24-1, ДИСС-15, радиовысотомер, демпфер, триммер, фрикцион, УШВ.
+Питание САУ — по постоянному и переменному току.
+(Формулировку условий при необходимости подгоним 1:1 под твой «чистовик».)
             </div>
           </div>
-        </section>
-
-        <!-- SECTION 2 -->
-        <section class="section" id="sec-checks">
-          <div class="grid2">
-
-            <div class="card">
-              <h3>2.1 Быстрый расчёт передаточного числа</h3>
-              <p>Введи значения. Отрицательные знаки не важны — берётся модуль.</p>
-
-              <div class="kv">
-                <div>
-                  <label>Тип проверки</label>
-                  <select id="checkType">
-                    <option value="linear">Линейная (мм/мм)</option>
-                    <option value="angular">Угловая (°/°)</option>
-                    <option value="mixed">Комбинированная (по технологии)</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Канал</label>
-                  <select id="channel">
-                    <option value="pitch">Тангаж</option>
-                    <option value="roll">Крен</option>
-                    <option value="yaw">Курс</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label>Вход X</label>
-                  <input id="xIn" inputmode="decimal" placeholder="например 5.0" />
-                </div>
-                <div>
-                  <label>Выход Y</label>
-                  <input id="yOut" inputmode="decimal" placeholder="например 12.5" />
-                </div>
-
-                <div>
-                  <label>Kном</label>
-                  <input id="kNom" inputmode="decimal" placeholder="например 2.500" />
-                </div>
-                <div>
-                  <label>Допуск ±</label>
-                  <input id="kTol" inputmode="decimal" placeholder="например 0.200" />
-                </div>
-              </div>
-
-              <div class="row">
-                <button class="btn primary" type="button" id="btnCalc">Рассчитать</button>
-                <button class="btn" type="button" id="btnAddRow">Добавить в журнал</button>
-              </div>
-
-              <div class="result" id="resultBox">
-                <div>
-                  <div style="font-size:13px; font-weight:950">K = <span class="mono" id="kValue">—</span></div>
-                  <div class="small" id="kMath">|Y| / |X|</div>
-                </div>
-                <div style="text-align:right">
-                  <div style="font-size:13px; font-weight:950" id="kStatus">—</div>
-                  <div class="small" id="kRange">—</div>
-                </div>
-              </div>
-
-              <div class="note">
-                Это “универсальный калькулятор”. Дальше (следующим шагом) мы привяжем его к конкретным пунктам технологии:
-                “шаг → что задать → что измерить → какая норма”.
-              </div>
-            </div>
-
-            <div class="card">
-              <h3>2.2 Журнал измерений</h3>
-              <p>Сохраняй ключевые результаты, чтобы потом иметь итог “годен/не годен”.</p>
-
-              <div style="overflow:auto; margin-top:10px; border-radius:14px; border:1px solid var(--stroke2);">
-                <table style="width:100%; border-collapse:collapse; min-width:760px; background:rgba(0,0,0,.18)">
-                  <thead>
-                    <tr style="text-align:left; font-size:12px; color:var(--muted)">
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">Время</th>
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">Канал</th>
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">Тип</th>
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">X</th>
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">Y</th>
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">K</th>
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">Норма</th>
-                      <th style="padding:10px 10px; border-bottom:1px solid var(--stroke2)">Статус</th>
-                    </tr>
-                  </thead>
-                  <tbody id="logBody"></tbody>
-                </table>
-              </div>
-
-              <div class="row">
-                <button class="btn" type="button" id="btnClearLog">Очистить журнал</button>
-                <button class="btn" type="button" id="btnExport">Экспорт (CSV)</button>
-              </div>
-
-              <div class="note">
-                Журнал хранится в браузере (localStorage). Это удобно для работы “для себя и коллег”.
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <!-- SECTION 3 -->
-        <section class="section" id="sec-reg">
-          <div class="grid1">
-            <div class="card">
-              <h3>3. Регулировка (структура)</h3>
-              <p>
-                Этот раздел — “карта регулировки”: что разрешено крутить, что запрещено, и обязательный повторный контроль.
-                Мы заполним его пунктами из технологии после привязки шагов.
-              </p>
-
-              <details style="margin-top:10px">
-                <summary>Правило</summary>
-                <div class="detailsBody">
-                  <div class="note">
-                    Если K вне допуска → выполняется регулировка → повтор проверки → запись в журнал.
-                  </div>
-                </div>
-              </details>
-
-              <details style="margin-top:10px">
-                <summary>Запись регулировки (черновик)</summary>
-                <div class="detailsBody">
-                  <div class="kv">
-                    <div>
-                      <label>Что регулировали</label>
-                      <input id="regWhat" placeholder="например тяга …" />
-                    </div>
-                    <div>
-                      <label>Сколько (обороты/мм)</label>
-                      <input id="regHowMuch" placeholder="например +0.5 оборота" />
-                    </div>
-                    <div style="grid-column:1 / -1">
-                      <label>Комментарий</label>
-                      <input id="regComment" placeholder="кратко: причина, результат" />
-                    </div>
-                  </div>
-                  <div class="row">
-                    <button class="btn primary" type="button" id="btnSaveReg">Сохранить запись</button>
-                    <button class="btn" type="button" id="btnClearReg">Сброс</button>
-                  </div>
-                  <div class="note" id="regSaved" style="display:none"></div>
-                </div>
-              </details>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION 4 -->
-        <section class="section" id="sec-gallery">
-          <div class="grid1">
-
-            <div class="card">
-              <h3>4. Технология (фото)</h3>
-              <p>Фото подтягиваются автоматически из папки <span class="mono">vuap1/assets/tech</span>.</p>
-
-              <div class="galleryTop" style="margin-top:10px">
-                <div class="galleryInfo" id="galInfo">Загрузка списка файлов…</div>
-                <div class="row" style="margin-top:0">
-                  <button class="btn" type="button" id="btnPrev">Назад</button>
-                  <button class="btn" type="button" id="btnNext">Вперёд</button>
-                </div>
-              </div>
-
-              <div class="thumbs" id="thumbs"></div>
-
-              <div class="note">
-                Если миниатюры не появились — значит GitHub API не видит папку или файлы не в <span class="mono">vuap1/assets/tech</span>.
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-      </div>
-    </main>
-
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="modalBox">
-      <div class="modalBar">
-        <div id="modalTitle">—</div>
-        <div class="barBtns">
-          <button class="btn" type="button" id="mPrev">Назад</button>
-          <button class="btn" type="button" id="mNext">Вперёд</button>
-          <button class="btn danger" type="button" id="mClose">Закрыть</button>
         </div>
       </div>
-      <img class="modalImg" id="modalImg" alt="Технология ВУАП-1" />
+
+      <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
+        <div class="blockTitle">Фиксация результата (в программу)</div>
+        <div class="fields two">
+          <div>
+            <label>Канал</label>
+            <select id="p2_channel">
+              <option value="direction">Направления</option>
+              <option value="roll">Крена</option>
+              <option value="pitch">Тангажа</option>
+              <option value="height">Высоты</option>
+            </select>
+          </div>
+          <div>
+            <label>Отклонение стрелки вышло дальше промежуточной отметки?</label>
+            <select id="p2_beyond">
+              <option value="no">Нет (в пределах)</option>
+              <option value="yes">Да (вышло дальше)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btnRow">
+          <button onclick="calcP2()">Проверить ТТ</button>
+          <button class="btn2" onclick="resetP2()">Сброс</button>
+        </div>
+
+        <div class="result" id="p2_out">
+          <span class="badge warn">ОЖИДАЕТ</span>
+          Внеси факт: вышла ли стрелка дальше промежуточной отметки.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== П3 ===================== -->
+    <section class="card hidden" id="p3">
+      <h2>3. Проверка крутизны датчика угла</h2>
+
+      <div class="grid two">
+        <div>
+          <div class="blockTitle">Содержание операций (по документу)</div>
+          <div class="p">
+а) Канал направления
+При нажатой кнопке-табло «ВКЛ» на пульте управления канала направления поворотом шкалы ручки центровки установить стрелку индикатора нулевого в совмещённое с промежуточными отметками положение,
+заметить угол поворота шкалы ручки центровки (деление соответствует 1°).
+Нажать кнопку-табло «ОТКЛ» на пульте управления канала направления.
+
+б) Каналы крена и тангажа
+Проделать аналогичную проверку, устанавливая стрелку индикатора нулевого в положение, соответствующее проверяемому каналу.
+
+Далее (регулировочная часть по документу): при необходимости выполняются действия на пульте управления (включая работу с «КР») — мы держим это строго по твоему зафиксированному тексту.
+          </div>
+        </div>
+
+        <div class="tt">
+          <div class="blockTitle">Технические требования (ТТ)</div>
+          <div class="p">
+Для каналов направления, крена и тангажа угол поворота шкалы ручки центровки должен быть 10° ± 3°.
+(Отдельные подпункты могут иметь допуск 10° ± 2° — если ты подтвердил это в «чистовике», выбираем ниже.)
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
+        <div class="blockTitle">Фиксация результата (в программу)</div>
+
+        <div class="fields three">
+          <div>
+            <label>Канал</label>
+            <select id="p3_channel" onchange="syncP3Tol()">
+              <option value="direction">Направления</option>
+              <option value="roll">Крена</option>
+              <option value="pitch">Тангажа</option>
+              <option value="height">Высоты</option>
+            </select>
+          </div>
+          <div>
+            <label>Измеренный угол поворота шкалы, °</label>
+            <input id="p3_angle" type="number" inputmode="decimal" step="0.1" placeholder="например 10.0" />
+          </div>
+          <div>
+            <label>Допуск (выбор)</label>
+            <select id="p3_tol">
+              <option value="3">10° ± 3°</option>
+              <option value="2">10° ± 2°</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btnRow">
+          <button onclick="calcP3()">Проверить ТТ</button>
+          <button class="btn2" onclick="resetP3()">Сброс</button>
+        </div>
+
+        <div class="result" id="p3_out">
+          <span class="badge warn">ОЖИДАЕТ</span>
+          Введи измеренный угол и проверь соответствие допуску.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== П4 ===================== -->
+    <section class="card hidden" id="p4">
+      <h2>4. Проверка крутизны сигнала в цепи обратной связи</h2>
+
+      <div class="grid two">
+        <div>
+          <div class="blockTitle">Содержание операций (по документу)</div>
+          <div class="p">
+а) Канал направления
+Нажать кнопку-табло «ВКЛ» на пульте управления канала направления.
+Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки) на 2–3 оборота
+отклонить шток малого цилиндра рулевого агрегата в крайнее положение.
+Заметить положение стрелки индикатора нулевого.
+
+ПРИМЕЧАНИЕ.
+При отклонении штока малого цилиндра до упора будет работать «перегонка».
+Поэтому необходимо ногами удерживать педали в нейтральном положении,
+не нажимая на подпедальные микровыключатели.
+
+По окончании проверки отключить канал направления кнопкой-табло «ОТКЛ» на пульте управления.
+
+б) Каналы крена, тангажа и высоты
+Проделать аналогичную описанной для канала направления проверку.
+При этом для отклонения штока малого цилиндра рулевых агрегатов крена и тангажа
+необходимо пользоваться шкалами ручек центровки соответствующих пультов управления,
+а для канала высоты — тумблером «Контроль» на пульте управления канала высоты.
+          </div>
+        </div>
+
+        <div class="tt">
+          <div class="blockTitle">Технические требования (ТТ)</div>
+          <div class="p">
+Для всех каналов стрелка индикатора нулевого должна устанавливаться
+в совмещённое с крайними отметками положение с точностью до толщины стрелки.
+          </div>
+
+          <div class="note" style="margin-top:12px;">
+            <div class="blockTitle">ПРИМЕЧАНИЕ (как ты продиктовал, капсом)</div>
+            <div class="p">
+ПОСЛЕ РЕГУЛИРОВКИ КРУТИЗНЫ СИГНАЛА В ЦЕПИ ОБРАТНОЙ СВЯЗИ КАКОГО-ЛИБО КАНАЛА
+АВТОПИЛОТА НЕОБХОДИМО ПРОИЗВЕСТИ ПРОВЕРКИ ПЕРЕДАТОЧНЫХ ЧИСЕЛ ПО УГЛУ (В СКОБКАХ ВЫСОТЕ),
+УГЛОВОЙ СКОРОСТИ, СКОРОСТИ ИЗМЕНЕНИЯ ВЫСОТЫ, ОТНОСЯЩИЕСЯ К ДАННОМУ КАНАЛУ.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
+        <div class="blockTitle">Фиксация результата (в программу)</div>
+
+        <div class="fields three">
+          <div>
+            <label>Канал</label>
+            <select id="p4_channel">
+              <option value="direction">Направления</option>
+              <option value="roll">Крена</option>
+              <option value="pitch">Тангажа</option>
+              <option value="height">Высоты</option>
+            </select>
+          </div>
+          <div>
+            <label>При «крайнем» положении штока стрелка встала на крайнюю отметку?</label>
+            <select id="p4_onmark">
+              <option value="yes">Да (до толщины стрелки)</option>
+              <option value="no">Нет</option>
+            </select>
+          </div>
+          <div>
+            <label>Сколько оборотов шкалы фактически делал(а), обор.</label>
+            <input id="p4_turns" type="number" inputmode="decimal" step="0.1" placeholder="2.0–3.0" />
+          </div>
+        </div>
+
+        <div class="btnRow">
+          <button onclick="calcP4()">Проверить ТТ</button>
+          <button class="btn2" onclick="resetP4()">Сброс</button>
+        </div>
+
+        <div class="result" id="p4_out">
+          <span class="badge warn">ОЖИДАЕТ</span>
+          Внеси факт: стрелка совпала с крайней отметкой (до толщины стрелки) или нет.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== П5 ===================== -->
+    <section class="card hidden" id="p5">
+      <h2>5. Проверка скорости согласования</h2>
+
+      <div class="grid two">
+        <div>
+          <div class="blockTitle">Содержание операций (по документу)</div>
+          <div class="p">
+а) Канал направления
+Нажать на пульте управления канала направления кнопку-табло «ВКЛ».
+Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки)
+от исходного положения на 6 оборотов задать угол направления 60°.
+
+ПРИМЕЧАНИЕ.
+В канале направления при повороте шкалы ручки центровки на 60°
+будет работать «перегонка». Поэтому необходимо ногами удерживать педали
+в нейтральном положении, не нажимая при этом на подпедальные микровыключатели.
+
+Далее (лист 11):
+Нажать кнопку-табло «ОТКЛ» на пульте управления канала направления и одновременно включить секундомер.
+Выключить секундомер в момент остановки шкалы ручки центровки.
+Для получения скорости согласования необходимо задаваемый угол 60° разделить на время, замеренное секундомером.
+
+б) Каналы крена и тангажа
+Проделать аналогичную проверку, оперируя ручкой центровки и кнопками-табло на пульте управления соответствующего канала.
+          </div>
+        </div>
+
+        <div class="tt">
+          <div class="blockTitle">Технические требования (ТТ)</div>
+          <div class="p">
+Для каналов направления, крена и тангажа: скорость согласования НЕ МЕНЕЕ 15 град/сек.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
+        <div class="blockTitle">Калькулятор (в программу)</div>
+
+        <div class="fields three">
+          <div>
+            <label>Канал</label>
+            <select id="p5_channel">
+              <option value="direction">Направления</option>
+              <option value="roll">Крена</option>
+              <option value="pitch">Тангажа</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Задаваемый угол, °</label>
+            <input id="p5_angle" type="number" inputmode="decimal" step="0.1" value="60" />
+          </div>
+
+          <div>
+            <label>Время по секундомеру, сек</label>
+            <input id="p5_time" type="number" inputmode="decimal" step="0.01" placeholder="например 3.50" />
+          </div>
+        </div>
+
+        <div class="btnRow">
+          <button onclick="calcP5()">Рассчитать скорость</button>
+          <button class="btn2" onclick="resetP5()">Сброс</button>
+        </div>
+
+        <div class="result" id="p5_out">
+          <span class="badge warn">ОЖИДАЕТ</span>
+          Введи время — скорость будет рассчитана как <span class="mono">V = угол / время</span>.
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      Если GitHub Pages “не обновляется”: чаще всего это кэш Safari/Cloudflare. Самый быстрый тест —
+      открыть страницу с добавкой <span class="mono">?v=123</span> в конце URL (любой набор цифр) или очистить кэш сайта.
+      Но код выше — корректный автономный файл без внешних зависимостей.
     </div>
   </div>
 
-<script>
-(() => {
-  // === SETTINGS (твой репозиторий) ===
-  const OWNER = "korotkovmykola11-cmd";
-  const REPO  = "Mi-Avionics-Tools";
-  const BRANCH = "main";
-  const TECH_DIR = "vuap1/assets/tech"; // папка с 69 фото
+  <script>
+    // ---------- Tabs ----------
+    const tabs = document.querySelectorAll('.tab');
+    const sections = ['p2','p3','p4','p5'].map(id => document.getElementById(id));
 
-  // === UI: navigation ===
-  const toc = document.getElementById("toc");
-  const sections = [...document.querySelectorAll(".section")];
-  toc.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-target]");
-    if(!btn) return;
-    toc.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    const id = btn.dataset.target;
-    sections.forEach(s => s.classList.toggle("active", s.id === id));
-    if(id === "sec-gallery") { ensureGallery(); }
-  });
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const id = t.dataset.tab;
+      sections.forEach(s => s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }));
 
-  // top buttons
-  document.getElementById("btnOpenTech").addEventListener("click", () => {
-    toc.querySelector('button[data-target="sec-gallery"]').click();
-  });
+    // ---------- P2 ----------
+    function calcP2(){
+      const ch = document.getElementById('p2_channel').value;
+      const beyond = document.getElementById('p2_beyond').value;
 
-  // === Calc ===
-  const xIn = document.getElementById("xIn");
-  const yOut = document.getElementById("yOut");
-  const kNom = document.getElementById("kNom");
-  const kTol = document.getElementById("kTol");
-  const kValue = document.getElementById("kValue");
-  const kStatus = document.getElementById("kStatus");
-  const kRange = document.getElementById("kRange");
-  const kMath = document.getElementById("kMath");
-  const resultBox = document.getElementById("resultBox");
+      const chName = mapCh(ch);
+      const out = document.getElementById('p2_out');
 
-  const toNum = (v) => {
-    if(v == null) return NaN;
-    const s = String(v).trim().replace(",", ".");
-    if(!s) return NaN;
-    const n = Number(s);
-    return Number.isFinite(n) ? n : NaN;
-  };
-
-  function setStatus(text, cls){
-    kStatus.textContent = text;
-    kStatus.className = "";
-    if(cls) kStatus.classList.add(cls);
-  }
-
-  function calcK(){
-    const X = Math.abs(toNum(xIn.value));
-    const Y = Math.abs(toNum(yOut.value));
-    if(!(X > 0) || !(Y > 0)){
-      kValue.textContent = "—";
-      kMath.textContent = "|Y| / |X|";
-      setStatus("—");
-      kRange.textContent = "—";
-      return null;
-    }
-    const K = Y / X;
-    const K3 = Math.round(K * 1000) / 1000;
-
-    kValue.textContent = K3.toFixed(3);
-    kMath.textContent = `|${Y.toFixed(3)}| / |${X.toFixed(3)}|`;
-
-    const nom = toNum(kNom.value);
-    const tol = Math.abs(toNum(kTol.value));
-
-    if(Number.isFinite(nom) && Number.isFinite(tol) && tol >= 0){
-      const lo = nom - tol;
-      const hi = nom + tol;
-      kRange.textContent = `Норма: ${lo.toFixed(3)} … ${hi.toFixed(3)}`;
-      if(K >= lo && K <= hi){
-        setStatus("В ДОПУСКЕ", "badgeGood");
+      if (beyond === 'no'){
+        out.innerHTML = `<span class="badge ok">OK</span>
+          П.2 (${chName}): стрелка НЕ вышла далее промежуточной отметки — ТТ выполнено.`;
       } else {
-        setStatus("ВНЕ ДОПУСКА", "badgeBad");
+        out.innerHTML = `<span class="badge bad">НЕ НОРМА</span>
+          П.2 (${chName}): стрелка вышла далее промежуточной отметки — ТТ НЕ выполнено.<br>
+          <b>Действия по карте:</b> заменить пульт управления соответствующего канала на исправный.`;
       }
-    } else {
-      kRange.textContent = "Норма: —";
-      setStatus("РАССЧИТАНО", "badgeWarn");
     }
-    return {X, Y, K: K3};
-  }
-
-  document.getElementById("btnCalc").addEventListener("click", calcK);
-
-  // Auto-calc on input
-  [xIn, yOut, kNom, kTol].forEach(el => el.addEventListener("input", () => calcK()));
-
-  // === Log ===
-  const logBody = document.getElementById("logBody");
-  const keyLog = "vuap1_log_v1";
-  function loadLog(){
-    logBody.innerHTML = "";
-    const raw = localStorage.getItem(keyLog);
-    if(!raw) return;
-    let arr = [];
-    try{ arr = JSON.parse(raw); } catch { arr = []; }
-    arr.forEach(addRowToTable);
-  }
-  function saveLog(arr){
-    localStorage.setItem(keyLog, JSON.stringify(arr));
-  }
-  function addRowToTable(r){
-    const tr = document.createElement("tr");
-    const td = (t) => {
-      const c = document.createElement("td");
-      c.style.padding = "10px 10px";
-      c.style.borderBottom = "1px solid rgba(255,255,255,.10)";
-      c.textContent = t;
-      return c;
-    };
-    tr.appendChild(td(r.time));
-    tr.appendChild(td(r.channel));
-    tr.appendChild(td(r.type));
-    tr.appendChild(td(r.x));
-    tr.appendChild(td(r.y));
-    tr.appendChild(td(r.k));
-    tr.appendChild(td(r.norm));
-    const st = td(r.status);
-    st.style.fontWeight = "950";
-    st.style.color = r.status.includes("ДОПУСКЕ") ? "rgba(37,209,138,1)" : "rgba(255,77,109,1)";
-    tr.appendChild(st);
-    logBody.appendChild(tr);
-  }
-
-  document.getElementById("btnAddRow").addEventListener("click", () => {
-    const res = calcK();
-    if(!res) return;
-    const type = document.getElementById("checkType").value;
-    const channel = document.getElementById("channel").value;
-
-    const nom = toNum(kNom.value);
-    const tol = Math.abs(toNum(kTol.value));
-    const normTxt = (Number.isFinite(nom) && Number.isFinite(tol))
-      ? `${(nom-tol).toFixed(3)}…${(nom+tol).toFixed(3)}`
-      : "—";
-
-    const statusTxt = kStatus.textContent || "—";
-
-    const row = {
-      time: new Date().toLocaleString(),
-      channel: channel,
-      type: type,
-      x: Math.abs(toNum(xIn.value)).toFixed(3),
-      y: Math.abs(toNum(yOut.value)).toFixed(3),
-      k: (res.K).toFixed(3),
-      norm: normTxt,
-      status: statusTxt
-    };
-
-    let arr = [];
-    try{ arr = JSON.parse(localStorage.getItem(keyLog) || "[]"); } catch { arr = []; }
-    arr.push(row);
-    saveLog(arr);
-    addRowToTable(row);
-  });
-
-  document.getElementById("btnClearLog").addEventListener("click", () => {
-    localStorage.removeItem(keyLog);
-    loadLog();
-  });
-
-  document.getElementById("btnExport").addEventListener("click", () => {
-    let arr = [];
-    try{ arr = JSON.parse(localStorage.getItem(keyLog) || "[]"); } catch { arr = []; }
-    const head = ["time","channel","type","x","y","k","norm","status"];
-    const lines = [head.join(",")].concat(arr.map(r => head.map(k => `"${String(r[k]||"").replaceAll('"','""')}"`).join(",")));
-    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "vuap1-log.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
-  // === Reg record ===
-  const regSaved = document.getElementById("regSaved");
-  document.getElementById("btnSaveReg").addEventListener("click", () => {
-    const what = document.getElementById("regWhat").value.trim();
-    const how = document.getElementById("regHowMuch").value.trim();
-    const com = document.getElementById("regComment").value.trim();
-    const msg = `Сохранено: ${what || "—"} / ${how || "—"} / ${com || "—"}`;
-    regSaved.style.display = "block";
-    regSaved.textContent = msg;
-  });
-  document.getElementById("btnClearReg").addEventListener("click", () => {
-    ["regWhat","regHowMuch","regComment"].forEach(id => document.getElementById(id).value = "");
-    regSaved.style.display = "none";
-  });
-
-  // === Reset all inputs ===
-  document.getElementById("btnResetAll").addEventListener("click", () => {
-    ["ambTemp","standCond","unitId","engineer","xIn","yOut","kNom","kTol"].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.value = "";
-    });
-    calcK();
-  });
-
-  // === Gallery (auto from GitHub) ===
-  let galleryLoaded = false;
-  let files = [];
-  let page = 0;
-  const perPage = 18;
-
-  const galInfo = document.getElementById("galInfo");
-  const thumbs = document.getElementById("thumbs");
-
-  const modal = document.getElementById("modal");
-  const modalImg = document.getElementById("modalImg");
-  const modalTitle = document.getElementById("modalTitle");
-  let modalIndex = 0;
-
-  function isImg(name){
-    const n = name.toLowerCase();
-    return n.endsWith(".jpg") || n.endsWith(".jpeg") || n.endsWith(".png") || n.endsWith(".webp");
-  }
-
-  async function loadFilesFromGitHub(){
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(TECH_DIR)}?ref=${BRANCH}`;
-    const r = await fetch(url, {headers: {"Accept":"application/vnd.github+json"}});
-    if(!r.ok) throw new Error("GitHub API error");
-    const arr = await r.json();
-    const imgs = arr
-      .filter(x => x && x.type === "file" && isImg(x.name))
-      .map(x => ({name: x.name, download_url: x.download_url}))
-      .sort((a,b) => a.name.localeCompare(b.name, "ru"));
-    return imgs;
-  }
-
-  function renderPage(){
-    thumbs.innerHTML = "";
-    const start = page * perPage;
-    const slice = files.slice(start, start + perPage);
-    galInfo.textContent = files.length
-      ? `Файлов: ${files.length} • Показ: ${start+1}–${Math.min(start+perPage, files.length)}`
-      : "Файлы не найдены в папке";
-
-    slice.forEach((f, i) => {
-      const idx = start + i;
-      const d = document.createElement("div");
-      d.className = "thumb";
-      d.title = f.name;
-      d.innerHTML = `<span class="n">${idx+1}</span><img loading="lazy" alt="${f.name}" />`;
-      const img = d.querySelector("img");
-      img.src = f.download_url;
-
-      d.addEventListener("click", () => openModal(idx));
-      thumbs.appendChild(d);
-    });
-  }
-
-  function openModal(idx){
-    modalIndex = idx;
-    const f = files[modalIndex];
-    modalTitle.textContent = `${modalIndex+1} / ${files.length} — ${f.name}`;
-    modalImg.src = f.download_url;
-    modal.classList.add("open");
-  }
-
-  function closeModal(){ modal.classList.remove("open"); }
-
-  document.getElementById("btnPrev").addEventListener("click", () => {
-    if(page > 0){ page--; renderPage(); }
-  });
-  document.getElementById("btnNext").addEventListener("click", () => {
-    const maxPage = Math.max(0, Math.ceil(files.length / perPage) - 1);
-    if(page < maxPage){ page++; renderPage(); }
-  });
-
-  document.getElementById("mClose").addEventListener("click", closeModal);
-  modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
-
-  document.getElementById("mPrev").addEventListener("click", () => {
-    if(modalIndex > 0) openModal(modalIndex - 1);
-  });
-  document.getElementById("mNext").addEventListener("click", () => {
-    if(modalIndex < files.length - 1) openModal(modalIndex + 1);
-  });
-
-  async function ensureGallery(){
-    if(galleryLoaded) return;
-    galleryLoaded = true;
-    try{
-      galInfo.textContent = "Загрузка списка файлов…";
-      files = await loadFilesFromGitHub();
-      page = 0;
-      renderPage();
-    } catch (e){
-      galInfo.textContent = "Не удалось загрузить файлы. Проверь папку vuap1/assets/tech и права доступа.";
+    function resetP2(){
+      document.getElementById('p2_channel').value = 'direction';
+      document.getElementById('p2_beyond').value = 'no';
+      document.getElementById('p2_out').innerHTML =
+        `<span class="badge warn">ОЖИДАЕТ</span> Внеси факт: вышла ли стрелка дальше промежуточной отметки.`;
     }
-  }
 
-  // load saved log
-  loadLog();
-  // init calc
-  calcK();
-})();
-</script>
+    // ---------- P3 ----------
+    function syncP3Tol(){
+      const ch = document.getElementById('p3_channel').value;
+      // По умолчанию: направление/крен/тангаж = ±3, высота часто отдельная (на твоё подтверждение)
+      const tol = document.getElementById('p3_tol');
+      tol.value = (ch === 'height') ? '2' : '3';
+    }
+
+    function calcP3(){
+      const ch = document.getElementById('p3_channel').value;
+      const angle = Number(document.getElementById('p3_angle').value);
+      const tol = Number(document.getElementById('p3_tol').value);
+
+      const out = document.getElementById('p3_out');
+      if (!isFinite(angle)){
+        out.innerHTML = `<span class="badge warn">НЕТ ДАННЫХ</span> Введи измеренный угол (°).`;
+        return;
+      }
+
+      const target = 10;
+      const min = target - tol;
+      const max = target + tol;
+
+      const chName = mapCh(ch);
+
+      if (angle >= min && angle <= max){
+        out.innerHTML = `<span class="badge ok">OK</span>
+          П.3 (${chName}): угол ${angle.toFixed(1)}° в допуске ${target}° ± ${tol}° (диапазон ${min}…${max}°).`;
+      } else {
+        out.innerHTML = `<span class="badge bad">НЕ НОРМА</span>
+          П.3 (${chName}): угол ${angle.toFixed(1)}° ВНЕ допуска ${target}° ± ${tol}° (норма ${min}…${max}°).`;
+      }
+    }
+
+    function resetP3(){
+      document.getElementById('p3_channel').value = 'direction';
+      document.getElementById('p3_angle').value = '';
+      document.getElementById('p3_tol').value = '3';
+      document.getElementById('p3_out').innerHTML =
+        `<span class="badge warn">ОЖИДАЕТ</span> Введи измеренный угол и проверь соответствие допуску.`;
+    }
+
+    // ---------- P4 ----------
+    function calcP4(){
+      const ch = document.getElementById('p4_channel').value;
+      const onmark = document.getElementById('p4_onmark').value;
+      const turns = document.getElementById('p4_turns').value;
+
+      const out = document.getElementById('p4_out');
+      const chName = mapCh(ch);
+
+      if (onmark === 'yes'){
+        out.innerHTML = `<span class="badge ok">OK</span>
+          П.4 (${chName}): стрелка совпала с крайней отметкой (до толщины стрелки) — ТТ выполнено.<br>
+          ${turns ? `Факт: выполнено оборотов шкалы: <b>${Number(turns).toFixed(1)}</b>.` : ''}`;
+      } else {
+        out.innerHTML = `<span class="badge bad">НЕ НОРМА</span>
+          П.4 (${chName}): стрелка НЕ встала на крайнюю отметку (до толщины стрелки) — ТТ НЕ выполнено.`;
+      }
+    }
+
+    function resetP4(){
+      document.getElementById('p4_channel').value = 'direction';
+      document.getElementById('p4_onmark').value = 'yes';
+      document.getElementById('p4_turns').value = '';
+      document.getElementById('p4_out').innerHTML =
+        `<span class="badge warn">ОЖИДАЕТ</span> Внеси факт: стрелка совпала с крайней отметкой (до толщины стрелки) или нет.`;
+    }
+
+    // ---------- P5 ----------
+    function calcP5(){
+      const ch = document.getElementById('p5_channel').value;
+      const angle = Number(document.getElementById('p5_angle').value);
+      const time = Number(document.getElementById('p5_time').value);
+
+      const out = document.getElementById('p5_out');
+      const chName = mapCh(ch);
+
+      if (!isFinite(angle) || angle <= 0){
+        out.innerHTML = `<span class="badge warn">НЕТ ДАННЫХ</span> Укажи угол (>0).`;
+        return;
+      }
+      if (!isFinite(time) || time <= 0){
+        out.innerHTML = `<span class="badge warn">НЕТ ДАННЫХ</span> Укажи время по секундомеру (>0).`;
+        return;
+      }
+
+      const v = angle / time; // град/сек
+      const ok = v >= 15;
+
+      out.innerHTML = `
+        <span class="badge ${ok ? 'ok' : 'bad'}">${ok ? 'OK' : 'НЕ НОРМА'}</span>
+        П.5 (${chName}): скорость согласования <b>${v.toFixed(2)} град/сек</b> при угле ${angle.toFixed(1)}° и времени ${time.toFixed(2)} сек.<br>
+        ТТ: не менее <b>15 град/сек</b> → ${ok ? '<b>выполнено</b>.' : '<b>не выполнено</b>.'}
+      `;
+    }
+
+    function resetP5(){
+      document.getElementById('p5_channel').value = 'direction';
+      document.getElementById('p5_angle').value = 60;
+      document.getElementById('p5_time').value = '';
+      document.getElementById('p5_out').innerHTML =
+        `<span class="badge warn">ОЖИДАЕТ</span> Введи время — скорость будет рассчитана как <span class="mono">V = угол / время</span>.`;
+    }
+
+    // ---------- Helpers ----------
+    function mapCh(ch){
+      switch(ch){
+        case 'direction': return 'канал направления';
+        case 'roll': return 'канал крена';
+        case 'pitch': return 'канал тангажа';
+        case 'height': return 'канал высоты';
+        default: return 'канал';
+      }
+    }
+  </script>
 </body>
 </html>
