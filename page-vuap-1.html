@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ВУАП-1 — Проверка коэффициента усиления</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>ВУАП-1 — Проверка коэффициента усиления (П.2)</title>
 
 <style>
 :root{
@@ -13,6 +13,7 @@
   --stroke:rgba(255,255,255,.18);
   --text:#e9f2ff;
   --muted:#b7c7dd;
+
   --ok:#7CFF9E;
   --bad:#FF9A9A;
   --wait:#FFD27C;
@@ -27,21 +28,14 @@ body{
     radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
     radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
     linear-gradient(180deg,var(--bg1),var(--bg2));
+  min-height:100vh;
 }
 
-.wrap{
-  max-width:1100px;
-  margin:0 auto;
-  padding:24px 16px 40px;
-}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
 
 .top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  flex-wrap:wrap;margin-bottom:20px;
 }
 
 .brand{
@@ -51,16 +45,8 @@ body{
   padding:14px 18px;
   backdrop-filter:blur(6px);
 }
-.brand h1{
-  margin:0;
-  font-size:18px;
-  letter-spacing:.4px;
-}
-.brand p{
-  margin:4px 0 0;
-  font-size:13px;
-  color:var(--muted);
-}
+.brand h1{margin:0;font-size:18px;letter-spacing:.4px}
+.brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
 
 .badge{
   padding:8px 12px;
@@ -69,6 +55,17 @@ body{
   background:rgba(255,255,255,.12);
   font-size:12px;
   white-space:nowrap;
+}
+
+a.toplink{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  text-decoration:none;
+  font-size:13px;
 }
 
 .card{
@@ -81,27 +78,10 @@ body{
   margin-bottom:16px;
 }
 
-.card h2{
-  margin:0 0 10px;
-  font-size:18px;
-}
+.card h2{margin:0 0 10px;font-size:18px}
+.card h3{margin:14px 0 6px;font-size:15px}
 
-.card h3{
-  margin:14px 0 6px;
-  font-size:15px;
-}
-
-.p{
-  font-size:14px;
-  line-height:1.45;
-  color:var(--muted);
-}
-
-.hr{
-  height:1px;
-  background:var(--stroke);
-  margin:14px 0;
-}
+.p{font-size:14px;line-height:1.45;color:var(--muted)}
 
 .form{
   display:grid;
@@ -110,16 +90,9 @@ body{
   margin-top:12px;
 }
 
-.field{
-  grid-column:span 6;
-}
+.field{grid-column:span 6}
 
-label{
-  display:block;
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:6px;
-}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
 
 select,button{
   width:100%;
@@ -131,21 +104,14 @@ select,button{
   font-size:14px;
 }
 
-button{
-  cursor:pointer;
-  font-weight:600;
-}
+button{cursor:pointer;font-weight:600}
 
 button.primary{
   background:linear-gradient(180deg,#ffffff,#e6f0ff);
   color:#000;
 }
 
-.actions{
-  display:flex;
-  gap:12px;
-  grid-column:span 12;
-}
+.actions{display:flex;gap:12px;grid-column:span 12}
 
 .result{
   margin-top:14px;
@@ -169,7 +135,8 @@ button.primary{
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
 
 @media(max-width:900px){
-  .field{grid-column:span 12;}
+  .field{grid-column:span 12}
+  .actions{flex-direction:column}
 }
 </style>
 </head>
@@ -182,6 +149,8 @@ button.primary{
       <h1>ВУАП-1</h1>
       <p>Инженерная инструкция · Пошаговый контроль допусков</p>
     </div>
+
+    <a class="toplink" href="./">← На главную</a>
     <div class="badge">Пункт 2 · Коэффициент усиления</div>
   </div>
 
@@ -199,9 +168,7 @@ button.primary{
     </div>
 
     <h3>б) Каналы крена и тангажа</h3>
-    <div class="p">
-      Проделать аналогичную каналу направления проверку.
-    </div>
+    <div class="p">Проделать аналогичную каналу направления проверку.</div>
 
     <h3>в) Канал высоты</h3>
     <div class="p">
@@ -223,9 +190,7 @@ button.primary{
   <!-- РАБОТЫ ПРИ ОТКЛОНЕНИЯХ -->
   <section class="card">
     <h2>Работы при отклонениях от ТТ</h2>
-    <div class="p">
-      Заменить пульт управления соответствующего канала на исправный.
-    </div>
+    <div class="p">Заменить пульт управления соответствующего канала на исправный.</div>
   </section>
 
   <!-- ФИКСАЦИЯ РЕЗУЛЬТАТА -->
@@ -235,7 +200,7 @@ button.primary{
     <div class="form">
       <div class="field">
         <label>Канал</label>
-        <select id="channel">
+        <select id="p2_channel">
           <option value="direction">Направления</option>
           <option value="roll">Крена</option>
           <option value="pitch">Тангажа</option>
@@ -245,7 +210,7 @@ button.primary{
 
       <div class="field">
         <label>Отклонение стрелки вышло дальше промежуточной отметки?</label>
-        <select id="fact">
+        <select id="p2_beyond">
           <option value="">— выбрать —</option>
           <option value="no">Нет (в пределах)</option>
           <option value="yes">Да (вышло)</option>
@@ -253,12 +218,12 @@ button.primary{
       </div>
 
       <div class="actions">
-        <button class="primary" onclick="check()">Проверить ТТ</button>
-        <button onclick="resetForm()">Сброс</button>
+        <button class="primary" type="button" onclick="calcP2()">Проверить ТТ</button>
+        <button type="button" onclick="resetP2()">Сброс</button>
       </div>
     </div>
 
-    <div class="result" id="out">
+    <div class="result" id="p2_out">
       <span class="status wait">ОЖИДАЕТ</span><br>
       Внеси факт: вышла ли стрелка дальше промежуточной отметки.
     </div>
@@ -267,41 +232,44 @@ button.primary{
 </div>
 
 <script>
-function channelName(v){
-  return {
-    direction:'канал направления',
-    roll:'канал крена',
-    pitch:'канал тангажа',
-    height:'канал высоты'
-  }[v] || 'канал';
+function mapCh(v){
+  switch(v){
+    case 'direction': return 'канал направления';
+    case 'roll': return 'канал крена';
+    case 'pitch': return 'канал тангажа';
+    case 'height': return 'канал высоты';
+    default: return 'канал';
+  }
 }
 
-function check(){
-  const ch = document.getElementById('channel').value;
-  const fact = document.getElementById('fact').value;
-  const out = document.getElementById('out');
+function calcP2(){
+  const ch = document.getElementById('p2_channel').value;
+  const beyond = document.getElementById('p2_beyond').value;
+  const out = document.getElementById('p2_out');
 
-  if(!fact){
+  if(!beyond){
     out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери факт наблюдения.';
     return;
   }
 
-  if(fact === 'no'){
+  const chName = mapCh(ch);
+
+  if(beyond === 'no'){
     out.innerHTML =
       '<span class="status ok">OK</span><br>' +
-      channelName(ch) + ': стрелка не вышла за промежуточную отметку — ТТ выполнено.';
+      'П.2 ('+ chName +'): стрелка НЕ вышла за промежуточную отметку — <b>ТТ выполнено</b>.';
   }else{
     out.innerHTML =
       '<span class="status bad">НЕ НОРМА</span><br>' +
-      channelName(ch) + ': стрелка вышла за промежуточную отметку — ТТ не выполнено.<br>' +
+      'П.2 ('+ chName +'): стрелка вышла за промежуточную отметку — <b>ТТ не выполнено</b>.<br>' +
       '<b>Действие:</b> заменить пульт управления соответствующего канала.';
   }
 }
 
-function resetForm(){
-  document.getElementById('channel').value='direction';
-  document.getElementById('fact').value='';
-  document.getElementById('out').innerHTML =
+function resetP2(){
+  document.getElementById('p2_channel').value = 'direction';
+  document.getElementById('p2_beyond').value = '';
+  document.getElementById('p2_out').innerHTML =
     '<span class="status wait">ОЖИДАЕТ</span><br>' +
     'Внеси факт: вышла ли стрелка дальше промежуточной отметки.';
 }
