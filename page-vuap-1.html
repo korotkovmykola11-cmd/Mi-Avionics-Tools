@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>ВУАП-1 — Проверка коэффициента усиления (П.2)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ВУАП-1 — Проверка крутизны датчика угла (п.3)</title>
 
 <style>
 :root{
@@ -13,10 +13,10 @@
   --stroke:rgba(255,255,255,.18);
   --text:#e9f2ff;
   --muted:#b7c7dd;
-
   --ok:#7CFF9E;
   --bad:#FF9A9A;
   --wait:#FFD27C;
+  --info:#9fd1ff;
 }
 
 *{box-sizing:border-box}
@@ -28,14 +28,21 @@ body{
     radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
     radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
     linear-gradient(180deg,var(--bg1),var(--bg2));
-  min-height:100vh;
 }
 
-.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
+.wrap{
+  max-width:1100px;
+  margin:0 auto;
+  padding:24px 16px 40px;
+}
 
 .top{
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  flex-wrap:wrap;margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
 }
 
 .brand{
@@ -45,8 +52,8 @@ body{
   padding:14px 18px;
   backdrop-filter:blur(6px);
 }
-.brand h1{margin:0;font-size:18px;letter-spacing:.4px}
-.brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.brand h1{margin:0;font-size:18px;letter-spacing:.4px;}
+.brand p{margin:4px 0 0;font-size:13px;color:var(--muted);}
 
 .badge{
   padding:8px 12px;
@@ -57,15 +64,24 @@ body{
   white-space:nowrap;
 }
 
-a.toplink{
-  display:inline-flex;align-items:center;gap:8px;
+.nav{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+a.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   padding:10px 12px;
-  border-radius:999px;
+  border-radius:12px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.10);
   color:var(--text);
   text-decoration:none;
-  font-size:13px;
+  font-size:14px;
+  font-weight:600;
 }
 
 .card{
@@ -78,10 +94,38 @@ a.toplink{
   margin-bottom:16px;
 }
 
-.card h2{margin:0 0 10px;font-size:18px}
-.card h3{margin:14px 0 6px;font-size:15px}
+.card h2{margin:0 0 10px;font-size:18px;}
+.card h3{margin:14px 0 6px;font-size:15px;}
 
-.p{font-size:14px;line-height:1.45;color:var(--muted)}
+.p{
+  font-size:14px;
+  line-height:1.45;
+  color:var(--muted);
+}
+
+.note{
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
+  border-radius:16px;
+  padding:14px;
+}
+
+.note .title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:.6px;
+  font-size:12px;
+  color:var(--info);
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.note .text{
+  color:var(--text);
+  font-size:14px;
+  line-height:1.45;
+}
 
 .form{
   display:grid;
@@ -90,9 +134,8 @@ a.toplink{
   margin-top:12px;
 }
 
-.field{grid-column:span 6}
-
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.field{grid-column:span 6;}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
 
 select,button{
   width:100%;
@@ -104,14 +147,17 @@ select,button{
   font-size:14px;
 }
 
-button{cursor:pointer;font-weight:600}
-
+button{cursor:pointer;font-weight:600;}
 button.primary{
   background:linear-gradient(180deg,#ffffff,#e6f0ff);
   color:#000;
 }
 
-.actions{display:flex;gap:12px;grid-column:span 12}
+.actions{
+  display:flex;
+  gap:12px;
+  grid-column:span 12;
+}
 
 .result{
   margin-top:14px;
@@ -129,14 +175,13 @@ button.primary{
   font-size:12px;
   margin-bottom:8px;
 }
-
 .ok{background:rgba(124,255,158,.18);color:var(--ok)}
 .bad{background:rgba(255,154,154,.18);color:var(--bad)}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
 
 @media(max-width:900px){
-  .field{grid-column:span 12}
-  .actions{flex-direction:column}
+  .field{grid-column:span 12;}
+  .nav{width:100%;justify-content:flex-end;}
 }
 </style>
 </head>
@@ -150,57 +195,44 @@ button.primary{
       <p>Инженерная инструкция · Пошаговый контроль допусков</p>
     </div>
 
-    <a class="toplink" href="./">← На главную</a>
-    <div class="badge">Пункт 2 · Коэффициент усиления</div>
+    <div class="nav">
+      <a class="btn" href="./index.html">← На главную</a>
+      <div class="badge">Пункт 3 · Крутизна датчика угла (начало)</div>
+    </div>
   </div>
 
-  <!-- СОДЕРЖАНИЕ ОПЕРАЦИИ -->
+  <!-- УСЛОВИЯ ПРОВЕДЕНИЯ -->
   <section class="card">
-    <h2>2. Проверка коэффициента усиления</h2>
+    <h2>Условия проведения проверки</h2>
+    <div class="note">
+      <div class="title">УСЛОВИЕ</div>
+      <div class="text">
+        Проверка производится при <b>выключенной наземной гидроустановке</b>.
+      </div>
+    </div>
+  </section>
+
+  <!-- СОДЕРЖАНИЕ ОПЕРАЦИИ (НАЧАЛО П.3) -->
+  <section class="card">
+    <h2>3. Проверка крутизны датчика угла (начало)</h2>
 
     <h3>а) Канал направления</h3>
     <div class="p">
-      При нажатой кнопке-табло «ОТКЛ» на пульте управления канала направления
+      При нажатой кнопке-табло «ВКЛ» на пульте управления канала направления
       поворотом шкалы ручки центровки установить стрелку индикатора нулевого
-      в среднее положение (стрелка совмещена с нулевой отметкой).<br><br>
-      Не отпуская «ОТКЛ», нажать кнопку-табло «ВКЛ» и, удерживая обе кнопки,
-      заметить положение стрелки индикатора нулевого.
-    </div>
-
-    <h3>б) Каналы крена и тангажа</h3>
-    <div class="p">Проделать аналогичную каналу направления проверку.</div>
-
-    <h3>в) Канал высоты</h3>
-    <div class="p">
-      Аналогично, с установкой стрелки индикатора нулевого в среднее положение
-      и фиксацией отклонения при удержании «ОТКЛ» + «ВКЛ».
+      в среднее положение.<br><br>
+      (Дальнейшее продолжение пункта 3 добавим следующим шагом — ты пришлёшь следующую часть текста/лист.)
     </div>
   </section>
 
-  <!-- ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ -->
-  <section class="card">
-    <h2>Технические требования (ТТ)</h2>
-    <div class="p">
-      Для всех каналов стрелка индикатора нулевого
-      (задняя кромка стрелки, если смотреть по направлению её движения)
-      <b>НЕ ДОЛЖНА</b> отклоняться далее промежуточной отметки.
-    </div>
-  </section>
-
-  <!-- РАБОТЫ ПРИ ОТКЛОНЕНИЯХ -->
-  <section class="card">
-    <h2>Работы при отклонениях от ТТ</h2>
-    <div class="p">Заменить пульт управления соответствующего канала на исправный.</div>
-  </section>
-
-  <!-- ФИКСАЦИЯ РЕЗУЛЬТАТА -->
+  <!-- ФИКСАЦИЯ РЕЗУЛЬТАТА (ЗАГОТОВКА ПОД П.3) -->
   <section class="card">
     <h2>Фиксация результата (в программу)</h2>
 
     <div class="form">
       <div class="field">
         <label>Канал</label>
-        <select id="p2_channel">
+        <select id="channel">
           <option value="direction">Направления</option>
           <option value="roll">Крена</option>
           <option value="pitch">Тангажа</option>
@@ -209,69 +241,65 @@ button.primary{
       </div>
 
       <div class="field">
-        <label>Отклонение стрелки вышло дальше промежуточной отметки?</label>
-        <select id="p2_beyond">
+        <label>Результат проверки (п.3)</label>
+        <select id="fact">
           <option value="">— выбрать —</option>
-          <option value="no">Нет (в пределах)</option>
-          <option value="yes">Да (вышло)</option>
+          <option value="ok">ТТ выполнено</option>
+          <option value="bad">ТТ не выполнено</option>
         </select>
       </div>
 
       <div class="actions">
-        <button class="primary" type="button" onclick="calcP2()">Проверить ТТ</button>
-        <button type="button" onclick="resetP2()">Сброс</button>
+        <button class="primary" onclick="check()">Зафиксировать</button>
+        <button onclick="resetForm()">Сброс</button>
       </div>
     </div>
 
-    <div class="result" id="p2_out">
+    <div class="result" id="out">
       <span class="status wait">ОЖИДАЕТ</span><br>
-      Внеси факт: вышла ли стрелка дальше промежуточной отметки.
+      Выбери результат для фиксации.
     </div>
   </section>
 
 </div>
 
 <script>
-function mapCh(v){
-  switch(v){
-    case 'direction': return 'канал направления';
-    case 'roll': return 'канал крена';
-    case 'pitch': return 'канал тангажа';
-    case 'height': return 'канал высоты';
-    default: return 'канал';
-  }
+function channelName(v){
+  return {
+    direction:'канал направления',
+    roll:'канал крена',
+    pitch:'канал тангажа',
+    height:'канал высоты'
+  }[v] || 'канал';
 }
 
-function calcP2(){
-  const ch = document.getElementById('p2_channel').value;
-  const beyond = document.getElementById('p2_beyond').value;
-  const out = document.getElementById('p2_out');
+function check(){
+  const ch = document.getElementById('channel').value;
+  const fact = document.getElementById('fact').value;
+  const out = document.getElementById('out');
 
-  if(!beyond){
-    out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери факт наблюдения.';
+  if(!fact){
+    out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери результат.';
     return;
   }
 
-  const chName = mapCh(ch);
-
-  if(beyond === 'no'){
+  if(fact === 'ok'){
     out.innerHTML =
       '<span class="status ok">OK</span><br>' +
-      'П.2 ('+ chName +'): стрелка НЕ вышла за промежуточную отметку — <b>ТТ выполнено</b>.';
+      channelName(ch) + ': результат зафиксирован — ТТ выполнено (п.3).';
   }else{
     out.innerHTML =
       '<span class="status bad">НЕ НОРМА</span><br>' +
-      'П.2 ('+ chName +'): стрелка вышла за промежуточную отметку — <b>ТТ не выполнено</b>.<br>' +
-      '<b>Действие:</b> заменить пульт управления соответствующего канала.';
+      channelName(ch) + ': результат зафиксирован — ТТ не выполнено (п.3).';
   }
 }
 
-function resetP2(){
-  document.getElementById('p2_channel').value = 'direction';
-  document.getElementById('p2_beyond').value = '';
-  document.getElementById('p2_out').innerHTML =
+function resetForm(){
+  document.getElementById('channel').value='direction';
+  document.getElementById('fact').value='';
+  document.getElementById('out').innerHTML =
     '<span class="status wait">ОЖИДАЕТ</span><br>' +
-    'Внеси факт: вышла ли стрелка дальше промежуточной отметки.';
+    'Выбери результат для фиксации.';
 }
 </script>
 
