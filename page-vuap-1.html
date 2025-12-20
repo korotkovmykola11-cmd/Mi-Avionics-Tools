@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ВУАП-1 — Проверка крутизны датчика угла (п.3)</title>
+<title>ВУАП-1 — Пункт 4: Проверка крутизны сигнала (ОС)</title>
 
 <style>
 :root{
@@ -16,7 +16,6 @@
   --ok:#7CFF9E;
   --bad:#FF9A9A;
   --wait:#FFD27C;
-  --info:#9fd1ff;
 }
 
 *{box-sizing:border-box}
@@ -30,18 +29,10 @@ body{
     linear-gradient(180deg,var(--bg1),var(--bg2));
 }
 
-.wrap{
-  max-width:1100px;
-  margin:0 auto;
-  padding:24px 16px 40px;
-}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
 
 .top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
   margin-bottom:20px;
 }
 
@@ -52,37 +43,27 @@ body{
   padding:14px 18px;
   backdrop-filter:blur(6px);
 }
-.brand h1{margin:0;font-size:18px;letter-spacing:.4px;}
-.brand p{margin:4px 0 0;font-size:13px;color:var(--muted);}
+.brand h1{margin:0;font-size:18px;letter-spacing:.4px}
+.brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
 
 .badge{
-  padding:8px 12px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
+  padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);
   background:rgba(255,255,255,.12);
-  font-size:12px;
-  white-space:nowrap;
+  font-size:12px;white-space:nowrap;
 }
 
 .nav{
-  display:flex;
-  gap:10px;
-  align-items:center;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
-
 a.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:10px 12px;
-  border-radius:12px;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 12px;border-radius:12px;text-decoration:none;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.10);
   color:var(--text);
-  text-decoration:none;
-  font-size:14px;
-  font-weight:600;
+  font-size:13px;font-weight:700;
 }
+a.btn:hover{background:rgba(255,255,255,.14)}
 
 .card{
   background:var(--card);
@@ -93,39 +74,11 @@ a.btn{
   box-shadow:0 18px 40px rgba(0,0,0,.25);
   margin-bottom:16px;
 }
+.card h2{margin:0 0 10px;font-size:18px}
+.card h3{margin:14px 0 6px;font-size:15px}
 
-.card h2{margin:0 0 10px;font-size:18px;}
-.card h3{margin:14px 0 6px;font-size:15px;}
-
-.p{
-  font-size:14px;
-  line-height:1.45;
-  color:var(--muted);
-}
-
-.note{
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.22);
-  border-radius:16px;
-  padding:14px;
-}
-
-.note .title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  letter-spacing:.6px;
-  font-size:12px;
-  color:var(--info);
-  margin-bottom:8px;
-  text-transform:uppercase;
-}
-.note .text{
-  color:var(--text);
-  font-size:14px;
-  line-height:1.45;
-}
+.p{font-size:14px;line-height:1.45;color:var(--muted)}
+.hr{height:1px;background:var(--stroke);margin:14px 0}
 
 .form{
   display:grid;
@@ -134,8 +87,8 @@ a.btn{
   margin-top:12px;
 }
 
-.field{grid-column:span 6;}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
+.field{grid-column:span 6}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
 
 select,button{
   width:100%;
@@ -146,18 +99,9 @@ select,button{
   color:var(--text);
   font-size:14px;
 }
-
-button{cursor:pointer;font-weight:600;}
-button.primary{
-  background:linear-gradient(180deg,#ffffff,#e6f0ff);
-  color:#000;
-}
-
-.actions{
-  display:flex;
-  gap:12px;
-  grid-column:span 12;
-}
+button{cursor:pointer;font-weight:700}
+button.primary{background:linear-gradient(180deg,#ffffff,#e6f0ff);color:#000}
+.actions{display:flex;gap:12px;grid-column:span 12}
 
 .result{
   margin-top:14px;
@@ -179,9 +123,20 @@ button.primary{
 .bad{background:rgba(255,154,154,.18);color:var(--bad)}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
 
+.note{
+  margin-top:10px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px dashed rgba(255,255,255,.25);
+  background:rgba(0,0,0,.18);
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
 @media(max-width:900px){
   .field{grid-column:span 12;}
-  .nav{width:100%;justify-content:flex-end;}
+  .actions{flex-direction:column;}
 }
 </style>
 </head>
@@ -197,35 +152,70 @@ button.primary{
 
     <div class="nav">
       <a class="btn" href="./index.html">← На главную</a>
-      <div class="badge">Пункт 3 · Крутизна датчика угла (начало)</div>
+      <div class="badge">Пункт 4 · Крутизна сигнала (ОС)</div>
     </div>
   </div>
 
-  <!-- УСЛОВИЯ ПРОВЕДЕНИЯ -->
+  <!-- УСЛОВИЯ -->
   <section class="card">
     <h2>Условия проведения проверки</h2>
-    <div class="note">
-      <div class="title">УСЛОВИЕ</div>
-      <div class="text">
-        Проверка производится при <b>выключенной наземной гидроустановке</b>.
-      </div>
+    <div class="p">
+      Проверка выполняется <b>с включённой наземной гидроустановкой</b>.
     </div>
   </section>
 
-  <!-- СОДЕРЖАНИЕ ОПЕРАЦИИ (НАЧАЛО П.3) -->
+  <!-- СОДЕРЖАНИЕ ОПЕРАЦИИ -->
   <section class="card">
-    <h2>3. Проверка крутизны датчика угла (начало)</h2>
+    <h2>4. Проверка крутизны сигнала в цепи обратной связи</h2>
 
     <h3>а) Канал направления</h3>
     <div class="p">
-      При нажатой кнопке-табло «ВКЛ» на пульте управления канала направления
-      поворотом шкалы ручки центровки установить стрелку индикатора нулевого
-      в среднее положение.<br><br>
-      (Дальнейшее продолжение пункта 3 добавим следующим шагом — ты пришлёшь следующую часть текста/лист.)
+      Нажать кнопку-табло «ВКЛ» на пульте управления канала направления.<br>
+      Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки)
+      на 2–3 оборота отклонить шток малого цилиндра рулевого агрегата в крайнее положение.<br>
+      Заметить положение стрелки индикатора нулевого.
+    </div>
+
+    <div class="note">
+      <b>Примечание.</b> При отклонении штока малого цилиндра до упора будет работать «перегонка».
+      Поэтому необходимо ногами удерживать педали в нейтральном положении, не нажимая при этом на подпедальники.
+    </div>
+
+    <h3>б) Каналы крена, тангажа и высоты</h3>
+    <div class="p">
+      Проделать аналогичную описанной для канала направления проверку.<br>
+      При этом для отклонения штока малого цилиндра каналов крена и тангажа необходимо
+      пользоваться шкалами ручек центровки соответствующих пультов управления,
+      а для канала высоты — тумблером «Контроль» на пульте управления канала высоты.
     </div>
   </section>
 
-  <!-- ФИКСАЦИЯ РЕЗУЛЬТАТА (ЗАГОТОВКА ПОД П.3) -->
+  <!-- ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ -->
+  <section class="card">
+    <h2>Технические требования (ТТ)</h2>
+    <div class="p">
+      Для всех каналов стрелка индикатора нулевого должна устанавливаться
+      в совмещённое с крайними отметками положение с точностью до толщины стрелки.
+    </div>
+  </section>
+
+  <!-- РАБОТЫ ПРИ ОТКЛОНЕНИЯХ -->
+  <section class="card">
+    <h2>Работы, выполняемые при отклонениях от ТТ</h2>
+    <div class="p">
+      Отключить и вновь включить проверяемый канал кнопками-табло «ОТКЛ» и «ВКЛ» на пульте управления.<br>
+      Поворотом шкалы ручки центровки по часовой стрелке на 2–3 оборота отклонить шток малого цилиндра
+      рулевого агрегата в крайнее положение и поворотом подстроечного резистора «ИН» на пульте управления
+      данного канала установить стрелку индикатора нулевого в совмещённое положение с крайней отметкой.
+    </div>
+
+    <div class="note">
+      <b>Важно.</b> После регулировки подстроечного резистора «ИН» необходимо перепроверить передаточные числа
+      соответствующего канала: <b>по углу</b>, <b>по угловой скорости</b>, <b>по высоте</b> — в соответствии с пунктом 3 технологии.
+    </div>
+  </section>
+
+  <!-- ФИКСАЦИЯ РЕЗУЛЬТАТА -->
   <section class="card">
     <h2>Фиксация результата (в программу)</h2>
 
@@ -241,23 +231,23 @@ button.primary{
       </div>
 
       <div class="field">
-        <label>Результат проверки (п.3)</label>
+        <label>Стрелка индикатора нулевого стала на крайнюю отметку (с точностью до толщины стрелки)?</label>
         <select id="fact">
           <option value="">— выбрать —</option>
-          <option value="ok">ТТ выполнено</option>
-          <option value="bad">ТТ не выполнено</option>
+          <option value="yes">Да (ТТ выполнено)</option>
+          <option value="no">Нет (ТТ не выполнено)</option>
         </select>
       </div>
 
       <div class="actions">
-        <button class="primary" onclick="check()">Зафиксировать</button>
+        <button class="primary" onclick="checkTT()">Проверить ТТ</button>
         <button onclick="resetForm()">Сброс</button>
       </div>
     </div>
 
     <div class="result" id="out">
       <span class="status wait">ОЖИДАЕТ</span><br>
-      Выбери результат для фиксации.
+      Выбери канал и факт установки стрелки по ТТ.
     </div>
   </section>
 
@@ -273,33 +263,35 @@ function channelName(v){
   }[v] || 'канал';
 }
 
-function check(){
+function checkTT(){
   const ch = document.getElementById('channel').value;
   const fact = document.getElementById('fact').value;
   const out = document.getElementById('out');
 
   if(!fact){
-    out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери результат.';
+    out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери факт наблюдения.';
     return;
   }
 
-  if(fact === 'ok'){
+  if(fact === 'yes'){
     out.innerHTML =
       '<span class="status ok">OK</span><br>' +
-      channelName(ch) + ': результат зафиксирован — ТТ выполнено (п.3).';
+      channelName(ch) + ': стрелка установилась на крайнюю отметку (с точностью до толщины стрелки) — ТТ выполнено.';
   }else{
     out.innerHTML =
       '<span class="status bad">НЕ НОРМА</span><br>' +
-      channelName(ch) + ': результат зафиксирован — ТТ не выполнено (п.3).';
+      channelName(ch) + ': стрелка не установилась по требованию — ТТ не выполнено.<br>' +
+      '<b>Действия по технологии:</b> выполнить операции раздела «Работы при отклонениях от ТТ» (ОТКЛ/ВКЛ, отклонение 2–3 оборота, регулировка «ИН»).<br>' +
+      '<b>Важно:</b> после регулировки «ИН» перепроверить передаточные числа: по углу, по угловой скорости, по высоте (п. 3).';
   }
 }
 
 function resetForm(){
-  document.getElementById('channel').value='direction';
-  document.getElementById('fact').value='';
+  document.getElementById('channel').value = 'direction';
+  document.getElementById('fact').value = '';
   document.getElementById('out').innerHTML =
     '<span class="status wait">ОЖИДАЕТ</span><br>' +
-    'Выбери результат для фиксации.';
+    'Выбери канал и факт установки стрелки по ТТ.';
 }
 </script>
 
