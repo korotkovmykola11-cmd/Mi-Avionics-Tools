@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>ВУАП-1 — Пункт 3 · Проверка крутизны датчика угла</title>
+  <title>ВУАП-1 — Пункт 3. Проверка крутизны датчика угла</title>
+
   <style>
     :root{
-      --bg1:#0b1a2a;
+      --bg1:#0b1d2a;
       --bg2:#153a5a;
       --card:rgba(255,255,255,.08);
       --stroke:rgba(255,255,255,.18);
       --text:#e9f2ff;
       --muted:#b7c7dd;
+      --accent:#4da3ff;
     }
     *{box-sizing:border-box}
     body{
@@ -23,98 +25,138 @@
         radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
     }
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:24px 16px 40px;
-    }
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
     .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
+      display:flex;justify-content:space-between;align-items:center;
+      gap:12px;margin-bottom:18px
     }
-    .brand{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      padding:14px 18px;
-      backdrop-filter:blur(6px);
-    }
-    .brand h1{margin:0;font-size:18px;letter-spacing:.4px}
-    .brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    .brand h1{margin:0;font-size:22px}
+    .brand p{margin:4px 0 0;color:var(--muted);font-size:14px}
     .badge{
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
+      padding:6px 10px;border-radius:999px;
       background:rgba(255,255,255,.12);
-      font-size:12px;
-      white-space:nowrap;
-    }
-    .nav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-    a.btn{
-      display:inline-block;
-      padding:10px 12px;
-      border-radius:12px;
       border:1px solid var(--stroke);
-      background:rgba(255,255,255,.10);
-      color:var(--text);
-      text-decoration:none;
-      font-size:14px;
+      font-size:13px;color:var(--muted)
     }
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      text-decoration:none;color:var(--text);
+      padding:8px 14px;border-radius:10px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.06);
+      font-size:14px
+    }
+    .btn:hover{background:rgba(255,255,255,.12)}
     .card{
       background:var(--card);
       border:1px solid var(--stroke);
-      border-radius:18px;
+      border-radius:16px;
       padding:18px;
-      backdrop-filter:blur(6px);
-      box-shadow:0 18px 40px rgba(0,0,0,.25);
-      margin-bottom:14px;
+      margin-top:14px
     }
-    .card h2{margin:0 0 10px;font-size:18px}
-    .p{font-size:14px;line-height:1.45;color:var(--muted)}
-    .placeholder{
-      border:1px dashed rgba(255,255,255,.28);
-      border-radius:14px;
-      padding:14px;
+    .card h2{margin:0 0 12px;font-size:20px}
+    .section h3{
+      margin:18px 0 8px;
+      font-size:16px;
+      color:var(--accent)
+    }
+    .text p{margin:6px 0;line-height:1.5}
+    .note{
+      margin-top:12px;
+      padding:12px;
+      border-radius:12px;
+      border:1px dashed var(--stroke);
       color:var(--muted);
-      font-size:14px;
+      font-size:14px
     }
   </style>
 </head>
 
-<body> 
-  <h1>Пункт 3. Проверка крутизны датчика угла</h1>
-  <div class="wrap">
+<body>
+<div class="wrap">
 
-    <div class="top">
-      <div class="brand">
-        <h1>ВУАП-1</h1>
-        <p>Инженерная инструкция · Пошаговый контроль допусков</p>
+  <div class="top">
+    <div class="brand">
+      <h1>ВУАП-1</h1>
+      <p>Инженерная инструкция · Пошаговый контроль допусков</p>
+    </div>
+    <div class="badge">Пункт 3 · проверка</div>
+  </div>
+
+  <div class="nav">
+    <a class="btn" href="../index.html">← На главную</a>
+    <a class="btn" href="../page-vuap-1.html">← Меню ВУАП-1</a>
+  </div>
+
+  <!-- Условия -->
+  <div class="card">
+    <h2>Условия проведения проверки</h2>
+    <div class="text">
+      <p>Проверка выполняется <strong>с выключенной наземной гидроустановкой</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Пункт 3 -->
+  <div class="card">
+    <h2>3. Проверка крутизны датчика угла</h2>
+
+    <div class="section">
+      <h3>а) Канал направления</h3>
+      <div class="text">
+        <p>Нажать кнопку-табло «ВКЛ» на пульте управления канала направления.</p>
+        <p>Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки)
+           установить стрелку индикатора нулевого в совмещённое с промежуточной отметкой положение.</p>
+        <p>Замерить угол поворота шкалы ручки центровки
+           (деление шкалы соответствует 1°).</p>
+        <p>Нажать кнопку-табло «ОТКЛ» на пульте управления канала направления.</p>
       </div>
-      <div class="badge">Пункт 3 · (черновик)</div>
     </div>
 
-    <div class="nav">
-      <a class="btn" href="../index.html">← На главную</a>
-      <a class="btn" href="../page-vuap-1.html">← Меню ВУАП-1</a>
+    <div class="section">
+      <h3>б) Каналы крена, тангажа и высоты</h3>
+      <div class="text">
+        <p>Проверку произвести аналогично описанной для канала направления.</p>
+        <p>При этом для каналов крена и тангажа пользоваться шкалами ручек центровки
+           соответствующих пультов управления.</p>
+        <p>Для канала высоты пользоваться тумблером «Контроль»
+           на пульте управления канала высоты.</p>
+      </div>
     </div>
 
-    <section class="card">
-      <h2>3. Проверка крутизны датчика угла</h2>
-      <div class="placeholder">
-        Здесь будет текст технологии пункта 3 (а/б/в), ТТ и работы при отклонениях.
-        Пока это каркас страницы: проверяем, что файл открывается и навигация работает.
+    <div class="section">
+      <h3>Технические требования (ТТ)</h3>
+      <div class="text">
+        <p>Для каналов направления, крена и тангажа угол поворота шкалы ручки центровки
+           должен быть <strong>10 ± 3°</strong>.</p>
       </div>
-    </section>
+    </div>
+
+    <div class="section">
+      <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+      <div class="text">
+        <p>Повернуть шкалу ручки центровки по часовой стрелке на 10°
+           от замеченного положения (1 оборот).</p>
+        <p>Поворотом подстроечного резистора «КР»
+           на пульте управления соответствующего канала
+           установить стрелку индикатора нулевого
+           в совмещённое с правой (для канала тангажа — нижней)
+           промежуточной отметкой положение.</p>
+        <p>Не отпуская кнопку-табло «ВКЛ»,
+           вернуть шкалу ручки центровки в исходное положение,
+           соответствующее среднему положению стрелки индикатора нулевого.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Важно:</strong> после регулировки подстроечного резистора «КР»
+      необходимо <strong>перепроверить передаточные числа</strong>
+      соответствующего канала:
+      по углу, по угловой скорости и по высоте —
+      в соответствии с пунктом 3 технологии.
+    </div>
 
   </div>
+
+</div>
 </body>
 </html>
