@@ -1,306 +1,311 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ВУАП-1 — технологическая карта (п.2)</title>
-  <style>
-    :root{
-      --bg1:#050a1a;
-      --bg2:#081026;
-      --card1:rgba(11,26,60,.72);
-      --card2:rgba(10,22,52,.68);
-      --line:rgba(122,162,255,.18);
-      --text:#e9eefc;
-      --muted:rgba(184,198,255,.75);
-      --accent:#7aa2ff;
-      --shadow: 0 12px 30px rgba(0,0,0,.35);
-      --radius:18px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ВУАП-1 — Проверка коэффициента усиления</title>
 
-      --ok:#59df97;
-      --bad:#ff6b6b;
-      --warn:#ffd16b;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1100px 600px at 20% -10%, rgba(122,162,255,.22), transparent 60%),
-        radial-gradient(900px 500px at 90% 0%, rgba(78,224,139,.16), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      min-height:100vh;
-    }
-    .wrap{
-      width:min(980px, 100%);
-      margin:0 auto;
-      padding:22px 14px 40px;
-    }
-    .title{
-      font-weight:900;
-      letter-spacing:.2px;
-      font-size: clamp(22px, 3.6vw, 34px);
-      margin: 6px 0 8px;
-    }
-    .sub{
-      color:var(--muted);
-      margin: 0 0 14px;
-      line-height:1.35;
-      font-size:14px;
-    }
-    .card{
-      background: linear-gradient(180deg, var(--card1), var(--card2));
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      margin: 12px 0;
-    }
-    h2{
-      margin:0 0 10px;
-      font-size:22px;
-      letter-spacing:.2px;
-    }
-    .blockTitle{
-      color:var(--muted);
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-size:12px;
-      margin-bottom:10px;
-    }
-    .p{
-      margin:0;
-      line-height:1.45;
-      font-size:14.5px;
-      white-space:pre-wrap;
-    }
-    .tt{
-      margin-top:12px;
-      border-left:4px solid rgba(122,162,255,.55);
-      padding-left:12px;
-      background: rgba(122,162,255,.06);
-      border-radius: 12px;
-      padding: 12px 12px 12px 14px;
-    }
-    .note{
-      margin-top:12px;
-      border-left:4px solid rgba(255,209,107,.65);
-      padding-left:12px;
-      background: rgba(255,209,107,.06);
-      border-radius: 12px;
-      padding: 12px 12px 12px 14px;
-    }
+<style>
+:root{
+  --bg1:#0b1a2a;
+  --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff;
+  --muted:#b7c7dd;
+  --ok:#7CFF9E;
+  --bad:#FF9A9A;
+  --wait:#FFD27C;
+}
 
-    .fields{
-      display:grid;
-      gap:10px;
-      margin-top:8px;
-    }
-    @media (min-width:720px){
-      .fields.two{ grid-template-columns: 1fr 1fr; }
-    }
-    label{
-      display:block;
-      font-size:13px;
-      color:var(--muted);
-      margin: 0 0 6px;
-      font-weight:800;
-    }
-    select, input{
-      width:100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border:1px solid rgba(28,47,102,.9);
-      background: rgba(5,10,26,.65);
-      color: var(--text);
-      outline:none;
-      font-size:15px;
-    }
-    select:focus, input:focus{
-      border-color: rgba(122,162,255,.7);
-      box-shadow: 0 0 0 3px rgba(122,162,255,.15);
-    }
-    .btnRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    button{
-      border:none;
-      cursor:pointer;
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-weight:900;
-      font-size:14px;
-      color:#07102a;
-      background: linear-gradient(180deg, #b9d1ff, #7aa2ff);
-      box-shadow: 0 10px 22px rgba(122,162,255,.18);
-      transition:.15s;
-    }
-    button:hover{ transform: translateY(-1px); }
-    .btn2{
-      background: rgba(11,26,60,.45);
-      color: var(--text);
-      border:1px solid var(--line);
-      box-shadow:none;
-    }
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
 
-    .result{
-      margin-top:12px;
-      border-radius: 14px;
-      border:1px solid var(--line);
-      background: rgba(5,10,26,.45);
-      padding: 12px;
-      line-height:1.4;
-      font-size:14px;
-    }
-    .badge{
-      display:inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-weight:900;
-      letter-spacing:.06em;
-      font-size:12px;
-      margin-right:8px;
-      border:1px solid transparent;
-      vertical-align:middle;
-    }
-    .badge.ok{ background: rgba(89,223,151,.12); color: var(--ok); border-color: rgba(89,223,151,.35); }
-    .badge.bad{ background: rgba(255,107,107,.12); color: var(--bad); border-color: rgba(255,107,107,.35); }
-    .badge.warn{ background: rgba(255,209,107,.12); color: var(--warn); border-color: rgba(255,209,107,.35); }
+.wrap{
+  max-width:1100px;
+  margin:0 auto;
+  padding:24px 16px 40px;
+}
 
-    .foot{
-      margin-top: 14px;
-      color: rgba(184,198,255,.55);
-      font-size: 12px;
-      line-height: 1.35;
-    }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-  </style>
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.brand{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:14px 18px;
+  backdrop-filter:blur(6px);
+}
+.brand h1{
+  margin:0;
+  font-size:18px;
+  letter-spacing:.4px;
+}
+.brand p{
+  margin:4px 0 0;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.badge{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.12);
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:18px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+  margin-bottom:16px;
+}
+
+.card h2{
+  margin:0 0 10px;
+  font-size:18px;
+}
+
+.card h3{
+  margin:14px 0 6px;
+  font-size:15px;
+}
+
+.p{
+  font-size:14px;
+  line-height:1.45;
+  color:var(--muted);
+}
+
+.hr{
+  height:1px;
+  background:var(--stroke);
+  margin:14px 0;
+}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:14px;
+  margin-top:12px;
+}
+
+.field{
+  grid-column:span 6;
+}
+
+label{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+select,button{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+}
+
+button{
+  cursor:pointer;
+  font-weight:600;
+}
+
+button.primary{
+  background:linear-gradient(180deg,#ffffff,#e6f0ff);
+  color:#000;
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  grid-column:span 12;
+}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+  font-size:14px;
+}
+
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+
+@media(max-width:900px){
+  .field{grid-column:span 12;}
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="title">2. Проверка коэффициента усиления</div>
-    <div class="sub">
-      Формат: технология → ввод → контроль по ТТ. Никаких “додумок”.<br>
-      Обозначения — как договорились: <b>САУ В-24-1</b>, <b>ДИСС-15</b>.
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <h1>ВУАП-1</h1>
+      <p>Инженерная инструкция · Пошаговый контроль допусков</p>
     </div>
-
-    <section class="card" id="p2">
-      <div class="blockTitle">Содержание операций (по документу)</div>
-      <div class="p">
-<b>а) Канал направления</b>
-При нажатой кнопке-табло «ОТКЛ» на пульте управления канала направления поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение
-(здесь и далее стрелка индикатора должна быть совмещена с нулевой отметкой).
-Не отпуская кнопку-табло «ОТКЛ», нажать на пульте управления кнопку-табло «ВКЛ» и, удерживая обе кнопки в нажатом состоянии, заметить положение стрелки индикатора нулевого.
-
-<b>б) Каналы крена и тангажа</b>
-Проделать аналогичную каналу направления проверку.
-
-<b>в) Канал высоты</b>
-(аналогично, с установкой стрелки индикатора нулевого в среднее положение и фиксацией отклонения при удержании «ОТКЛ» + «ВКЛ»).
-      </div>
-
-      <div class="tt">
-        <div class="blockTitle">Технические требования (ТТ)</div>
-        <div class="p">
-Для всех каналов стрелка индикатора нулевого (задняя кромка стрелки, если смотреть по направлению её движения) НЕ ДОЛЖНА отклоняться далее промежуточной отметки.
-        </div>
-
-        <div class="blockTitle" style="margin-top:10px;">Работы при отклонениях от ТТ</div>
-        <div class="p">Заменить пульт управления соответствующего канала на исправный.</div>
-      </div>
-
-      <div class="note">
-        <div class="blockTitle">Условия выполнения (зафиксировано ранее)</div>
-        <div class="p">
-Пункты 2, 3, 5 — выполнять с ОТКЛЮЧЕННОЙ гидросистемой (как ты ранее зафиксировал).
-Включить взаимодействующие системы с САУ В-24-1, ДИСС-15, радиовысотомер, демпфер, триммер, фрикцион, УШВ.
-Питание САУ — по постоянному и переменному току.
-(Формулировку условий при необходимости подгоним 1:1 под твой «чистовик».)
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:14px; background: rgba(11,26,60,.35);">
-        <div class="blockTitle">Фиксация результата (в программу)</div>
-
-        <div class="fields two">
-          <div>
-            <label for="p2_channel">Канал</label>
-            <select id="p2_channel">
-              <option value="direction">Направления</option>
-              <option value="roll">Крена</option>
-              <option value="pitch">Тангажа</option>
-              <option value="height">Высоты</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="p2_beyond">Отклонение стрелки вышло дальше промежуточной отметки?</label>
-            <select id="p2_beyond">
-              <option value="no">Нет (в пределах)</option>
-              <option value="yes">Да (вышло дальше)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="btnRow">
-          <button type="button" onclick="calcP2()">Проверить ТТ</button>
-          <button type="button" class="btn2" onclick="resetP2()">Сброс</button>
-        </div>
-
-        <div class="result" id="p2_out">
-          <span class="badge warn">ОЖИДАЕТ</span>
-          Внеси факт: вышла ли стрелка дальше промежуточной отметки.
-        </div>
-      </div>
-
-      <div class="foot">
-        Если GitHub Pages “не обновляет”: закрой/открой страницу в инкогнито или добавь <span class="mono">?v=123</span> в конец URL.
-      </div>
-    </section>
+    <div class="badge">Пункт 2 · Коэффициент усиления</div>
   </div>
 
-  <script>
-    function mapCh(ch){
-      switch(ch){
-        case 'direction': return 'канал направления';
-        case 'roll': return 'канал крена';
-        case 'pitch': return 'канал тангажа';
-        case 'height': return 'канал высоты';
-        default: return 'канал';
-      }
-    }
+  <!-- СОДЕРЖАНИЕ ОПЕРАЦИИ -->
+  <section class="card">
+    <h2>2. Проверка коэффициента усиления</h2>
 
-    function calcP2(){
-      const ch = document.getElementById('p2_channel').value;
-      const beyond = document.getElementById('p2_beyond').value;
-      const out = document.getElementById('p2_out');
-      const chName = mapCh(ch);
+    <h3>а) Канал направления</h3>
+    <div class="p">
+      При нажатой кнопке-табло «ОТКЛ» на пульте управления канала направления
+      поворотом шкалы ручки центровки установить стрелку индикатора нулевого
+      в среднее положение (стрелка совмещена с нулевой отметкой).<br><br>
+      Не отпуская «ОТКЛ», нажать кнопку-табло «ВКЛ» и, удерживая обе кнопки,
+      заметить положение стрелки индикатора нулевого.
+    </div>
 
-      if (beyond === 'no'){
-        out.innerHTML =
-          '<span class="badge ok">ОК</span>' +
-          'п.2 (' + chName + '): стрелка НЕ вышла далее промежуточной отметки — ТТ выполнено.';
-      } else {
-        out.innerHTML =
-          '<span class="badge bad">НЕ НОРМА</span>' +
-          'п.2 (' + chName + '): стрелка вышла далее промежуточной отметки — ТТ НЕ выполнено.<br>' +
-          '<b>Действия по карте:</b> заменить пульт управления соответствующего канала на исправный.';
-      }
-    }
+    <h3>б) Каналы крена и тангажа</h3>
+    <div class="p">
+      Проделать аналогичную каналу направления проверку.
+    </div>
 
-    function resetP2(){
-      document.getElementById('p2_channel').value = 'direction';
-      document.getElementById('p2_beyond').value = 'no';
-      document.getElementById('p2_out').innerHTML =
-        '<span class="badge warn">ОЖИДАЕТ</span>' +
-        'Внеси факт: вышла ли стрелка дальше промежуточной отметки.';
-    }
-  </script>
+    <h3>в) Канал высоты</h3>
+    <div class="p">
+      Аналогично, с установкой стрелки индикатора нулевого в среднее положение
+      и фиксацией отклонения при удержании «ОТКЛ» + «ВКЛ».
+    </div>
+  </section>
+
+  <!-- ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ -->
+  <section class="card">
+    <h2>Технические требования (ТТ)</h2>
+    <div class="p">
+      Для всех каналов стрелка индикатора нулевого
+      (задняя кромка стрелки, если смотреть по направлению её движения)
+      <b>НЕ ДОЛЖНА</b> отклоняться далее промежуточной отметки.
+    </div>
+  </section>
+
+  <!-- РАБОТЫ ПРИ ОТКЛОНЕНИЯХ -->
+  <section class="card">
+    <h2>Работы при отклонениях от ТТ</h2>
+    <div class="p">
+      Заменить пульт управления соответствующего канала на исправный.
+    </div>
+  </section>
+
+  <!-- ФИКСАЦИЯ РЕЗУЛЬТАТА -->
+  <section class="card">
+    <h2>Фиксация результата (в программу)</h2>
+
+    <div class="form">
+      <div class="field">
+        <label>Канал</label>
+        <select id="channel">
+          <option value="direction">Направления</option>
+          <option value="roll">Крена</option>
+          <option value="pitch">Тангажа</option>
+          <option value="height">Высоты</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Отклонение стрелки вышло дальше промежуточной отметки?</label>
+        <select id="fact">
+          <option value="">— выбрать —</option>
+          <option value="no">Нет (в пределах)</option>
+          <option value="yes">Да (вышло)</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="primary" onclick="check()">Проверить ТТ</button>
+        <button onclick="resetForm()">Сброс</button>
+      </div>
+    </div>
+
+    <div class="result" id="out">
+      <span class="status wait">ОЖИДАЕТ</span><br>
+      Внеси факт: вышла ли стрелка дальше промежуточной отметки.
+    </div>
+  </section>
+
+</div>
+
+<script>
+function channelName(v){
+  return {
+    direction:'канал направления',
+    roll:'канал крена',
+    pitch:'канал тангажа',
+    height:'канал высоты'
+  }[v] || 'канал';
+}
+
+function check(){
+  const ch = document.getElementById('channel').value;
+  const fact = document.getElementById('fact').value;
+  const out = document.getElementById('out');
+
+  if(!fact){
+    out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери факт наблюдения.';
+    return;
+  }
+
+  if(fact === 'no'){
+    out.innerHTML =
+      '<span class="status ok">OK</span><br>' +
+      channelName(ch) + ': стрелка не вышла за промежуточную отметку — ТТ выполнено.';
+  }else{
+    out.innerHTML =
+      '<span class="status bad">НЕ НОРМА</span><br>' +
+      channelName(ch) + ': стрелка вышла за промежуточную отметку — ТТ не выполнено.<br>' +
+      '<b>Действие:</b> заменить пульт управления соответствующего канала.';
+  }
+}
+
+function resetForm(){
+  document.getElementById('channel').value='direction';
+  document.getElementById('fact').value='';
+  document.getElementById('out').innerHTML =
+    '<span class="status wait">ОЖИДАЕТ</span><br>' +
+    'Внеси факт: вышла ли стрелка дальше промежуточной отметки.';
+}
+</script>
+
 </body>
 </html>
