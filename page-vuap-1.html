@@ -4,21 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ВУАП-1 — технологическая карта (пункты 2–5)</title>
+
   <style>
     :root{
       --bg1:#050a1a;
       --bg2:#061026;
-      --card:#0b1a3c;
-      --card2:#0a1634;
+      --card1:#0a1634;
+      --card2:#0a1a3d;
       --line:#1c2f66;
       --text:#e9eefc;
       --muted:#b8c6ff;
       --accent:#7aa2ff;
-      --ok:#4ee08b;
+      --ok:#7adf7a;
       --bad:#ff6b6b;
-      --warn:#ffd166;
+      --warn:#ffdc6b;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:18px;
+      --radius: 18px;
     }
 
     *{ box-sizing:border-box; }
@@ -28,7 +29,7 @@
       color:var(--text);
       background:
         radial-gradient(1100px 600px at 20% -10%, rgba(122,162,255,.22), transparent 60%),
-        radial-gradient(900px 500px at 90% 0%, rgba(78,224,139,.16), transparent 60%),
+        radial-gradient(900px 500px at 90% 60%, rgba(78,224,139,.16), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       min-height:100vh;
     }
@@ -43,13 +44,12 @@
       font-weight: 800;
       letter-spacing:.2px;
       font-size: clamp(22px, 3.6vw, 34px);
-      margin: 6px 0 14px;
+      margin: 6px 0 10px;
     }
-
     .sub{
-      color: var(--muted);
+      color:var(--muted);
+      line-height:1.35;
       margin: 0 0 16px;
-      line-height: 1.35;
       font-size: 14px;
     }
 
@@ -62,19 +62,19 @@
     .tab{
       border:1px solid var(--line);
       background: rgba(11,26,60,.45);
-      color: var(--text);
+      color:var(--text);
       padding: 10px 12px;
       border-radius: 12px;
       cursor:pointer;
       user-select:none;
-      transition:.15s;
+      transition: .15s;
       font-weight:700;
-      font-size: 14px;
+      font-size:14px;
     }
     .tab:hover{ transform: translateY(-1px); }
     .tab.active{
-      outline: 2px solid rgba(122,162,255,.45);
-      border-color: rgba(122,162,255,.55);
+      outline:2px solid rgba(122,162,255,.55);
+      border-color: rgba(122,162,255,.85);
       background: rgba(122,162,255,.10);
     }
 
@@ -88,51 +88,48 @@
     }
 
     h2{
-      margin: 0 0 10px;
+      margin: 0 0 12px;
       font-size: 22px;
       letter-spacing:.2px;
     }
 
-    .grid{
+    .grid-two{
       display:grid;
       grid-template-columns: 1fr;
       gap:12px;
     }
-    @media (min-width: 860px){
-      .grid.two{ grid-template-columns: 1fr 1fr; }
+    @media(min-width: 860px){
+      .grid-two{ grid-template-columns: 1fr 1fr; }
     }
 
     .blockTitle{
-      font-weight:800;
-      color: var(--muted);
-      margin: 0 0 8px;
+      font-weight: 800;
+      color:var(--muted);
+      margin: 0 0 6px;
       text-transform: uppercase;
-      letter-spacing: .08em;
+      letter-spacing:.08em;
       font-size: 12px;
     }
 
     .p{
-      margin: 0 0 10px;
-      line-height: 1.45;
-      color: var(--text);
+      margin:0;
+      line-height:1.45;
       font-size: 14.5px;
       white-space: pre-wrap;
     }
 
     .tt{
+      padding: 12px 12px;
       border-left: 4px solid rgba(122,162,255,.55);
-      padding-left: 12px;
       background: rgba(122,162,255,.06);
       border-radius: 12px;
-      padding: 12px 12px 12px 14px;
     }
 
     .note{
+      padding: 12px 12px;
       border-left: 4px solid rgba(255,209,102,.65);
-      padding-left: 12px;
       background: rgba(255,209,102,.06);
       border-radius: 12px;
-      padding: 12px 12px 12px 14px;
     }
 
     .fields{
@@ -141,7 +138,7 @@
       gap:10px;
       margin-top: 10px;
     }
-    @media (min-width: 700px){
+    @media(min-width: 720px){
       .fields.two{ grid-template-columns: 1fr 1fr; }
       .fields.three{ grid-template-columns: 1fr 1fr 1fr; }
     }
@@ -149,7 +146,7 @@
     label{
       display:block;
       font-size: 13px;
-      color: var(--muted);
+      color:var(--muted);
       margin: 0 0 6px;
       font-weight: 700;
     }
@@ -157,18 +154,23 @@
       width:100%;
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(28,47,102,.9);
+      border:1px solid rgba(28,47,102,.90);
       background: rgba(5,10,26,.65);
       color: var(--text);
       font-size: 15px;
-      outline: none;
+      outline:none;
     }
     input:focus, select:focus{
       border-color: rgba(122,162,255,.7);
       box-shadow: 0 0 0 3px rgba(122,162,255,.15);
     }
 
-    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .btnRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 10px;
+    }
     button{
       border:none;
       cursor:pointer;
@@ -176,17 +178,18 @@
       padding: 10px 14px;
       font-weight: 800;
       font-size: 14px;
-      color: #07102a;
+      transition:.15s;
+      color:#071026;
       background: linear-gradient(180deg, #b9d1ff, #7aa2ff);
       box-shadow: 0 10px 22px rgba(122,162,255,.18);
-      transition:.15s;
     }
     button:hover{ transform: translateY(-1px); }
     .btn2{
       background: rgba(11,26,60,.45);
       color: var(--text);
-      border: 1px solid var(--line);
-      box-shadow: none;
+      border:1px solid var(--line);
+      box-shadow:none;
+      font-weight: 800;
     }
 
     .result{
@@ -195,30 +198,31 @@
       border:1px solid var(--line);
       background: rgba(5,10,26,.45);
       padding: 12px 12px;
-      line-height: 1.4;
+      line-height: 1.35;
       font-size: 14px;
     }
     .badge{
       display:inline-block;
       font-weight: 900;
-      padding: 4px 10px;
+      padding: 4px 9px;
       border-radius: 999px;
-      margin-right: 8px;
       font-size: 12px;
-      letter-spacing:.06em;
+      letter-spacing:.04em;
+      margin-right: 8px;
     }
-    .ok{ background: rgba(78,224,139,.15); color: var(--ok); border:1px solid rgba(78,224,139,.35); }
-    .bad{ background: rgba(255,107,107,.12); color: var(--bad); border:1px solid rgba(255,107,107,.35); }
-    .warn{ background: rgba(255,209,102,.12); color: var(--warn); border:1px solid rgba(255,209,102,.35); }
+    .ok{ background: rgba(122,223,122,.14); color: var(--ok); border:1px solid rgba(122,223,122,.35); }
+    .bad{ background: rgba(255,107,107,.14); color: var(--bad); border:1px solid rgba(255,107,107,.35); }
+    .warn{ background: rgba(255,220,107,.12); color: var(--warn); border:1px solid rgba(255,220,107,.35); }
 
     .hidden{ display:none; }
 
     .foot{
+      margin-top: 18px;
       color: rgba(184,198,255,.75);
       font-size: 12px;
-      margin-top: 18px;
-      line-height: 1.35;
+      line-height:1.35;
     }
+
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
   </style>
 </head>
@@ -226,10 +230,11 @@
 <body>
   <div class="wrap">
     <div class="title">ВУАП-1 — технологическая карта (пункты 2–5)</div>
-    <p class="sub">
-      Формат: <b>технология → ввод → расчёт/контроль по ТТ</b>. Никаких “додумок”.<br>
+    <div class="sub">
+      Формат: <b>технология → ввод → расчёт/контроль по ТТ</b>.<br>
+      Никаких “додумок”.<br>
       Обозначения — как договорились: <b>САУ В-24-1</b>, <b>ДИСС-15</b>.
-    </p>
+    </div>
 
     <div class="tabs" id="tabs">
       <div class="tab active" data-tab="p2">П.2 Коэффициент усиления</div>
@@ -238,38 +243,40 @@
       <div class="tab" data-tab="p5">П.5 Скорость согласования</div>
     </div>
 
-    <!-- ===================== П2 ===================== -->
+    <!-- ========================= P2 ========================= -->
     <section class="card" id="p2">
       <h2>2. Проверка коэффициента усиления</h2>
 
-      <div class="grid two">
+      <div class="grid-two">
         <div>
           <div class="blockTitle">Содержание операций (по документу)</div>
           <div class="p">
 а) Канал направления
-При нажатой кнопке-табло «ОТКЛ» на пульте управления канала направления поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение
-(здесь и далее стрелка индикатора должна быть совмещена с нулевой отметкой).
+При нажатой кнопке-табло «ОТКЛ» на пульте управления канала направления поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение с совмещением с нулевой отметкой.
+Нажать кнопку-табло «ВКЛ».
 Не отпуская кнопку-табло «ОТКЛ», нажать на пульте управления кнопку-табло «ВКЛ»
 и, удерживая обе кнопки в нажатом состоянии, заметить положение стрелки индикатора нулевого.
 
 б) Каналы крена и тангажа
-Проделать аналогичную каналу направления проверку.
+Проделать аналогичную проверку.
 
 в) Канал высоты
-(аналогично, с установкой стрелки индикатора нулевого в среднее положение и фиксацией отклонения при удержании «ОТКЛ» + «ВКЛ»).
+(аналогично, с установкой стрелки индикатора нулевого в среднее положение и фиксацией отклонения при удержании «ОТКЛ» + «ВКЛ».)
           </div>
         </div>
 
-        <div class="tt">
-          <div class="blockTitle">Технические требования (ТТ)</div>
-          <div class="p">
+        <div>
+          <div class="tt">
+            <div class="blockTitle">Технические требования (ТТ)</div>
+            <div class="p">
 Для всех каналов стрелка индикатора нулевого
 (задняя кромка стрелки, если смотреть по направлению её движения)
 НЕ ДОЛЖНА отклоняться далее промежуточной отметки.
-          </div>
+            </div>
 
-          <div class="blockTitle">Работы при отклонениях от ТТ</div>
-          <div class="p">Заменить пульт управления соответствующего канала на исправный.</div>
+            <div class="blockTitle" style="margin-top:10px;">Работы при отклонениях от ТТ</div>
+            <div class="p">Заменить пульт управления соответствующего канала на исправный.</div>
+          </div>
 
           <div class="note" style="margin-top:12px;">
             <div class="blockTitle">Условия выполнения (зафиксировано ранее)</div>
@@ -277,7 +284,6 @@
 Пункты 2, 3, 5 — выполнять с ОТКЛЮЧЕННОЙ гидросистемой (как ты ранее зафиксировал).
 Включить взаимодействующие системы с САУ В-24-1, ДИСС-15, радиовысотомер, демпфер, триммер, фрикцион, УШВ.
 Питание САУ — по постоянному и переменному току.
-(Формулировку условий при необходимости подгоним 1:1 под твой «чистовик».)
             </div>
           </div>
         </div>
@@ -285,6 +291,7 @@
 
       <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
         <div class="blockTitle">Фиксация результата (в программу)</div>
+
         <div class="fields two">
           <div>
             <label>Канал</label>
@@ -295,8 +302,9 @@
               <option value="height">Высоты</option>
             </select>
           </div>
+
           <div>
-            <label>Отклонение стрелки вышло дальше промежуточной отметки?</label>
+            <label>Отклонение стрелки вышло далее промежуточной отметки?</label>
             <select id="p2_beyond">
               <option value="no">Нет (в пределах)</option>
               <option value="yes">Да (вышло дальше)</option>
@@ -311,42 +319,35 @@
 
         <div class="result" id="p2_out">
           <span class="badge warn">ОЖИДАЕТ</span>
-          Внеси факт: вышла ли стрелка дальше промежуточной отметки.
+          Внеси факт: вышла ли стрелка далее промежуточной отметки.
         </div>
       </div>
     </section>
 
-    <!-- ===================== П3 ===================== -->
+    <!-- ========================= P3 ========================= -->
     <section class="card hidden" id="p3">
-      <h2>3. Проверка крутизны датчика угла</h2>
+      <h2>3. Проверка крутизны датчика угла (КР)</h2>
 
-      <div class="grid two">
+      <div class="grid-two">
         <div>
           <div class="blockTitle">Содержание операций (по документу)</div>
           <div class="p">
-а) Канал направления
-При нажатой кнопке-табло «ВКЛ» на пульте управления канала направления поворотом шкалы ручки центровки установить стрелку индикатора нулевого в совмещённое с промежуточными отметками положение,
-заметить угол поворота шкалы ручки центровки (деление соответствует 1°).
-Нажать кнопку-табло «ОТКЛ» на пульте управления канала направления.
-
-б) Каналы крена и тангажа
-Проделать аналогичную проверку, устанавливая стрелку индикатора нулевого в положение, соответствующее проверяемому каналу.
-
-Далее (регулировочная часть по документу): при необходимости выполняются действия на пульте управления (включая работу с «КР») — мы держим это строго по твоему зафиксированному тексту.
+Измерить фактический угол (°) по проверяемому каналу.
+Сравнить с требуемым значением 10° с допуском.
           </div>
         </div>
 
         <div class="tt">
           <div class="blockTitle">Технические требования (ТТ)</div>
           <div class="p">
-Для каналов направления, крена и тангажа угол поворота шкалы ручки центровки должен быть 10° ± 3°.
-(Отдельные подпункты могут иметь допуск 10° ± 2° — если ты подтвердил это в «чистовике», выбираем ниже.)
+Для каналов направления, крена и тангажа: 10° ± 3°.
+Для канала высоты: 10° ± 2°.
           </div>
         </div>
       </div>
 
       <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
-        <div class="blockTitle">Фиксация результата (в программу)</div>
+        <div class="blockTitle">Калькулятор (в программу)</div>
 
         <div class="fields three">
           <div>
@@ -358,15 +359,17 @@
               <option value="height">Высоты</option>
             </select>
           </div>
+
           <div>
             <label>Измеренный угол поворота шкалы, °</label>
             <input id="p3_angle" type="number" inputmode="decimal" step="0.1" placeholder="например 10.0" />
           </div>
+
           <div>
-            <label>Допуск (выбор)</label>
+            <label>Допуск (выбирается автоматически)</label>
             <select id="p3_tol">
-              <option value="3">10° ± 3°</option>
-              <option value="2">10° ± 2°</option>
+              <option value="3">± 3°</option>
+              <option value="2">± 2°</option>
             </select>
           </div>
         </div>
@@ -383,32 +386,26 @@
       </div>
     </section>
 
-    <!-- ===================== П4 ===================== -->
+    <!-- ========================= P4 ========================= -->
     <section class="card hidden" id="p4">
-      <h2>4. Проверка крутизны сигнала в цепи обратной связи</h2>
+      <h2>4. Проверка крутизны сигнала в цепи обратной связи (ОС)</h2>
 
-      <div class="grid two">
+      <div class="grid-two">
         <div>
           <div class="blockTitle">Содержание операций (по документу)</div>
           <div class="p">
 а) Канал направления
 Нажать кнопку-табло «ВКЛ» на пульте управления канала направления.
-Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки) на 2–3 оборота
-отклонить шток малого цилиндра рулевого агрегата в крайнее положение.
-Заметить положение стрелки индикатора нулевого.
+Поворотом шкалы ручки центровки на 2–3 оборота отклонить шток малого цилиндра рулевого агрегата в крайнее положение.
+Отметить: встала ли стрелка на крайнюю отметку (до толщины стрелки).
 
-ПРИМЕЧАНИЕ.
-При отклонении штока малого цилиндра до упора будет работать «перегонка».
-Поэтому необходимо ногами удерживать педали в нейтральном положении,
-не нажимая на подпедальные микровыключатели.
-
-По окончании проверки отключить канал направления кнопкой-табло «ОТКЛ» на пульте управления.
+Примечание:
+При отклонении штока малого цилиндра до упора будет работать «перегонка»,
+поэтому необходимо ногами удерживать педали в нейтральном положении,
+не нажимая при этом на подпедальные микровыключатели.
 
 б) Каналы крена, тангажа и высоты
-Проделать аналогичную описанной для канала направления проверку.
-При этом для отклонения штока малого цилиндра рулевых агрегатов крена и тангажа
-необходимо пользоваться шкалами ручек центровки соответствующих пультов управления,
-а для канала высоты — тумблером «Контроль» на пульте управления канала высоты.
+Проделать аналогичную проверку.
           </div>
         </div>
 
@@ -416,22 +413,22 @@
           <div class="blockTitle">Технические требования (ТТ)</div>
           <div class="p">
 Для всех каналов стрелка индикатора нулевого должна устанавливаться
-в совмещённое с крайними отметками положение с точностью до толщины стрелки.
+в совмещённое с крайней отметкой положение с точностью до толщины стрелки.
           </div>
 
           <div class="note" style="margin-top:12px;">
-            <div class="blockTitle">ПРИМЕЧАНИЕ (как ты продиктовал, капсом)</div>
+            <div class="blockTitle">Примечание</div>
             <div class="p">
-ПОСЛЕ РЕГУЛИРОВКИ КРУТИЗНЫ СИГНАЛА В ЦЕПИ ОБРАТНОЙ СВЯЗИ КАКОГО-ЛИБО КАНАЛА
-АВТОПИЛОТА НЕОБХОДИМО ПРОИЗВЕСТИ ПРОВЕРКИ ПЕРЕДАТОЧНЫХ ЧИСЕЛ ПО УГЛУ (В СКОБКАХ ВЫСОТЕ),
-УГЛОВОЙ СКОРОСТИ, СКОРОСТИ ИЗМЕНЕНИЯ ВЫСОТЫ, ОТНОСЯЩИЕСЯ К ДАННОМУ КАНАЛУ.
+После регулировки крутизны сигнала в цепи обратной связи какого-либо канала автопилота
+необходимо произвести проверки передаточных чисел по углу (в скобках высоте),
+угловой скорости, скорости изменения высоты, относящиеся к данному каналу.
             </div>
           </div>
         </div>
       </div>
 
       <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
-        <div class="blockTitle">Фиксация результата (в программу)</div>
+        <div class="blockTitle">Калькулятор (в программу)</div>
 
         <div class="fields three">
           <div>
@@ -443,15 +440,17 @@
               <option value="height">Высоты</option>
             </select>
           </div>
+
           <div>
-            <label>При «крайнем» положении штока стрелка встала на крайнюю отметку?</label>
+            <label>Стрелка встала на крайнюю отметку (до толщины стрелки)?</label>
             <select id="p4_onmark">
               <option value="yes">Да (до толщины стрелки)</option>
               <option value="no">Нет</option>
             </select>
           </div>
+
           <div>
-            <label>Сколько оборотов шкалы фактически делал(а), обор.</label>
+            <label>Сколько оборотов шкалы фактически сделано, обор.</label>
             <input id="p4_turns" type="number" inputmode="decimal" step="0.1" placeholder="2.0–3.0" />
           </div>
         </div>
@@ -463,88 +462,48 @@
 
         <div class="result" id="p4_out">
           <span class="badge warn">ОЖИДАЕТ</span>
-          Внеси факт: стрелка совпала с крайней отметкой (до толщины стрелки) или нет.
+          Внеси факт: стрелка совпа́ла с крайней отметкой (до толщины стрелки) или нет. Если “Да” — введи обороты.
         </div>
       </div>
     </section>
 
-    <!-- ===================== П5 ===================== -->
-<section class="card hidden" id="p5">
-  <h2>5. Проверка скорости согласования</h2>
+    <!-- ========================= P5 ========================= -->
+    <section class="card hidden" id="p5">
+      <h2>5. Проверка скорости согласования</h2>
 
-  <div class="grid two">
-    <div>
-      <div class="blockTitle">Содержание операций (по документу)</div>
-      <div class="p">
-        <b>а) Канал направления</b><br><br>
+      <div class="grid-two">
+        <div>
+          <div class="blockTitle">Содержание операций (по документу)</div>
+          <div class="p">
+а) Канал направления
+Нажать на пульте управления канала направления кнопку-табло «ВКЛ».
+Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки)
+от исходного положения на 6 оборотов задать угол направления 60°.
 
-        Нажать на пульте управления канала направления кнопку-табло «ВКЛ».<br>
-        Поворотом шкалы ручки центровки по часовой стрелке
-        (против часовой стрелки) от исходного положения
-        на 6 оборотов задать угол направления 60°.<br><br>
+ПРИМЕЧАНИЕ:
+В канале направления при повороте шкалы ручки центровки на 60°
+будет работать «перегонка». Поэтому необходимо ногами удерживать педали
+в нейтральном положении, не нажимая при этом на подпедальные микровыключатели.
 
-        <b>ПРИМЕЧАНИЕ.</b><br>
-        В канале направления при повороте шкалы ручки центровки на 60°
-        будет работать «перегонка». Поэтому необходимо ногами удерживать
-        педали в нейтральном положении, не нажимая при этом
-        на подпедальные микровыключатели.<br><br>
+Далее (лист 11):
+Нажать кнопку-табло «ОТКЛ» на пульте управления канала направления и одновременно включить секундомер.
+Выключить секундомер в момент остановки шкалы ручки центровки.
+Для получения скорости согласования необходимо задаваемый угол 60° разделить на время, замеренное секундомером.
 
-        <b>Далее (лист 11):</b><br>
-        Нажать кнопку-табло «ОТКЛ» на пульте управления канала направления
-        и одновременно включить секундомер.<br>
-        Выключить секундомер в момент остановки шкалы ручки центровки.<br>
-        Для получения скорости согласования необходимо задаваемый угол 60°
-        разделить на время, замеренное секундомером.<br><br>
+б) Каналы крена и тангажа
+Проделать аналогичную проверку, оперируя ручкой центровки и кнопками-табло
+на пульте управления соответствующего канала.
+          </div>
+        </div>
 
-        <b>б) Каналы крена и тангажа</b><br>
-        Проделать аналогичную проверку, оперируя ручкой центровки
-        и кнопками-табло на пульте управления соответствующего канала.
+        <div class="tt">
+          <div class="blockTitle">Технические требования (ТТ)</div>
+          <div class="p">
+Для каналов направления, крена и тангажа скорость согласования должна быть
+<b>НЕ МЕНЕЕ 15 град/сек</b>.
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div>
-      <div class="blockTitle">Технические требования (ТТ)</div>
-      <div class="p">
-        Для каналов направления, крена и тангажа
-        скорость согласования должна быть
-        <b>НЕ МЕНЕЕ 15 град/сек</b>.
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
-    <div class="blockTitle">Калькулятор (в программу)</div>
-
-    <div class="fields three">
-      <div>
-        <label>Канал</label>
-        <select id="p5_channel">
-          <option value="direction">Направление</option>
-          <option value="roll">Крен</option>
-          <option value="pitch">Тангаж</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Задаваемый угол, град</label>
-        <input id="p5_angle" type="number" value="60">
-      </div>
-
-      <div>
-        <label>Время по секундомеру, сек</label>
-        <input id="p5_time" type="number" step="0.1">
-      </div>
-    </div>
-
-    <button onclick="calcP5()">Рассчитать скорость</button>
-
-    <div class="result" id="p5_out">
-      <span class="badge warn">ОЖИДАЕТ</span>
-    </div>
-  </div>
-</section>
-
-    
 
       <div class="card" style="margin-top:14px; background:rgba(11,26,60,.35);">
         <div class="blockTitle">Калькулятор (в программу)</div>
@@ -560,7 +519,7 @@
           </div>
 
           <div>
-            <label>Задаваемый угол, °</label>
+            <label>Задаваемый угол, град</label>
             <input id="p5_angle" type="number" inputmode="decimal" step="0.1" value="60" />
           </div>
 
@@ -577,15 +536,17 @@
 
         <div class="result" id="p5_out">
           <span class="badge warn">ОЖИДАЕТ</span>
-          Введи время — скорость будет рассчитана как <span class="mono">V = угол / время</span>.
+          Введи время — скорость будет рассчитана как <span class="mono">v = угол / время</span>.
         </div>
+      </div>
+
+      <div class="foot">
+        Если GitHub Pages где-то “не обновляется” — тестируй в Safari/Chrome в режиме без кэша (инкогнито) или очисти кеш сайта.
       </div>
     </section>
 
     <div class="foot">
-      Если GitHub Pages “не обновляется”: чаще всего это кэш Safari/Cloudflare. Самый быстрый тест —
-      открыть страницу с добавкой <span class="mono">?v=123</span> в конце URL (любой набор цифр) или очистить кэш сайта.
-      Но код выше — корректный автономный файл без внешних зависимостей.
+      Версия: автономная HTML-страница без внешних зависимостей.
     </div>
   </div>
 
@@ -597,140 +558,14 @@
     tabs.forEach(t => t.addEventListener('click', () => {
       tabs.forEach(x => x.classList.remove('active'));
       t.classList.add('active');
+
       const id = t.dataset.tab;
-      sections.forEach(s => s.classList.add('hidden'));
-      document.getElementById(id).classList.remove('hidden');
-      window.scrollTo({top:0, behavior:'smooth'});
+      sections.forEach(s => s && s.classList.add('hidden'));
+      const target = document.getElementById(id);
+      if (target) target.classList.remove('hidden');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }));
-
-    // ---------- P2 ----------
-    function calcP2(){
-      const ch = document.getElementById('p2_channel').value;
-      const beyond = document.getElementById('p2_beyond').value;
-
-      const chName = mapCh(ch);
-      const out = document.getElementById('p2_out');
-
-      if (beyond === 'no'){
-        out.innerHTML = `<span class="badge ok">OK</span>
-          П.2 (${chName}): стрелка НЕ вышла далее промежуточной отметки — ТТ выполнено.`;
-      } else {
-        out.innerHTML = `<span class="badge bad">НЕ НОРМА</span>
-          П.2 (${chName}): стрелка вышла далее промежуточной отметки — ТТ НЕ выполнено.<br>
-          <b>Действия по карте:</b> заменить пульт управления соответствующего канала на исправный.`;
-      }
-    }
-    function resetP2(){
-      document.getElementById('p2_channel').value = 'direction';
-      document.getElementById('p2_beyond').value = 'no';
-      document.getElementById('p2_out').innerHTML =
-        `<span class="badge warn">ОЖИДАЕТ</span> Внеси факт: вышла ли стрелка дальше промежуточной отметки.`;
-    }
-
-    // ---------- P3 ----------
-    function syncP3Tol(){
-      const ch = document.getElementById('p3_channel').value;
-      // По умолчанию: направление/крен/тангаж = ±3, высота часто отдельная (на твоё подтверждение)
-      const tol = document.getElementById('p3_tol');
-      tol.value = (ch === 'height') ? '2' : '3';
-    }
-
-    function calcP3(){
-      const ch = document.getElementById('p3_channel').value;
-      const angle = Number(document.getElementById('p3_angle').value);
-      const tol = Number(document.getElementById('p3_tol').value);
-
-      const out = document.getElementById('p3_out');
-      if (!isFinite(angle)){
-        out.innerHTML = `<span class="badge warn">НЕТ ДАННЫХ</span> Введи измеренный угол (°).`;
-        return;
-      }
-
-      const target = 10;
-      const min = target - tol;
-      const max = target + tol;
-
-      const chName = mapCh(ch);
-
-      if (angle >= min && angle <= max){
-        out.innerHTML = `<span class="badge ok">OK</span>
-          П.3 (${chName}): угол ${angle.toFixed(1)}° в допуске ${target}° ± ${tol}° (диапазон ${min}…${max}°).`;
-      } else {
-        out.innerHTML = `<span class="badge bad">НЕ НОРМА</span>
-          П.3 (${chName}): угол ${angle.toFixed(1)}° ВНЕ допуска ${target}° ± ${tol}° (норма ${min}…${max}°).`;
-      }
-    }
-
-    function resetP3(){
-      document.getElementById('p3_channel').value = 'direction';
-      document.getElementById('p3_angle').value = '';
-      document.getElementById('p3_tol').value = '3';
-      document.getElementById('p3_out').innerHTML =
-        `<span class="badge warn">ОЖИДАЕТ</span> Введи измеренный угол и проверь соответствие допуску.`;
-    }
-
-    // ---------- P4 ----------
-    function calcP4(){
-      const ch = document.getElementById('p4_channel').value;
-      const onmark = document.getElementById('p4_onmark').value;
-      const turns = document.getElementById('p4_turns').value;
-
-      const out = document.getElementById('p4_out');
-      const chName = mapCh(ch);
-
-      if (onmark === 'yes'){
-        out.innerHTML = `<span class="badge ok">OK</span>
-          П.4 (${chName}): стрелка совпала с крайней отметкой (до толщины стрелки) — ТТ выполнено.<br>
-          ${turns ? `Факт: выполнено оборотов шкалы: <b>${Number(turns).toFixed(1)}</b>.` : ''}`;
-      } else {
-        out.innerHTML = `<span class="badge bad">НЕ НОРМА</span>
-          П.4 (${chName}): стрелка НЕ встала на крайнюю отметку (до толщины стрелки) — ТТ НЕ выполнено.`;
-      }
-    }
-
-    function resetP4(){
-      document.getElementById('p4_channel').value = 'direction';
-      document.getElementById('p4_onmark').value = 'yes';
-      document.getElementById('p4_turns').value = '';
-      document.getElementById('p4_out').innerHTML =
-        `<span class="badge warn">ОЖИДАЕТ</span> Внеси факт: стрелка совпала с крайней отметкой (до толщины стрелки) или нет.`;
-    }
-
-    // ---------- P5 ----------
-    function calcP5(){
-      const ch = document.getElementById('p5_channel').value;
-      const angle = Number(document.getElementById('p5_angle').value);
-      const time = Number(document.getElementById('p5_time').value);
-
-      const out = document.getElementById('p5_out');
-      const chName = mapCh(ch);
-
-      if (!isFinite(angle) || angle <= 0){
-        out.innerHTML = `<span class="badge warn">НЕТ ДАННЫХ</span> Укажи угол (>0).`;
-        return;
-      }
-      if (!isFinite(time) || time <= 0){
-        out.innerHTML = `<span class="badge warn">НЕТ ДАННЫХ</span> Укажи время по секундомеру (>0).`;
-        return;
-      }
-
-      const v = angle / time; // град/сек
-      const ok = v >= 15;
-
-      out.innerHTML = `
-        <span class="badge ${ok ? 'ok' : 'bad'}">${ok ? 'OK' : 'НЕ НОРМА'}</span>
-        П.5 (${chName}): скорость согласования <b>${v.toFixed(2)} град/сек</b> при угле ${angle.toFixed(1)}° и времени ${time.toFixed(2)} сек.<br>
-        ТТ: не менее <b>15 град/сек</b> → ${ok ? '<b>выполнено</b>.' : '<b>не выполнено</b>.'}
-      `;
-    }
-
-    function resetP5(){
-      document.getElementById('p5_channel').value = 'direction';
-      document.getElementById('p5_angle').value = 60;
-      document.getElementById('p5_time').value = '';
-      document.getElementById('p5_out').innerHTML =
-        `<span class="badge warn">ОЖИДАЕТ</span> Введи время — скорость будет рассчитана как <span class="mono">V = угол / время</span>.`;
-    }
 
     // ---------- Helpers ----------
     function mapCh(ch){
@@ -742,6 +577,157 @@
         default: return 'канал';
       }
     }
+
+    function setOut(el, badgeClass, badgeText, html){
+      el.innerHTML = `<span class="badge ${badgeClass}">${badgeText}</span>${html}`;
+    }
+
+    // ---------- P2 ----------
+    function calcP2(){
+      const ch = document.getElementById('p2_channel').value;
+      const beyond = document.getElementById('p2_beyond').value;
+
+      const out = document.getElementById('p2_out');
+      const chName = mapCh(ch);
+
+      if (beyond === 'no'){
+        setOut(out, 'ok', 'OK', `П.2 (${chName}): стрелка НЕ вышла далее промежуточной отметки — ТТ выполнено.`);
+      } else {
+        setOut(out, 'bad', 'НЕ НОРМА',
+          `П.2 (${chName}): стрелка вышла далее промежуточной отметки — ТТ НЕ выполнено.<br><b>Действия по карте:</b> заменить пульт управления соответствующего канала на исправный.`
+        );
+      }
+    }
+
+    function resetP2(){
+      document.getElementById('p2_channel').value = 'direction';
+      document.getElementById('p2_beyond').value = 'no';
+      const out = document.getElementById('p2_out');
+      setOut(out, 'warn', 'ОЖИДАЕТ', 'Внеси факт: вышла ли стрелка далее промежуточной отметки.');
+    }
+
+    // ---------- P3 ----------
+    function syncP3Tol(){
+      const ch = document.getElementById('p3_channel').value;
+      const tol = document.getElementById('p3_tol');
+      tol.value = (ch === 'height') ? '2' : '3';
+    }
+
+    function calcP3(){
+      const ch = document.getElementById('p3_channel').value;
+      const angle = Number(document.getElementById('p3_angle').value);
+      const tol = Number(document.getElementById('p3_tol').value);
+
+      const out = document.getElementById('p3_out');
+      const chName = mapCh(ch);
+
+      if (!Number.isFinite(angle)){
+        setOut(out, 'warn', 'НЕТ ДАННЫХ', 'Введи измеренный угол (°).');
+        return;
+      }
+
+      const target = 10;
+      const min = target - tol;
+      const max = target + tol;
+
+      if (angle >= min && angle <= max){
+        setOut(out, 'ok', 'OK',
+          `П.3 (${chName}): угол <span class="mono">${angle.toFixed(1)}°</span> в допуске ${target}° ± ${tol}° (диапазон ${min}…${max}) — ТТ выполнено.`
+        );
+      } else {
+        setOut(out, 'bad', 'НЕ НОРМА',
+          `П.3 (${chName}): угол <span class="mono">${angle.toFixed(1)}°</span> вне допуска ${target}° ± ${tol}° (норма ${min}…${max}) — ТТ НЕ выполнено.`
+        );
+      }
+    }
+
+    function resetP3(){
+      document.getElementById('p3_channel').value = 'direction';
+      document.getElementById('p3_angle').value = '';
+      document.getElementById('p3_tol').value = '3';
+      const out = document.getElementById('p3_out');
+      setOut(out, 'warn', 'ОЖИДАЕТ', 'Введи измеренный угол и проверь соответствие допуску.');
+    }
+
+    // ---------- P4 ----------
+    function calcP4(){
+      const ch = document.getElementById('p4_channel').value;
+      const onmark = document.getElementById('p4_onmark').value;
+      const turnsStr = document.getElementById('p4_turns').value;
+      const turns = Number(turnsStr);
+
+      const out = document.getElementById('p4_out');
+      const chName = mapCh(ch);
+
+      if (onmark === 'yes'){
+        // FIX: нельзя принимать пустое поле как 0.0
+        if (turnsStr.trim() === '' || !Number.isFinite(turns) || turns <= 0){
+          setOut(out, 'warn', 'НЕТ ДАННЫХ',
+            `П.4 (${chName}): отмечено “Да”, но не введено число оборотов. Введи обороты (например 2.0–3.0).`
+          );
+          return;
+        }
+
+        setOut(out, 'ok', 'OK',
+          `П.4 (${chName}): стрелка совпала с крайней отметкой (до толщины стрелки) — ТТ выполнено.<br>` +
+          `Факт: выполнено оборотов шкалы <b>${turns.toFixed(1)}</b>.`
+        );
+      } else {
+        setOut(out, 'bad', 'НЕ НОРМА',
+          `П.4 (${chName}): стрелка НЕ встала на крайнюю отметку (до толщины стрелки) — ТТ НЕ выполнено.`
+        );
+      }
+    }
+
+    function resetP4(){
+      document.getElementById('p4_channel').value = 'direction';
+      document.getElementById('p4_onmark').value = 'yes';
+      document.getElementById('p4_turns').value = '';
+      const out = document.getElementById('p4_out');
+      setOut(out, 'warn', 'ОЖИДАЕТ',
+        'Внеси факт: стрелка совпа́ла с крайней отметкой (до толщины стрелки) или нет. Если “Да” — введи обороты.'
+      );
+    }
+
+    // ---------- P5 ----------
+    function calcP5(){
+      const ch = document.getElementById('p5_channel').value;
+      const angle = Number(document.getElementById('p5_angle').value);
+      const time = Number(document.getElementById('p5_time').value);
+
+      const out = document.getElementById('p5_out');
+      const chName = mapCh(ch);
+
+      if (!Number.isFinite(angle) || angle <= 0){
+        setOut(out, 'warn', 'НЕТ ДАННЫХ', 'Укажи угол (> 0).');
+        return;
+      }
+      if (!Number.isFinite(time) || time <= 0){
+        setOut(out, 'warn', 'НЕТ ДАННЫХ', 'Укажи время по секундомеру (> 0).');
+        return;
+      }
+
+      const v = angle / time; // град/сек
+      const ok = v >= 15;
+
+      setOut(out, ok ? 'ok' : 'bad', ok ? 'OK' : 'НЕ НОРМА',
+        `П.5 (${chName}): скорость согласования <b>${v.toFixed(2)} град/сек</b> при угле ${angle.toFixed(1)}° и времени ${time.toFixed(2)} сек.<br>` +
+        `ТТ: не менее <b>15 град/сек</b> — ${ok ? 'выполнено' : 'НЕ выполнено'}.`
+      );
+    }
+
+    function resetP5(){
+      document.getElementById('p5_channel').value = 'direction';
+      document.getElementById('p5_angle').value = '60';
+      document.getElementById('p5_time').value = '';
+      const out = document.getElementById('p5_out');
+      setOut(out, 'warn', 'ОЖИДАЕТ',
+        'Введи время — скорость будет рассчитана как <span class="mono">v = угол / время</span>.'
+      );
+    }
+
+    // init
+    syncP3Tol();
   </script>
 </body>
 </html>
