@@ -1,1 +1,119 @@
-Create p03.html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ВУАП-1 — Пункт 3</title>
+  <style>
+    :root{
+      --bg1:#0b1a2a;
+      --bg2:#153a5a;
+      --card:rgba(255,255,255,.08);
+      --stroke:rgba(255,255,255,.18);
+      --text:#e9f2ff;
+      --muted:#b7c7dd;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px 16px 40px;
+    }
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .brand{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:14px 18px;
+      backdrop-filter:blur(6px);
+    }
+    .brand h1{margin:0;font-size:18px;letter-spacing:.4px}
+    .brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    .badge{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.12);
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    a.btn{
+      display:inline-block;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      text-decoration:none;
+      font-size:14px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      padding:18px;
+      backdrop-filter:blur(6px);
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+      margin-bottom:14px;
+    }
+    .card h2{margin:0 0 10px;font-size:18px}
+    .p{font-size:14px;line-height:1.45;color:var(--muted)}
+    .placeholder{
+      border:1px dashed rgba(255,255,255,.28);
+      border-radius:14px;
+      padding:14px;
+      color:var(--muted);
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="top">
+      <div class="brand">
+        <h1>ВУАП-1</h1>
+        <p>Инженерная инструкция · Пошаговый контроль допусков</p>
+      </div>
+      <div class="badge">Пункт 3 · (черновик)</div>
+    </div>
+
+    <div class="nav">
+      <a class="btn" href="../index.html">← На главную</a>
+      <a class="btn" href="../page-vuap-1.html">← Меню ВУАП-1</a>
+    </div>
+
+    <section class="card">
+      <h2>3. Проверка крутизны датчика угла</h2>
+      <div class="placeholder">
+        Здесь будет текст технологии пункта 3 (а/б/в), ТТ и работы при отклонениях.
+        Пока это каркас страницы: проверяем, что файл открывается и навигация работает.
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
