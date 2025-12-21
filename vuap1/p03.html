@@ -1,25 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>ВУАП-1 — Пункт 3</title>
+
   <style>
     :root{
-      --bg1:#0b1b2a;
-      --bg2:#153a5a;
+      --bg1:#0b1d2b;
+      --bg2:#0a2a3f;
       --card:rgba(255,255,255,.08);
-      --stroke:rgba(255,255,255,.18);
+      --stroke:rgba(255,255,255,.16);
       --text:#e9f2ff;
       --muted:#b7c7dd;
-      --good:#7ddc8a;
-      --bad:#ff7b7b;
-      --warn:#ffd36a;
+      --btn:rgba(255,255,255,.08);
+      --btn2:rgba(255,255,255,.12);
+      --ok:rgba(110,255,180,.15);
+      --bad:rgba(255,120,120,.15);
+      --okStroke:rgba(110,255,180,.35);
+      --badStroke:rgba(255,120,120,.35);
+      --shadow:0 10px 40px rgba(0,0,0,.35);
+      --radius:22px;
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
       background:
         radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
@@ -27,371 +34,337 @@
         linear-gradient(180deg,var(--bg1),var(--bg2));
       min-height:100vh;
     }
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
-    .h1{
-      font-size:44px;
-      line-height:1.05;
-      margin:8px 0 18px;
-      letter-spacing:.2px;
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
     }
-    .card{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:22px;
-      padding:22px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
-    }
+
     .top{
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:14px;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom: 14px;
     }
-    .brand h2{
+
+    .brand{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding:16px 18px;
+      box-shadow: var(--shadow);
+      width: 100%;
+    }
+    .brand h1{
       margin:0;
-      font-size:28px;
-      letter-spacing:.5px;
+      font-size: 20px;
+      letter-spacing:.2px;
     }
     .brand p{
-      margin:6px 0 0;
+      margin:6px 0 0 0;
       color:var(--muted);
       font-size:14px;
     }
+
+    h2.page{
+      font-size: clamp(28px, 5vw, 52px);
+      margin: 16px 0 14px;
+      line-height: 1.05;
+      letter-spacing: .2px;
+    }
+
     .nav{
       display:flex;
-      gap:12px;
+      gap:10px;
       flex-wrap:wrap;
-      margin:14px 0 18px;
+      margin: 10px 0 18px;
     }
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:12px 16px;
-      border-radius:16px;
+      appearance:none;
       border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
+      background: var(--btn);
       color:var(--text);
-      font-weight:600;
+      border-radius: 18px;
+      padding: 10px 14px;
       cursor:pointer;
-      user-select:none;
-      transition:transform .05s ease, background .15s ease;
-    }
-    .btn:active{transform:scale(.99)}
-    .btn:hover{background:rgba(255,255,255,.09)}
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      align-items:start;
-    }
-    @media (max-width: 900px){
-      .h1{font-size:38px}
-      .grid{grid-template-columns:1fr}
-    }
-    .section-title{
-      margin:0 0 10px;
-      font-size:26px;
-    }
-    .sub{
-      margin:0;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.45;
-    }
-    .block-title{
-      margin:0 0 10px;
-      font-size:20px;
-      letter-spacing:.2px;
-    }
-    .steps{
-      margin:10px 0 0;
-      color:var(--muted);
-      line-height:1.55;
-    }
-    .steps b{color:var(--text)}
-    .steps ul{margin:10px 0 0 20px}
-    .steps li{margin:6px 0}
-    .pill{
+      text-decoration:none;
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      color:var(--muted);
-      font-weight:700;
-      letter-spacing:.3px;
-      margin-bottom:12px;
+      transition:.15s ease;
     }
-    .form{
-      display:grid;
-      gap:12px;
-      margin-top:8px;
+    .btn:hover{ background: var(--btn2); }
+    .btn.ghost{ background: transparent; }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin: 14px 0;
     }
-    .row2{
+
+    .card h2{
+      margin:0 0 10px 0;
+      font-size: 24px;
+    }
+
+    .card h3{
+      margin: 14px 0 8px;
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    .muted{ color: var(--muted); }
+    .small{ font-size: 13px; }
+    ul{ margin: 8px 0 0 20px; }
+    li{ margin: 6px 0; }
+
+    .grid2{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:12px;
+      gap: 12px;
+      margin-top: 8px;
     }
-    @media (max-width: 520px){
-      .row2{grid-template-columns:1fr}
+    @media (max-width:720px){
+      .grid2{ grid-template-columns: 1fr; }
     }
-    label{
-      display:block;
-      color:var(--muted);
-      font-weight:700;
-      font-size:13px;
-      margin:0 0 6px;
-    }
-    select, input, textarea{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      outline:none;
-      font-size:15px;
-    }
-    textarea{min-height:84px;resize:vertical}
-    .actions{
+
+    .field{
       display:flex;
-      gap:12px;
+      flex-direction:column;
+      gap:6px;
+    }
+    .lbl{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    select, input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.12);
+      color: var(--text);
+      outline: none;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
       flex-wrap:wrap;
-      margin-top:4px;
+      margin-top: 10px;
     }
-    .btn-primary{
-      background:rgba(255,255,255,.10);
-      border-color:rgba(255,255,255,.22);
-    }
+
     .status{
-      border-radius:16px;
-      border:1px solid var(--stroke);
-      background:rgba(0,0,0,.16);
-      padding:14px;
-      margin-top:10px;
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.10);
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
     }
     .status .tag{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:900;
-      letter-spacing:.3px;
-      font-size:12px;
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.06);
-      margin-bottom:8px;
+      font-weight: 700;
+      letter-spacing:.2px;
+      white-space:nowrap;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
     }
-    .status.good .tag{color:var(--good); border-color:rgba(125,220,138,.45)}
-    .status.bad .tag{color:var(--bad); border-color:rgba(255,123,123,.45)}
-    .status.wait .tag{color:var(--warn); border-color:rgba(255,211,106,.45)}
-    .status p{margin:0;color:var(--muted);line-height:1.45}
-    .note{
-      margin-top:16px;
-      color:rgba(233,242,255,.70);
-      font-size:13px;
+    .status.ok{
+      background: var(--ok);
+      border-color: var(--okStroke);
+    }
+    .status.ok .tag{
+      border-color: var(--okStroke);
+    }
+    .status.bad{
+      background: var(--bad);
+      border-color: var(--badStroke);
+    }
+    .status.bad .tag{
+      border-color: var(--badStroke);
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="h1">Пункт 3. Проверка крутизны датчика угла</div>
+    <h2 class="page">Пункт 3. Проверка крутизны датчика угла</h2>
 
-    <div class="card">
-      <div class="top">
-        <div class="brand">
-          <h2>ВУАП-1</h2>
-          <p>Инженерная инструкция · Пошаговый контроль допусков</p>
-        </div>
+    <div class="top">
+      <div class="brand">
+        <h1>ВУАП-1</h1>
+        <p>Инженерная инструкция · Пошаговый контроль допусков</p>
       </div>
-
-      <div class="nav">
-        <a class="btn" href="../index.html">← На главную</a>
-        <a class="btn" href="index.html">← Меню ВУАП-1</a>
-      </div>
-
-      <div class="grid">
-        <!-- LEFT: text -->
-        <div class="card">
-          <div class="pill">Условия проведения проверки</div>
-          <h3 class="section-title">Условия проведения проверки</h3>
-          <p class="sub"><b>Проверка выполняется с выключенной наземной гидроустановкой.</b></p>
-
-          <div style="height:14px"></div>
-
-          <h3 class="section-title">3. Проверка крутизны датчика угла</h3>
-
-          <div class="pill">а) Канал направления</div>
-          <div class="steps">
-            <ul>
-              <li>При нажатой кнопке-табло <b>«ВКЛ»</b> на пульте управления канала направления поворотом шкалы ручки центровки установить стрелку индикатора нулевого в <b>среднее положение</b>, заметив положение шкалы ручки центровки.</li>
-              <li>Не отпуская кнопку-табло <b>«ВКЛ»</b>, поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки) установить стрелку индикатора нулевого в <b>совмещённое с промежуточными отметками</b> положение, заметив угол поворота шкалы ручки центровки (деление соответствует <b>1°</b>).</li>
-              <li>Нажать кнопку-табло <b>«ОТКЛ»</b> на пульте управления канала направления.</li>
-            </ul>
-          </div>
-
-          <div style="height:10px"></div>
-
-          <div class="pill">б) Каналы крена и тангажа</div>
-          <div class="steps">
-            <p style="margin:0 0 6px;color:var(--muted);">
-              Проделать аналогичную проверку, устанавливая стрелку индикатора нулевого в совмещённое с промежуточной отметкой положение поворотом шкалы ручки центровки соответствующего канала.
-            </p>
-          </div>
-
-          <div style="height:16px"></div>
-
-          <div class="pill">Технические требования (ТТ)</div>
-          <div class="steps">
-            <p style="margin:0;color:var(--muted);">
-              Для каналов направления, крена и тангажа угол поворота шкалы ручки центровки должен быть <b>10° ± 3°</b> (1 оборот).
-            </p>
-          </div>
-
-          <div style="height:16px"></div>
-
-          <div class="pill">Работы, выполняемые при отклонениях от ТТ</div>
-          <div class="steps">
-            <p style="margin:0 0 10px;color:var(--muted);">
-              Не отпуская кнопку-табло <b>«ВКЛ»</b>, повернуть шкалу ручки центровки по часовой стрелке на <b>10°</b> (1 оборот) от замеченного положения и поворотом подстроечного резистора <b>«КР»</b> на пульте управления соответствующего канала установить стрелку индикатора нулевого:
-            </p>
-            <ul>
-              <li>в совмещённое с <b>правой</b> промежуточной отметкой положение (для канала тангажа — <b>нижней</b> промежуточной отметкой);</li>
-              <li>в совмещённое с <b>левой</b> промежуточной отметкой положение (для канала тангажа — <b>верхней</b> промежуточной отметкой).</li>
-            </ul>
-            <p style="margin:10px 0 0;color:var(--muted);">
-              Не отпуская кнопку-табло <b>«ВКЛ»</b>, вернуть шкалу ручки центровки в исходное положение, соответствующее среднему положению стрелки индикатора нулевого.
-            </p>
-          </div>
-        </div>
-
-        <!-- RIGHT: fixation -->
-        <div class="card">
-          <h3 class="section-title">Фиксация результата (в программу)</h3>
-
-          <div class="form" id="formP3">
-            <div>
-              <label for="channel">Канал</label>
-              <select id="channel">
-                <option value="">— выбрать —</option>
-                <option value="направления">Направления</option>
-                <option value="крен">Крен</option>
-                <option value="тангаж">Тангаж</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="fact">Стрелка индикатора нулевого стала на крайнюю отметку (с точностью до толщины стрелки)?</label>
-              <select id="fact">
-                <option value="">— выбрать —</option>
-                <option value="да">Да</option>
-                <option value="нет">Нет</option>
-              </select>
-            </div>
-
-            <div class="row2">
-              <div>
-                <label for="angle">Фактический угол поворота шкалы, ° (если измеряли)</label>
-                <input id="angle" type="number" step="1" placeholder="например, 10" />
-              </div>
-              <div>
-                <label for="comment">Примечание</label>
-                <input id="comment" type="text" placeholder="Комментарий (если есть)" />
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="btn btn-primary" type="button" id="checkBtn">Проверить ТТ</button>
-              <button class="btn" type="button" id="resetBtn">Сброс</button>
-            </div>
-
-            <div class="status wait" id="statusBox">
-              <div class="tag" id="statusTag">ОЖИДАЕТ</div>
-              <p id="statusText">Выбери канал и факт установки стрелки по ТТ.</p>
-            </div>
-
-            <div class="note">
-              Подсказка: по ТТ угол поворота должен быть в диапазоне <b>7…13°</b> (10° ± 3°), если ты вводишь измеренное значение.
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
+
+    <div class="nav">
+      <a class="btn ghost" href="../index.html">← На главную</a>
+      <a class="btn ghost" href="./index.html">← Меню ВУАП-1</a>
+    </div>
+
+    <!-- Условия проведения проверки -->
+    <section class="card" id="conditions">
+      <h2>Условия проведения проверки</h2>
+      <p class="muted">
+        Проверка выполняется с <b>выключенной</b> наземной гидроустановкой.
+      </p>
+    </section>
+
+    <!-- Технология пункта 3 -->
+    <section class="card" id="tech">
+      <h2>3. Проверка крутизны датчика угла</h2>
+
+      <h3>а) Канал направления</h3>
+      <ul class="muted">
+        <li>Нажать кнопку-табло «ВКЛ» на пульте управления канала направления.</li>
+        <li>Поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение.</li>
+        <li>Заметить положение шкалы ручки центровки.</li>
+        <li>
+          Не отпуская кнопку-табло «ВКЛ», поворотом шкалы ручки центровки по часовой стрелке
+          (против часовой стрелки) установить стрелку индикатора нулевого в положение, совмещённое
+          с промежуточными отметками, заметив угол поворота шкалы ручки центровки
+          (деление соответствует 1°).
+        </li>
+      </ul>
+
+      <h3>б) Каналы крена и тангажа</h3>
+      <p class="muted">
+        Проделать аналогичную проверку, устанавливая стрелку индикатора нулевого
+        в совмещённое с промежуточной отметкой положение поворотом шкалы ручки центровки
+        соответствующего канала.
+      </p>
+
+      <div class="card" style="margin-top:14px;">
+        <h3 style="margin-top:0;">Технические требования (ТТ)</h3>
+        <p class="muted" style="margin:0;">
+          Для каналов направления, крена и тангажа угол поворота шкалы ручки центровки должен быть
+          <b>10° ± 3°</b> (1 оборот).
+        </p>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3 style="margin-top:0;">Работы, выполняемые при отклонениях от ТТ</h3>
+        <p class="muted" style="margin:0 0 10px 0;">
+          Не отпуская кнопку-табло «ВКЛ», повернуть шкалу ручки центровки по часовой стрелке
+          на 10° (1 оборот) от замеченного положения и поворотом подстроечного резистора «КР»
+          на пульте управления соответствующего канала установить стрелку индикатора нулевого:
+        </p>
+        <ul class="muted" style="margin-top:0;">
+          <li>
+            в совмещённое с <b>правой</b> промежуточной отметкой положение
+            (для канала тангажа — <b>нижней</b> промежуточной отметкой);
+          </li>
+          <li>
+            в совмещённое с <b>левой</b> промежуточной отметкой положение
+            (для канала тангажа — <b>верхней</b> промежуточной отметкой).
+          </li>
+        </ul>
+        <p class="muted" style="margin:10px 0 0 0;">
+          Не отпуская кнопку-табло «ВКЛ», вернуть шкалу ручки центровки в исходное положение,
+          соответствующее среднему положению стрелки индикатора нулевого.
+        </p>
+      </div>
+    </section>
+
+    <!-- Фиксация результата -->
+    <section class="card" id="fix">
+      <h2>Фиксация результата (в программу)</h2>
+
+      <div class="grid2">
+        <label class="field">
+          <span class="lbl">Канал</span>
+          <select id="fixChannel">
+            <option value="" selected disabled>— выбрать —</option>
+            <option value="yaw">Направления</option>
+            <option value="roll">Крен</option>
+            <option value="pitch">Тангаж</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span class="lbl">Угол поворота шкалы, °</span>
+          <input id="fixAngle" type="number" inputmode="decimal" step="0.1" placeholder="Напр. 10">
+        </label>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="btnCheckFix" type="button">Проверить ТТ</button>
+        <button class="btn ghost" id="btnResetFix" type="button">Сброс</button>
+      </div>
+
+      <div class="status" id="fixStatus">
+        <span class="tag">ОЖИДАЕТ</span>
+        <span class="msg">Выбери канал и введи измеренный угол.</span>
+      </div>
+
+      <div class="small muted" style="margin-top:10px;">
+        ТТ: 10° ± 3°.
+      </div>
+    </section>
   </div>
 
   <script>
-    const channel = document.getElementById('channel');
-    const fact = document.getElementById('fact');
-    const angle = document.getElementById('angle');
-    const comment = document.getElementById('comment');
+    // ТТ: 10° ± 3°
+    const TT = { target: 10, tol: 3 };
 
-    const statusBox = document.getElementById('statusBox');
-    const statusTag = document.getElementById('statusTag');
-    const statusText = document.getElementById('statusText');
+    const elCh = document.getElementById('fixChannel');
+    const elAngle = document.getElementById('fixAngle');
+    const elStatus = document.getElementById('fixStatus');
 
-    const checkBtn = document.getElementById('checkBtn');
-    const resetBtn = document.getElementById('resetBtn');
-
-    function setStatus(kind, tag, text){
-      statusBox.classList.remove('good','bad','wait');
-      statusBox.classList.add(kind);
-      statusTag.textContent = tag;
-      statusText.textContent = text;
+    function channelName(v){
+      if (v === 'yaw') return 'Направления';
+      if (v === 'roll') return 'Крен';
+      if (v === 'pitch') return 'Тангаж';
+      return '';
     }
 
-    function validate(){
-      if(!channel.value){
-        setStatus('wait','ОЖИДАЕТ','Выбери канал.');
-        return;
-      }
-      if(!fact.value){
-        setStatus('wait','ОЖИДАЕТ','Выбери факт установки стрелки по ТТ.');
-        return;
-      }
+    function setStatus(state, text) {
+      const tag = elStatus.querySelector('.tag');
+      const msg = elStatus.querySelector('.msg');
 
-      // Base decision from "fact"
-      let ok = (fact.value === 'да');
-      let details = [];
+      tag.textContent = state;
+      msg.textContent = text;
 
-      // Optional angle check if filled
-      const a = angle.value.trim() === '' ? null : Number(angle.value);
-      if(a !== null && Number.isFinite(a)){
-        const min = 7, max = 13; // 10 ± 3
-        if(a < min || a > max){
-          ok = false;
-          details.push(`Угол ${a}° вне допуска 10° ± 3° (7…13°).`);
-        } else {
-          details.push(`Угол ${a}° в допуске 10° ± 3°.`);
-        }
-      }
+      elStatus.classList.remove('ok','bad');
+      if (state === 'СООТВЕТСТВУЕТ') elStatus.classList.add('ok');
+      if (state === 'НЕ СООТВЕТСТВУЕТ') elStatus.classList.add('bad');
+    }
 
-      if(ok){
-        setStatus('good','СООТВЕТСТВУЕТ ТТ',
-          `Канал: ${channel.value}. Результат: соответствует ТТ.` + (details.length ? ' ' + details.join(' ') : '')
-        );
+    document.getElementById('btnCheckFix').addEventListener('click', () => {
+      const ch = elCh.value;
+      const a = Number(elAngle.value);
+
+      if (!ch) { setStatus('ОЖИДАЕТ', 'Выбери канал.'); return; }
+      if (!Number.isFinite(a)) { setStatus('ОЖИДАЕТ', 'Введи угол (число).'); return; }
+
+      const low = TT.target - TT.tol;
+      const high = TT.target + TT.tol;
+      const pass = (a >= low && a <= high);
+
+      if (pass) {
+        setStatus('СООТВЕТСТВУЕТ', `${channelName(ch)}: ${a}° входит в допуск ${low}…${high}°.`);
       } else {
-        setStatus('bad','НЕ СООТВЕТСТВУЕТ ТТ',
-          `Канал: ${channel.value}. Результат: не соответствует ТТ.` + (details.length ? ' ' + details.join(' ') : '')
-        );
+        setStatus('НЕ СООТВЕТСТВУЕТ', `${channelName(ch)}: ${a}° НЕ входит в допуск ${low}…${high}°.`);
       }
-    }
-
-    checkBtn.addEventListener('click', validate);
-
-    resetBtn.addEventListener('click', () => {
-      channel.value = '';
-      fact.value = '';
-      angle.value = '';
-      comment.value = '';
-      setStatus('wait','ОЖИДАЕТ','Выбери канал и факт установки стрелки по ТТ.');
     });
+
+    document.getElementById('btnResetFix').addEventListener('click', () => {
+      elCh.selectedIndex = 0;
+      elAngle.value = '';
+      setStatus('ОЖИДАЕТ', 'Выбери канал и введи измеренный угол.');
+    });
+
+    // старт
+    setStatus('ОЖИДАЕТ', 'Выбери канал и введи измеренный угол.');
   </script>
 </body>
 </html>
