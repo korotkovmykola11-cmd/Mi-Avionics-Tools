@@ -1,259 +1,158 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Пункт 2. Проверка коэффициента усиления — ВУАП-1</title>
   <style>
     :root{
-      --bg:#0b1f2a;
-      --card:#273946;
-      --card2:#2c4150;
-      --text:#e9f2f7;
-      --muted:#b7c6cf;
-      --muted2:#93a7b4;
-      --stroke:rgba(255,255,255,.12);
-      --stroke2:rgba(255,255,255,.18);
-      --btn:#2a3f4d;
-      --btn2:#324b5b;
-      --ok:#27c08a;
+      --bg1:#061621;
+      --bg2:#071c2a;
+      --card:#223746;
+      --card2:#1c3140;
+      --text:#e9f0f5;
+      --muted:#b9c7d2;
+      --line:rgba(255,255,255,.14);
+      --ok:#4dd17a;
       --bad:#ff6b6b;
-      --warn:#ffd166;
-      --shadow:0 20px 60px rgba(0,0,0,.35);
-      --r:22px;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      background: radial-gradient(1200px 700px at 30% -10%, rgba(92,139,170,.35), transparent 60%),
-                  radial-gradient(900px 600px at 90% 10%, rgba(30,120,120,.25), transparent 55%),
-                  var(--bg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
+      background: radial-gradient(1200px 800px at 30% -10%, #0b3347 0%, transparent 60%),
+                  linear-gradient(180deg, var(--bg2) 0%, var(--bg1) 100%);
     }
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 18px 60px;
-    }
-    .title{
+    .wrap{max-width: 900px; margin:0 auto; padding: 22px 18px 50px;}
+    h1{
+      font-size: 42px;
+      line-height: 1.05;
+      margin: 10px 0 18px;
       font-weight: 800;
-      letter-spacing: .2px;
-      line-height: 1.08;
-      font-size: clamp(28px, 5vw, 44px);
-      margin: 6px 0 18px;
     }
-    .subcard{
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--stroke);
-      border-radius: var(--r);
-      padding: 18px 18px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      max-width: 520px;
-      box-shadow: var(--shadow);
+    .top-card, .card{
+      background: rgba(34,55,70,.62);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 18px;
+      margin: 14px 0;
+      backdrop-filter: blur(6px);
     }
-    .subcard .h{
-      font-weight:800;
-      font-size: 18px;
-    }
-    .subcard .p{
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.25;
-    }
-    .row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin: 14px 0 18px;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
+    .kicker{font-weight:800; font-size: 18px; margin-bottom:6px;}
+    .sub{color:var(--muted); font-size: 16px;}
+    .badge-row{display:flex; gap:10px; flex-wrap:wrap; margin: 14px 0 12px;}
+    .badge{
+      display:inline-flex; align-items:center;
       padding: 10px 14px;
       border-radius: 999px;
+      border: 1px solid var(--line);
       background: rgba(255,255,255,.06);
-      border: 1px solid var(--stroke);
       color: var(--muted);
       font-weight: 650;
-      font-size: 14px;
-      user-select:none;
     }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding: 11px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--stroke2);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      color: var(--text);
-      text-decoration:none;
-      font-weight: 750;
-      font-size: 14px;
-      box-shadow: 0 10px 26px rgba(0,0,0,.20);
-      transition: transform .08s ease, filter .15s ease;
-    }
-    .btn:hover{ filter: brightness(1.08); }
-    .btn:active{ transform: translateY(1px); }
-
-    .card{
+    .nav-row{display:flex; gap:10px; flex-wrap:wrap; margin: 10px 0 18px;}
+    a.btn{
+      text-decoration:none; color: var(--text);
+      padding: 10px 14px; border-radius: 14px;
+      border: 1px solid var(--line);
       background: rgba(255,255,255,.06);
-      border: 1px solid var(--stroke);
-      border-radius: var(--r);
-      padding: 18px 18px;
-      box-shadow: var(--shadow);
-      margin: 14px 0;
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight:700;
     }
-    .card h2{
-      margin: 0 0 10px;
-      font-size: 22px;
-      letter-spacing:.2px;
-    }
-    .card h3{
-      margin: 14px 0 10px;
-      font-size: 18px;
-      color: var(--text);
-    }
-    .muted{ color: var(--muted); }
-    .muted2{ color: var(--muted2); }
-    ul{
-      margin: 8px 0 0 20px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-    li{ margin: 6px 0; }
+    a.btn:hover{background: rgba(255,255,255,.10)}
+    .card h2{margin:0 0 10px; font-size: 26px; font-weight: 800;}
+    .card h3{margin: 16px 0 8px; font-size: 20px; font-weight: 800;}
+    .p{color:var(--muted); font-size: 17px; line-height: 1.5; margin: 8px 0 0;}
+    ul{margin: 10px 0 0 20px; padding:0}
+    li{margin: 8px 0; color: var(--muted); font-size: 17px; line-height:1.5}
 
-    .two{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-    @media (min-width: 860px){
-      .two{ grid-template-columns: 1fr 1fr; }
-    }
-
-    .formCard{
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--stroke);
-      border-radius: var(--r);
-      padding: 18px;
-      box-shadow: var(--shadow);
+    .tt{
+      background: rgba(28,49,64,.70);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 14px 12px;
       margin-top: 14px;
     }
-    .formGrid{
+    .tt .title{font-weight: 850; margin-bottom: 6px;}
+    .tt .text{color: var(--muted); line-height:1.5; font-size: 17px;}
+
+    .fix{
       display:grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
-    @media(min-width:860px){
-      .formGrid{ grid-template-columns: 1fr 1fr; }
+    @media (max-width: 760px){
+      h1{font-size: 34px}
+      .fix{grid-template-columns: 1fr}
     }
-    label{
-      display:block;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 700;
-      margin: 2px 0 8px;
-    }
-    select, input, textarea{
-      width:100%;
-      border-radius: 14px;
-      border: 1px solid var(--stroke2);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
-      padding: 12px 12px;
-      font-size: 14px;
-      outline:none;
-    }
-    textarea{ min-height: 44px; resize: vertical; }
-    .actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top: 10px;
-      align-items:center;
-    }
-    .btnWide{
-      flex: 1 1 260px;
-      padding: 12px 16px;
+    .field{
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
       border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-      border: 1px solid rgba(255,255,255,.18);
-      font-weight: 850;
-      cursor:pointer;
-      color: var(--text);
+      padding: 12px;
     }
-    .btnGhost{
-      flex: 1 1 180px;
-      padding: 12px 16px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.12);
+    .label{color: var(--muted); font-weight: 750; margin-bottom: 8px;}
+    select, textarea{
+      width: 100%;
       border: 1px solid rgba(255,255,255,.14);
-      font-weight: 850;
-      cursor:pointer;
+      background: rgba(0,0,0,.12);
       color: var(--text);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 16px;
+      outline: none;
     }
+    textarea{min-height: 92px; resize: vertical;}
+
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px;}
+    button{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      min-width: 160px;
+    }
+    button:hover{background: rgba(255,255,255,.12)}
     .status{
       margin-top: 12px;
       border-radius: 16px;
-      border: 1px solid var(--stroke);
-      padding: 12px 12px;
-      background: rgba(0,0,0,.14);
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.12);
       color: var(--muted);
       font-weight: 750;
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
     }
-    .tag{
-      font-size: 12px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid var(--stroke2);
-      background: rgba(255,255,255,.06);
-      color: var(--muted);
-      font-weight: 900;
-      letter-spacing:.3px;
-      flex: 0 0 auto;
-      margin-top: 1px;
-    }
-    .tag.ok{ color: #0c2d1f; background: rgba(39,192,138,.95); border-color: rgba(39,192,138,.95); }
-    .tag.bad{ color: #3b1010; background: rgba(255,107,107,.95); border-color: rgba(255,107,107,.95); }
-    .tag.wait{ color: #3b2e09; background: rgba(255,209,102,.95); border-color: rgba(255,209,102,.95); }
-    .footerNote{
-      margin-top: 16px;
-      font-size: 12px;
-      color: var(--muted2);
-      opacity:.9;
-    }
+    .status.ok{border-color: rgba(77,209,122,.35); color: var(--ok)}
+    .status.bad{border-color: rgba(255,107,107,.35); color: var(--bad)}
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="title">Пункт 2. Проверка коэффициента усиления</div>
+    <h1>Пункт 2. Проверка коэффициента усиления</h1>
 
-    <div class="subcard">
-      <div class="h">ВУАП-1</div>
-      <div class="p">Инженерная инструкция · Пошаговый контроль допусков</div>
+    <div class="top-card">
+      <div class="kicker">ВУАП-1</div>
+      <div class="sub">Инженерная инструкция · Пошаговый контроль допусков</div>
     </div>
 
-    <div class="row" style="margin-top:14px">
+    <div class="badge-row">
+      <div class="badge">ВУАП-1 · Пункт 2</div>
+    </div>
+
+    <div class="nav-row">
       <a class="btn" href="../index.html">← На главную</a>
       <a class="btn" href="../page-vuap-1.html">← Меню ВУАП-1</a>
     </div>
 
     <div class="card">
       <h2>Условия проведения проверки</h2>
-      <div class="muted" style="font-size:15px; line-height:1.35;">
-        Проверка выполняется с <b>выключенной</b> наземной гидроустановкой.
-      </div>
+      <p class="p"><b>Проверка выполняется с выключенной наземной гидроустановкой.</b></p>
     </div>
 
     <div class="card">
@@ -275,164 +174,120 @@
         <li>При нажатой кнопке-табло «ОТКЛ» на пульте управления канала высоты поворотом потенциометра «Центр» на передней панели пульта установить стрелку индикатора нулевого в среднее положение.</li>
         <li>Не отпуская кнопку-табло «ОТКЛ», нажать на пульте управления канала высоты кнопку-табло «ВКЛ», удерживая обе кнопки в нажатом состоянии, заметить положение стрелки индикатора нулевого на пульте управления канала высоты.</li>
       </ul>
-    </div>
 
-    <div class="two">
-      <div class="card">
-        <h2>Технические требования (ТТ)</h2>
-        <div class="muted" style="line-height:1.45;">
+      <div class="tt">
+        <div class="title">Технические требования (ТТ)</div>
+        <div class="text">
           Для всех каналов стрелка индикатора нулевого (задняя кромка стрелки, если смотреть по направлению её движения) не должна отклоняться далее промежуточной отметки.
         </div>
       </div>
 
-      <div class="card">
-        <h2>Работы, выполняемые при отклонениях от ТТ</h2>
-        <div class="muted" style="line-height:1.45;">
+      <div class="tt" style="margin-top:12px;">
+        <div class="title">Работы, выполняемые при отклонениях от ТТ</div>
+        <div class="text">
           Заменить пульт управления соответствующего канала на исправный.
         </div>
       </div>
     </div>
 
-    <div class="formCard">
-      <h2 style="margin:0 0 8px;">Фиксация результата (в программу)</h2>
+    <div class="card">
+      <h2>Фиксация результата (в программу)</h2>
 
-      <div class="formGrid">
-        <div>
-          <label for="channel">Канал</label>
-          <select id="channel">
-            <option value="">— выбрать —</option>
-            <option value="direction">Направления</option>
-            <option value="roll">Крена</option>
-            <option value="pitch">Тангажа</option>
-            <option value="altitude">Высоты</option>
+      <div class="fix">
+        <div class="field">
+          <div class="label">Канал</div>
+          <select id="ch">
+            <option value="" selected disabled>— выбрать —</option>
+            <option value="направления">Направления</option>
+            <option value="крена">Крена</option>
+            <option value="тангажа">Тангажа</option>
+            <option value="высоты">Высоты</option>
           </select>
         </div>
 
-        <div>
-          <label for="fact">Стрелка индикатора нулевого не отклонялась далее промежуточной отметки?</label>
-          <select id="fact">
-            <option value="">— выбрать —</option>
-            <option value="yes">Да</option>
-            <option value="no">Нет</option>
+        <div class="field">
+          <div class="label">Стрелка не отклонилась далее промежуточной отметки?</div>
+          <select id="ok">
+            <option value="" selected disabled>— выбрать —</option>
+            <option value="yes">Да (соответствует ТТ)</option>
+            <option value="no">Нет (не соответствует ТТ)</option>
           </select>
         </div>
 
-        <div style="grid-column: 1 / -1;">
-          <label for="comment">Примечание (если есть)</label>
-          <input id="comment" type="text" placeholder="Комментарий (если есть)" />
+        <div class="field" style="grid-column: 1 / -1;">
+          <div class="label">Примечание (если есть)</div>
+          <textarea id="note" placeholder="Комментарий (если есть)"></textarea>
         </div>
       </div>
 
       <div class="actions">
-        <button class="btnWide" id="btnCheck" type="button">Проверить ТТ</button>
-        <button class="btnGhost" id="btnReset" type="button">Сброс</button>
+        <button id="saveBtn">Сохранить</button>
+        <button id="resetBtn">Сброс</button>
       </div>
 
-      <div class="status" id="statusBox">
-        <div class="tag wait" id="tag">ОЖИДАЕТ</div>
-        <div id="statusText">Выбери канал и факт по ТТ.</div>
-      </div>
-
-      <div class="footerNote">
-        Примечание: оценка результата выполняется строго по ТТ данного пункта (без дополнительных проверок и без добавлений от себя).
-      </div>
+      <div id="status" class="status">ОЖИДАЕТ: выбери канал и результат по ТТ.</div>
     </div>
-
   </div>
 
-<script>
-(function(){
-  const KEY = "vuap1_p02_gaincheck";
+  <script>
+    (function(){
+      const KEY = "vuap1_p02_fix";
+      const ch = document.getElementById("ch");
+      const ok = document.getElementById("ok");
+      const note = document.getElementById("note");
+      const status = document.getElementById("status");
+      const saveBtn = document.getElementById("saveBtn");
+      const resetBtn = document.getElementById("resetBtn");
 
-  const channelEl = document.getElementById("channel");
-  const factEl = document.getElementById("fact");
-  const commentEl = document.getElementById("comment");
-  const btnCheck = document.getElementById("btnCheck");
-  const btnReset = document.getElementById("btnReset");
+      function setStatus(){
+        if(!ch.value || !ok.value){
+          status.className = "status";
+          status.textContent = "ОЖИДАЕТ: выбери канал и результат по ТТ.";
+          return;
+        }
+        if(ok.value === "yes"){
+          status.className = "status ok";
+          status.textContent = "СООТВЕТСТВУЕТ ТТ: стрелка не отклонилась далее промежуточной отметки.";
+        } else {
+          status.className = "status bad";
+          status.textContent = "НЕ СООТВЕТСТВУЕТ ТТ: заменить пульт управления соответствующего канала на исправный.";
+        }
+      }
 
-  const tag = document.getElementById("tag");
-  const statusText = document.getElementById("statusText");
+      function load(){
+        try{
+          const raw = localStorage.getItem(KEY);
+          if(!raw) return;
+          const d = JSON.parse(raw);
+          if(d.ch) ch.value = d.ch;
+          if(d.ok) ok.value = d.ok;
+          if(typeof d.note === "string") note.value = d.note;
+          setStatus();
+        } catch(e){}
+      }
 
-  function channelName(v){
-    switch(v){
-      case "direction": return "Направления";
-      case "roll": return "Крена";
-      case "pitch": return "Тангажа";
-      case "altitude": return "Высоты";
-      default: return "";
-    }
-  }
+      function save(){
+        const data = { ch: ch.value || "", ok: ok.value || "", note: note.value || "" };
+        localStorage.setItem(KEY, JSON.stringify(data));
+        setStatus();
+      }
 
-  function setStatus(state, text){
-    tag.classList.remove("ok","bad","wait");
-    if(state==="ok"){ tag.classList.add("ok"); tag.textContent="ПРОХОДИТ"; }
-    else if(state==="bad"){ tag.classList.add("bad"); tag.textContent="НЕ ПРОХОДИТ"; }
-    else { tag.classList.add("wait"); tag.textContent="ОЖИДАЕТ"; }
-    statusText.textContent = text;
-  }
+      function reset(){
+        ch.value = "";
+        ok.value = "";
+        note.value = "";
+        localStorage.removeItem(KEY);
+        setStatus();
+      }
 
-  function save(result){
-    const payload = {
-      ts: new Date().toISOString(),
-      channel: channelEl.value,
-      channelText: channelName(channelEl.value),
-      fact: factEl.value, // yes/no
-      comment: commentEl.value || ""
-    };
-    try{ localStorage.setItem(KEY, JSON.stringify(payload)); }catch(e){}
-    return payload;
-  }
+      ch.addEventListener("change", setStatus);
+      ok.addEventListener("change", setStatus);
+      saveBtn.addEventListener("click", save);
+      resetBtn.addEventListener("click", reset);
 
-  function load(){
-    try{
-      const raw = localStorage.getItem(KEY);
-      if(!raw) return null;
-      return JSON.parse(raw);
-    }catch(e){ return null; }
-  }
-
-  function applyLoaded(){
-    const data = load();
-    if(!data) return;
-    channelEl.value = data.channel || "";
-    factEl.value = data.fact || "";
-    commentEl.value = data.comment || "";
-    // статус не выставляем автоматически — только после "Проверить ТТ"
-  }
-
-  btnCheck.addEventListener("click", ()=>{
-    const ch = channelEl.value;
-    const fact = factEl.value;
-
-    if(!ch){
-      setStatus("wait","Выбери канал.");
-      return;
-    }
-    if(!fact){
-      setStatus("wait","Выбери факт по ТТ.");
-      return;
-    }
-
-    const pass = (fact === "yes");
-    const data = save();
-
-    if(pass){
-      setStatus("ok", `Канал: ${data.channelText}. ТТ выполнены: стрелка не отклонялась далее промежуточной отметки.`);
-    }else{
-      setStatus("bad", `Канал: ${data.channelText}. ТТ НЕ выполнены: стрелка отклонилась далее промежуточной отметки.`);
-    }
-  });
-
-  btnReset.addEventListener("click", ()=>{
-    channelEl.value = "";
-    factEl.value = "";
-    commentEl.value = "";
-    try{ localStorage.removeItem(KEY); }catch(e){}
-    setStatus("wait","Выбери канал и факт по ТТ.");
-  });
-
-  applyLoaded();
-})();
-</script>
+      load();
+      setStatus();
+    })();
+  </script>
 </body>
 </html>
