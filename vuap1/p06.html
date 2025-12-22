@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пункт 6. Проверка передаточного числа по углу</title>
 
+<!-- MathJax для математических формул -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+
+<style>
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:#071822;
+  color:#e8f1f7;
+}
+.wrapper{
+  max-width:960px;
+  margin:auto;
+  padding:24px 16px 40px;
+}
+h1{
+  font-size:36px;
+  margin-bottom:16px;
+}
+.card{
+  background:#102a3a;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+}
+h2{
+  margin-top:0;
+  font-size:22px;
+}
+ul{
+  margin-left:20px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  border:1px solid rgba(255,255,255,.15);
+  padding:10px;
+  text-align:left;
+}
+th{
+  background:#16384d;
+}
+input,select,textarea,button{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.2);
+  background:#0c2230;
+  color:#e8f1f7;
+}
+button{
+  cursor:pointer;
+  background:#1f4b66;
+  font-weight:600;
+}
+.status{
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  background:#0c2230;
+}
+.ok{color:#2bd47d;font-weight:700}
+.bad{color:#ff5a6a;font-weight:700}
+.math{
+  background:#0c2230;
+  border-radius:12px;
+  padding:14px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<h1>Пункт 6. Проверка передаточного числа по углу</h1>
+
+<div class="card">
+<h2>Условия проведения проверки</h2>
+<b>Проверка выполняется с включенной наземной гидроустановкой.</b>
+</div>
+
+<div class="card">
+<h2>Технические требования</h2>
+
+<table>
+<tr>
+<th>Канал</th>
+<th>Угол поворота шкалы, град</th>
+<th>Передаточное число, %/град</th>
+</tr>
+<tr>
+<td>Направление</td>
+<td>5<sup>+3</sup><sub>−1,5</sub></td>
+<td>14 ± 5,6</td>
+</tr>
+<tr>
+<td>Крен</td>
+<td>8<sup>+6</sup><sub>−2</sub></td>
+<td>8 ± 3,2</td>
+</tr>
+<tr>
+<td>Тангаж</td>
+<td>3,5<sup>+2</sup><sub>−1</sub></td>
+<td>20 ± 8</td>
+</tr>
+</table>
+
+<div class="math">
+<b>Формула расчёта передаточного числа по углу:</b>
+
+$$
+i = \frac{66{,}7}{\alpha}
+$$
+
+где:  
+$\alpha$ — задаваемый угол (угол поворота шкалы), град  
+<br><br>
+$66{,}7\%$ — величина хода штока малого цилиндра рулевого агрегата от застопоренного положения до положения, соответствующего отклонению стрелки индикатора нулевого до промежуточной отметки.
+</div>
+</div>
+
+<div class="card">
+<h2>Порядок проверки</h2>
+
+<h3>а) Канал направления</h3>
+<ul>
+<li>Нажать кнопку-табло «ВКЛ» на пульте управления канала.</li>
+<li>Установить стрелку индикатора нулевого в среднее положение.</li>
+<li>Заметить положение шкалы ручки центровки.</li>
+<li>Плавно отклонять шток малого цилиндра в обе стороны.</li>
+<li>Совместить стрелку индикатора нулевого с промежуточными отметками.</li>
+<li>Измерить угол поворота шкалы и сравнить с ТТ.</li>
+</ul>
+
+<h3>б) Каналы крена и тангажа</h3>
+<ul>
+<li>Проверку выполнить аналогично каналу направления.</li>
+<li>Передаточное число должно соответствовать техническим требованиям.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Фиксация результата</h2>
+
+<label>Канал</label>
+<select id="channel">
+<option value="">— выбрать —</option>
+<option value="dir">Направление</option>
+<option value="roll">Крен</option>
+<option value="pitch">Тангаж</option>
+</select>
+
+<label style="margin-top:10px">Измеренный угол α, град</label>
+<input id="alpha" placeholder="например: 5 / 8 / 3.5">
+
+<label style="margin-top:10px">Расчётное передаточное число i, %/град</label>
+<input id="result" readonly>
+
+<button style="margin-top:12px" onclick="check()">Проверить</button>
+
+<div class="status" id="status">Ожидание ввода данных</div>
+</div>
+
+</div>
+
+<script>
+function check(){
+  const a = parseFloat(document.getElementById('alpha').value.replace(',','.'));
+  const ch = document.getElementById('channel').value;
+  if(!a || !ch){
+    status.innerHTML='<span class="bad">Ошибка: введите данные</span>';
+    return;
+  }
+  const i = 66.7 / a;
+  result.value = i.toFixed(2).replace('.',',');
+
+  let ok=false;
+  if(ch==='dir') ok = (i>=8.4 && i<=19.6);
+  if(ch==='roll') ok = (i>=4.8 && i<=11.2);
+  if(ch==='pitch') ok = (i>=12 && i<=28);
+
+  status.innerHTML = ok
+    ? '<span class="ok">ПРОХОДИТ</span>'
+    : '<span class="bad">НЕ ПРОХОДИТ</span>';
+}
+</script>
+
+</body>
+</html>
