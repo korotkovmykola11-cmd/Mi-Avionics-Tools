@@ -1,205 +1,441 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пункт 6. Проверка передаточного числа по углу</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Пункт 6. Проверка передаточного числа по углу</title>
 
-<!-- MathJax для математических формул -->
-<script>
-  window.MathJax = {
-    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
-  };
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+  <!-- Формулы (математический вид) -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)'], ['$', '$']] } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-<style>
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background:#071822;
-  color:#e8f1f7;
-}
-.wrapper{
-  max-width:960px;
-  margin:auto;
-  padding:24px 16px 40px;
-}
-h1{
-  font-size:36px;
-  margin-bottom:16px;
-}
-.card{
-  background:#102a3a;
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:16px;
-}
-h2{
-  margin-top:0;
-  font-size:22px;
-}
-ul{
-  margin-left:20px;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-th,td{
-  border:1px solid rgba(255,255,255,.15);
-  padding:10px;
-  text-align:left;
-}
-th{
-  background:#16384d;
-}
-input,select,textarea,button{
-  width:100%;
-  padding:10px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.2);
-  background:#0c2230;
-  color:#e8f1f7;
-}
-button{
-  cursor:pointer;
-  background:#1f4b66;
-  font-weight:600;
-}
-.status{
-  margin-top:12px;
-  padding:12px;
-  border-radius:12px;
-  background:#0c2230;
-}
-.ok{color:#2bd47d;font-weight:700}
-.bad{color:#ff5a6a;font-weight:700}
-.math{
-  background:#0c2230;
-  border-radius:12px;
-  padding:14px;
-  margin-top:10px;
-}
-</style>
+  <style>
+    :root{
+      --bg0:#06121c;
+      --bg1:#0b2030;
+      --card:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.14);
+      --text:#e9f2f7;
+      --muted:rgba(233,242,247,.72);
+      --muted2:rgba(233,242,247,.55);
+      --ok:#2bd47d;
+      --bad:#ff5a6a;
+      --warn:#ffd166;
+      --radius:22px;
+      --shadow:0 14px 34px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 750px at 15% 10%, rgba(32,120,170,.28), transparent 60%),
+        radial-gradient(900px 600px at 85% 20%, rgba(40,160,120,.14), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:22px 16px 52px}
+    .title{
+      font-weight:900;
+      letter-spacing:.2px;
+      font-size:clamp(28px,4.7vw,46px);
+      margin:6px 0 14px;
+      line-height:1.08;
+    }
+    .subrow{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 16px}
+    .chip{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 14px;border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
+      font-weight:800;
+      backdrop-filter: blur(6px);
+    }
+    .nav{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 18px}
+    a.btn{
+      text-decoration:none;
+      color:var(--text);
+      padding:12px 16px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      font-weight:900;
+      display:inline-flex;align-items:center;gap:10px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+    a.btn:active{transform:translateY(1px)}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin:14px 0;
+      backdrop-filter: blur(8px);
+    }
+    h2{margin:0 0 10px;font-size:22px;letter-spacing:.2px}
+    h3{margin:16px 0 8px;font-size:18px;letter-spacing:.2px}
+    .muted{color:var(--muted)}
+    .muted2{color:var(--muted2)}
+    ul{margin:10px 0 0 20px}
+    li{margin:7px 0;color:var(--muted);line-height:1.45}
+    .note{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(0,0,0,.16);
+      border:1px dashed rgba(255,255,255,.18);
+      color:var(--muted);
+      font-weight:750;
+    }
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media (min-width:860px){ .grid2{grid-template-columns:1fr 1fr} }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+    }
+    th,td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      font-size:14px;
+      vertical-align:top;
+    }
+    th{color:var(--muted);font-weight:900;background:rgba(255,255,255,.06);text-align:left}
+    tr:last-child td{border-bottom:none}
+    .mathbox{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+      color:var(--muted);
+    }
+
+    .field{
+      background:rgba(0,0,0,.14);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:12px;
+    }
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:900;
+      color:var(--muted2);
+      margin:0 0 8px;
+    }
+    select,input,textarea,button{
+      width:100%;
+      font:inherit;
+      color:var(--text);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;
+      padding:12px 12px;
+      outline:none;
+    }
+    textarea{min-height:84px;resize:vertical}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    button{
+      cursor:pointer;
+      width:auto;
+      min-width:200px;
+      border-radius:999px;
+      font-weight:950;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+    }
+    button.secondary{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted)}
+    .status{
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+      color:var(--muted);
+      font-weight:850;
+    }
+    .mono{font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1;}
+    .ok{color:var(--ok)}
+    .bad{color:var(--bad)}
+    .warn{color:var(--warn)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      font-weight:950;
+      color:var(--text);
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrapper">
+  <div class="wrap">
+    <div class="title">Пункт 6. Проверка передаточного числа по углу</div>
 
-<h1>Пункт 6. Проверка передаточного числа по углу</h1>
+    <div class="subrow">
+      <div class="chip"><b>ВУАП-1</b><span class="muted">Инженерная инструкция · Пошаговый контроль допусков</span></div>
+    </div>
 
-<div class="card">
-<h2>Условия проведения проверки</h2>
-<b>Проверка выполняется с включенной наземной гидроустановкой.</b>
-</div>
+    <div class="nav">
+      <a class="btn" href="../index.html">← На главную</a>
+      <a class="btn" href="../page-vuap-1.html">← Меню ВУАП-1</a>
+    </div>
 
-<div class="card">
-<h2>Технические требования</h2>
+    <section class="card">
+      <h2>Условия проведения проверки</h2>
+      <div class="muted"><b>Проверка выполняется с включенной наземной гидроустановкой.</b></div>
+    </section>
 
-<table>
-<tr>
-<th>Канал</th>
-<th>Угол поворота шкалы, град</th>
-<th>Передаточное число, %/град</th>
-</tr>
-<tr>
-<td>Направление</td>
-<td>5<sup>+3</sup><sub>−1,5</sub></td>
-<td>14 ± 5,6</td>
-</tr>
-<tr>
-<td>Крен</td>
-<td>8<sup>+6</sup><sub>−2</sub></td>
-<td>8 ± 3,2</td>
-</tr>
-<tr>
-<td>Тангаж</td>
-<td>3,5<sup>+2</sup><sub>−1</sub></td>
-<td>20 ± 8</td>
-</tr>
-</table>
+    <section class="card">
+      <h2>Технические требования (ТТ)</h2>
 
-<div class="math">
-<b>Формула расчёта передаточного числа по углу:</b>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">Канал</th>
+            <th style="width:39%">Угол поворота шкалы, град</th>
+            <th style="width:39%">Передаточное число, %/град</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Направление</b></td>
+            <td>5<sup>+3</sup><sub>−1,5</sub></td>
+            <td>14 ± 5,6</td>
+          </tr>
+          <tr>
+            <td><b>Крен</b></td>
+            <td>8<sup>+6</sup><sub>−2</sub></td>
+            <td>8 ± 3,2</td>
+          </tr>
+          <tr>
+            <td><b>Тангаж</b></td>
+            <td>3,5<sup>+2</sup><sub>−1</sub></td>
+            <td>20 ± 8</td>
+          </tr>
+        </tbody>
+      </table>
 
-$$
-i = \frac{66{,}7}{\alpha}
-$$
+      <div class="mathbox">
+        <div class="muted"><b>Формула расчёта передаточного числа по углу:</b></div>
+        <div style="margin-top:10px;">
+          \[
+            i=\frac{66{,}7}{\alpha}\;\; \bigl[\%\!/\text{град}\bigr]
+          \]
+          \[
+            \alpha\;—\;\text{угол поворота шкалы, град}
+          \]
+          \[
+            66{,}7\%\;—\;\text{величина хода штока малого цилиндра от застопоренного положения до положения,
+            соответствующего отклонению стрелки индикатора нулевого до промежуточной отметки}
+          \]
+        </div>
+      </div>
 
-где:  
-$\alpha$ — задаваемый угол (угол поворота шкалы), град  
-<br><br>
-$66{,}7\%$ — величина хода штока малого цилиндра рулевого агрегата от застопоренного положения до положения, соответствующего отклонению стрелки индикатора нулевого до промежуточной отметки.
-</div>
-</div>
+      <div class="note">
+        Измерение угла поворота шкалы выполнять с точностью до половины деления шкалы.
+      </div>
+    </section>
 
-<div class="card">
-<h2>Порядок проверки</h2>
+    <section class="card">
+      <h2>6. Проверка передаточного числа по углу</h2>
 
-<h3>а) Канал направления</h3>
-<ul>
-<li>Нажать кнопку-табло «ВКЛ» на пульте управления канала.</li>
-<li>Установить стрелку индикатора нулевого в среднее положение.</li>
-<li>Заметить положение шкалы ручки центровки.</li>
-<li>Плавно отклонять шток малого цилиндра в обе стороны.</li>
-<li>Совместить стрелку индикатора нулевого с промежуточными отметками.</li>
-<li>Измерить угол поворота шкалы и сравнить с ТТ.</li>
-</ul>
+      <h3>а) Канал направления</h3>
+      <ul>
+        <li>Нажать на пульте управления канала направления кнопку-табло <b>«ВКЛ»</b>.</li>
+        <li>Поворотом потенциометра <b>«ЦЕНТР»</b> установить стрелку индикатора нулевого в среднее положение (стрелка совмещена с нулевой отметкой).</li>
+        <li>Заметить положение шкалы ручки центровки.</li>
+        <li>Плавным поворотом шкалы ручки центровки отклонить шток малого цилиндра рулевого агрегата поочерёдно в обе стороны, совмещая стрелку индикатора нулевого с <b>промежуточными отметками</b>.</li>
+        <li>Замерить величину угла поворота шкалы от замеченного положения (одно деление шкалы соответствует 1°) и сравнить с ТТ.</li>
+      </ul>
 
-<h3>б) Каналы крена и тангажа</h3>
-<ul>
-<li>Проверку выполнить аналогично каналу направления.</li>
-<li>Передаточное число должно соответствовать техническим требованиям.</li>
-</ul>
-</div>
+      <h3>б) Каналы крена и тангажа</h3>
+      <ul>
+        <li>Проверку выполнить аналогично каналу направления, работая ручкой центровки и кнопками-табло на пульте управления соответствующего канала.</li>
+        <li>Передаточное число по углу должно соответствовать техническим требованиям.</li>
+      </ul>
+    </section>
 
-<div class="card">
-<h2>Фиксация результата</h2>
+    <section class="card">
+      <h2>Работы, выполняемые при отклонениях от ТТ</h2>
 
-<label>Канал</label>
-<select id="channel">
-<option value="">— выбрать —</option>
-<option value="dir">Направление</option>
-<option value="roll">Крен</option>
-<option value="pitch">Тангаж</option>
-</select>
+      <h3>Канал направления</h3>
+      <ul>
+        <li>Заметить положение шкалы.</li>
+        <li>Повернуть шкалу ручки центровки по часовой стрелке на угол <b>5°</b>.</li>
+        <li>Поворотом подстроечного потенциометра <b>«УГОЛ»</b> добиться того, чтобы стрелка индикатора нулевого совместилась с <b>правой</b> промежуточной отметкой.</li>
+        <li>Плавным поворотом шкалы ручки центровки против часовой стрелки совместить стрелку индикатора нулевого с <b>левой</b> промежуточной отметкой.</li>
+        <li>Угол поворота шкалы от замеченного положения должен находиться в пределах допуска.</li>
+        <li>Отключить канал направления кнопкой-табло <b>«ОТКЛ»</b> на пульте управления.</li>
+      </ul>
 
-<label style="margin-top:10px">Измеренный угол α, град</label>
-<input id="alpha" placeholder="например: 5 / 8 / 3.5">
+      <h3>Канал крена</h3>
+      <ul>
+        <li>Подрегулировку выполнить аналогично каналу направления, используя подстроечный потенциометр <b>«УГОЛ»</b> на пульте управления канала крена.</li>
+        <li>Угол поворота шкалы ручки центровки задать равным <b>8°</b>; при проверке в противоположную сторону он должен быть в пределах допуска.</li>
+      </ul>
 
-<label style="margin-top:10px">Расчётное передаточное число i, %/град</label>
-<input id="result" readonly>
+      <h3>Канал тангажа</h3>
+      <ul>
+        <li>Подрегулировку выполнить аналогично каналу направления, используя подстроечный потенциометр <b>«УГОЛ»</b> на пульте управления канала тангажа.</li>
+        <li>Угол поворота шкалы ручки центровки задать равным <b>3,5°</b>; при проверке в противоположную сторону он должен быть в пределах допуска.</li>
+      </ul>
+    </section>
 
-<button style="margin-top:12px" onclick="check()">Проверить</button>
+    <section class="card">
+      <h2>Фиксация результата (в программу)</h2>
 
-<div class="status" id="status">Ожидание ввода данных</div>
-</div>
+      <div class="grid grid2">
+        <div class="field">
+          <label for="ch">Канал</label>
+          <select id="ch">
+            <option value="" selected>— выбрать —</option>
+            <option value="dir">Направление</option>
+            <option value="roll">Крен</option>
+            <option value="pitch">Тангаж</option>
+          </select>
+          <div class="muted2" style="margin-top:8px;font-weight:800;font-size:13px">
+            Вводи измеренный угол \(\alpha\) (угол поворота шкалы).
+          </div>
+        </div>
 
-</div>
+        <div class="field">
+          <label for="alpha">Измеренный угол \(\alpha\), град</label>
+          <input id="alpha" inputmode="decimal" placeholder="например: 5 / 8 / 3.5" />
+          <div class="muted2" style="margin-top:8px;font-weight:800;font-size:13px">
+            Расчёт: \( i=\frac{66{,}7}{\alpha} \)
+          </div>
+        </div>
 
-<script>
-function check(){
-  const a = parseFloat(document.getElementById('alpha').value.replace(',','.'));
-  const ch = document.getElementById('channel').value;
-  if(!a || !ch){
-    status.innerHTML='<span class="bad">Ошибка: введите данные</span>';
-    return;
-  }
-  const i = 66.7 / a;
-  result.value = i.toFixed(2).replace('.',',');
+        <div class="field">
+          <label for="iCalc">Расчётное \(i\), %/град</label>
+          <input id="iCalc" readonly placeholder="автоматически" />
+        </div>
 
-  let ok=false;
-  if(ch==='dir') ok = (i>=8.4 && i<=19.6);
-  if(ch==='roll') ok = (i>=4.8 && i<=11.2);
-  if(ch==='pitch') ok = (i>=12 && i<=28);
+        <div class="field">
+          <label for="comment">Примечание</label>
+          <textarea id="comment" placeholder="Комментарий (если есть)"></textarea>
+        </div>
+      </div>
 
-  status.innerHTML = ok
-    ? '<span class="ok">ПРОХОДИТ</span>'
-    : '<span class="bad">НЕ ПРОХОДИТ</span>';
-}
-</script>
+      <div class="actions">
+        <button type="button" id="btnCheck">Проверить ТТ</button>
+        <button type="button" class="secondary" id="btnReset">Сброс</button>
+      </div>
 
+      <div class="status" id="status">
+        <span class="pill warn">ОЖИДАЕТ</span>
+        <span style="margin-left:10px">Выбери канал и введи \(\alpha\), затем нажми «Проверить ТТ».</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const TT = {
+      dir:   { alphaMin: 5 - 1.5,  alphaMax: 5 + 3.0,  iNom: 14.0, iTol: 5.6 },
+      roll:  { alphaMin: 8 - 2.0,  alphaMax: 8 + 6.0,  iNom:  8.0, iTol: 3.2 },
+      pitch: { alphaMin: 3.5 - 1.0,alphaMax: 3.5 + 2.0,iNom: 20.0, iTol: 8.0 }
+    };
+
+    const elCh = document.getElementById('ch');
+    const elAlpha = document.getElementById('alpha');
+    const elICalc = document.getElementById('iCalc');
+    const elStatus = document.getElementById('status');
+    const btnCheck = document.getElementById('btnCheck');
+    const btnReset = document.getElementById('btnReset');
+
+    function parseNum(s){
+      if(!s) return NaN;
+      const t = String(s).trim().replace(',', '.');
+      const n = Number(t);
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function calcI(alpha){
+      if(!(alpha > 0)) return NaN;
+      return 66.7 / alpha;
+    }
+    function fmt(n, d=2){
+      if(!Number.isFinite(n)) return '';
+      return n.toFixed(d).replace('.', ',');
+    }
+    function setStatus(pillClass, pillText, html){
+      elStatus.innerHTML =
+        `<span class="pill ${pillClass}">${pillText}</span>` +
+        `<div style="margin-top:8px;color:rgba(233,242,247,.75)">${html}</div>`;
+    }
+
+    function updateICalc(){
+      const a = parseNum(elAlpha.value);
+      const i = calcI(a);
+      elICalc.value = Number.isFinite(i) ? fmt(i,2) : '';
+    }
+
+    elAlpha.addEventListener('input', updateICalc);
+
+    btnCheck.addEventListener('click', () => {
+      const key = elCh.value;
+      const a = parseNum(elAlpha.value);
+
+      if(!key){
+        setStatus('warn','ОШИБКА','Канал не выбран.');
+        return;
+      }
+      if(!(a > 0)){
+        setStatus('warn','ОШИБКА','Введи корректный угол \\(\\alpha\\) (град).');
+        return;
+      }
+
+      const t = TT[key];
+      const i = calcI(a);
+      elICalc.value = fmt(i,2);
+
+      const alphaOk = (a >= t.alphaMin && a <= t.alphaMax);
+      const iMin = t.iNom - t.iTol;
+      const iMax = t.iNom + t.iTol;
+      const iOk = (i >= iMin && i <= iMax);
+      const overallOk = alphaOk && iOk;
+
+      const alphaLine = `\$begin:math:text$\\\\alpha\=\$\{fmt\(a\,2\)\}\\\\\,\\\\degree\\$end:math:text$ (допуск: ${fmt(t.alphaMin,2)}…${fmt(t.alphaMax,2)}°) — ` +
+                        (alphaOk ? '<b class="ok">соответствует</b>' : '<b class="bad">НЕ соответствует</b>');
+      const iLine = `\$begin:math:text$i\=\$\{fmt\(i\,2\)\}\\\\ \\\\\%\/\\\\text\{град\}\\$end:math:text$ (допуск: ${fmt(iMin,2)}…${fmt(iMax,2)}) — ` +
+                    (iOk ? '<b class="ok">соответствует</b>' : '<b class="bad">НЕ соответствует</b>');
+
+      setStatus(
+        overallOk ? 'ok' : 'bad',
+        overallOk ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ',
+        `${alphaLine}<br>${iLine}`
+      );
+
+      // Перерисовать формулы внутри статуса (MathJax)
+      if(window.MathJax && MathJax.typesetPromise){
+        MathJax.typesetPromise([elStatus]);
+      }
+    });
+
+    btnReset.addEventListener('click', () => {
+      elCh.value = '';
+      elAlpha.value = '';
+      elICalc.value = '';
+      document.getElementById('comment').value = '';
+      elStatus.innerHTML =
+        `<span class="pill warn">ОЖИДАЕТ</span><span style="margin-left:10px">Выбери канал и введи \$begin:math:text$\\\\alpha\\$end:math:text$, затем нажми «Проверить ТТ».</span>`;
+      if(window.MathJax && MathJax.typesetPromise){
+        MathJax.typesetPromise([elStatus]);
+      }
+    });
+
+    // старт
+    updateICalc();
+  </script>
 </body>
 </html>
