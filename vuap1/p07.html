@@ -1,1 +1,548 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Пункт 7. Проверка передаточного числа по барометрической высоте</title>
 
+  <style>
+    :root{
+      --bg:#071822;
+      --card:#0f2a36;
+      --card2:#0c2330;
+      --text:#e7f0f6;
+      --muted:#a9c0cd;
+      --line:rgba(255,255,255,.14);
+      --btn:#163a4a;
+      --btn2:#0f2f3d;
+      --ok:#5bd18a;
+      --bad:#ff6b6b;
+      --warn:#ffd166;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 700px at 20% 0%, #0b2a36 0%, var(--bg) 55%);
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:22px 16px 48px;}
+    .title{
+      font-size:38px;line-height:1.08;margin:10px 0 8px;font-weight:900;letter-spacing:.2px;
+    }
+    .subtitle{
+      color:var(--muted);
+      font-size:15px;margin:0 0 18px;
+    }
+    .navrow{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 18px;}
+    .chip, .btn{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:999px;
+      padding:10px 14px;
+      text-decoration:none;
+      display:inline-flex;align-items:center;gap:8px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    }
+    .btn{background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding:18px 18px 16px;
+      box-shadow: var(--shadow);
+      margin:14px 0;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:24px;
+      letter-spacing:.2px;
+    }
+    .card h3{
+      margin:14px 0 10px;
+      font-size:18px;
+      color:#d8ebf5;
+    }
+    .muted{color:var(--muted);}
+    ul{margin:10px 0 0 22px;}
+    li{margin:7px 0;color:#d9e9f2;}
+    .hr{height:1px;background:var(--line);margin:14px 0;}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+    }
+    @media (max-width:860px){ .grid{grid-template-columns:1fr;} }
+    .ttbox{
+      background: rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      padding:14px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+    }
+    th,td{
+      padding:10px 10px;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
+      font-size:14px;
+    }
+    th{color:#eaf6ff;background: rgba(255,255,255,.05);text-align:left;}
+    tr:last-child td{border-bottom:none;}
+    .kbd{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding:2px 6px;
+      border:1px solid var(--line);
+      border-bottom-color: rgba(255,255,255,.25);
+      border-radius: 8px;
+      background: rgba(0,0,0,.25);
+      display:inline-block;
+      margin:0 2px;
+      color:#dff4ff;
+    }
+    .note{
+      border-left:4px solid rgba(255,255,255,.18);
+      padding:10px 12px;
+      background: rgba(0,0,0,.12);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size:14px;
+    }
+    .schemaWrap{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+    .schema{
+      flex: 1 1 420px;
+      background: rgba(0,0,0,.14);
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      padding:12px;
+      overflow:hidden;
+    }
+    .schema figcaption{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:10px;
+    }
+    .formgrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width:680px){ .formgrid{grid-template-columns:1fr;} }
+    label{
+      display:block;
+      color:#d9edf7;
+      font-size:13px;
+      margin:0 0 6px;
+    }
+    input,select,textarea{
+      width:100%;
+      box-sizing:border-box;
+      background: rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius: 12px;
+      padding:12px 12px;
+      color:var(--text);
+      outline:none;
+      font-size:15px;
+    }
+    textarea{min-height:92px;resize:vertical;}
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .primary{
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      padding:12px 14px;
+      border-radius: 14px;
+      color:var(--text);
+      font-weight:700;
+    }
+    .ghost{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      padding:12px 14px;
+      border-radius: 14px;
+      color:var(--text);
+      font-weight:600;
+    }
+    .resultLine{
+      margin-top:12px;
+      padding:12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      font-size:13px;
+      color:#dff3ff;
+    }
+    .pill.ok{border-color: rgba(91,209,138,.45); background: rgba(91,209,138,.12);}
+    .pill.bad{border-color: rgba(255,107,107,.45); background: rgba(255,107,107,.12);}
+    .pill.warn{border-color: rgba(255,209,102,.45); background: rgba(255,209,102,.10);}
+    .mono{font-family:var(--mono);}
+    .small{font-size:12.5px;color:var(--muted);}
+    .math{
+      background: rgba(0,0,0,.12);
+      border:1px solid var(--line);
+      border-radius: 12px;
+      padding:10px 12px;
+      overflow:auto;
+    }
+  </style>
+
+  <!-- MathJax (формулы в математическом виде) -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="title">Пункт 7. Проверка передаточного числа по барометрической высоте</div>
+    <div class="subtitle">ВУАП-1 · Инженерная инструкция · Пошаговый контроль допусков</div>
+
+    <div class="navrow">
+      <span class="chip">ВУАП-1 · Пункт 7</span>
+      <a class="btn" href="index.html">← На главную</a>
+      <a class="btn" href="page-vuap-1.html">← Меню ВУАП-1</a>
+    </div>
+
+    <div class="card">
+      <h2>Условия проведения проверки</h2>
+      <div class="muted">Проверка выполняется по технологической карте.</div>
+    </div>
+
+    <div class="card">
+      <h2>7. Проверка передаточного числа по высоте барометрической</h2>
+
+      <div class="schemaWrap">
+        <figure class="schema">
+          <!-- Схема подключения: Высотомер – КЗВ – КПУ-3 (вместо водяного манометра) -->
+          <svg viewBox="0 0 860 340" width="100%" height="auto" aria-label="Схема подключения высотомера, КПУ-3 и КЗВ">
+            <defs>
+              <style>
+                .b{fill:rgba(255,255,255,.05);stroke:rgba(255,255,255,.25);stroke-width:3;rx:16;ry:16;}
+                .t{fill:#eaf6ff;font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-weight:700; font-size:26px;}
+                .s{fill:#a9c0cd;font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size:16px;}
+                .p{stroke:rgba(255,255,255,.35);stroke-width:8;fill:none;stroke-linecap:round;}
+              </style>
+            </defs>
+
+            <!-- Blocks -->
+            <rect class="b" x="40" y="60" width="250" height="120"></rect>
+            <text class="t" x="165" y="110" text-anchor="middle">Высотомер</text>
+            <text class="s" x="165" y="142" text-anchor="middle">(диапазон 270–330 м)</text>
+
+            <rect class="b" x="570" y="60" width="250" height="120"></rect>
+            <text class="t" x="695" y="118" text-anchor="middle">КЗВ</text>
+
+            <rect class="b" x="325" y="205" width="210" height="110"></rect>
+            <text class="t" x="430" y="255" text-anchor="middle">КПУ-3</text>
+
+            <!-- Pipes -->
+            <path class="p" d="M290 120 L390 120 L390 205"></path>
+            <path class="p" d="M570 120 L470 120 L470 205"></path>
+          </svg>
+          <figcaption>Рис. 6. Подключение КПУ-3 к высотомеру и к КЗВ при проверке передаточного числа по высоте.</figcaption>
+        </figure>
+
+        <div style="flex:1 1 360px;">
+          <div class="note">
+            <div><b>Примечание.</b> В случае использования водяного (или спиртового при t ниже 0°С) манометра учитывают коэффициент перевода миллиметров столба в метры высоты:</div>
+            <div class="hr"></div>
+            <div class="math">
+              \(k_{\text{вод.}} = 0{,}83 \ \dfrac{\text{м высоты}}{\text{мм вод. ст.}}\) <br/>
+              \(k_{\text{спирт.}} = 0{,}65 \ \dfrac{\text{м высоты}}{\text{мм спирт. ст.}}\)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <h3>Содержание операций</h3>
+      <ul>
+        <li>Подсоединить к КЗВ установку КПУ-3 с высотомером, оттарированным по водяному манометру в диапазоне 270–330 м (или водяным манометром) и создать при помощи КПУ-3 разрежение, соответствующее высоте 300 м.</li>
+        <li>Нажать кнопку-табло <span class="kbd">«ВКЛ»</span> на пульте управления канала высоты.</li>
+        <li>Поворотом потенциометра <span class="kbd">«ЦЕНТР»</span> на пульте управления канала высоты установить стрелку индикатора нулевого в среднее положение.</li>
+        <li>Плавным изменением разрежения на спуск (подъём) отклонить шток малого цилиндра агрегата, совместив стрелку индикатора нулевого с промежуточной отметкой, и заметить по высотомеру (или манометру) изменение высоты от исходного положения и направление отклонения стрелки индикатора нулевого.</li>
+        <li>При изменении высоты на спуск (подъём) стрелка индикатора нулевого должна отклоняться вверх (вниз).</li>
+        <li>Полученное значение высоты и передаточное число должны соответствовать техническим требованиям.</li>
+        <li>Передаточное число по высоте, пересчитанное в % от хода штока малого цилиндра до упора от застопоренного положения на метр высоты, подсчитать по формуле.</li>
+        <li>Отключить канал высоты кнопкой-табло <span class="kbd">«ОТКЛ»</span> на пульте управления канала высоты.</li>
+      </ul>
+
+      <div class="hr"></div>
+
+      <div class="grid">
+        <div class="ttbox">
+          <h3>Технические требования (ТТ)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Параметр</th>
+                <th>Норма</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Изменение задаваемой высоты, \(\Delta H\), м</td>
+                <td class="mono">13 (+9 / −3,5)</td>
+              </tr>
+              <tr>
+                <td>Передаточное число, \(i\), %/м</td>
+                <td class="mono">5 ± 2</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="hr"></div>
+
+          <h3>Формула</h3>
+          <div class="math">
+            \( i = \dfrac{66{,}7}{\Delta H} \ \left(\dfrac{\%}{\text{м}}\right) \)
+          </div>
+          <div class="small" style="margin-top:10px;">
+            где: \(i\) — передаточное число по высоте; \(66{,}7\%\) — величина хода штока малого цилиндра рулевого агрегата от застопоренного положения; \(\Delta H\) — изменение задаваемой высоты.
+          </div>
+        </div>
+
+        <div class="ttbox">
+          <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+          <ul>
+            <li>Отключить и вновь включить канал высоты кнопками-табло <span class="kbd">«ОТКЛ»</span> и <span class="kbd">«ВКЛ»</span> на пульте управления канала высоты.</li>
+            <li>Поворотом потенциометра <span class="kbd">«ЦЕНТР»</span> на пульте управления установить стрелку индикатора нулевого в среднее положение.</li>
+            <li>Изменить разрежение от исходного значения 300 м на спуск на величину 13 м и поворотом подстроечного резистора <span class="kbd">«ВЫС»</span> на пульте управления канала высоты добиться того, чтобы стрелка индикатора нулевого совместилась с верхней промежуточной отметкой.</li>
+            <li>Плавно меняя разрежение в сторону подъёма (увеличения высоты), совместить стрелку индикатора нулевого с нижней промежуточной отметкой.</li>
+            <li>Изменение высоты от исходного значения должно быть в пределах: <span class="mono">13 (+9 / −3,5) м</span>.</li>
+            <li>Отключить канал высоты кнопкой-табло <span class="kbd">«ОТКЛ»</span> на пульте управления канала высоты.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Фиксация результата (в программу)</h2>
+
+      <div class="formgrid">
+        <div>
+          <label for="channel">Канал</label>
+          <select id="channel">
+            <option value="h">Высота (барометрическая)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="direction">Направление изменения высоты</label>
+          <select id="direction">
+            <option value="">— выбрать —</option>
+            <option value="descent">Спуск (уменьшение высоты)</option>
+            <option value="climb">Подъём (увеличение высоты)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="dh">Изменение высоты, ΔH (м)</label>
+          <input id="dh" inputmode="decimal" placeholder="например: 13" />
+        </div>
+
+        <div>
+          <label for="arrow">Отклонение стрелки индикатора нулевого при изменении высоты</label>
+          <select id="arrow">
+            <option value="">— выбрать —</option>
+            <option value="up">Вверх</option>
+            <option value="down">Вниз</option>
+          </select>
+          <div class="small" style="margin-top:8px;">
+            По технологии: при <b>спуске</b> — стрелка вверх; при <b>подъёме</b> — стрелка вниз.
+          </div>
+        </div>
+
+        <div>
+          <label for="i">Передаточное число, i (%/м) — расчёт</label>
+          <input id="i" class="mono" readonly placeholder="автоматически" />
+        </div>
+
+        <div>
+          <label for="comment">Примечание / комментарий</label>
+          <textarea id="comment" placeholder="если есть"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="calcBtn">Рассчитать и проверить ТТ</button>
+        <button class="ghost" id="resetBtn">Сброс</button>
+      </div>
+
+      <div class="resultLine" id="resultLine" style="display:none;">
+        <span class="pill" id="pillDh"></span>
+        <span class="pill" id="pillI"></span>
+        <span class="pill" id="pillArrow"></span>
+        <span class="pill" id="pillTotal"></span>
+      </div>
+
+      <div class="small" style="margin-top:10px;">
+        Нормы: \(\Delta H = 13^{+9}_{-3{,}5}\) м; \(i = 5 \pm 2\) %/м.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Нормы по ТТ:
+    // ΔH: 13 (+9 / −3.5) => min 9.5, max 22
+    // i: 5 ± 2 => min 3, max 7
+    const TT = {
+      dhMin: 9.5,
+      dhMax: 22.0,
+      iMin: 3.0,
+      iMax: 7.0
+    };
+
+    const elDh = document.getElementById('dh');
+    const elI  = document.getElementById('i');
+    const elDir = document.getElementById('direction');
+    const elArrow = document.getElementById('arrow');
+
+    const line = document.getElementById('resultLine');
+    const pillDh = document.getElementById('pillDh');
+    const pillI = document.getElementById('pillI');
+    const pillArrow = document.getElementById('pillArrow');
+    const pillTotal = document.getElementById('pillTotal');
+
+    function setPill(el, text, state){
+      el.textContent = text;
+      el.classList.remove('ok','bad','warn');
+      el.classList.add('pill');
+      if(state) el.classList.add(state);
+    }
+
+    function parseNum(v){
+      if(typeof v !== 'string') return NaN;
+      v = v.trim().replace(',', '.');
+      if(!v) return NaN;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function check(){
+      const dh = parseNum(elDh.value);
+      const dir = elDir.value;
+      const arrow = elArrow.value;
+
+      let okDh = false, okI = false, okArrow = false;
+
+      // Расчет i
+      let i = NaN;
+      if(Number.isFinite(dh) && dh > 0){
+        i = 66.7 / dh;
+        elI.value = i.toFixed(2);
+      }else{
+        elI.value = '';
+      }
+
+      // Проверка ΔH
+      if(Number.isFinite(dh)){
+        okDh = (dh >= TT.dhMin && dh <= TT.dhMax);
+        setPill(
+          pillDh,
+          `ΔH = ${dh.toFixed(2)} м (норма ${TT.dhMin}…${TT.dhMax})`,
+          okDh ? 'ok' : 'bad'
+        );
+      }else{
+        setPill(pillDh, 'ΔH: нет значения', 'warn');
+      }
+
+      // Проверка i
+      if(Number.isFinite(i)){
+        okI = (i >= TT.iMin && i <= TT.iMax);
+        setPill(
+          pillI,
+          `i = ${i.toFixed(2)} %/м (норма ${TT.iMin}…${TT.iMax})`,
+          okI ? 'ok' : 'bad'
+        );
+      }else{
+        setPill(pillI, 'i: нет расчёта', 'warn');
+      }
+
+      // Проверка направления стрелки
+      // По технологии: при спуске — вверх; при подъеме — вниз.
+      if(dir && arrow){
+        okArrow = (dir === 'descent' && arrow === 'up') || (dir === 'climb' && arrow === 'down');
+        const want = (dir === 'descent') ? 'вверх' : 'вниз';
+        setPill(
+          pillArrow,
+          `Стрелка: выбрано «${arrow === 'up' ? 'вверх' : 'вниз'}», ожидается «${want}»`,
+          okArrow ? 'ok' : 'bad'
+        );
+      }else{
+        setPill(pillArrow, 'Стрелка/направление: не выбрано', 'warn');
+      }
+
+      const totalOk = okDh && okI && okArrow;
+      setPill(pillTotal, totalOk ? 'ИТОГ: ПРОХОДИТ' : 'ИТОГ: НЕ ПРОХОДИТ', totalOk ? 'ok' : 'bad');
+
+      line.style.display = 'flex';
+    }
+
+    document.getElementById('calcBtn').addEventListener('click', check);
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('channel').value = 'h';
+      elDir.value = '';
+      elArrow.value = '';
+      elDh.value = '';
+      elI.value = '';
+      document.getElementById('comment').value = '';
+      line.style.display = 'none';
+    });
+
+    // Авто-пересчет i при вводе ΔH (без автопроверки)
+    elDh.addEventListener('input', () => {
+      const dh = parseNum(elDh.value);
+      if(Number.isFinite(dh) && dh > 0){
+        elI.value = (66.7 / dh).toFixed(2);
+      }else{
+        elI.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
