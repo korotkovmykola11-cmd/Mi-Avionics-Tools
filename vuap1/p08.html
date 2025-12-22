@@ -3,380 +3,952 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Р08 — Проверка передаточного числа по угловой скорости</title>
-
+  <title>Р08 — Проверка передаточного числа по угловой скорости (ВУАП-1)</title>
   <style>
     :root{
-      --ink:#111;
-      --muted:#555;
-      --line:#111;
-      --bg:#fff;
-      --pad:12px;
+      --bg:#0b1220;
+      --panel:#101a2f;
+      --panel2:#0f1a33;
+      --card:#111c34;
+      --line:rgba(255,255,255,.10);
+      --text:#e9eefc;
+      --muted:rgba(233,238,252,.72);
+      --accent:#6ea8ff;
+      --ok:#2dd4bf;
+      --bad:#fb7185;
+      --warn:#fbbf24;
+      --shadow:0 12px 32px rgba(0,0,0,.35);
+      --radius:14px;
+      --radius2:18px;
+      --pad:16px;
+      --pad2:18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
     }
-    *{box-sizing:border-box}
+
+    html,body{height:100%;}
     body{
       margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:"Times New Roman", Times, serif;
-      font-size:16px;
-      line-height:1.25;
+      font-family:var(--sans);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(110,168,255,.15), transparent 70%),
+        radial-gradient(1000px 700px at 90% 10%, rgba(45,212,191,.10), transparent 65%),
+        var(--bg);
+      color:var(--text);
     }
-    .page{
-      max-width:1100px;
-      margin:0 auto;
-      padding:22px 14px 40px;
+
+    a{color:var(--accent); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 14px 60px;}
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      background:linear-gradient(180deg, rgba(17,28,52,.85), rgba(16,26,47,.85));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius2);
+      padding:14px 16px;
+      position:sticky; top:10px; z-index:50;
+      backdrop-filter: blur(8px);
     }
-    h1,h2,h3{margin:0; font-weight:700; text-align:center}
-    h1{font-size:22px; letter-spacing:.2px}
-    h2{font-size:20px; margin-top:6px}
-    .subtitle{
-      text-align:center;
-      margin-top:6px;
-      font-size:14px;
+    .brand{display:flex; flex-direction:column; gap:2px;}
+    .brand .t1{font-weight:800; letter-spacing:.4px;}
+    .brand .t2{font-size:12px; color:var(--muted);}
+    .navbtns{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:650;
+      letter-spacing:.2px;
+    }
+    .btn:hover{background:rgba(255,255,255,.06);}
+    .btn.primary{border-color:rgba(110,168,255,.35); background:rgba(110,168,255,.10);}
+    .btn.ghost{background:transparent;}
+    .btn:disabled{opacity:.55; cursor:not-allowed;}
+
+    .h1{
+      margin:18px 6px 10px;
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0 6px 16px;
       color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
     }
 
+    .grid{display:grid; grid-template-columns:1fr; gap:14px;}
+    @media (min-width: 900px){
+      .grid{grid-template-columns: 1.35fr .65fr;}
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(17,28,52,.92), rgba(16,26,47,.92));
+      border:1px solid var(--line);
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+      padding:var(--pad2);
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .card p, .card li{color:var(--muted); line-height:1.35;}
+    .card ul{margin:8px 0 0 18px; padding:0;}
+    .hr{height:1px; background:var(--line); margin:14px 0;}
+
+    .imgrow{display:grid; grid-template-columns:1fr; gap:10px;}
+    @media (min-width: 900px){
+      .imgrow{grid-template-columns:1fr 1fr;}
+    }
     figure{
-      margin:14px auto;
-      padding:0;
-      max-width:980px;
+      margin:0;
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      background:rgba(0,0,0,.15);
     }
-    figure img{
-      width:100%;
-      height:auto;
-      display:block;
-      border:1px solid #bbb;
-    }
+    figure img{width:100%; height:auto; display:block;}
     figcaption{
-      text-align:center;
-      font-size:14px;
-      margin-top:6px;
+      font-size:12px; padding:10px 12px; color:var(--muted);
+      border-top:1px solid var(--line);
     }
 
-    .note{
-      max-width:980px;
-      margin:8px auto 18px;
+    .sectionTitle{
+      margin:14px 0 6px;
       font-size:14px;
-      color:var(--ink);
+      font-weight:900;
+      letter-spacing:.2px;
+      display:flex; align-items:center; gap:10px;
     }
-
-    /* Main table */
-    .table-wrap{
-      overflow-x:auto;
-      max-width:100%;
+    .tag{
+      font-size:11px;
+      padding:5px 9px;
+      border-radius:999px;
       border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,.03);
+      font-weight:750;
     }
-    table.main{
-      width:100%;
-      min-width:980px; /* чтобы не “ломало” колонки в вертикальные буквы */
-      border-collapse:collapse;
-      table-layout:fixed;
-    }
-    table.main th, table.main td{
+
+    .test{
       border:1px solid var(--line);
-      vertical-align:top;
-      padding:10px 10px;
-      font-size:14px;
+      border-radius:16px;
+      padding:14px;
+      background:rgba(0,0,0,.08);
+      margin-top:10px;
     }
-    table.main th{
-      text-align:center;
-      font-weight:700;
+    .testHeader{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .testHeader .name{font-weight:900;}
+    .testHeader .small{font-size:12px; color:var(--muted); margin-top:2px;}
+    .badge{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .badge.wait{color:var(--muted);}
+    .badge.ok{color:var(--ok); border-color:rgba(45,212,191,.35); background:rgba(45,212,191,.08);}
+    .badge.bad{color:var(--bad); border-color:rgba(251,113,133,.35); background:rgba(251,113,133,.08);}
+
+    .cols{display:grid; grid-template-columns:1fr; gap:12px;}
+    @media(min-width:900px){
+      .cols{grid-template-columns: 1.1fr .9fr;}
     }
 
-    /* Column widths */
-    col.c1{width:44%}
-    col.c2{width:28%}
-    col.c3{width:28%}
-
-    .sec-title{
-      font-weight:700;
-      margin-bottom:6px;
-    }
-    ol{margin:6px 0 0 18px; padding:0}
-    li{margin:4px 0}
-    .muted{color:var(--muted)}
-    .ref{white-space:nowrap}
-    .kbd{font-weight:700}
-
-    /* TT mini tables */
-    table.tt{
-      width:100%;
-      border-collapse:collapse;
-      table-layout:fixed;
-      margin:6px 0 8px;
+    .ttBox{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,.02);
       font-size:13px;
     }
-    table.tt th, table.tt td{
-      border:1px solid var(--line);
-      padding:6px 6px;
-      text-align:center;
-      vertical-align:middle;
-    }
-    table.tt th{font-weight:700}
+    .ttBox .mono{font-family:var(--mono); color:var(--text);}
+    .ttBox .muted{color:var(--muted);}
 
-    .formula{
+    .form{
       border:1px solid var(--line);
-      padding:8px 10px;
-      margin-top:6px;
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,.02);
     }
-    .formula .eq{
-      text-align:center;
-      font-size:16px;
-      margin:6px 0;
+    .row{display:grid; grid-template-columns: 1fr; gap:10px;}
+    @media(min-width:650px){
+      .row{grid-template-columns: 1fr 1fr;}
     }
-    .small{font-size:13px}
-    .tight{margin-top:4px}
-
-    .check{
-      border-top:1px solid #999;
-      margin-top:10px;
-      padding-top:8px;
-    }
-    .check:first-child{
-      border-top:none;
-      margin-top:0;
-      padding-top:0;
-    }
-    .check h4{
-      margin:0 0 6px;
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
+    input, select, textarea{
+      width:100%;
+      box-sizing:border-box;
+      background:rgba(0,0,0,.25);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 10px;
+      outline:none;
       font-size:14px;
-      font-weight:700;
+    }
+    textarea{min-height:70px; resize:vertical;}
+    input::placeholder{color:rgba(233,238,252,.35);}
+
+    .formActions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .statusLine{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px dashed rgba(255,255,255,.18);
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .summary table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid var(--line);
+    }
+    .summary th, .summary td{
+      padding:10px 10px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+    }
+    .summary th{color:var(--muted); font-weight:900; background:rgba(255,255,255,.03);}
+    .summary tr:last-child td{border-bottom:none;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      font-weight:900;
+    }
+    .dot{width:8px; height:8px; border-radius:50%;}
+    .dot.wait{background:var(--muted);}
+    .dot.ok{background:var(--ok);}
+    .dot.bad{background:var(--bad);}
+
+    .footnote{
+      font-size:12px; color:var(--muted); margin-top:12px;
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <h1>ТЕХНОЛОГИЧЕСКАЯ КАРТА № 2</h1>
-    <h2>Р08 — Проверка передаточного числа по угловой скорости</h2>
-    <div class="subtitle">(оформление: 3 колонки — «Содержание операций» / «Технические требования (ТТ)» / «Работы при отклонениях от ТТ»)</div>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="t1">ВУАП-1</div>
+        <div class="t2">Инженерная инструкция · Пошаговый контроль допусков</div>
+      </div>
+      <div class="navbtns">
+        <button class="btn ghost" id="btnHome">← На главную</button>
+        <button class="btn primary" id="btnThis">Р08</button>
+        <button class="btn" id="btnNext">Следующий пункт →</button>
+      </div>
+    </header>
 
-    <!-- Рисунки (ИМЕННО 29.JPEG и 36.JPEG) -->
-    <figure>
-      <img src="./29.JPEG" alt="Рис. 6. Крепление датчика угловых скоростей на поворотной установке" />
-      <figcaption><b>Рис. 6.</b> Крепление датчика угловых скоростей на поворотной установке.</figcaption>
-    </figure>
-
-    <div class="note">
-      <b>Ориентация по рисунку:</b> знак «↑» на датчике — <b>сверху</b>.
-      <b>Направление вращения:</b> «правый разворот / правый крен» — согласно стрелке на установке.
-      <span class="muted">Указание по крепежу: кронштейн 6С4.132.020.</span>
+    <div class="h1">Р08 — Проверка передаточного числа по угловой скорости</div>
+    <div class="sub">
+      Формат: ВУАП-1 (тёмный интерфейс + фиксация результата).<br>
+      Структура проверок: <b>направление — 2</b>, <b>крен — 2</b>, <b>тангаж — 1</b>.
     </div>
 
-    <figure>
-      <img src="./36.JPEG" alt="Рис. 7. Крепление гировертикали на поворотной установке при проверке канала тангажа" />
-      <figcaption><b>Рис. 7.</b> Крепление гировертикали на поворотной установке при проверке передаточного числа по угловой скорости в канале тангажа (пикирование/кабрирование).</figcaption>
-    </figure>
+    <div class="grid">
+      <!-- LEFT COLUMN -->
+      <div>
 
-    <div class="table-wrap">
-      <table class="main">
-        <colgroup>
-          <col class="c1"><col class="c2"><col class="c3">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Содержание операций</th>
-            <th>Технические требования (ТТ)</th>
-            <th>Работы, выполняемые при отклонениях от ТТ</th>
-          </tr>
-        </thead>
+        <section class="card">
+          <h2>Условия проведения проверки</h2>
+          <ul>
+            <li>Проверка выполняется при включённой наземной гидроустановке.</li>
+            <li>Поворотная установка обеспечивает плавное изменение угловой скорости в диапазоне 0–20 град/сек.</li>
+            <li>Подключение — через технологические удлинительные жгуты.</li>
+            <li>Ориентация датчиков и направление вращения — согласно рис. 6 и 7.</li>
+          </ul>
+        </section>
 
-        <tbody>
-          <!-- ===================== -->
-          <!-- a) КАНАЛ НАПРАВЛЕНИЯ  -->
-          <!-- ===================== -->
-          <tr>
-            <td>
-              <div class="sec-title">а) Канал направления</div>
-              <ol>
-                <li>Снять с вертолёта датчик угловых скоростей направления <b>ДУСУ1-18АС</b> и установить его на поворотную установку, обеспечивающую плавное изменение угловой скорости в диапазоне <b>0–20 град/сек</b> (<span class="ref">рис. 6</span>).</li>
-                <li>С помощью удлинительного жгута <b>изд. 606.640.046-1</b> соединить датчик с фидерной схемой вертолёта.</li>
-                <li>Выключатель <b>V3</b> в технологическом переходном жгуте <b class="ref">24-71-00-70</b> установить в положение <b>«ω<sub>y</sub>»</b>.</li>
-                <li>Нажать кнопку-табло <span class="kbd">«ВКЛ»</span> на пульте управления каналом направления и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение.</li>
-                <li>Задать вращение установки, соответствующее правому (левому) развороту, и плавно изменяя скорость вращения, отклонить шток малого цилиндра рулевого агрегата до положения, при котором стрелка индикатора нулевого совместится с промежуточной отметкой.</li>
-                <li>Измерить секундомером скорость вращения установки.</li>
-              </ol>
-            </td>
+        <section class="card">
+          <h2>Иллюстрации</h2>
+          <div class="imgrow">
+            <figure>
+              <img src="./29.JPEG" alt="Рис. 6" loading="lazy">
+              <figcaption><b>Рис. 6.</b> Крепление датчика угловых скоростей на поворотной установке.</figcaption>
+            </figure>
+            <figure>
+              <img src="./36.JPEG" alt="Рис. 7" loading="lazy">
+              <figcaption><b>Рис. 7.</b> Крепление гирровертикали при проверке канала тангажа (пикирование/кабрирование).</figcaption>
+            </figure>
+          </div>
+          <div class="footnote">
+            Если изображения не показываются: проверь регистр имени файла (например <span style="font-family:var(--mono)">29.JPEG</span>, а не <span style="font-family:var(--mono)">29.jpeg</span>).
+          </div>
+        </section>
 
-            <td>
-              <!-- Проверка 1 -->
-              <div class="check">
-                <h4>Проверка 1: передаточное число по угловой скорости в канале направления</h4>
-                <table class="tt">
-                  <tr>
-                    <th>Задаваемая угловая скорость, град/сек</th>
-                    <th>Передаточное число, % / (град/сек)</th>
-                  </tr>
-                  <tr>
-                    <td>3,5 <span class="small">(+2,1 / −1,1)</span></td>
-                    <td>20 ± 8</td>
-                  </tr>
-                </table>
+        <!-- CHANNEL: DIRECTION -->
+        <section class="card">
+          <div class="sectionTitle">Канал направления <span class="tag">2 проверки</span></div>
 
-                <div class="formula small">
-                  <div><b>Расчёт передаточного числа:</b></div>
-                  <div class="eq"><b>μ = 66,7 / ω</b></div>
-                  <div class="tight">
-                    где: <b>μ</b> — передаточное число по угловой скорости;<br/>
-                    <b>66,7</b> — величина хода штока малого цилиндра рулевого агрегата от застопоренного положения, %;<br/>
-                    <b>ω</b> — задаваемая угловая скорость, град/сек.
+          <!-- Test 1 -->
+          <div class="test" data-test="dir_w">
+            <div class="testHeader">
+              <div>
+                <div class="name">Проверка 1 — Передаточное число по угловой скорости (канал направления)</div>
+                <div class="small">ω = 3,5 (+2,1/−1,1) град/сек · μ = 20 ± 8 %/(град/сек)</div>
+              </div>
+              <div class="badge wait" id="badge_dir_w">ОЖИДАЕТ</div>
+            </div>
+
+            <div class="cols">
+              <div class="ttBox">
+                <div class="muted"><b>Содержание операций</b></div>
+                <ol class="muted" style="margin:8px 0 0 18px;">
+                  <li>Снять ДУСУ1-18АС (направления) и установить на поворотную установку (0–20 град/сек), см. рис. 6.</li>
+                  <li>Удлинительным жгутом 6С8.640.046-1 соединить датчик с бортовой схемой.</li>
+                  <li>Выключатель В3 в жгуте 24-7100-70 поставить в положение «ω».</li>
+                  <li>Нажать «ВКЛ» канала направления, ручкой центровки поставить стрелку нулевого в среднее.</li>
+                  <li>Задать вращение (правый/левый разворот), плавно меняя скорость, совместить стрелку с промежуточной отметкой.</li>
+                  <li>Измерить секундомером скорость вращения установки.</li>
+                  <li>Поменять направление вращения и проверить симметричность отклонений.</li>
+                </ol>
+                <div class="hr"></div>
+                <div class="muted"><b>Работы при отклонениях от ТТ</b></div>
+                <ul class="muted">
+                  <li>Отключить/включить канал «ОТКЛ»/«ВКЛ».</li>
+                  <li>Ручкой центровки выставить среднее положение стрелки.</li>
+                  <li>При ω=3,5 град/сек подстроечным резистором «Скор» добиться совпадения стрелки с отметкой.</li>
+                  <li>Проверить симметричность при обратном направлении.</li>
+                </ul>
+              </div>
+
+              <div class="form">
+                <div class="muted"><b>Фиксация результата</b></div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Измеренная угловая скорость ω, град/сек</label>
+                    <input id="dir_w_omega" type="number" step="0.1" placeholder="например 3.5">
+                  </div>
+                  <div>
+                    <label>Измеренное передаточное число μ, %/(град/сек)</label>
+                    <input id="dir_w_mu" type="number" step="0.1" placeholder="например 20">
                   </div>
                 </div>
-              </div>
 
-              <!-- Проверка 2 -->
-              <div class="check">
-                <h4>Проверка 2: передаточное число в канале направления в режиме управления по курсу</h4>
-                <table class="tt">
-                  <tr>
-                    <th>Задаваемая угловая скорость, град/сек</th>
-                    <th>Передаточное число, % / (град/сек)</th>
-                  </tr>
-                  <tr>
-                    <td>6,5 <span class="small">(+6,5 / −2,0)</span></td>
-                    <td>10 ± 8</td>
-                  </tr>
-                </table>
-              </div>
-            </td>
-
-            <td>
-              <div class="check">
-                <h4>При отклонениях от ТТ (для обеих проверок канала направления)</h4>
-                <ol>
-                  <li>Отключить и вновь включить канал направления кнопками-табло <span class="kbd">«ОТКЛ»</span> и <span class="kbd">«ВКЛ»</span> на пульте управления.</li>
-                  <li>Поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение.</li>
-                  <li>Задать вращение установки со скоростью <b>3,5 град/сек</b> и поворотом подстроечного резистора <b>«Скор»</b> на пульте управления добиться совмещения стрелки индикатора нулевого с левой промежуточной отметкой.</li>
-                  <li>Изменить направление вращения установки и проверить симметричность отклонения.</li>
-                </ol>
-              </div>
-            </td>
-          </tr>
-
-          <!-- ===================== -->
-          <!-- б) КАНАЛ КРЕНА        -->
-          <!-- ===================== -->
-          <tr>
-            <td>
-              <div class="sec-title">б) Канал крена</div>
-              <ol>
-                <li>Снять с вертолёта датчик угловых скоростей крена <b>ДУСУ-18АС</b> и установить его на поворотную установку (<span class="ref">рис. 6</span>).</li>
-                <li>Соединить датчик с фидерной схемой вертолёта удлинительным жгутом <b>606.640.046-1</b>.</li>
-                <li>Нажать кнопку-табло <span class="kbd">«ВКЛ»</span> на пульте управления канала крена и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение.</li>
-                <li>Задать вращение установки вправо (влево) и выполнить проверку аналогично каналу направления.</li>
-              </ol>
-            </td>
-
-            <td>
-              <!-- Проверка 1 -->
-              <div class="check">
-                <h4>Проверка 1: передаточное число по угловой скорости в канале крена</h4>
-                <table class="tt">
-                  <tr>
-                    <th>Задаваемая угловая скорость, град/сек</th>
-                    <th>Передаточное число, % / (град/сек)</th>
-                  </tr>
-                  <tr>
-                    <td>8 <span class="small">(+6 / −2)</span></td>
-                    <td>8 ± 3,2</td>
-                  </tr>
-                </table>
-              </div>
-
-              <!-- Проверка 2 -->
-              <div class="check">
-                <h4>Проверка 2: передаточное число в канале крена в режиме управления по крену</h4>
-                <table class="tt">
-                  <tr>
-                    <th>Задаваемая угловая скорость, град/сек</th>
-                    <th>Передаточное число, % / (град/сек)</th>
-                  </tr>
-                  <tr>
-                    <td>17 <span class="small">(+16,5 / −8)</span></td>
-                    <td>4 ± 2</td>
-                  </tr>
-                </table>
-              </div>
-            </td>
-
-            <td>
-              <div class="check">
-                <h4>При отклонениях от ТТ (канал крена)</h4>
-                <div class="small">
-                  Подрегулировать передаточное число по методике, описанной для канала направления, используя кнопки-табло
-                  <span class="kbd">«ВКЛ»</span>, <span class="kbd">«ОТКЛ»</span>, шкалу ручки центровки и потенциометр <b>«Скор»</b> на пульте управления канала крена.
-                </div>
-              </div>
-            </td>
-          </tr>
-
-          <!-- ===================== -->
-          <!-- в) КАНАЛ ТАНГАЖА      -->
-          <!-- ===================== -->
-          <tr>
-            <td>
-              <div class="sec-title">в) Канал тангажа</div>
-              <ol>
-                <li>Снять с вертолёта гировертикаль и установить её на поворотную установку (<span class="ref">рис. 7</span>).</li>
-                <li>Соединить гировертикаль с фидерной схемой вертолёта с помощью удлинительного жгута <b>606.863.467-1</b>.</li>
-                <li>Выключатель <b>V2</b> в технологическом жгуте <b class="ref">24-71-00-70</b> установить в положение <b>«ω<sub>z</sub>»</b>.</li>
-                <li>Нажать кнопку-табло <span class="kbd">«ВКЛ»</span> на пульте управления канала тангажа и потенциометром <b>«ЦЕНТР»</b> установить стрелку индикатора нулевого в среднее положение.</li>
-                <li>Задать вращение установки (пикирование/кабрирование) и выполнить проверку по методике канала направления.</li>
-              </ol>
-
-              <div class="small muted" style="margin-top:8px">
-                Примечание: при вращении на пикирование (кабрирование) стрелка индикатора нулевого должна отклоняться
-                вверх; при кабрировании — вниз.
-              </div>
-            </td>
-
-            <td>
-              <div class="check">
-                <h4>Передаточное число по угловой скорости в канале тангажа</h4>
-                <table class="tt">
-                  <tr>
-                    <th>Задаваемая угловая скорость, град/сек</th>
-                    <th>Передаточное число, % / (град/сек)</th>
-                  </tr>
-                  <tr>
-                    <td>3,5 <span class="small">(+2,1 / −1,1)</span></td>
-                    <td>20 ± 8</td>
-                  </tr>
-                </table>
-
-                <div class="formula small">
-                  <div><b>Расчёт передаточного числа:</b></div>
-                  <div class="eq"><b>μ = 66,7 / ω</b></div>
-                  <div class="tight">
-                    где: <b>μ</b> — передаточное число по угловой скорости;<br/>
-                    <b>66,7</b> — величина хода штока малого цилиндра рулевого агрегата от застопоренного положения, %;<br/>
-                    <b>ω</b> — задаваемая угловая скорость, град/сек.
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Комментарий (опционально)</label>
+                    <textarea id="dir_w_note" placeholder="заметки/условия/особенности"></textarea>
+                  </div>
+                  <div>
+                    <label>Результат (ручной выбор)</label>
+                    <select id="dir_w_manual">
+                      <option value="">— не выбрано —</option>
+                      <option value="ok">Соответствует ТТ</option>
+                      <option value="bad">Не соответствует ТТ</option>
+                    </select>
+                    <div class="footnote">Можно не выбирать — статус выставится по кнопке “Проверить ТТ”.</div>
                   </div>
                 </div>
+
+                <div class="formActions">
+                  <button class="btn primary" data-action="check">Проверить ТТ</button>
+                  <button class="btn" data-action="save">Сохранить</button>
+                  <button class="btn" data-action="reset">Сброс</button>
+                </div>
+
+                <div class="statusLine" id="status_dir_w">ОЖИДАЕТ: внеси значения и нажми “Проверить ТТ”.</div>
               </div>
-            </td>
+            </div>
+          </div>
 
-            <td>
-              <div class="check">
-                <h4>При отклонениях от ТТ (канал тангажа)</h4>
-                <ol>
-                  <li>Отключить и вновь включить канал тангажа кнопками-табло <span class="kbd">«ОТКЛ»</span> и <span class="kbd">«ВКЛ»</span> на пульте управления.</li>
-                  <li>Потенциометром <b>«ЦЕНТР»</b> установить стрелку индикатора нулевого в среднее положение.</li>
-                  <li>Поворотом потенциометра <b>«Скор»</b> добиться выполнения ТТ при соответствующем направлении вращения.</li>
-                </ol>
+          <!-- Test 2 -->
+          <div class="test" data-test="dir_course">
+            <div class="testHeader">
+              <div>
+                <div class="name">Проверка 2 — Передаточное число (канал направления) в режиме управления по курсу</div>
+                <div class="small">ω = 6,5 (+6,5/−2,0) град/сек · μ = 10 ± 8 %/(град/сек)</div>
               </div>
-            </td>
-          </tr>
+              <div class="badge wait" id="badge_dir_course">ОЖИДАЕТ</div>
+            </div>
 
-        </tbody>
-      </table>
+            <div class="cols">
+              <div class="ttBox">
+                <div class="muted"><b>Методика</b></div>
+                <p class="muted" style="margin:8px 0 0;">
+                  Выполняется аналогично проверке 1 для канала направления, но фиксируется режим управления по курсу.
+                </p>
+              </div>
+
+              <div class="form">
+                <div class="muted"><b>Фиксация результата</b></div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Измеренная угловая скорость ω, град/сек</label>
+                    <input id="dir_course_omega" type="number" step="0.1" placeholder="например 6.5">
+                  </div>
+                  <div>
+                    <label>Измеренное передаточное число μ, %/(град/сек)</label>
+                    <input id="dir_course_mu" type="number" step="0.1" placeholder="например 10">
+                  </div>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Комментарий (опционально)</label>
+                    <textarea id="dir_course_note"></textarea>
+                  </div>
+                  <div>
+                    <label>Результат (ручной выбор)</label>
+                    <select id="dir_course_manual">
+                      <option value="">— не выбрано —</option>
+                      <option value="ok">Соответствует ТТ</option>
+                      <option value="bad">Не соответствует ТТ</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="formActions">
+                  <button class="btn primary" data-action="check">Проверить ТТ</button>
+                  <button class="btn" data-action="save">Сохранить</button>
+                  <button class="btn" data-action="reset">Сброс</button>
+                </div>
+
+                <div class="statusLine" id="status_dir_course">ОЖИДАЕТ.</div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- CHANNEL: ROLL -->
+        <section class="card">
+          <div class="sectionTitle">Канал крена <span class="tag">2 проверки</span></div>
+
+          <!-- Test 3 -->
+          <div class="test" data-test="roll_w">
+            <div class="testHeader">
+              <div>
+                <div class="name">Проверка 3 — Передаточное число по угловой скорости (канал крена)</div>
+                <div class="small">ω = 8 (+6/−2) град/сек · μ = 8 ± 3,2 %/(град/сек)</div>
+              </div>
+              <div class="badge wait" id="badge_roll_w">ОЖИДАЕТ</div>
+            </div>
+
+            <div class="cols">
+              <div class="ttBox">
+                <div class="muted"><b>Методика</b></div>
+                <p class="muted" style="margin:8px 0 0;">
+                  Аналогично каналу направления, но используется пульт/органы управления канала крена.
+                </p>
+              </div>
+
+              <div class="form">
+                <div class="muted"><b>Фиксация результата</b></div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Измеренная ω, град/сек</label>
+                    <input id="roll_w_omega" type="number" step="0.1" placeholder="например 8">
+                  </div>
+                  <div>
+                    <label>Измеренное μ, %/(град/сек)</label>
+                    <input id="roll_w_mu" type="number" step="0.1" placeholder="например 8">
+                  </div>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Комментарий</label>
+                    <textarea id="roll_w_note"></textarea>
+                  </div>
+                  <div>
+                    <label>Результат (ручной)</label>
+                    <select id="roll_w_manual">
+                      <option value="">— не выбрано —</option>
+                      <option value="ok">Соответствует ТТ</option>
+                      <option value="bad">Не соответствует ТТ</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="formActions">
+                  <button class="btn primary" data-action="check">Проверить ТТ</button>
+                  <button class="btn" data-action="save">Сохранить</button>
+                  <button class="btn" data-action="reset">Сброс</button>
+                </div>
+
+                <div class="statusLine" id="status_roll_w">ОЖИДАЕТ.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test 4 -->
+          <div class="test" data-test="roll_mode">
+            <div class="testHeader">
+              <div>
+                <div class="name">Проверка 4 — Передаточное число (канал крена) в режиме управления по крену</div>
+                <div class="small">ω = 17 (+16,5/−8) град/сек · μ = 4 ± 2 %/(град/сек)</div>
+              </div>
+              <div class="badge wait" id="badge_roll_mode">ОЖИДАЕТ</div>
+            </div>
+
+            <div class="cols">
+              <div class="ttBox">
+                <div class="muted"><b>Методика</b></div>
+                <p class="muted" style="margin:8px 0 0;">
+                  Аналогично проверке 3, но фиксируется режим управления по крену.
+                </p>
+              </div>
+
+              <div class="form">
+                <div class="muted"><b>Фиксация результата</b></div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Измеренная ω, град/сек</label>
+                    <input id="roll_mode_omega" type="number" step="0.1" placeholder="например 17">
+                  </div>
+                  <div>
+                    <label>Измеренное μ, %/(град/сек)</label>
+                    <input id="roll_mode_mu" type="number" step="0.1" placeholder="например 4">
+                  </div>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Комментарий</label>
+                    <textarea id="roll_mode_note"></textarea>
+                  </div>
+                  <div>
+                    <label>Результат (ручной)</label>
+                    <select id="roll_mode_manual">
+                      <option value="">— не выбрано —</option>
+                      <option value="ok">Соответствует ТТ</option>
+                      <option value="bad">Не соответствует ТТ</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="formActions">
+                  <button class="btn primary" data-action="check">Проверить ТТ</button>
+                  <button class="btn" data-action="save">Сохранить</button>
+                  <button class="btn" data-action="reset">Сброс</button>
+                </div>
+
+                <div class="statusLine" id="status_roll_mode">ОЖИДАЕТ.</div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- CHANNEL: PITCH -->
+        <section class="card">
+          <div class="sectionTitle">Канал тангажа <span class="tag">1 проверка</span></div>
+
+          <!-- Test 5 -->
+          <div class="test" data-test="pitch_w">
+            <div class="testHeader">
+              <div>
+                <div class="name">Проверка 5 — Передаточное число по угловой скорости (канал тангажа)</div>
+                <div class="small">ω = 3,5 (+2,1/−1,1) град/сек · μ = 20 ± 8 %/(град/сек)</div>
+              </div>
+              <div class="badge wait" id="badge_pitch_w">ОЖИДАЕТ</div>
+            </div>
+
+            <div class="cols">
+              <div class="ttBox">
+                <div class="muted"><b>Методика (ключевые требования)</b></div>
+                <ul class="muted">
+                  <li>Установка гирровертикали на поворотную установку (рис. 7).</li>
+                  <li>Выключатель В2 — положение «ω».</li>
+                  <li>Потенциометром «ЦЕНТР» выставить стрелку нулевого в среднее положение.</li>
+                  <li>Пикирование/кабрирование — отклонение стрелки согласно методике.</li>
+                </ul>
+              </div>
+
+              <div class="form">
+                <div class="muted"><b>Фиксация результата</b></div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Измеренная ω, град/сек</label>
+                    <input id="pitch_w_omega" type="number" step="0.1" placeholder="например 3.5">
+                  </div>
+                  <div>
+                    <label>Измеренное μ, %/(град/сек)</label>
+                    <input id="pitch_w_mu" type="number" step="0.1" placeholder="например 20">
+                  </div>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                  <div>
+                    <label>Комментарий</label>
+                    <textarea id="pitch_w_note"></textarea>
+                  </div>
+                  <div>
+                    <label>Результат (ручной)</label>
+                    <select id="pitch_w_manual">
+                      <option value="">— не выбрано —</option>
+                      <option value="ok">Соответствует ТТ</option>
+                      <option value="bad">Не соответствует ТТ</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="formActions">
+                  <button class="btn primary" data-action="check">Проверить ТТ</button>
+                  <button class="btn" data-action="save">Сохранить</button>
+                  <button class="btn" data-action="reset">Сброс</button>
+                </div>
+
+                <div class="statusLine" id="status_pitch_w">ОЖИДАЕТ.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN (SUMMARY) -->
+      <div>
+        <section class="card summary">
+          <h2>Сводка Р08</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Проверка</th>
+                <th>Канал</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody">
+              <!-- filled by JS -->
+            </tbody>
+          </table>
+
+          <div class="hr"></div>
+          <div class="muted"><b>Общий статус Р08</b></div>
+          <div style="margin-top:10px;">
+            <span class="pill" id="overallPill"><span class="dot wait" id="overallDot"></span><span id="overallText">ОЖИДАЕТ</span></span>
+          </div>
+
+          <div class="hr"></div>
+          <button class="btn" id="btnClearAll">Очистить всё (localStorage)</button>
+          <div class="footnote">Сохраняет/восстанавливает данные автоматически при перезагрузке страницы.</div>
+        </section>
+      </div>
     </div>
-
-    <div class="note muted" style="margin-top:14px">
-      Важно: имена файлов чувствительны к регистру. Если в репозитории файл называется <b>29.JPEG</b>, то в HTML должно быть <b>29.JPEG</b>, не 29.jpeg и не 29.jpg.
-    </div>
-
   </div>
+
+<script>
+(() => {
+  // ==== Конфигурация ТТ (строго по твоим фото/сообщениям) ====
+  // ω: min/max по допускам; μ: диапазон ±
+  const TT = {
+    dir_w: {
+      label: "П1: μ по ω (направление)",
+      channel: "Направление",
+      omega: { nominal: 3.5, plus: 2.1, minus: 1.1 },
+      mu:    { nominal: 20,  tol: 8.0 }
+    },
+    dir_course: {
+      label: "П2: режим по курсу (направление)",
+      channel: "Направление",
+      omega: { nominal: 6.5, plus: 6.5, minus: 2.0 },
+      mu:    { nominal: 10,  tol: 8.0 }
+    },
+    roll_w: {
+      label: "П3: μ по ω (крен)",
+      channel: "Крен",
+      omega: { nominal: 8.0, plus: 6.0, minus: 2.0 },
+      mu:    { nominal: 8.0, tol: 3.2 }
+    },
+    roll_mode: {
+      label: "П4: режим по крену (крен)",
+      channel: "Крен",
+      omega: { nominal: 17.0, plus: 16.5, minus: 8.0 },
+      mu:    { nominal: 4.0,  tol: 2.0 }
+    },
+    pitch_w: {
+      label: "П5: μ по ω (тангаж)",
+      channel: "Тангаж",
+      omega: { nominal: 3.5, plus: 2.1, minus: 1.1 },
+      mu:    { nominal: 20,  tol: 8.0 }
+    }
+  };
+
+  const STORAGE_KEY = "VUAP1_R08_RESULTS_V1";
+
+  const qs = (s, root=document) => root.querySelector(s);
+  const qsa = (s, root=document) => Array.from(root.querySelectorAll(s));
+
+  function omegaRange(cfg){
+    const min = cfg.omega.nominal - cfg.omega.minus;
+    const max = cfg.omega.nominal + cfg.omega.plus;
+    return {min, max};
+  }
+  function muRange(cfg){
+    const min = cfg.mu.nominal - cfg.mu.tol;
+    const max = cfg.mu.nominal + cfg.mu.tol;
+    return {min, max};
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){
+      return {};
+    }
+  }
+  function saveState(state){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function setBadge(testId, status){
+    const badge = qs("#badge_" + testId);
+    if(!badge) return;
+    badge.classList.remove("wait","ok","bad");
+    if(status === "ok"){
+      badge.classList.add("ok");
+      badge.textContent = "СООТВЕТСТВУЕТ";
+    } else if(status === "bad"){
+      badge.classList.add("bad");
+      badge.textContent = "НЕ СООТВЕТСТВУЕТ";
+    } else {
+      badge.classList.add("wait");
+      badge.textContent = "ОЖИДАЕТ";
+    }
+  }
+
+  function setStatusLine(testId, text){
+    const el = qs("#status_" + testId);
+    if(el) el.textContent = text;
+  }
+
+  function getInputs(testId){
+    return {
+      omega: qs(`#${testId}_omega`)?.value,
+      mu: qs(`#${testId}_mu`)?.value,
+      note: qs(`#${testId}_note`)?.value,
+      manual: qs(`#${testId}_manual`)?.value
+    };
+  }
+  function setInputs(testId, data){
+    if(qs(`#${testId}_omega`)) qs(`#${testId}_omega`).value = data?.omega ?? "";
+    if(qs(`#${testId}_mu`)) qs(`#${testId}_mu`).value = data?.mu ?? "";
+    if(qs(`#${testId}_note`)) qs(`#${testId}_note`).value = data?.note ?? "";
+    if(qs(`#${testId}_manual`)) qs(`#${testId}_manual`).value = data?.manual ?? "";
+  }
+
+  function evalTT(testId){
+    const cfg = TT[testId];
+    const inp = getInputs(testId);
+
+    const omega = Number(inp.omega);
+    const mu = Number(inp.mu);
+
+    if(!isFinite(omega) || !isFinite(mu)){
+      return {status:"wait", msg:"ОЖИДАЕТ: введи числовые ω и μ."};
+    }
+
+    const oR = omegaRange(cfg);
+    const mR = muRange(cfg);
+
+    const omegaOk = (omega >= oR.min && omega <= oR.max);
+    const muOk = (mu >= mR.min && mu <= mR.max);
+
+    const status = (omegaOk && muOk) ? "ok" : "bad";
+
+    const msg =
+      `ω=${omega} (допуск ${oR.min.toFixed(1)}…${oR.max.toFixed(1)}), ` +
+      `μ=${mu} (допуск ${mR.min.toFixed(1)}…${mR.max.toFixed(1)}) → ` +
+      (status==="ok" ? "СООТВЕТСТВУЕТ" : "НЕ СООТВЕТСТВУЕТ");
+
+    return {status, msg};
+  }
+
+  function updateSummary(state){
+    const body = qs("#summaryBody");
+    body.innerHTML = "";
+
+    const rows = Object.keys(TT).map(testId => {
+      const cfg = TT[testId];
+      const st = state?.[testId]?.status || "wait";
+      const dotClass = st === "ok" ? "ok" : (st==="bad" ? "bad" : "wait");
+      const text = st === "ok" ? "OK" : (st==="bad" ? "FAIL" : "WAIT");
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${cfg.label}</td>
+        <td>${cfg.channel}</td>
+        <td><span class="pill"><span class="dot ${dotClass}"></span>${text}</span></td>
+      `;
+      return tr;
+    });
+
+    rows.forEach(r => body.appendChild(r));
+
+    // overall: OK если ВСЕ ok, FAIL если хотя бы один bad, иначе WAIT
+    const statuses = Object.keys(TT).map(id => state?.[id]?.status || "wait");
+    let overall = "wait";
+    if(statuses.every(s => s === "ok")) overall = "ok";
+    else if(statuses.some(s => s === "bad")) overall = "bad";
+
+    const overallDot = qs("#overallDot");
+    const overallText = qs("#overallText");
+    const overallPill = qs("#overallPill");
+
+    overallDot.classList.remove("wait","ok","bad");
+    overallPill.style.borderColor = "var(--line)";
+    overallPill.style.background = "rgba(255,255,255,.03)";
+
+    if(overall === "ok"){
+      overallDot.classList.add("ok");
+      overallText.textContent = "СООТВЕТСТВУЕТ";
+      overallPill.style.borderColor = "rgba(45,212,191,.35)";
+      overallPill.style.background = "rgba(45,212,191,.08)";
+    } else if(overall === "bad"){
+      overallDot.classList.add("bad");
+      overallText.textContent = "НЕ СООТВЕТСТВУЕТ";
+      overallPill.style.borderColor = "rgba(251,113,133,.35)";
+      overallPill.style.background = "rgba(251,113,133,.08)";
+    } else {
+      overallDot.classList.add("wait");
+      overallText.textContent = "ОЖИДАЕТ";
+    }
+  }
+
+  function applyStatus(testId, status, msg, state){
+    setBadge(testId, status);
+    setStatusLine(testId, msg);
+
+    state[testId] = state[testId] || {};
+    state[testId].status = status;
+
+    saveState(state);
+    updateSummary(state);
+  }
+
+  function bindTestBlocks(){
+    const state = loadState();
+
+    // restore inputs + status
+    Object.keys(TT).forEach(testId => {
+      setInputs(testId, state?.[testId]);
+      setBadge(testId, state?.[testId]?.status || "wait");
+      if(state?.[testId]?.lastMsg){
+        setStatusLine(testId, state[testId].lastMsg);
+      }
+    });
+
+    updateSummary(state);
+
+    // bind buttons inside each test
+    qsa(".test").forEach(testEl => {
+      const testId = testEl.getAttribute("data-test");
+      testEl.addEventListener("click", (ev) => {
+        const btn = ev.target.closest("button[data-action]");
+        if(!btn) return;
+
+        const action = btn.getAttribute("data-action");
+        const st = loadState();
+
+        if(action === "check"){
+          const res = evalTT(testId);
+
+          // если вручную выбрали — приоритет ручного
+          const manual = qs(`#${testId}_manual`)?.value;
+          if(manual === "ok" || manual === "bad"){
+            res.status = manual;
+            res.msg = (manual === "ok")
+              ? "Ручной выбор: СООТВЕТСТВУЕТ ТТ."
+              : "Ручной выбор: НЕ СООТВЕТСТВУЕТ ТТ.";
+          }
+
+          st[testId] = st[testId] || {};
+          st[testId].omega = qs(`#${testId}_omega`)?.value ?? "";
+          st[testId].mu    = qs(`#${testId}_mu`)?.value ?? "";
+          st[testId].note  = qs(`#${testId}_note`)?.value ?? "";
+          st[testId].manual= qs(`#${testId}_manual`)?.value ?? "";
+          st[testId].lastMsg = res.msg;
+
+          applyStatus(testId, res.status, res.msg, st);
+          return;
+        }
+
+        if(action === "save"){
+          st[testId] = st[testId] || {};
+          st[testId].omega = qs(`#${testId}_omega`)?.value ?? "";
+          st[testId].mu    = qs(`#${testId}_mu`)?.value ?? "";
+          st[testId].note  = qs(`#${testId}_note`)?.value ?? "";
+          st[testId].manual= qs(`#${testId}_manual`)?.value ?? "";
+          st[testId].lastMsg = st[testId].lastMsg || "Сохранено без проверки ТТ.";
+          saveState(st);
+          setStatusLine(testId, "Сохранено. (Для статуса нажми “Проверить ТТ”.)");
+          updateSummary(st);
+          return;
+        }
+
+        if(action === "reset"){
+          // очистить поля + статус конкретного теста
+          setInputs(testId, {omega:"", mu:"", note:"", manual:""});
+          setBadge(testId, "wait");
+          setStatusLine(testId, "ОЖИДАЕТ.");
+
+          if(st[testId]) delete st[testId];
+          saveState(st);
+          updateSummary(st);
+          return;
+        }
+      });
+    });
+  }
+
+  function bindGlobal(){
+    qs("#btnClearAll").addEventListener("click", () => {
+      if(!confirm("Очистить все сохранённые результаты Р08?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    });
+
+    // заглушки под вашу навигацию
+    qs("#btnHome").addEventListener("click", () => {
+      // поменяй на реальный путь
+      window.location.href = "./index.html";
+    });
+    qs("#btnNext").addEventListener("click", () => {
+      // поменяй на реальный путь следующего пункта
+      alert("Подставь ссылку на следующий пункт.");
+    });
+    qs("#btnThis").addEventListener("click", () => window.scrollTo({top:0, behavior:"smooth"}));
+  }
+
+  bindTestBlocks();
+  bindGlobal();
+})();
+</script>
 </body>
 </html>
