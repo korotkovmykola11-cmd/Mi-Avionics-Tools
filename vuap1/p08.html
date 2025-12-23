@@ -1,179 +1,139 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Пункт 8. Проверка передаточного числа по угловой скорости — Канал направления</title>
+<meta charset="utf-8">
+<title>П.8 Проверка передаточного числа — Канал направления</title>
 
-  <style>
-    :root{
-      --bg:#071229;        /* тёмно-синий фон */
-      --paper:#ffffff;     /* лист */
-      --ink:#111111;       /* текст */
-      --grid:#2b2b2b;      /* линии таблицы */
-      --muted:#555;
-    }
+<style>
+:root{
+  --bg:#071229;
+  --paper:#ffffff;
+  --ink:#111;
+  --grid:#2b2b2b;
+}
 
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:"Times New Roman", Times, serif; /* ближе к карте */
-    }
+body{
+  margin:0;
+  background:var(--bg);
+  font-family:"Times New Roman", Times, serif;
+}
 
-    .wrap{
-      max-width:1100px;
-      margin:24px auto 48px;
-      padding:0 14px;
-    }
+.wrap{max-width:1100px;margin:24px auto;padding:0 14px;}
+.paper{
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 14px 40px rgba(0,0,0,.35);
+  padding:18px;
+}
 
-    .paper{
-      background:var(--paper);
-      border-radius:12px;
-      box-shadow:0 14px 40px rgba(0,0,0,.35);
-      padding:18px 18px 22px;
-      overflow:hidden;
-    }
+h1{font-size:22px;margin:0 0 10px;}
+h2{font-size:16px;margin:0 0 14px;}
 
-    .title{
-      font-size:22px;
-      font-weight:700;
-      margin:2px 0 10px;
-    }
-    .subtitle{
-      font-size:14px;
-      margin:0 0 14px;
-      color:#222;
-    }
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  border:2px solid var(--grid);
+  font-size:15px;
+}
+col.c1{width:52%}
+col.c2{width:20%}
+col.c3{width:28%}
 
-    /* === ТАБЛИЦА КАК ТЕХНОКАРТА === */
-    table.tech{
-      width:100%;
-      border-collapse:collapse;
-      table-layout:fixed;
-      border:2px solid var(--grid);
-      font-size:15px;
-      line-height:1.25;
-    }
-    table.tech col.c1{width:52%}
-    table.tech col.c2{width:20%}
-    table.tech col.c3{width:28%}
+th,td{
+  border:1px solid var(--grid);
+  vertical-align:top;
+  padding:10px;
+}
 
-    table.tech th, table.tech td{
-      border:1px solid var(--grid);
-      vertical-align:top;
-      padding:10px 10px;
-    }
-    table.tech th{
-      text-align:center;
-      font-weight:700;
-    }
+th{text-align:center;font-weight:700;}
 
-    /* важно: чтобы текст вставлялся СЛОВО-В-СЛОВО с переносами */
-    .pre{
-      white-space:pre-wrap;     /* сохраняет переносы, но переносит длинные строки */
-      word-break:break-word;
-    }
+.pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+}
 
-    .note{
-      font-size:13px;
-      color:var(--muted);
-      margin-top:10px;
-    }
+.figcap{
+  font-weight:700;
+  margin:12px 0 6px;
+}
 
-    /* === БЛОК РИСУНКА === */
-    .figure{
-      margin-top:10px;
-      border:1px solid var(--grid);
-      padding:10px;
-    }
-    .figcap{
-      font-size:14px;
-      margin-bottom:8px;
-      font-weight:700;
-    }
-    .figure img{
-      display:block;
-      max-width:100%;
-      height:auto;
-      border:1px solid #bbb;
-      background:#f6f6f6;
-    }
+img{
+  max-width:100%;
+  border:1px solid #999;
+  display:block;
+}
 
-    /* === ФОРМУЛЫ/КАЛЬКУЛЯТОР === */
-    .calc{
-      margin-top:18px;
-      padding:14px;
-      border:2px solid rgba(255,255,255,.15);
-      border-radius:12px;
-      background:rgba(255,255,255,.06);
-      color:#eaf1ff;
-      font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
-    .calc h2{
-      margin:0 0 10px;
-      font-size:18px;
-    }
-    .calc .row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-    .calc label{
-      display:block;
-      font-size:13px;
-      opacity:.9;
-      margin:0 0 6px;
-    }
-    .calc input{
-      width:100%;
-      box-sizing:border-box;
-      padding:10px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.22);
-      background:rgba(0,0,0,.25);
-      color:#fff;
-      outline:none;
-    }
-    .calc .btns{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .calc button{
-      padding:10px 12px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.25);
-      background:rgba(255,255,255,.12);
-      color:#fff;
-      cursor:pointer;
-    }
-    .calc button:hover{background:rgba(255,255,255,.18)}
-    .calc .out{
-      margin-top:10px;
-      padding:10px;
-      border-radius:10px;
-      background:rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.18);
-      font-size:14px;
-      white-space:pre-wrap;
-    }
-    .calc .small{
-      font-size:12px;
-      opacity:.85;
-      margin-top:6px;
-      line-height:1.35;
-    }
-  </style>
+/* === КАЛЬКУЛЯТОР === */
+.calc{
+  margin-top:20px;
+  padding:14px;
+  background:rgba(255,255,255,.07);
+  border-radius:12px;
+  color:#eaf1ff;
+  font-family:system-ui, sans-serif;
+}
+
+.calc h3{margin:0 0 10px;}
+
+.calc label{display:block;font-size:13px;margin-bottom:4px;}
+
+.calc input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(0,0,0,.3);
+  color:#fff;
+}
+
+.calc .row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.calc button{
+  margin-top:10px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  cursor:pointer;
+}
+
+.calc .out{
+  margin-top:10px;
+  padding:10px;
+  background:rgba(0,0,0,.35);
+  border-radius:10px;
+  font-size:14px;
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="paper">
-      <div class="title">Содержание операций</div>
-      <div class="subtitle"><b>8.</b> Проверьте передаточное число по угловой скорости: <b>А. Канала направления</b></div>
+<div class="wrap">
+<div class="paper">
+
+<h1>Содержание операций</h1>
+<h2>8. Проверьте передаточное число по угловой скорости: <b>А. Канала направления</b></h2>
+
+<table>
+<colgroup>
+  <col class="c1"><col class="c2"><col class="c3">
+</colgroup>
+<thead>
+<tr>
+  <th>Содержание операций</th>
+  <th>Технические требования (ТТ)</th>
+  <th>Работы при отклонениях от ТТ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="pre">8.</b> Проверьте передаточное число по угловой скорости: <b>А. Канала направления</b></div>
 
       <table class="tech" aria-label="Технологическая карта — Канал направления">
         <colgroup>
@@ -189,7 +149,8 @@
         <tbody>
           <tr>
             <!-- ЛЕВЫЙ СТОЛБЕЦ: СОДЕРЖАНИЕ ОПЕРАЦИЙ (ВСТАВЬ СЮДА СЛОВО-В-СЛОВО) -->
-            <td class="pre">8. Проверьте передаточное число по угловой скорости:
+            <td class="pre">
+              8. Проверьте передаточное число по угловой скорости:
 
  Канала направления, для чего:
  Снимите с вертолета датчик угловой скорости, установите его на. установку УПГ-56 с помощью кронштейна 6С4.132.020 и с помощью переходного жгута 6С6.640.046-1 соедините датчик со схемой вертолета;
@@ -226,151 +187,56 @@
 Отключите и вновь включите канал направления кнопками- лампочками "ОТКЛ" и "ВКЛ." на пульте управления. Поворотом шкалы ручки центровки установите подвиж-ный индекс нулевого индикатора в среднее положение. Задайте вращение установке, со-ответ¬ствующее правому развороту со скоро-стью 3,5 град/с Поворотом подстроечного ре-зистора "СКОР." на пульте управления добей-тесь, чтобы подвижный индекс нулевого ин-дикатора совместился с левой промежуточной отметкой. Измените направление вращения установки (в сторону левого разворота) и плавным изменением скорости вращения совместите подвижный' индекс нулевого ин-дикатора с правой промежуточной точной от-меткой. Скорость вращения должна быть (3,5 ±0,7)град/с</td>
               </tr>
 
-             </tr>
-        </tbody>
-      </table>
+           </tr>
+</tbody>
+</table>
 
-      <!-- РИСУНОК -->
-      <div class="figrow">
-        <div class="figcap">Рис. 6 (29.JPEG)</div>
-        <img src="./29.JPEG" alt="Рис. 6. Крепление датчика угловых скоростей на поворотной установке.">
-      </div>
-    </div>
+<div class="figcap">Рис. 6 (29.JPEG)</div>
+<img src="./29.JPEG" alt="Крепление датчика угловых скоростей на поворотной установке">
 
-    <!-- КАЛЬКУЛЯТОР -->
-    <section class="calc" id="calc-mu">
-      <h2>Калькулятор передаточного числа μ (канал направления)</h2>
+</div>
 
-      <div class="grid2">
-        <div class="field">
-          <label for="angleDeg">Δφ — угол поворота платформы, град (если считаешь ω по секундомеру)</label>
-          <input id="angleDeg" type="text" inputmode="decimal" placeholder="например 90">
-        </div>
+<!-- КАЛЬКУЛЯТОР -->
+<div class="calc">
+<h3>Калькулятор передаточного числа μ</h3>
 
-        <div class="field">
-          <label for="timeSec">t — время поворота, сек (если считаешь ω по секундомеру)</label>
-          <input id="timeSec" type="text" inputmode="decimal" placeholder="например 25,7">
-        </div>
-
-        <div class="field">
-          <label for="omega">ω — угловая скорость, град/с (можно ввести напрямую)</label>
-          <input id="omega" type="text" inputmode="decimal" placeholder="например 3,5">
-        </div>
-
-        <div class="field">
-          <label for="strokePct">S — ход штока, %</label>
-          <input id="strokePct" type="text" inputmode="decimal" placeholder="например 66,7">
-        </div>
-      </div>
-
-      <div class="btnrow">
-        <button type="button" class="btn" id="btnCalcOmega">Посчитать ω = Δφ / t</button>
-        <button type="button" class="btn" id="btnCalcMu">Посчитать μ = S / ω</button>
-        <button type="button" class="btn ghost" id="btnClear">Очистить</button>
-      </div>
-
-      <div class="eq">
-        <span class="sym">ω</span> = <span class="sym">Δφ</span> / <span class="sym">t</span> &nbsp;&nbsp;&nbsp;
-        <span class="sym">μ</span> = <span class="sym">S</span> / <span class="sym">ω</span>
-      </div>
-
-      <div class="out" id="out"></div>
-
-      <div class="formulas">
-        <div class="hint">Поддерживаются запятая и точка: 3,5 = 3.5</div>
-      </div>
-    </section>
-
+<div class="row">
+  <div>
+    <label>ω — угловая скорость, град/с</label>
+    <input id="omega" placeholder="например 3,5">
   </div>
+  <div>
+    <label>S — ход штока, %</label>
+    <input id="S" placeholder="например 66,7">
+  </div>
+</div>
 
-  <script>
-    (function(){
-      const $ = (id)=>document.getElementById(id);
+<button onclick="calc()">Посчитать μ</button>
 
-      function parseNum(v){
-        if(v==null) return NaN;
-        v = String(v).trim().replace(/\s+/g,'').replace(',', '.');
-        if(v==='') return NaN;
-        const n = Number(v);
-        return Number.isFinite(n) ? n : NaN;
-      }
+<div class="out" id="out">μ = S / ω</div>
+</div>
 
-      function fmt(n, digits=4){
-        if(!Number.isFinite(n)) return '';
-        // красиво: убрать хвостовые нули, но оставить точность
-        let s = n.toFixed(digits);
-        s = s.replace(/\.?0+$/,'');
-        // для русского вида — запятая
-        return s.replace('.', ',');
-      }
+</div>
 
-      function setOut(text, isError=false){
-        const out = $('out');
-        out.textContent = text;
-        out.style.borderColor = isError ? 'rgba(255,80,80,0.60)' : 'rgba(255,255,255,0.10)';
-      }
+<script>
+function n(v){
+  return parseFloat(v.replace(',','.'));
+}
+function calc(){
+  const w = n(document.getElementById('omega').value);
+  const S = n(document.getElementById('S').value);
+  if(!isFinite(w)||!isFinite(S)||w<=0){
+    out.textContent='Ошибка ввода';
+    return;
+  }
+  const mu = S / w;
+  out.textContent =
+    'μ = S / ω = ' + S.toFixed(2).replace('.',',') +
+    ' / ' + w.toFixed(2).replace('.',',') +
+    ' = ' + mu.toFixed(2).replace('.',',') +
+    ' %/(град/с)';
+}
+</script>
 
-      function calcOmega(){
-        const ang = parseNum($('angleDeg').value);
-        const t   = parseNum($('timeSec').value);
-
-        if(!Number.isFinite(ang) || !Number.isFinite(t)){
-          setOut('Ошибка: для расчёта ω нужны Δφ и t (оба числа).', true);
-          return;
-        }
-        if(t<=0){
-          setOut('Ошибка: t должно быть > 0.', true);
-          return;
-        }
-
-        const omega = ang / t;
-        $('omega').value = fmt(omega, 6);
-        setOut('ω = Δφ / t = ' + fmt(ang,6) + ' / ' + fmt(t,6) + ' = ' + fmt(omega,6) + ' град/с');
-      }
-
-      function calcMu(){
-        let omega = parseNum($('omega').value);
-
-        // Если ω не введено — попробуем вычислить из Δφ и t
-        if(!Number.isFinite(omega)){
-          const ang = parseNum($('angleDeg').value);
-          const t   = parseNum($('timeSec').value);
-          if(Number.isFinite(ang) && Number.isFinite(t) && t>0){
-            omega = ang / t;
-            $('omega').value = fmt(omega, 6);
-          }
-        }
-
-        const S = parseNum($('strokePct').value);
-
-        if(!Number.isFinite(omega)){
-          setOut('Ошибка: нет ω. Введи ω вручную или заполни Δφ и t и нажми "Посчитать ω".', true);
-          return;
-        }
-        if(omega<=0){
-          setOut('Ошибка: ω должно быть > 0.', true);
-          return;
-        }
-        if(!Number.isFinite(S)){
-          setOut('Ошибка: введи S — ход штока в %.', true);
-          return;
-        }
-
-        const mu = S / omega;
-        setOut('μ = S / ω = ' + fmt(S,6) + ' / ' + fmt(omega,6) + ' = ' + fmt(mu,6) + ' %/(град/с)');
-      }
-
-      function clearAll(){
-        ['angleDeg','timeSec','omega','strokePct'].forEach(id=>$(id).value='');
-        setOut('Готово.');
-      }
-
-      $('btnCalcOmega').addEventListener('click', calcOmega);
-      $('btnCalcMu').addEventListener('click', calcMu);
-      $('btnClear').addEventListener('click', clearAll);
-
-      setOut('Готово.');
-    })();
-  </script>
 </body>
 </html>
