@@ -226,207 +226,226 @@
 Отключите и вновь включите канал направления кнопками- лампочками "ОТКЛ" и "ВКЛ." на пульте управления. Поворотом шкалы ручки центровки установите подвиж-ный индекс нулевого индикатора в среднее положение. Задайте вращение установке, со-ответ¬ствующее правому развороту со скоро-стью 3,5 град/с Поворотом подстроечного ре-зистора "СКОР." на пульте управления добей-тесь, чтобы подвижный индекс нулевого ин-дикатора совместился с левой промежуточной отметкой. Измените направление вращения установки (в сторону левого разворота) и плавным изменением скорости вращения совместите подвижный' индекс нулевого ин-дикатора с правой промежуточной точной от-меткой. Скорость вращения должна быть (3,5 ±0,7)град/с</td>
               </tr>
 
-          <tr>
-            <td colspan="3" class="figrow">
-              <div class="figure">
-                <div class="figcap">Рис. 6 (29.JPEG)</div>
-                <img id="fig6" src="./29.JPEG"
-                     alt="Рис. 6. Крепление датчика угловых скоростей на поворотной установке."
-                     onerror="showImgError();" />
-                <div id="imgErr" class="imgerr" style="display:none;"></div>
+            <tr>
+                <td colspan="3">
+                  <div class="figbox">
+                    <div class="figcap">Рис. 6 (29.JPEG)</div>
+                    <img id="fig6" class="figimg" src="./29.JPEG"
+                      alt="Рис. 6. Крепление датчика угловых скоростей на поворотной установке."
+                      onerror="showImgError();" />
+                    <div id="imgErr" class="imgerr"></div>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="calcGrid">
+        <div class="calcCard">
+          <div class="calcTitle">Формулы (как в технологии)</div>
+          <div class="out" id="formulaBox">
+ω = Δφ / t
+μ = S / ω
+
+где:
+Δφ — угол поворота платформы, град
+t — время поворота, сек
+ω — угловая скорость, град/с
+S — ход штока, % (от полного хода)
+μ — передаточное число, %/(град/с)
+          </div>
+        </div>
+
+        <div class="calcCard">
+          <div class="calcTitle">Калькулятор передаточного числа (канал направления)</div>
+
+          <div class="row">
+            <div class="field">
+              <label>Режим проверки (для автопроверки по ТТ)</label>
+              <select id="mode">
+                <option value="basic">Основной режим: ω = 3,5+2,1−1,1; μ = 20±8</option>
+                <option value="isod">Режим изодрома: ω = 6,5+6,5−2,0; μ = 10±8</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Ход штока S, %</label>
+              <input id="stroke" inputmode="decimal" placeholder="например 66,7" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div class="field">
+              <label>Угловая скорость ω, град/с (можно ввести напрямую)</label>
+              <input id="omega" inputmode="decimal" placeholder="например 3,5 или 7,0" />
+            </div>
+            <div class="field">
+              <label>Δφ, град и t, сек (если хочешь посчитать ω = Δφ/t)</label>
+              <div class="row">
+                <input id="angle" inputmode="decimal" placeholder="Δφ, например 90" />
+                <input id="time" inputmode="decimal" placeholder="t, например 25,7" />
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+            </div>
+          </div>
 
-    <!-- ФОРМУЛЫ (КРАСИВО, С БУКВАМИ μ, ω, Δφ) -->
-    <div class="card">
-      <div class="math">
-        <b>Формулы</b><br>
-        1) Определение угловой скорости вращения: &nbsp; <b>ω = Δφ / t</b><br>
-        2) Определение передаточного числа по угловой скорости: &nbsp; <b>μ = S / ω</b>
-      </div>
-      <div class="help">
-        Где: Δφ — угол поворота платформы, град; t — время поворота, сек; ω — угловая скорость, град/с; S — ход штока, %.
-        Угол Δφ нужен только чтобы вычислить ω по секундомеру (как в карте). Если ω уже известна — вводи ω напрямую.
-      </div>
-    </div>
+          <div class="btns">
+            <button type="button" onclick="calcOmegaFromAngle()">Посчитать ω = Δφ / t</button>
+            <button type="button" onclick="calcMuFromSOmega()">Посчитать μ = S / ω</button>
+            <button type="button" onclick="checkTT()">Проверить по ТТ (PASS/FAIL)</button>
+            <button type="button" onclick="clearAll()">Очистить</button>
+          </div>
 
-    <!-- КАЛЬКУЛЯТОР -->
-    <div class="card">
-      <div style="font-weight:800; font-size:16px; margin-bottom:10px;">Калькулятор передаточного числа (канал направления)</div>
-
-      <div class="calcgrid">
-        <div class="field">
-          <label>Режим ТТ</label>
-          <select id="mode">
-            <option value="main">Основной: ω = 3,5 (+2,1 −1,1) ; μ = 20 ±8</option>
-            <option value="iso">По курсу (изодром): ω = 6,5 (+6,5 −2,0) ; μ = 10 ±8</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Ход штока S, % (для μ = S/ω)</label>
-          <input id="stroke" inputmode="decimal" placeholder="например 66.7 или 30" />
-        </div>
-
-        <div class="field">
-          <label>Угловая скорость ω, град/с (можно ввести напрямую)</label>
-          <input id="omega" inputmode="decimal" placeholder="например 3.5" />
-        </div>
-
-        <div class="field">
-          <label>Время поворота t, сек (для расчёта ω = Δφ/t)</label>
-          <input id="time" inputmode="decimal" placeholder="например 25.7" />
-        </div>
-
-        <div class="field">
-          <label>Угол поворота Δφ, град (для расчёта ω = Δφ/t)</label>
-          <input id="angle" inputmode="decimal" placeholder="например 90" />
-        </div>
-
-        <div class="field">
-          <label>Полный ход по карте, % (фиксировано 66,7 для μ = 66,7/ω)</label>
-          <input id="full" inputmode="decimal" value="66.7" />
+          <div class="out" id="out">Готов.</div>
         </div>
       </div>
-
-      <div class="btnrow">
-        <button type="button" onclick="calcOmega()">Посчитать ω = Δφ / t</button>
-        <button type="button" onclick="calcMuFromS()">Посчитать μ = S / ω</button>
-        <button type="button" onclick="calcMuFromFull()">Посчитать μ = 66,7 / ω</button>
-        <button type="button" onclick="checkTT()">Проверить по ТТ (PASS/FAIL)</button>
-        <button type="button" onclick="resetAll()">Очистить</button>
-      </div>
-
-      <div id="out" class="out">Готово.</div>
-    </div>
-
-    <div class="help">
-      Если GitHub Pages показывает старую версию — открой ссылку в режиме инкогнито или добавь к URL <b>?v=1</b> (потом меняй цифру).
     </div>
   </div>
 
-<script>
-  function showImgError(){
-    const el = document.getElementById('imgErr');
-    el.style.display = 'block';
-    el.textContent =
-      'ОШИБКА: не найден файл 29.JPEG рядом с p08.html. ' +
-      'Проверь: имя = ровно "29.JPEG" (регистр важен) и лежит в той же папке vuap1.';
-  }
-
-  // --- утилиты ---
-  function n(v){
-    if(v === null || v === undefined) return NaN;
-    const s = String(v).trim().replace(',', '.');
-    if(s === '') return NaN;
-    return Number(s);
-  }
-  function isBad(x){ return Number.isNaN(x) || !Number.isFinite(x); }
-  function fmt(x, d=3){
-    if(isBad(x)) return 'NaN';
-    return Number(x).toFixed(d).replace(/\.?0+$/,''); // без лишних нулей
-  }
-  function setOut(text){ document.getElementById('out').textContent = text; }
-
-  // --- ТТ диапазоны (из твоих данных) ---
-  // Основной: ω = 3.5 (+2.1 -1.1) => [2.4 ; 5.6]
-  //          μ = 20 ±8 => [12 ; 28]
-  // Изодром: ω = 6.5 (+6.5 -2.0) => [4.5 ; 13.0]
-  //          μ = 10 ±8 => [2 ; 18]
-  const TT = {
-    main: { wMin: 2.4, wMax: 5.6, muMin: 12, muMax: 28, name:'Основной' },
-    iso:  { wMin: 4.5, wMax:13.0, muMin:  2, muMax: 18, name:'Изодром (по курсу)' }
-  };
-
-  // --- расчёты ---
-  function calcOmega(){
-    const ang = n(document.getElementById('angle').value);
-    const t   = n(document.getElementById('time').value);
-    if(isBad(ang) || isBad(t) || t <= 0){
-      setOut('Ошибка: для ω = Δφ/t введи Δφ (град) и t (сек), при этом t > 0.');
-      return;
+  <script>
+    // ====== УТИЛИТЫ ======
+    function n(v){
+      if(v === null || v === undefined) return NaN;
+      const s = String(v).trim().replace(',', '.');
+      if(s === '') return NaN;
+      const num = Number(s);
+      return Number.isFinite(num) ? num : NaN;
     }
-    const w = ang / t;
-    document.getElementById('omega').value = fmt(w, 5);
-    setOut(`ω = Δφ / t = ${fmt(ang,3)} / ${fmt(t,3)} = ${fmt(w,5)} град/с`);
-  }
-
-  function calcMuFromS(){
-    const S = n(document.getElementById('stroke').value);
-    const w = n(document.getElementById('omega').value);
-    if(isBad(S)){
-      setOut('Ошибка: введи S (% хода штока).');
-      return;
+    function isBad(x){ return !Number.isFinite(x); }
+    function fmt(x, d=3){
+      if(!Number.isFinite(x)) return 'NaN';
+      return x.toFixed(d);
     }
-    if(isBad(w) || w <= 0){
-      setOut('Ошибка: введи ω (град/с), ω > 0. Можно посчитать ω кнопкой ω = Δφ/t.');
-      return;
-    }
-    const mu = S / w;
-    setOut(`μ = S / ω = ${fmt(S,3)} / ${fmt(w,5)} = ${fmt(mu,5)} %/(град/с)`);
-  }
-
-  function calcMuFromFull(){
-    const full = n(document.getElementById('full').value);
-    const w    = n(document.getElementById('omega').value);
-    if(isBad(full) || full <= 0){
-      setOut('Ошибка: поле "полный ход" должно быть > 0 (обычно 66.7).');
-      return;
-    }
-    if(isBad(w) || w <= 0){
-      setOut('Ошибка: введи ω (град/с), ω > 0. Можно посчитать ω кнопкой ω = Δφ/t.');
-      return;
-    }
-    const mu = full / w;
-    setOut(`μ = ${fmt(full,3)} / ω = ${fmt(full,3)} / ${fmt(w,5)} = ${fmt(mu,5)} %/(град/с)`);
-  }
-
-  function checkTT(){
-    const mode = document.getElementById('mode').value;
-    const tt = TT[mode];
-
-    const w = n(document.getElementById('omega').value);
-    const S = n(document.getElementById('stroke').value);
-
-    if(isBad(w) || w <= 0){
-      setOut(`Ошибка: введи ω (град/с), ω > 0. Для ТТ "${tt.name}" сравнение невозможно.`);
-      return;
-    }
-    if(isBad(S)){
-      setOut(`Ошибка: введи S (%). Для ТТ "${tt.name}" сравнение μ невозможно.`);
-      return;
+    function setOut(txt){
+      document.getElementById('out').textContent = txt;
     }
 
-    const mu = S / w;
-
-    const wOK  = (w >= tt.wMin && w <= tt.wMax);
-    const muOK = (mu >= tt.muMin && mu <= tt.muMax);
-
-    let res = '';
-    res += `Режим: ${tt.name}\n`;
-    res += `ω = ${fmt(w,5)} град/с ; ТТ: [${fmt(tt.wMin,3)} … ${fmt(tt.wMax,3)}] → ${wOK ? 'PASS' : 'FAIL'}\n`;
-    res += `S = ${fmt(S,3)} %\n`;
-    res += `μ = S/ω = ${fmt(mu,5)} %/(град/с) ; ТТ: [${fmt(tt.muMin,3)} … ${fmt(tt.muMax,3)}] → ${muOK ? 'PASS' : 'FAIL'}\n`;
-
-    // подсказки по "СКОР."
-    if(!muOK){
-      res += `\nПодсказка (по карте): при отклонении μ выполняется регулировка потенциометром/резистором "СКОР." на пульте управления.\n`;
+    // ====== КАРТИНКА ======
+    function showImgError(){
+      const el = document.getElementById('imgErr');
+      el.style.display = 'block';
+      el.textContent =
+        'ОШИБКА: файл 29.JPEG не найден рядом с p08.html\\n' +
+        'Проверь: папка vuap1, имя и регистр: именно 29.JPEG\\n' +
+        'Пример: /Mi-Avionics-Tools/vuap1/29.JPEG';
     }
-    setOut(res);
-  }
 
-  function resetAll(){
-    document.getElementById('stroke').value = '';
-    document.getElementById('omega').value  = '';
-    document.getElementById('time').value   = '';
-    document.getElementById('angle').value  = '';
-    document.getElementById('full').value   = '66.7';
-    setOut('Готово.');
-  }
-</script>
+    // ====== РАСЧЁТЫ ======
+    function calcOmegaFromAngle(){
+      const a = n(document.getElementById('angle').value);
+      const t = n(document.getElementById('time').value);
+
+      if(isBad(a) || a <= 0){
+        setOut('Ошибка: введи Δφ (град), Δφ > 0.');
+        return;
+      }
+      if(isBad(t) || t <= 0){
+        setOut('Ошибка: введи t (сек), t > 0.');
+        return;
+      }
+      const w = a / t;
+      document.getElementById('omega').value = String(w.toFixed(3)).replace('.', ',');
+      setOut('ω = Δφ / t = ' + fmt(a,3) + ' / ' + fmt(t,3) + ' = ' + fmt(w,3) + ' град/с');
+    }
+
+    function calcMuFromSOmega(){
+      const S = n(document.getElementById('stroke').value);
+      const w = n(document.getElementById('omega').value);
+
+      if(isBad(S)){
+        setOut('Ошибка: введи S (% хода штока).');
+        return;
+      }
+      if(isBad(w) || w <= 0){
+        setOut('Ошибка: введи ω (град/с), ω > 0. (Можно посчитать ω кнопкой ω = Δφ/t.)');
+        return;
+      }
+
+      // защита от типичной ошибки: 45 вместо 4,5
+      if(w > 20){
+        setOut(
+          'Предупреждение: ω=' + fmt(w,3) + ' слишком большая для ТТ.\\n' +
+          'Проверь: возможно нужно 4,5 а не 45.\\n\\n' +
+          'μ = S / ω = ' + fmt(S,3) + ' / ' + fmt(w,5) + ' = ' + fmt(S/w,5) + ' %/(град/с)'
+        );
+        return;
+      }
+
+      const mu = S / w;
+      setOut('μ = S / ω = ' + fmt(S,3) + ' / ' + fmt(w,5) + ' = ' + fmt(mu,5) + ' %/(град/с)');
+    }
+
+    // ====== ТТ (автопроверка) ======
+    const TT = {
+      basic: {
+        name: 'Основной режим',
+        wMin: 3.5 - 1.1,   // 2.4
+        wMax: 3.5 + 2.1,   // 5.6
+        muNom: 20,
+        muTol: 8
+      },
+      isod: {
+        name: 'Режим изодрома',
+        wMin: 6.5 - 2.0,   // 4.5
+        wMax: 6.5 + 6.5,   // 13.0
+        muNom: 10,
+        muTol: 8
+      }
+    };
+
+    function passFail(val, min, max){
+      if(!Number.isFinite(val)) return {ok:false, note:'NaN'};
+      if(val < min || val > max) return {ok:false, note:'FAIL'};
+      return {ok:true, note:'PASS'};
+    }
+
+    function checkTT(){
+      const mode = document.getElementById('mode').value;
+      const spec = TT[mode];
+
+      const S = n(document.getElementById('stroke').value);
+      const w = n(document.getElementById('omega').value);
+
+      if(isBad(S)){
+        setOut('Ошибка: введи S (% хода штока).');
+        return;
+      }
+      if(isBad(w) || w <= 0){
+        setOut('Ошибка: введи ω (град/с), ω > 0.');
+        return;
+      }
+
+      const mu = S / w;
+
+      const muMin = spec.muNom - spec.muTol;
+      const muMax = spec.muNom + spec.muTol;
+
+      const rW  = passFail(w,  spec.wMin,  spec.wMax);
+      const rMu = passFail(mu, muMin, muMax);
+
+      let msg = '';
+      msg += 'Режим: ' + spec.name + '\\n';
+      msg += 'ω = ' + fmt(w,3) + ' град/с  | ТТ: [' + fmt(spec.wMin,3) + ' … ' + fmt(spec.wMax,3) + ']  => ' + (rW.ok ? 'PASS' : 'FAIL') + '\\n';
+      msg += 'μ = S/ω = ' + fmt(S,3) + '/' + fmt(w,3) + ' = ' + fmt(mu,5) + ' %/(град/с)\\n';
+      msg += 'ТТ по μ: ' + spec.muNom + ' ± ' + spec.muTol + ' => [' + fmt(muMin,3) + ' … ' + fmt(muMax,3) + ']  => ' + (rMu.ok ? 'PASS' : 'FAIL') + '\\n\\n';
+
+      if(rW.ok && rMu.ok){
+        msg += 'ИТОГ: PASS (соответствует ТТ)';
+      } else {
+        msg += 'ИТОГ: FAIL (не соответствует ТТ)';
+      }
+
+      setOut(msg);
+    }
+
+    function clearAll(){
+      document.getElementById('stroke').value = '';
+      document.getElementById('omega').value = '';
+      document.getElementById('angle').value = '';
+      document.getElementById('time').value = '';
+      setOut('Готов.');
+    }
+  </script>
 </body>
 </html>
