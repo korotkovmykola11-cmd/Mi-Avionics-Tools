@@ -2,242 +2,243 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Пункт 8 — Канал направления (передаточное число по угловой скорости)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Пункт 8 — Проверка передаточного числа по угловой скорости (канал направления)</title>
 
   <style>
     :root{
-      --bg:#061a3a;
-      --paper:#ffffff;
-      --ink:#101010;
-      --grid:#2f2f2f;
-      --muted:#666;
-      --card:#0b2146;
-      --card2:#0a1c3d;
-      --line:#1f3a66;
-      --accent:#7fb2ff;
-      --ok:#2ecc71;
-      --bad:#ff5a5a;
+      --bg1:#081a3a;
+      --bg2:#071431;
+      --card:#0f254f;
+      --card2:#0c1f43;
+      --text:#eaf0ff;
+      --muted:#b9c6ea;
+      --line:#2b3a62;
+      --btn:#1a356d;
+      --btn2:#163064;
+      --danger:#ff5a6a;
+      --ok:#34d399;
+      --warn:#fbbf24;
     }
-
-    html,body{height:100%}
+    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 900px at 50% 0%, #0b2a5c 0%, var(--bg) 45%, #041227 100%);
-      color:#eaf1ff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 600px at 50% 0%, var(--bg1), var(--bg2));
     }
-
-    .wrap{
-      max-width: 1100px;
-      margin: 22px auto 40px;
-      padding: 0 12px;
-    }
-
     .topbar{
+      height:44px;
       display:flex;
-      gap:10px;
       align-items:center;
-      justify-content:space-between;
-      margin-bottom:14px;
-    }
-
-    .crumbs{
-      font-size:14px;
-      opacity:.9;
-    }
-
-    .crumbs b{color:#fff}
-    .hint{
+      justify-content:center;
+      gap:10px;
+      color:var(--muted);
       font-size:12px;
+      letter-spacing:.2px;
+      opacity:.9;
+      padding:0 10px;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:12px 14px 40px;
+    }
+
+    /* Белый "лист" */
+    .paper-wrap{
+      display:flex;
+      justify-content:center;
+    }
+    .paper-scroll{
+      width:100%;
+      overflow-x:auto;         /* ключ: на телефоне скролл, а не сжатие */
+      padding-bottom:8px;
+    }
+    .paper{
+      background:#fff;
+      color:#000;
+      border-radius:10px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      border:1px solid rgba(0,0,0,.2);
+      padding:18px 18px 14px;
+      min-width:860px;         /* ключ: чтобы не ужималось в “кишку” */
+      max-width:1060px;
+      margin:0 auto;
+    }
+    .paper h2{
+      font-size:18px;
+      margin:0 0 6px 0;
+      font-weight:700;
+    }
+    .paper .subtitle{
+      font-size:12px;
+      margin:0 0 10px 0;
       opacity:.85;
     }
 
-    /* “Лист” */
-    .paper{
-      background:var(--paper);
-      color:var(--ink);
-      border-radius:14px;
-      box-shadow: 0 18px 45px rgba(0,0,0,.35);
-      padding: 18px 18px 14px;
-      overflow:hidden;
-    }
-
-    .paper h1{
-      font-family: "Times New Roman", Times, serif;
-      margin:0 0 6px 0;
-      font-size:22px;
-      font-weight:700;
-    }
-
-    .paper .sub{
-      font-family: "Times New Roman", Times, serif;
-      margin:0 0 14px 0;
-      font-size:14px;
-      color:#222;
-    }
-
-    /* Таблица 3 колонки */
     table.tech{
       width:100%;
       border-collapse:collapse;
       table-layout:fixed;
-      border:1px solid var(--grid);
-      font-family: "Times New Roman", Times, serif;
-      font-size:14px;
-      line-height:1.18;
+      font-size:12px;
+      line-height:1.25;
     }
     table.tech th, table.tech td{
-      border:1px solid var(--grid);
+      border:1px solid #444;
       vertical-align:top;
-      padding:8px 10px;
+      padding:8px 8px 10px;
+      word-wrap:break-word;
     }
     table.tech th{
-      text-align:center;
       font-weight:700;
+      text-align:center;
     }
+    .col-ops{width:56%}
+    .col-tt{width:22%}
+    .col-dev{width:22%}
 
-    /* ширины колонок как “ощущение” оригинала */
-    col.c1{width:58%}
-    col.c2{width:20%}
-    col.c3{width:22%}
-
-    .celltext{
-      white-space: pre-wrap; /* сохраняет переносы */
-    }
-
-    /* Рисунок внутри “листа” */
-    .figure{
-      border:1px solid var(--grid);
+    .figblock{
       margin-top:10px;
+      border:1px solid #444;
       padding:8px;
-      font-family: "Times New Roman", Times, serif;
-      background:#fff;
     }
     .figcap{
-      font-size:14px;
-      margin:0 0 8px 0;
-      color:#111;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:6px;
     }
-    .figure img{
-      display:block;
+    .figimg{
       width:100%;
+      height:auto;
+      display:block;
+      border:1px solid #bbb;
+      background:#f4f4f4;
       max-height:520px;
       object-fit:contain;
-      border:1px solid #bbb;
-      background:#fafafa;
     }
 
-    /* Блок калькулятора */
+    /* Калькулятор */
     .calc{
-      margin-top:18px;
-      background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
-      border:1px solid var(--line);
+      margin-top:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.14);
       border-radius:14px;
       padding:14px;
-      box-shadow: 0 14px 35px rgba(0,0,0,.25);
+      box-shadow:0 10px 24px rgba(0,0,0,.25);
     }
-    .calc h2{
-      margin:0 0 10px 0;
-      font-size:16px;
-      color:#eaf1ff;
+    .calc h3{
+      margin:0 0 6px;
+      font-size:14px;
+      font-weight:800;
+      color:var(--text);
+    }
+    .calc .formula{
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 12px;
     }
     .grid{
       display:grid;
-      grid-template-columns: 1.2fr 1fr 1fr;
+      grid-template-columns: 1.3fr 1fr 1fr;
       gap:10px;
-      align-items:end;
     }
     .field label{
       display:block;
       font-size:12px;
-      opacity:.9;
-      margin:0 0 6px 0;
+      color:var(--muted);
+      margin:0 0 4px;
     }
-    .field input, .field select{
+    select, input{
       width:100%;
-      box-sizing:border-box;
-      height:36px;
-      border-radius:10px;
+      background: rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      color:#fff;
-      padding:0 10px;
+      color:var(--text);
+      padding:10px 10px;
+      border-radius:10px;
       outline:none;
+      font-size:14px;
     }
-    .field input::placeholder{color:rgba(255,255,255,.55)}
-    .buttons{
+    input::placeholder{color:rgba(255,255,255,.35)}
+    .actions{
       display:flex;
       gap:10px;
-      flex-wrap:wrap;
       margin-top:10px;
+      flex-wrap:wrap;
     }
     button{
-      height:34px;
-      border-radius:10px;
       border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.09);
-      color:#fff;
-      padding:0 12px;
+      background: linear-gradient(180deg, var(--btn), var(--btn2));
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:10px;
       cursor:pointer;
+      font-weight:700;
+      font-size:13px;
     }
-    button:hover{background: rgba(255,255,255,.14)}
+    button:active{transform:translateY(1px)}
     .out{
       margin-top:10px;
-      padding:10px;
-      border-radius:12px;
+      padding:10px 12px;
+      border-radius:10px;
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: rgba(0,0,0,.20);
       font-size:13px;
-      white-space:pre-wrap;
+      min-height:44px;
+      white-space:pre-line;
     }
-    .mathline{
-      margin-top:8px;
-      font-size:13px;
-      opacity:.95;
+    .tag{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      margin-left:8px;
+      vertical-align:middle;
     }
-    .sym{font-style:italic}
-    .ok{color:var(--ok); font-weight:700}
-    .bad{color:var(--bad); font-weight:700}
+    .tag.ok{background:rgba(52,211,153,.18); color:var(--ok); border:1px solid rgba(52,211,153,.35)}
+    .tag.bad{background:rgba(255,90,106,.18); color:var(--danger); border:1px solid rgba(255,90,106,.35)}
+    .tag.warn{background:rgba(251,191,36,.18); color:var(--warn); border:1px solid rgba(251,191,36,.35)}
 
-    /* мобильная читабельность */
-    @media (max-width: 860px){
-      col.c1{width:56%}
-      col.c2{width:22%}
-      col.c3{width:22%}
-      .grid{grid-template-columns: 1fr}
+    @media (max-width:720px){
+      .grid{grid-template-columns:1fr}
+      .paper{min-width:860px} /* специально оставляем — будет скролл */
     }
   </style>
 </head>
 
 <body>
+  <div class="topbar">
+    Mi-Avionics-Tools / vuap1 / p08.html
+    <span style="margin-left:auto;opacity:.8">Пункт 8 — только канал направления</span>
+  </div>
+
   <div class="wrap">
-    <div class="topbar">
-      <div class="crumbs">Mi-Avionics-Tools / <b>vuap1</b> / <b>p08.html</b></div>
-      <div class="hint">Пункт 8 — только канал направления</div>
-    </div>
 
-    <!-- ЛИСТ (как в технологии) -->
-    <section class="paper" aria-label="Технологическая карта — канал направления">
-      <h1>Содержание операций</h1>
-      <p class="sub">8. Проверьте передаточное число по угловой скорости: <b>А. Канала направления</b></p>
+    <!-- БЕЛЫЙ ЛИСТ -->
+    <div class="paper-wrap">
+      <div class="paper-scroll">
+        <div class="paper">
+          <h2>Содержание операций</h2>
+          <p class="subtitle">8. Проверьте передаточное число по угловой скорости: <b>А. Канала направления</b></p>
 
-      <table class="tech" aria-label="Технологическая карта (3 колонки)">
-        <colgroup>
-          <col class="c1"><col class="c2"><col class="c3">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Содержание операций</th>
-            <th>Технические требования (ТТ)</th>
-            <th>Работы, выполняемые при отклонениях от ТТ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><div class="celltext">8. Проверьте передаточное число по угловой скорости:
-
+          <table class="tech">
+            <colgroup>
+              <col class="col-ops" />
+              <col class="col-tt" />
+              <col class="col-dev" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Содержание операций</th>
+                <th>Технические требования (ТТ)</th>
+                <th>Работы, выполняемые при отклонениях от ТТ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <b>8. Проверьте передаточное число по угловой скорости:</b><br><br>
  Канала направления, для чего:
  Снимите с вертолета датчик угловой скорости, установите его на. установку УПГ-56 с помощью кронштейна 6С4.132.020 и с помощью переходного жгута 6С6.640.046-1 соедините датчик со схемой вертолета;
  выключатель В3 технологического жгута 246-9948-00 установите в положение "Wy ";
@@ -271,125 +272,133 @@
             <!-- ПРАВЫЙ СТОЛБЕЦ: РАБОТЫ ПРИ ОТКЛОНЕНИЯХ (ВСТАВЬ СЮДА СЛОВО-В-СЛОВО) -->
             <td class="pre">Работы, выполняемые при отклонениях от ТТ
 Отключите и вновь включите канал направления кнопками- лампочками "ОТКЛ" и "ВКЛ." на пульте управления. Поворотом шкалы ручки центровки установите подвиж-ный индекс нулевого индикатора в среднее положение. Задайте вращение установке, со-ответ¬ствующее правому развороту со скоро-стью 3,5 град/с Поворотом подстроечного ре-зистора "СКОР." на пульте управления добей-тесь, чтобы подвижный индекс нулевого ин-дикатора совместился с левой промежуточной отметкой. Измените направление вращения установки (в сторону левого разворота) и плавным изменением скорости вращения совместите подвижный' индекс нулевого ин-дикатора с правой промежуточной точной от-меткой. Скорость вращения должна быть (3,5 ±0,7)град/с</td>
-               </tr>
-        </tbody>
-      </table>
+              </tr>
+            </tbody>
+          </table>
 
-      <!-- Рисунок 6 -->
-      <div class="figure" aria-label="Рис. 6">
-        <div class="figcap">Рис. 6 (29.JPEG)</div>
-        <img src="./29.JPEG" alt="Рис. 6. Крепление датчика угловых скоростей на поворотной установке.">
+          <div class="figblock">
+            <div class="figcap">Рис. 6 (29.JPEG)</div>
+            <img class="figimg" src="./29.JPEG" alt="Рис. 6. Крепление датчика угловых скоростей на поворотной установке.">
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <!-- Калькулятор -->
-    <section class="calc" aria-label="Калькулятор передаточного числа">
-      <h2>Калькулятор передаточного числа (канал направления)</h2>
-
-      <div class="mathline">
-        Формула: <span class="sym">μ</span> = <span class="sym">S</span> / <span class="sym">ω</span>,
-        где <span class="sym">S</span> — ход штока, %, <span class="sym">ω</span> — угловая скорость, град/с.
+    <!-- КАЛЬКУЛЯТОР -->
+    <div class="calc" id="calc">
+      <h3>Калькулятор передаточного числа (канал направления)</h3>
+      <div class="formula">
+        Формула: <b>&mu; = S / &omega;</b>, где <b>S</b> — ход штока, %, <b>&omega;</b> — угловая скорость, град/с
       </div>
 
-      <div class="grid" style="margin-top:10px;">
+      <div class="grid">
         <div class="field">
           <label>Режим ТТ</label>
           <select id="mode">
-            <option value="main">Основной режим (ω = 3,5+2,1-1,1; μ = 20 ±8)</option>
-            <option value="iso">Режим “по курсу” (изодром) (ω = 6,5+6,5-2,0; μ = 10 ±8)</option>
+            <option value="main">Основной режим (ω = 3,5+2,1−1,1; μ = 20±8)</option>
+            <option value="course">Режим по курсу (ω = 6,5+6,5−2,0; μ = 10±8)</option>
           </select>
         </div>
 
         <div class="field">
           <label>Угловая скорость ω, град/с</label>
-          <input id="omega" type="number" step="0.01" placeholder="например 3.5">
+          <input id="omega" inputmode="decimal" placeholder="например 3.5" />
         </div>
 
         <div class="field">
           <label>Ход штока S, %</label>
-          <input id="S" type="number" step="0.01" placeholder="например 66.7">
+          <input id="stroke" inputmode="decimal" placeholder="например 66.7" />
         </div>
       </div>
 
-      <div class="buttons">
-        <button type="button" id="btnCalc">Посчитать μ = S / ω</button>
-        <button type="button" id="btnClear">Очистить</button>
+      <div class="actions">
+        <button id="btnCalc">Посчитать μ = S / ω</button>
+        <button id="btnClear">Очистить</button>
       </div>
 
-      <div class="out" id="out">Готов.</div>
-    </section>
+      <div class="out" id="out">Готово.</div>
+    </div>
+
   </div>
 
   <script>
-    function rangesForMode(mode){
-      if(mode === "main"){
-        // ω = (3,5+2,1-1,1) => 2.4..5.6
-        // μ = 20±8 => 12..28
-        return { wMin: 2.4, wMax: 5.6, muMin: 12, muMax: 28,
-                 label: "Основной режим: ω ∈ [2.4; 5.6], μ ∈ [12; 28]" };
+    (function(){
+      const $ = (id)=>document.getElementById(id);
+
+      // режимы ТТ
+      // ω-диапазон берём из вида (a + b - c): min = a - c, max = a + b
+      const TT = {
+        main:   { name:'Основной режим', omegaMin: 3.5 - 1.1, omegaMax: 3.5 + 2.1, muMin: 20 - 8, muMax: 20 + 8 },
+        course: { name:'Режим по курсу', omegaMin: 6.5 - 2.0, omegaMax: 6.5 + 6.5, muMin: 10 - 8, muMax: 10 + 8 }
+      };
+
+      function parseNum(v){
+        if(v===null || v===undefined) return NaN;
+        v = String(v).trim().replace(/\s+/g,'').replace(',','.');
+        if(v==='') return NaN;
+        const n = Number(v);
+        return Number.isFinite(n) ? n : NaN;
       }
-      // iso
-      // ω = (6,5+6,5-2,0) => 4.5..13.0
-      // μ = 10±8 => 2..18
-      return { wMin: 4.5, wMax: 13.0, muMin: 2, muMax: 18,
-               label: "Изодром: ω ∈ [4.5; 13.0], μ ∈ [2; 18]" };
-    }
-
-    function fmt(x){
-      return Number.isFinite(x) ? x.toFixed(3) : "—";
-    }
-
-    function calc(){
-      const mode = document.getElementById("mode").value;
-      const r = rangesForMode(mode);
-
-      const omega = parseFloat(document.getElementById("omega").value.replace(",", "."));
-      const S = parseFloat(document.getElementById("S").value.replace(",", "."));
-
-      if(!Number.isFinite(omega) || !Number.isFinite(S) || omega === 0){
-        document.getElementById("out").textContent =
-          "Ошибка ввода: введи ω (не 0) и S.\n" + r.label;
-        return;
+      function fmt(n, d=3){
+        if(!Number.isFinite(n)) return '—';
+        return n.toFixed(d).replace(/\.?0+$/,'');
       }
 
-      const mu = S / omega;
+      function tag(cls, text){
+        return ' <span class="tag '+cls+'">'+text+'</span>';
+      }
 
-      const wPass = (omega >= r.wMin && omega <= r.wMax);
-      const muPass = (mu >= r.muMin && mu <= r.muMax);
+      function calc(){
+        const modeKey = $('mode').value;
+        const t = TT[modeKey];
 
-      const wTxt = wPass ? "PASS" : "FAIL";
-      const muTxt = muPass ? "PASS" : "FAIL";
+        const omega = parseNum($('omega').value);
+        const S = parseNum($('stroke').value);
 
-      const verdict = (wPass && muPass) ? "ИТОГ: PASS (по ТТ)" : "ИТОГ: FAIL (вне ТТ)";
+        // Валидация
+        if(!Number.isFinite(omega) || omega<=0){
+          $('out').textContent =
+            'Ошибка ввода: введи ω (число > 0).\n' +
+            t.name + ': ω ∈ [' + fmt(t.omegaMin) + '; ' + fmt(t.omegaMax) + '] град/с, μ ∈ [' + fmt(t.muMin) + '; ' + fmt(t.muMax) + '] %/(град/с)';
+          return;
+        }
+        if(!Number.isFinite(S)){
+          $('out').textContent =
+            'Ошибка ввода: введи S (ход штока, %).\n' +
+            t.name + ': ω ∈ [' + fmt(t.omegaMin) + '; ' + fmt(t.omegaMax) + '] град/с, μ ∈ [' + fmt(t.muMin) + '; ' + fmt(t.muMax) + '] %/(град/с)';
+          return;
+        }
 
-      const out =
-`${r.label}
-Ввод: ω = ${fmt(omega)} град/с,  S = ${fmt(S)} %
-Расчёт: μ = S/ω = ${fmt(mu)} %/(град/с)
+        const mu = S / omega;
 
-Проверка:
-ω: ${wTxt}
-μ: ${muTxt}
-${verdict}`;
+        // PASS/FAIL по μ
+        const muPass = (mu >= t.muMin && mu <= t.muMax);
+        const omegaPass = (omega >= t.omegaMin && omega <= t.omegaMax);
 
-      // раскраска “ИТОГ”
-      const box = document.getElementById("out");
-      box.textContent = out;
+        // Подсказка: какие S должны быть при текущей ω для попадания в μ диапазон
+        const Smin = t.muMin * omega;
+        const Smax = t.muMax * omega;
 
-      // добавим цвет в конце (минимально, без “мусора”)
-      box.innerHTML = out
-        .replace("ИТОГ: PASS (по ТТ)", `<span class="ok">ИТОГ: PASS (по ТТ)</span>`)
-        .replace("ИТОГ: FAIL (вне ТТ)", `<span class="bad">ИТОГ: FAIL (вне ТТ)</span>`)
-        .replaceAll("\n","<br>");
-    }
+        let line1 = 'μ = S / ω = ' + fmt(S) + ' / ' + fmt(omega) + ' = ' + fmt(mu) + ' %/(град/с)';
+        line1 += muPass ? tag('ok','PASS по μ') : tag('bad','FAIL по μ');
 
-    document.getElementById("btnCalc").addEventListener("click", calc);
+        let line2 = t.name + ': μ ∈ [' + fmt(t.muMin) + '; ' + fmt(t.muMax) + '], ω ∈ [' + fmt(t.omegaMin) + '; ' + fmt(t.omegaMax) + ']';
+        line2 += omegaPass ? tag('ok','ω в норме') : tag('warn','ω вне диапазона');
 
-    document.getElementById("btnClear").addEventListener("click", () => {
-      document.getElementById("omega").value = "";
-      document.getElementById("S").value = "";
-      document.getElementById("out").textContent = "Готов.";
-    });
+        let line3 = 'Для этой ω: чтобы попасть в ТТ по μ, нужно S ∈ [' + fmt(Smin) + '; ' + fmt(Smax) + '] %';
+
+        $('out').innerHTML = line1 + '\n' + line2 + '\n' + line3;
+      }
+
+      function clearAll(){
+        $('omega').value='';
+        $('stroke').value='';
+        $('out').textContent='Готово.';
+      }
+
+      $('btnCalc').addEventListener('click', calc);
+      $('btnClear').addEventListener('click', clearAll);
+    })();
   </script>
 </body>
 </html>
