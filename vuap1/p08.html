@@ -3,952 +3,365 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Р08 — Проверка передаточного числа по угловой скорости (ВУАП-1)</title>
+  <title>ВУАП-1 — Пункт 8. Проверка передаточного числа по угловой скорости</title>
+
+  <!-- MathJax для формул -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
   <style>
-    :root{
-      --bg:#0b1220;
-      --panel:#101a2f;
-      --panel2:#0f1730;
-      --card:#111b34;
-      --line:rgba(255,255,255,.10);
-      --text:#e9effc;
-      --muted:rgba(233,239,252,.72);
-      --accent:#6ea8ff;
-      --ok:#2dd4bf;
-      --bad:#ff7185;
-      --warn:#ffb020;
-      --shadow:0 12px 32px rgba(0,0,0,.35);
-      --radius:14px;
-      --radius2:18px;
-      --pad:16px;
-      --pad2:18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
-    }
-
-    html,body{height:100%;}
-    body{
-      margin:0;
-      font-family:var(--sans);
-      background:
-        radial-gradient(1200px 600px at 20% -10%, rgba(110,168,255,.15), transparent 70%),
-        radial-gradient(1000px 700px at 90% 10%, rgba(45,212,191,.10), transparent 65%),
-        var(--bg);
-      color:var(--text);
-    }
-
-    a{color:var(--accent); text-decoration:none;}
-    a:hover{text-decoration:underline;}
-
-    .wrap{max-width:1200px; margin:0 auto; padding:20px 16px 40px;}
-
-    /* topbar */
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 12px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      border-radius:16px;
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-    .brand{
-      display:flex; flex-direction:column; gap:2px;
-    }
-    .brand .t{font-weight:800; letter-spacing:.2px;}
-    .brand .s{font-size:12px; color:var(--muted);}
-    .nav{
-      display:flex; gap:10px; align-items:center;
-    }
-    .btn{
-      appearance:none; border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      padding:9px 12px; border-radius:12px;
-      font-weight:700; cursor:pointer;
-    }
-    .btn:hover{border-color:rgba(110,168,255,.35);}
-    .btn.primary{background:rgba(110,168,255,.18); border-color:rgba(110,168,255,.35);}
-    .pill{
-      padding:6px 10px; border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      font-size:12px; color:var(--muted);
-      font-weight:700;
-    }
-
-    /* layout */
-    .grid{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns: 1fr 340px;
-      gap:16px;
-      align-items:start;
-    }
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr;}
-    }
-
-    .card{
-      background:rgba(255,255,255,.03);
-      border:1px solid var(--line);
-      border-radius:var(--radius2);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .card .head{
-      padding:var(--pad2);
-      border-bottom:1px solid var(--line);
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-    }
-    .card .head h1{
-      margin:0; font-size:18px; letter-spacing:.2px;
-    }
-    .card .head .sub{
-      margin-top:6px;
-      font-size:13px; color:var(--muted);
-      line-height:1.35;
-    }
-    .card .body{padding:var(--pad2);}
-
-    .sectionTitle{
-      margin:0 0 10px 0;
-      font-size:14px; letter-spacing:.2px;
-    }
-
-    ul{margin:10px 0 0 18px; color:var(--muted); line-height:1.45;}
-    .note{
-      margin-top:10px;
-      border:1px dashed rgba(255,255,255,.18);
-      background:rgba(255,255,255,.03);
-      padding:10px 12px;
-      border-radius:12px;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .mono{font-family:var(--mono);}
-
-    /* illustrations */
-    .figGrid{
-      display:grid; grid-template-columns: 1fr 1fr; gap:12px;
-      margin-top:12px;
-    }
-    @media (max-width: 820px){ .figGrid{grid-template-columns:1fr;} }
-
-    .fig{
-      border:1px solid var(--line);
-      border-radius:14px;
-      overflow:hidden;
-      background:rgba(0,0,0,.18);
-      cursor:pointer;
-      position:relative;
-    }
-    .fig img{width:100%; height:auto; display:block; opacity:.95;}
-    .fig .cap{
-      padding:10px 12px;
-      border-top:1px solid var(--line);
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.3;
-    }
-    .fig .zoomHint{
-      position:absolute; right:10px; top:10px;
-      font-size:12px; font-weight:800;
-      padding:6px 8px; border-radius:10px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.35);
-      color:var(--text);
-    }
-
-    /* checks */
-    .checks{display:flex; flex-direction:column; gap:14px;}
-    .check{
-      border:1px solid var(--line);
-      border-radius:16px;
-      overflow:hidden;
-      background:rgba(255,255,255,.02);
-    }
-    .check .cHead{
-      padding:12px 14px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      border-bottom:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-    }
-    .check .cHead .left{
-      display:flex; flex-direction:column; gap:2px;
-    }
-    .check .cHead .name{font-weight:900;}
-    .check .cHead .meta{font-size:12px; color:var(--muted);}
-    .badge{
-      font-size:12px;
-      font-weight:900;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:var(--muted);
-      display:flex; align-items:center; gap:8px;
-      white-space:nowrap;
-    }
-    .dot{width:8px; height:8px; border-radius:50%;}
-    .dot.wait{background:rgba(233,239,252,.35);}
-    .dot.ok{background:var(--ok);}
-    .dot.bad{background:var(--bad);}
-
-    .check .cBody{
-      padding:14px;
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:14px;
-    }
-    @media (max-width: 900px){ .check .cBody{grid-template-columns:1fr;} }
-
-    .box{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px;
-      background:rgba(255,255,255,.02);
-    }
-    .box h3{
-      margin:0 0 10px 0;
-      font-size:13px;
-      letter-spacing:.2px;
-    }
-    .reqTable{
-      width:100%;
-      border-collapse:collapse;
-      font-size:13px;
-      color:var(--muted);
-    }
-    .reqTable td{
-      padding:6px 0;
-      border-bottom:1px dashed rgba(255,255,255,.10);
-      vertical-align:top;
-    }
-    .reqTable td:first-child{color:var(--text); width:44%;}
-    .reqTable tr:last-child td{border-bottom:none;}
-    .opList{
-      margin:0;
-      padding-left:18px;
-      color:var(--muted);
-      line-height:1.45;
-      font-size:13px;
-    }
-
-    .formRow{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top:10px;
-    }
-    @media (max-width: 520px){ .formRow{grid-template-columns:1fr;} }
-
-    label{
-      display:flex; flex-direction:column; gap:6px;
-      font-size:12px; color:var(--muted); font-weight:700;
-    }
-    input, select{
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.22);
-      color:var(--text);
-      padding:10px 10px;
-      border-radius:12px;
-      outline:none;
-      font-size:14px;
-      font-family:var(--mono);
-    }
-    input:focus, select:focus{border-color:rgba(110,168,255,.45);}
-
-    .calcLine{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.20);
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.35;
-    }
-    .calcLine b{color:var(--text);}
-
-    .actions{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .btn.small{padding:9px 11px; border-radius:12px; font-weight:900;}
-    .btn.ok{background:rgba(45,212,191,.18); border-color:rgba(45,212,191,.35);}
-    .btn.danger{background:rgba(255,113,133,.14); border-color:rgba(255,113,133,.35);}
-
-    /* sidebar */
-    .side .body{padding:14px;}
-    .summaryTable{
-      width:100%;
-      border-collapse:collapse;
-      font-size:12px;
-      color:var(--muted);
-    }
-    .summaryTable th, .summaryTable td{
-      padding:9px 6px;
-      border-bottom:1px dashed rgba(255,255,255,.10);
-      text-align:left;
-    }
-    .summaryTable th{color:var(--text); font-size:12px;}
-    .statusPill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      font-weight:900;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-    .statusPill.ok{border-color:rgba(45,212,191,.35); background:rgba(45,212,191,.10); color:var(--text);}
-    .statusPill.bad{border-color:rgba(255,113,133,.35); background:rgba(255,113,133,.10); color:var(--text);}
-    .statusPill.wait{border-color:rgba(233,239,252,.20); background:rgba(255,255,255,.03);}
-
-    .bigStatus{
-      margin-top:10px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .bigStatus .label{color:var(--muted); font-weight:800; font-size:12px;}
-    .bigStatus .value{font-weight:1000; letter-spacing:.3px;}
-
-    /* modal */
-    dialog{
-      border:none;
-      border-radius:16px;
-      padding:0;
-      background:rgba(15, 23, 48, .98);
-      color:var(--text);
-      width:min(1050px, 94vw);
-      box-shadow:0 30px 90px rgba(0,0,0,.65);
-    }
-    dialog::backdrop{
-      background:rgba(0,0,0,.65);
-      backdrop-filter: blur(3px);
-    }
-    .modalHead{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-    }
-    .modalHead .ttl{font-weight:1000;}
-    .modalTools{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
-    .modalBody{
-      padding:12px;
-      overflow:auto;
-      max-height:78vh;
-    }
-    .zoomWrap{
-      display:flex; align-items:center; justify-content:center;
-      padding:10px;
-    }
-    .zoomImg{
-      transform-origin: top left;
-      will-change: transform;
-      user-select:none;
-      pointer-events:none;
-      max-width:none; /* allow scaling beyond container */
-      display:block;
-    }
-    .range{
-      width:180px;
-      accent-color: var(--accent);
-    }
+    :root{ --bg:#0f141a; --card:#141b23; --border:#2b3a4b; --text:#e8eef6; --muted:#b8c6d8; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    .wrap{ max-width:1100px; margin:0 auto; padding:20px 14px 60px; }
+    h1,h2,h3{ margin:14px 0 10px; }
+    h1{ font-size:22px; }
+    h2{ font-size:18px; margin-top:26px; }
+    h3{ font-size:16px; margin-top:18px; }
+    .note{ color:var(--muted); font-size:14px; margin:6px 0 14px; }
+    .block{ background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin:12px 0; }
+    .grid3{ display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap:12px; }
+    @media (max-width: 980px){ .grid3{ grid-template-columns:1fr; } }
+    .coltitle{ font-weight:700; margin-bottom:8px; }
+    .todo{ background:rgba(255,200,0,.08); border:1px dashed rgba(255,200,0,.6); padding:10px; border-radius:8px; color:var(--muted); }
+    table{ width:100%; border-collapse:collapse; font-size:14px; }
+    th,td{ border:1px solid var(--border); padding:8px; vertical-align:top; }
+    th{ background:rgba(255,255,255,.03); text-align:left; }
+    .figrow{ display:flex; flex-wrap:wrap; gap:14px; }
+    figure{ margin:0; max-width:520px; }
+    img{ width:100%; border:1px solid var(--border); border-radius:8px; background:#0b0f14; }
+    figcaption{ font-size:13px; color:var(--muted); margin-top:6px; }
+    .math{ font-size:16px; }
+    .subtle{ color:var(--muted); }
+    .tag{ display:inline-block; padding:2px 8px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <div class="t">ВУАП-1</div>
-        <div class="s">Инженерная инструкция • Пошаговый контроль допусков</div>
+    <h1>8. Проверка передаточного числа по угловой скорости</h1>
+    <div class="note">
+      Структура пункта оформлена по технологической карте №2: <span class="tag">Содержание операций</span> /
+      <span class="tag">Технические требования (ТТ)</span> / <span class="tag">Работы при отклонениях от ТТ</span>.
+      Рисунки и формулы включены.
+    </div>
+
+    <!-- ===== РИСУНКИ К УСТАНОВКЕ/КРЕПЛЕНИЮ ===== -->
+    <div class="block">
+      <h2>Рисунки к установке оборудования на поворотную установку</h2>
+      <div class="figrow">
+        <figure>
+          <!-- TODO: положить файл в /vuap1/ и указать правильное имя -->
+          <img src="img/fig6.jpg" alt="Рис. 6 — Крепление датчика угловых скоростей на поворотной установке">
+          <figcaption>Рис. 6. Крепление датчика угловых скоростей на поворотной установке.</figcaption>
+        </figure>
+
+        <figure>
+          <!-- TODO: положить файл в /vuap1/ и указать правильное имя -->
+          <img src="img/fig7.jpg" alt="Рис. 7 — Крепление гирровертикали на поворотной установке (пикирование)">
+          <figcaption>Рис. 7. Крепление гирровертикали на поворотной установке при проверке передаточного числа по угловой скорости в канале тангажа (пикирование).</figcaption>
+        </figure>
       </div>
-      <div class="nav">
-        <a class="btn" href="../index.html">← На главную</a>
-        <span class="pill">Р08</span>
-        <a class="btn primary" href="./p07.html">Предыдущий пункт</a>
-        <a class="btn primary" href="./p02.html">Следующий пункт →</a>
+
+      <div class="todo">
+        TODO (если нужно строго по карте): подписи “Кронштейн…”, “Знак Δ…”, “Правый разворот/правый крен”, “Пикирование”, “Кронштейн поворотный КП-9”
+        — можно добавить как отдельный список под рисунками.
       </div>
     </div>
 
-    <div class="grid">
-      <!-- MAIN -->
-      <div class="card">
-        <div class="head">
-          <div>
-            <h1>Р08 — Проверка передаточного числа по угловой скорости</h1>
-            <div class="sub">
-              Формат ВУАП-1 (тёмный интерфейс + фиксация результата).<br/>
-              Структура проверок: <b>направление — 2</b>, <b>крен — 2</b>, <b>тангаж — 1</b>.
-            </div>
-          </div>
-          <div class="pill mono" id="storageInfo">localStorage: ON</div>
-        </div>
+    <!-- =================================================================== -->
+    <!-- ========================== а) КАНАЛ НАПРАВЛЕНИЯ ==================== -->
+    <!-- =================================================================== -->
+    <div class="block">
+      <h2>а) Канал направления</h2>
 
-        <div class="body">
-          <!-- Conditions -->
-          <div class="box">
-            <h2 class="sectionTitle">Условия проведения проверки</h2>
-            <ul>
-              <li>Проверка выполняется при включённой наземной гидроустановке.</li>
-              <li>Поворотная установка обеспечивает плавное изменение угловой скорости в диапазоне 0–20 град/сек.</li>
-              <li>Подключение — через технологические удлинительные жгуты.</li>
-              <li>Ориентация датчиков и направление вращения — согласно рис. 6 и 7.</li>
-            </ul>
-          </div>
+      <!-- 1) Основной режим -->
+      <h3>1) Передаточное число по угловой скорости (основной режим)</h3>
 
-          <!-- Illustrations -->
-          <div class="box" style="margin-top:14px;">
-            <h2 class="sectionTitle">Иллюстрации</h2>
-            <div class="figGrid">
-              <div class="fig" data-img="./29.JPEG" data-title="Рис. 6. Крепление датчика угловых скоростей на поворотной установке">
-                <div class="zoomHint">ЗУМ</div>
-                <img src="./29.JPEG" alt="Рис. 6" loading="lazy">
-                <div class="cap">Рис. 6. Крепление датчика угловых скоростей на поворотной установке.</div>
-              </div>
-              <div class="fig" data-img="./36.JPEG" data-title="Рис. 7. Крепление гирровертикали/провертора на поворотной установке (тангаж)">
-                <div class="zoomHint">ЗУМ</div>
-                <img src="./36.JPEG" alt="Рис. 7" loading="lazy">
-                <div class="cap">Рис. 7. Крепление для проверки канала тангажа (пикирование/кабрирование).</div>
-              </div>
-            </div>
-            <div class="note">
-              Если изображения не показываются — проверь регистр имён файлов:
-              <span class="mono">29.JPEG</span> и <span class="mono">36.JPEG</span> (не <span class="mono">29.jpeg</span>).
-            </div>
-          </div>
-
-          <!-- Checks -->
-          <div style="margin-top:14px;" class="checks" id="checks"></div>
-
-          <div class="note" style="margin-top:14px;">
-            Формула расчёта: <span class="mono"><b>μ = 66,7 / ω</b></span>,
-            где <span class="mono">66,7%</span> — ход штока малого цилиндра от застопоренного положения до упора,
-            <span class="mono">ω</span> — измеренная угловая скорость (град/сек) в момент совмещения стрелки с требуемой отметкой.
+      <div class="grid3">
+        <div>
+          <div class="coltitle">Содержание операций</div>
+          <div class="todo">
+            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 20, левый столбец):<br>
+            – ВКЛ канала направления, установить стрелку нулевого в среднее положение;<br>
+            – задать вращение установки (правый/левый разворот), плавно меняя скорость, отклонить шток малого цилиндра до положения совмещения с промежуточной отметкой;<br>
+            – направление отклонения стрелки при правом/левом развороте;<br>
+            – замер секундомером скорости; сравнение с ТТ.
           </div>
         </div>
-      </div>
 
-      <!-- SIDE -->
-      <div class="card side">
-        <div class="head">
-          <div>
-            <div style="font-weight:1000;">Сводка Р08</div>
-            <div class="sub">Статусы обновляются по факту фиксации результатов.</div>
-          </div>
-        </div>
-        <div class="body">
-          <table class="summaryTable" id="summaryTable">
+        <div>
+          <div class="coltitle">Технические требования (ТТ)</div>
+          <table>
             <thead>
               <tr>
-                <th>Проверка</th>
-                <th>Канал</th>
-                <th>Статус</th>
+                <th>Задаваемая угловая скорость, град/сек</th>
+                <th>Передаточное число, %/(град/сек)</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              <tr>
+                <td>3,5 \(+\;2,1\; / -\;1,1\)</td>
+                <td>20 ± 8</td>
+              </tr>
+            </tbody>
           </table>
+          <div class="note subtle">Источник: лист 20 (таблица ТТ для канала направления).</div>
+        </div>
 
-          <div class="bigStatus">
-            <div>
-              <div class="label">Общий статус Р08</div>
-              <div class="value" id="overallStatus">ОЖИДАЕТ</div>
-            </div>
-            <span class="statusPill wait" id="overallPill"><span class="dot wait"></span>WAIT</span>
+        <div>
+          <div class="coltitle">Работы при отклонениях от ТТ</div>
+          <div class="todo">
+            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 20, правый столбец):<br>
+            – ОТКЛ/ВКЛ канал направления кнопками-табло;<br>
+            – поворотом шкалы ручки центровки выставить стрелку нулевого в среднее положение;<br>
+            – задать вращение установки с нужной скоростью;<br>
+            – потенциометром “Скор” добиться совмещения стрелки с промежуточной отметкой;<br>
+            – дальнейшие действия из текста (в т.ч. смена направления вращения).
           </div>
+        </div>
+      </div>
 
-          <div style="margin-top:12px;">
-            <button class="btn small danger" id="resetAll">Очистить всё (localStorage)</button>
-            <div class="note" style="margin-top:10px;">
-              Сохраняет/восстанавливает результаты автоматически при перезагрузке страницы.
-            </div>
+      <!-- 2) Режим управления по курсу (изодром) -->
+      <h3>2) Передаточное число по угловой скорости в режиме управления по курсу (изодром)</h3>
+
+      <div class="grid3">
+        <div>
+          <div class="coltitle">Содержание операций</div>
+          <div class="todo">
+            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 21, левый столбец):<br>
+            – ОТКЛ канал направления, поставить ноги на педали и повторить проверку;<br>
+            – после проверки/регулировки выключатель В3 технологического жгута в положение “ОТКЛ”;<br>
+            – проверить работоспособность изодрома в цепи ДУС (порядок включения/задания вращения и реакция стрелки).
+          </div>
+        </div>
+
+        <div>
+          <div class="coltitle">Технические требования (ТТ)</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Задаваемая угловая скорость, град/сек</th>
+                <th>Передаточное число, %/(град/сек)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>6,5 \(+\;6,5\; / -\;2,0\)</td>
+                <td>10 ± 8</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="note subtle">Источник: лист 21 (режим управления по курсу / изодром).</div>
+        </div>
+
+        <div>
+          <div class="coltitle">Работы при отклонениях от ТТ</div>
+          <div class="todo">
+            TODO: Если на листе 21 есть отдельные указания — вставить сюда буква-в-букву.
+            Если нет — оставить пустым (но это надо подтвердить по читаемой копии).
           </div>
         </div>
       </div>
     </div>
+
+    <!-- =================================================================== -->
+    <!-- ============================== б) КАНАЛ КРЕНА ======================= -->
+    <!-- =================================================================== -->
+    <div class="block">
+      <h2>б) Канал крена</h2>
+
+      <h3>1) Передаточное число по угловой скорости (основной режим)</h3>
+
+      <div class="grid3">
+        <div>
+          <div class="coltitle">Содержание операций</div>
+          <div class="todo">
+            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 22/23, левый столбец):<br>
+            – снять датчик угловой скорости крена, установить на поворотную установку (см. рис.6);<br>
+            – соединить удлинительным жгутом с фидерной схемой;<br>
+            – ВКЛ канала крена; стрелка нулевого в среднее положение;<br>
+            – задать вращение (правый/левый крен), плавно менять скорость, довести до совмещения с промежуточной отметкой;<br>
+            – направление отклонения стрелки при правом/левом крене;<br>
+            – замер скорости секундомером; сравнение с ТТ.
+          </div>
+        </div>
+
+        <div>
+          <div class="coltitle">Технические требования (ТТ)</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Задаваемая угловая скорость, град/сек</th>
+                <th>Передаточное число, %/(град/сек)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>8 \(+\;6\; / -\;2\)</td>
+                <td>8 ± 3,2</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="note subtle">Источник: лист 23 (верхняя таблица для канала крена).</div>
+        </div>
+
+        <div>
+          <div class="coltitle">Работы при отклонениях от ТТ</div>
+          <div class="todo">
+            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 22, правый столбец):<br>
+            – подрегулировать по методике канала направления, оперируя “ВКЛ/ОТКЛ”, ручкой центровки и потенциометром “Скор” канала крена;<br>
+            – скорость вращения установки должна быть в пределах: 8 \(+\;2,5 / -\;1,0\) град/сек.
+          </div>
+        </div>
+      </div>
+
+      <h3>2) Канал крена в режиме управления (при нажатии кнопки триммера)</h3>
+
+      <div class="grid3">
+        <div>
+          <div class="coltitle">Содержание операций</div>
+          <div class="todo">
+            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 23, левый столбец, нижний абзац):<br>
+            – нажать кнопку триммера на ручке управления лётчика;<br>
+            – снова произвести проверку для канала крена;<br>
+            – полученное значение должно соответствовать ТТ.
+          </div>
+        </div>
+
+        <div>
+          <div class="coltitle">Технические требования (ТТ)</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Задаваемая угловая скорость, град/сек</th>
+                <th>Передаточное число, %/(град/сек)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>17 \(+\;16,5\; / -\;6,5\)</td>
+                <td>4 ± 2</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="note subtle">Источник: лист 23 (нижняя таблица — режим управления/триммер).</div>
+        </div>
+
+        <div>
+          <div class="coltitle">Работы при отклонениях от ТТ</div>
+          <div class="todo">
+            TODO: если на листе 23/24 есть отдельные указания по отклонениям в этом режиме — вставить.
+          </div>
+        </div>
+      </div>
+
+      <div class="todo">
+        TODO (лист 24): “После проверки (и подрегулировки) отключить канал крена кнопкой-табло ‘ОТКЛ’…”
+        — вставить как завершающую строку раздела б).
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- ============================ в) КАНАЛ ТАНГАЖА ======================== -->
+    <!-- =================================================================== -->
+    <div class="block">
+      <h2>в) Канал тангажа</h2>
+
+      <div class="note">
+        Здесь обязательно: установка гирровертикали (рис.7), режим “пикирование/кабрирование”,
+        ограничение по углу ±30°, формула для пересчёта и таблица ТТ.
+      </div>
+
+      <h3>1) Содержание операций</h3>
+      <div class="todo">
+        TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 24, левый столбец):<br>
+        – снять гирровертикаль, установить на поворотную установку (см. рис.7);<br>
+        – соединить удлинительным жгутом с фидерной схемой;<br>
+        – положение поворотного стола на нулевой отметке, гирровертикаль горизонтальна;<br>
+        – выключатель В2 технологического жгута… (позиция как в тексте);<br>
+        – “ВКЛ” канал тангажа, потенциометром “Центр” установить стрелку в среднее положение;<br>
+        – дальше проверка аналогично направления/крена с учётом замечаний.
+      </div>
+
+      <h3>2) Ограничение по углу</h3>
+      <div class="block">
+        <div class="subtle">
+          При вращении гирровертикали угол её отклонения от нулевого положения не должен превышать <b>±30°</b>
+          (при больших углах крутизна сигнала уменьшается).
+        </div>
+        <div class="note subtle">Источник: лист 26 (левый столбец).</div>
+      </div>
+
+      <h3>3) Формула (пересчёт передаточного числа)</h3>
+      <div class="block math">
+        \[
+          \mu = \frac{66{,}7}{\omega}
+        \]
+        <div class="todo" style="margin-top:10px">
+          TODO: “где:” вставить расшифровки из листа 27 буква-в-букву:<br>
+          – \(\mu\) — передаточное число по угловой скорости;<br>
+          – 66,7 (%) — величина хода штока малого цилиндра…;<br>
+          – \(\omega\) (град/сек) — задаваемая угловая скорость.
+        </div>
+      </div>
+
+      <h3>4) Технические требования (ТТ)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Задаваемая угловая скорость, град/сек</th>
+            <th>Передаточное число, %/(град/сек)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3,5 \(+\;2,1\; / -\;1,1\)</td>
+            <td>20 ± 8</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note subtle">Источник: лист 27 (таблица ТТ для канала тангажа).</div>
+
+      <h3>5) Работы при отклонениях от ТТ</h3>
+      <div class="grid3">
+        <div>
+          <div class="coltitle">ОТКЛ/ВКЛ, “Центр”</div>
+          <div class="todo">
+            TODO: Вставить из листа 26 (правый столбец):<br>
+            – ОТКЛ/ВКЛ канал тангажа кнопками-табло;<br>
+            – потенциометром “Центр” установить стрелку нулевого в среднее положение.
+          </div>
+        </div>
+        <div>
+          <div class="coltitle">“Скор”, верхняя/нижняя отметка</div>
+          <div class="todo">
+            TODO: Вставить из листа 26 (правый столбец):<br>
+            – задать вращение установки, соответствующее пикированию со скоростью 3,5 град/сек;<br>
+            – потенциометром “Скор” совместить стрелку с верхней промежуточной отметкой;<br>
+            – изменить скорость/направление и плавно совместить с нижней промежуточной отметкой.
+          </div>
+        </div>
+        <div>
+          <div class="coltitle">Контроль скорости установки</div>
+          <div class="block">
+            Скорость вращения установки должна быть в пределах:<br>
+            <b>3,5 ± 0,7</b> град/сек.
+            <div class="note subtle" style="margin:8px 0 0">Источник: лист 27 (правый столбец).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Финальная фиксация/завершение пункта ===== -->
+    <div class="block">
+      <h2>Завершение</h2>
+      <div class="todo">
+        TODO: добавить финальные строки отключения каналов/установки датчиков “на место” (как в конце листов 22/24/26, где это указано).
+      </div>
+    </div>
+
   </div>
-
-  <!-- Modal for zoom -->
-  <dialog id="imgModal">
-    <div class="modalHead">
-      <div class="ttl" id="modalTitle">Просмотр</div>
-      <div class="modalTools">
-        <button class="btn small" id="fitBtn" type="button">FIT</button>
-        <button class="btn small" id="zOut" type="button">−</button>
-        <input class="range" id="zoomRange" type="range" min="25" max="400" value="100" />
-        <button class="btn small" id="zIn" type="button">+</button>
-        <span class="pill mono" id="zoomLabel">100%</span>
-        <button class="btn small" id="closeModal" type="button">Закрыть</button>
-      </div>
-    </div>
-    <div class="modalBody" id="modalBody">
-      <div class="zoomWrap" id="zoomWrap">
-        <img id="modalImg" class="zoomImg" alt="Просмотр" />
-      </div>
-    </div>
-  </dialog>
-
-  <script>
-    /*************************************************************
-     * ДАННЫЕ Р08 (ровно 5 проверок: направление-2, крен-2, тангаж-1)
-     *************************************************************/
-    const CHECKS = [
-      {
-        id: "p1_dir_rate",
-        code: "П1",
-        title: "Передаточное число по угловой скорости (канал направления)",
-        channel: "Направление",
-        omega_nom: 3.5, omega_plus: 2.1, omega_minus: 1.1,
-        mu_nom: 20, mu_tol: 8,
-        operations: [
-          "Снять с вертолёта датчик угловых скоростей направления (ДУСУ-… направления) и установить на поворотную установку (0–20 град/сек).",
-          "Соединить датчик с фидерной схемой вертолёта через технологический удлинительный жгут.",
-          "В технологическом переходном жгуте установить соответствующий выключатель в положение «СД …» (как в техкарте).",
-          "Включить канал кнопкой-табло «ВКЛ», ручкой центровки установить стрелку индикатора нулевого в среднее положение.",
-          "Задать вращение (правый/левый разворот) и, плавно меняя скорость, добиться совмещения стрелки с промежуточной отметкой.",
-          "Измерить секундомером/по установке фактическую ω (град/сек) в момент совмещения."
-        ]
-      },
-      {
-        id: "p2_dir_heading",
-        code: "П2",
-        title: "Передаточное число (канал направления) в режиме управления по курсу",
-        channel: "Направление",
-        omega_nom: 6.5, omega_plus: 6.5, omega_minus: 2.0,
-        mu_nom: 10, mu_tol: 8,
-        operations: [
-          "Выполнить проверку аналогично П1, но в режиме управления по курсу (как в техкарте).",
-          "Установить стрелку индикатора нулевого в среднее положение.",
-          "Задать вращение, добиться требуемого положения стрелки (по техкарте), измерить ω (град/сек).",
-          "Проверить соответствие допускам по ω и по рассчитанному μ."
-        ]
-      },
-      {
-        id: "p3_roll_rate",
-        code: "П3",
-        title: "Передаточное число по угловой скорости (канал крена)",
-        channel: "Крен",
-        omega_nom: 8, omega_plus: 6, omega_minus: 2,
-        mu_nom: 8, mu_tol: 3.2,
-        operations: [
-          "Снять с вертолёта датчик угловых скоростей крена (ДУСУ-… крена) и установить на поворотную установку (рис. 6).",
-          "Соединить датчик с фидерной схемой вертолёта через технологический удлинительный жгут.",
-          "Включить канал крена кнопкой-табло «ВКЛ», ручкой центровки установить стрелку индикатора нулевого в среднее положение.",
-          "Задать вращение установки (правый/левый крен), добиться совмещения стрелки с промежуточной отметкой, измерить ω."
-        ]
-      },
-      {
-        id: "p4_roll_att",
-        code: "П4",
-        title: "Передаточное число (канал крена) в режиме управления по крену",
-        channel: "Крен",
-        omega_nom: 17, omega_plus: 16.5, omega_minus: 8,
-        mu_nom: 4, mu_tol: 2,
-        operations: [
-          "Выполнить проверку по крену в режиме управления по крену (как в техкарте).",
-          "Выставить исходное положение стрелки нулевого.",
-          "Задать вращение, добиться требуемого положения стрелки, измерить ω.",
-          "Проверить соответствие допускам по ω и μ."
-        ]
-      },
-      {
-        id: "p5_pitch_rate",
-        code: "П5",
-        title: "Передаточное число по угловой скорости (канал тангажа)",
-        channel: "Тангаж",
-        omega_nom: 3.5, omega_plus: 2.1, omega_minus: 1.1,
-        mu_nom: 20, mu_tol: 8,
-        operations: [
-          "Установить гирровертикаль/провертор на поворотную установку согласно рис. 7 (пикирование/кабрирование).",
-          "Положение поворотного стола — на нулевой отметке, гирровертикаль — горизонтально (как в техкарте).",
-          "Перевести выключатель режима в требуемое положение и включить канал тангажа кнопкой-табло «ВКЛ».",
-          "Потенциометром «ЦЕНТР» установить стрелку индикатора нулевого в среднее положение.",
-          "Задать вращение (пикирование/кабрирование), добиться нужной отметки, измерить ω.",
-          "Проверить соответствие допускам по ω и μ."
-        ]
-      }
-    ];
-
-    const STORAGE_KEY = "vuap1_p08_results_v2"; // новая версия, чтобы не мешать старым данным
-
-    function rangeMinMax(nom, plus, minus){
-      const min = nom - minus;
-      const max = nom + plus;
-      return {min, max};
-    }
-
-    function within(v, min, max){
-      if (v === null || v === undefined || Number.isNaN(v)) return false;
-      return v >= min && v <= max;
-    }
-
-    function round1(x){ return Math.round(x*10)/10; }
-    function round2(x){ return Math.round(x*100)/100; }
-
-    function calcMu(omega){
-      // μ = 66,7 / ω
-      return 66.7 / omega;
-    }
-
-    function loadResults(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return {};
-        return JSON.parse(raw) || {};
-      }catch(e){
-        return {};
-      }
-    }
-
-    function saveResults(obj){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
-    }
-
-    function clearResults(){
-      localStorage.removeItem(STORAGE_KEY);
-    }
-
-    function statusFromEval(ev){
-      // ev: {omega_ok, mu_ok}
-      if(!ev) return "WAIT";
-      if(ev.omega_ok && ev.mu_ok) return "OK";
-      return "BAD";
-    }
-
-    function pillHTML(status){
-      if(status === "OK") return `<span class="statusPill ok"><span class="dot ok"></span>OK</span>`;
-      if(status === "BAD") return `<span class="statusPill bad"><span class="dot bad"></span>BAD</span>`;
-      return `<span class="statusPill wait"><span class="dot wait"></span>WAIT</span>`;
-    }
-
-    function badge(status){
-      const dot = status === "OK" ? "ok" : (status === "BAD" ? "bad" : "wait");
-      return `<span class="badge"><span class="dot ${dot} ${dot}"></span>${status}</span>`;
-    }
-
-    function render(){
-      const results = loadResults();
-
-      // Checks list
-      const checksEl = document.getElementById("checks");
-      checksEl.innerHTML = "";
-
-      for(const c of CHECKS){
-        const r = results[c.id] || null;
-
-        const omegaRange = rangeMinMax(c.omega_nom, c.omega_plus, c.omega_minus);
-        const muMin = c.mu_nom - c.mu_tol;
-        const muMax = c.mu_nom + c.mu_tol;
-
-        const omega_meas = r?.omega_meas ?? "";
-        const mu_calc = (omega_meas !== "" && !Number.isNaN(Number(omega_meas)) && Number(omega_meas) > 0)
-          ? calcMu(Number(omega_meas))
-          : null;
-
-        const omega_ok = (mu_calc !== null) ? within(Number(omega_meas), omegaRange.min, omegaRange.max) : false;
-        const mu_ok = (mu_calc !== null) ? within(mu_calc, muMin, muMax) : false;
-
-        const status = statusFromEval(r?.eval);
-
-        const check = document.createElement("div");
-        check.className = "check";
-        check.innerHTML = `
-          <div class="cHead">
-            <div class="left">
-              <div class="name">${c.code}: ${c.title}</div>
-              <div class="meta">Канал: <b>${c.channel}</b></div>
-            </div>
-            ${badge(status)}
-          </div>
-
-          <div class="cBody">
-            <div class="box">
-              <h3>Технические требования (ТТ)</h3>
-              <table class="reqTable">
-                <tr>
-                  <td>Задаваемая ω</td>
-                  <td class="mono">${c.omega_nom} (+${c.omega_plus} / −${c.omega_minus}) град/сек</td>
-                </tr>
-                <tr>
-                  <td>Диапазон ω</td>
-                  <td class="mono">${round2(omegaRange.min)} … ${round2(omegaRange.max)} град/сек</td>
-                </tr>
-                <tr>
-                  <td>Передаточное число μ</td>
-                  <td class="mono">${c.mu_nom} ± ${c.mu_tol} %/(град/сек)</td>
-                </tr>
-                <tr>
-                  <td>Диапазон μ</td>
-                  <td class="mono">${round2(muMin)} … ${round2(muMax)} %/(град/сек)</td>
-                </tr>
-              </table>
-
-              <div class="calcLine">
-                Расчёт: <span class="mono"><b>μ = 66,7 / ω</b></span>.<br/>
-                Вводишь измеренную <span class="mono">ω</span> — получаешь конечное <span class="mono">μ</span> и оценку по допускам.
-              </div>
-
-              <h3 style="margin-top:12px;">Содержание операций (количественно соответствует структуре)</h3>
-              <ol class="opList">
-                ${c.operations.map(x => `<li>${x}</li>`).join("")}
-              </ol>
-            </div>
-
-            <div class="box">
-              <h3>Фиксация результата</h3>
-
-              <div class="formRow">
-                <label>
-                  Измеренная угловая скорость ω, град/сек
-                  <input type="number" step="0.1" min="0" placeholder="например 3.5" value="${omega_meas}" data-input="omega" data-id="${c.id}">
-                </label>
-
-                <label>
-                  Рассчитанное передаточное число μ, %/(град/сек)
-                  <input type="text" readonly value="${mu_calc === null ? "" : round2(mu_calc)}" placeholder="авто" data-output="mu" data-id="${c.id}">
-                </label>
-              </div>
-
-              <div class="calcLine" id="eval_${c.id}">
-                ${mu_calc === null ? `Введи ω — появятся расчёт μ и оценка.` : `
-                  <b>Проверка ω:</b> ${omega_ok ? "OK" : "BAD"} (допуск ${round2(omegaRange.min)}…${round2(omegaRange.max)})<br/>
-                  <b>Проверка μ:</b> ${mu_ok ? "OK" : "BAD"} (допуск ${round2(muMin)}…${round2(muMax)})<br/>
-                  <b>Итог:</b> μ = <span class="mono"><b>${round2(mu_calc)}</b></span> %/(град/сек)
-                `}
-              </div>
-
-              <div class="actions">
-                <button class="btn small ok" type="button" data-save="${c.id}">
-                  Зафиксировать
-                </button>
-                <button class="btn small" type="button" data-clear="${c.id}">
-                  Сбросить
-                </button>
-              </div>
-
-              <div class="note">
-                Фиксация хранится в <span class="mono">localStorage</span>. После регулировки подстроечных резисторов — перепроверить и обновить фиксацию.
-              </div>
-            </div>
-          </div>
-        `;
-        checksEl.appendChild(check);
-      }
-
-      // Summary
-      const tbody = document.querySelector("#summaryTable tbody");
-      tbody.innerHTML = "";
-
-      let okCount = 0;
-      let badCount = 0;
-      let doneCount = 0;
-
-      for(const c of CHECKS){
-        const r = results[c.id] || null;
-        const st = statusFromEval(r?.eval);
-
-        if(st !== "WAIT") doneCount++;
-        if(st === "OK") okCount++;
-        if(st === "BAD") badCount++;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${c.code}: ${shortTitle(c.title)}</td>
-          <td>${c.channel}</td>
-          <td>${pillHTML(st)}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-
-      const overallStatusEl = document.getElementById("overallStatus");
-      const overallPill = document.getElementById("overallPill");
-
-      let overall = "ОЖИДАЕТ";
-      let overallCode = "WAIT";
-
-      if(doneCount === 0){
-        overall = "ОЖИДАЕТ";
-        overallCode = "WAIT";
-      } else if(badCount > 0){
-        overall = "ЕСТЬ НЕСООТВЕТСТВИЯ";
-        overallCode = "BAD";
-      } else if(okCount === CHECKS.length){
-        overall = "СООТВЕТСТВУЕТ";
-        overallCode = "OK";
-      } else {
-        overall = "ЧАСТИЧНО";
-        overallCode = "WAIT";
-      }
-
-      overallStatusEl.textContent = overall;
-      overallPill.className = "statusPill " + (overallCode === "OK" ? "ok" : (overallCode === "BAD" ? "bad" : "wait"));
-      overallPill.innerHTML = `<span class="dot ${overallCode === "OK" ? "ok" : (overallCode === "BAD" ? "bad" : "wait")}"></span>${overallCode}`;
-
-      // wiring inputs and buttons
-      wireEvents();
-    }
-
-    function shortTitle(t){
-      // компактно для сводки
-      if(t.includes("угловой скорости")) return t.replace("Передаточное число ", "").replace("по угловой скорости", "по ω");
-      return t;
-    }
-
-    function wireEvents(){
-      // inputs
-      document.querySelectorAll('input[data-input="omega"]').forEach(inp => {
-        inp.oninput = () => {
-          // только пересчёт на экране — фиксация по кнопке
-          const id = inp.getAttribute("data-id");
-          // мы просто перерендерим (быстро)
-          const results = loadResults();
-          const cur = results[id] || {};
-          cur.omega_meas = inp.value;
-          // eval пока не сохраняем окончательно, но можем показать при фиксации
-          results[id] = cur;
-          saveResults(results);
-          render();
-        };
-      });
-
-      // save
-      document.querySelectorAll("button[data-save]").forEach(btn => {
-        btn.onclick = () => {
-          const id = btn.getAttribute("data-save");
-          const c = CHECKS.find(x => x.id === id);
-          const results = loadResults();
-          const cur = results[id] || {};
-
-          const omegaVal = Number(cur.omega_meas);
-          if(!cur.omega_meas || Number.isNaN(omegaVal) || omegaVal <= 0){
-            alert("Введи корректную ω (град/сек) > 0, затем фиксируй.");
-            return;
-          }
-
-          const omegaRange = rangeMinMax(c.omega_nom, c.omega_plus, c.omega_minus);
-          const mu = calcMu(omegaVal);
-          const muMin = c.mu_nom - c.mu_tol;
-          const muMax = c.mu_nom + c.mu_tol;
-
-          const omega_ok = within(omegaVal, omegaRange.min, omegaRange.max);
-          const mu_ok = within(mu, muMin, muMax);
-
-          cur.mu_calc = mu;
-          cur.eval = { omega_ok, mu_ok, ts: new Date().toISOString() };
-
-          results[id] = cur;
-          saveResults(results);
-          render();
-        };
-      });
-
-      // clear one
-      document.querySelectorAll("button[data-clear]").forEach(btn => {
-        btn.onclick = () => {
-          const id = btn.getAttribute("data-clear");
-          const results = loadResults();
-          delete results[id];
-          saveResults(results);
-          render();
-        };
-      });
-    }
-
-    // Reset all
-    document.getElementById("resetAll").onclick = () => {
-      if(confirm("Точно очистить все фиксации Р08?")){
-        clearResults();
-        render();
-      }
-    };
-
-    /*************************************************************
-     * MODAL ZOOM (клик по рисунку -> зум +/- / ползунок / колесо)
-     *************************************************************/
-    const modal = document.getElementById("imgModal");
-    const modalImg = document.getElementById("modalImg");
-    const modalTitle = document.getElementById("modalTitle");
-    const zoomRange = document.getElementById("zoomRange");
-    const zoomLabel = document.getElementById("zoomLabel");
-    const modalBody = document.getElementById("modalBody");
-
-    let zoom = 1;
-
-    function applyZoom(){
-      modalImg.style.transform = `scale(${zoom})`;
-      zoomLabel.textContent = Math.round(zoom*100) + "%";
-      zoomRange.value = Math.round(zoom*100);
-    }
-
-    function openImg(src, title){
-      modalTitle.textContent = title || "Просмотр";
-      modalImg.src = src;
-      zoom = 1;
-      applyZoom();
-      modal.showModal();
-      // сброс прокрутки
-      modalBody.scrollTop = 0;
-      modalBody.scrollLeft = 0;
-    }
-
-    document.querySelectorAll(".fig").forEach(f => {
-      f.addEventListener("click", () => {
-        const src = f.getAttribute("data-img");
-        const title = f.getAttribute("data-title");
-        openImg(src, title);
-      });
-    });
-
-    document.getElementById("closeModal").onclick = () => modal.close();
-    document.getElementById("zIn").onclick = () => { zoom = Math.min(4, zoom + 0.1); applyZoom(); };
-    document.getElementById("zOut").onclick = () => { zoom = Math.max(0.25, zoom - 0.1); applyZoom(); };
-
-    zoomRange.oninput = () => {
-      zoom = Math.max(0.25, Math.min(4, Number(zoomRange.value)/100));
-      applyZoom();
-    };
-
-    // FIT: подогнать по ширине (грубо)
-    document.getElementById("fitBtn").onclick = () => {
-      // fit by width: available width / natural width
-      const wrapW = modalBody.clientWidth - 24;
-      const natW = modalImg.naturalWidth || 1000;
-      zoom = Math.max(0.25, Math.min(4, wrapW / natW));
-      applyZoom();
-    };
-
-    // wheel zoom
-    modalBody.addEventListener("wheel", (e) => {
-      if(!modal.open) return;
-      if(!e.ctrlKey) return; // чтобы не мешать обычному скроллу
-      e.preventDefault();
-      const delta = Math.sign(e.deltaY);
-      zoom = zoom + (delta > 0 ? -0.08 : 0.08);
-      zoom = Math.max(0.25, Math.min(4, zoom));
-      applyZoom();
-    }, {passive:false});
-
-    /*************************************************************
-     * INIT
-     *************************************************************/
-    (function init(){
-      // показать, что storage доступен
-      try{
-        localStorage.setItem("__test__", "1");
-        localStorage.removeItem("__test__");
-        document.getElementById("storageInfo").textContent = "localStorage: ON";
-      }catch(e){
-        document.getElementById("storageInfo").textContent = "localStorage: OFF";
-      }
-      render();
-    })();
-  </script>
 </body>
 </html>
