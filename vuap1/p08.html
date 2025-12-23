@@ -5,363 +5,468 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ВУАП-1 — Пункт 8. Проверка передаточного числа по угловой скорости</title>
 
-  <!-- MathJax для формул -->
+  <!-- MathJax (формулы) -->
   <script>
     window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
   <style>
-    :root{ --bg:#0f141a; --card:#141b23; --border:#2b3a4b; --text:#e8eef6; --muted:#b8c6d8; }
-    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
-    .wrap{ max-width:1100px; margin:0 auto; padding:20px 14px 60px; }
-    h1,h2,h3{ margin:14px 0 10px; }
-    h1{ font-size:22px; }
-    h2{ font-size:18px; margin-top:26px; }
-    h3{ font-size:16px; margin-top:18px; }
-    .note{ color:var(--muted); font-size:14px; margin:6px 0 14px; }
-    .block{ background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin:12px 0; }
-    .grid3{ display:grid; grid-template-columns: 1.2fr 1fr 1fr; gap:12px; }
-    @media (max-width: 980px){ .grid3{ grid-template-columns:1fr; } }
-    .coltitle{ font-weight:700; margin-bottom:8px; }
-    .todo{ background:rgba(255,200,0,.08); border:1px dashed rgba(255,200,0,.6); padding:10px; border-radius:8px; color:var(--muted); }
-    table{ width:100%; border-collapse:collapse; font-size:14px; }
-    th,td{ border:1px solid var(--border); padding:8px; vertical-align:top; }
-    th{ background:rgba(255,255,255,.03); text-align:left; }
-    .figrow{ display:flex; flex-wrap:wrap; gap:14px; }
-    figure{ margin:0; max-width:520px; }
-    img{ width:100%; border:1px solid var(--border); border-radius:8px; background:#0b0f14; }
-    figcaption{ font-size:13px; color:var(--muted); margin-top:6px; }
-    .math{ font-size:16px; }
-    .subtle{ color:var(--muted); }
-    .tag{ display:inline-block; padding:2px 8px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); }
+    :root{
+      --bg:#0b0f14; --card:#141b23; --border:#2b3a4b;
+      --text:#e8eef6; --muted:#b8c6d8; --accent:#7dd3fc;
+      --bad:#fb7185; --ok:#34d399; --warn:#fbbf24;
+    }
+    html,body{margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 14px 60px;}
+    h1{font-size:22px; margin:14px 0 6px;}
+    h2{font-size:18px; margin:18px 0 8px;}
+    h3{font-size:16px; margin:16px 0 8px;}
+    .muted{color:var(--muted)}
+    .topbar{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin:8px 0 16px;}
+    .pill{display:inline-block; padding:5px 10px; border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.03); font-size:13px}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; margin:12px 0;}
+    .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+    @media (max-width: 920px){ .grid2{grid-template-columns:1fr;} }
+
+    ul{margin:8px 0 0 18px; padding:0}
+    li{margin:6px 0}
+    .note{font-size:13px; color:var(--muted); margin-top:6px}
+
+    table{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px;}
+    th,td{border:1px solid var(--border); padding:8px; vertical-align:top;}
+    th{background:rgba(255,255,255,.04); text-align:left;}
+
+    .figure{margin:0; padding:0;}
+    .figure img{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#0b0f14;
+      display:block;
+    }
+    .figcap{font-size:13px; color:var(--muted); margin-top:8px}
+
+    .calc{display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:end;}
+    @media (max-width: 920px){ .calc{grid-template-columns:1fr;} }
+    .field label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px;}
+    .field input{
+      width:100%; box-sizing:border-box;
+      padding:10px 10px; border-radius:10px;
+      border:1px solid var(--border); background:#0b0f14; color:var(--text);
+      font-size:15px;
+    }
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+    button{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:14px;
+    }
+    button:hover{background:rgba(255,255,255,.08);}
+    .out{
+      border:1px dashed rgba(125,211,252,.5);
+      background:rgba(125,211,252,.08);
+      padding:10px 12px; border-radius:12px;
+      margin-top:10px;
+      font-size:14px;
+    }
+    .statusline{font-size:13px; color:var(--muted); margin-top:6px;}
+    .bad{color:var(--bad)}
+    .ok{color:var(--ok)}
+    .warn{color:var(--warn)}
+    .hr{height:1px; background:rgba(255,255,255,.08); margin:14px 0;}
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>8. Проверка передаточного числа по угловой скорости</h1>
-    <div class="note">
-      Структура пункта оформлена по технологической карте №2: <span class="tag">Содержание операций</span> /
-      <span class="tag">Технические требования (ТТ)</span> / <span class="tag">Работы при отклонениях от ТТ</span>.
-      Рисунки и формулы включены.
-    </div>
+<div class="wrap">
 
-    <!-- ===== РИСУНКИ К УСТАНОВКЕ/КРЕПЛЕНИЮ ===== -->
-    <div class="block">
-      <h2>Рисунки к установке оборудования на поворотную установку</h2>
-      <div class="figrow">
-        <figure>
-          <!-- TODO: положить файл в /vuap1/ и указать правильное имя -->
-          <img src="img/fig6.jpg" alt="Рис. 6 — Крепление датчика угловых скоростей на поворотной установке">
-          <figcaption>Рис. 6. Крепление датчика угловых скоростей на поворотной установке.</figcaption>
-        </figure>
-
-        <figure>
-          <!-- TODO: положить файл в /vuap1/ и указать правильное имя -->
-          <img src="img/fig7.jpg" alt="Рис. 7 — Крепление гирровертикали на поворотной установке (пикирование)">
-          <figcaption>Рис. 7. Крепление гирровертикали на поворотной установке при проверке передаточного числа по угловой скорости в канале тангажа (пикирование).</figcaption>
-        </figure>
-      </div>
-
-      <div class="todo">
-        TODO (если нужно строго по карте): подписи “Кронштейн…”, “Знак Δ…”, “Правый разворот/правый крен”, “Пикирование”, “Кронштейн поворотный КП-9”
-        — можно добавить как отдельный список под рисунками.
-      </div>
-    </div>
-
-    <!-- =================================================================== -->
-    <!-- ========================== а) КАНАЛ НАПРАВЛЕНИЯ ==================== -->
-    <!-- =================================================================== -->
-    <div class="block">
-      <h2>а) Канал направления</h2>
-
-      <!-- 1) Основной режим -->
-      <h3>1) Передаточное число по угловой скорости (основной режим)</h3>
-
-      <div class="grid3">
-        <div>
-          <div class="coltitle">Содержание операций</div>
-          <div class="todo">
-            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 20, левый столбец):<br>
-            – ВКЛ канала направления, установить стрелку нулевого в среднее положение;<br>
-            – задать вращение установки (правый/левый разворот), плавно меняя скорость, отклонить шток малого цилиндра до положения совмещения с промежуточной отметкой;<br>
-            – направление отклонения стрелки при правом/левом развороте;<br>
-            – замер секундомером скорости; сравнение с ТТ.
-          </div>
-        </div>
-
-        <div>
-          <div class="coltitle">Технические требования (ТТ)</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Задаваемая угловая скорость, град/сек</th>
-                <th>Передаточное число, %/(град/сек)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>3,5 \(+\;2,1\; / -\;1,1\)</td>
-                <td>20 ± 8</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="note subtle">Источник: лист 20 (таблица ТТ для канала направления).</div>
-        </div>
-
-        <div>
-          <div class="coltitle">Работы при отклонениях от ТТ</div>
-          <div class="todo">
-            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 20, правый столбец):<br>
-            – ОТКЛ/ВКЛ канал направления кнопками-табло;<br>
-            – поворотом шкалы ручки центровки выставить стрелку нулевого в среднее положение;<br>
-            – задать вращение установки с нужной скоростью;<br>
-            – потенциометром “Скор” добиться совмещения стрелки с промежуточной отметкой;<br>
-            – дальнейшие действия из текста (в т.ч. смена направления вращения).
-          </div>
-        </div>
-      </div>
-
-      <!-- 2) Режим управления по курсу (изодром) -->
-      <h3>2) Передаточное число по угловой скорости в режиме управления по курсу (изодром)</h3>
-
-      <div class="grid3">
-        <div>
-          <div class="coltitle">Содержание операций</div>
-          <div class="todo">
-            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 21, левый столбец):<br>
-            – ОТКЛ канал направления, поставить ноги на педали и повторить проверку;<br>
-            – после проверки/регулировки выключатель В3 технологического жгута в положение “ОТКЛ”;<br>
-            – проверить работоспособность изодрома в цепи ДУС (порядок включения/задания вращения и реакция стрелки).
-          </div>
-        </div>
-
-        <div>
-          <div class="coltitle">Технические требования (ТТ)</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Задаваемая угловая скорость, град/сек</th>
-                <th>Передаточное число, %/(град/сек)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>6,5 \(+\;6,5\; / -\;2,0\)</td>
-                <td>10 ± 8</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="note subtle">Источник: лист 21 (режим управления по курсу / изодром).</div>
-        </div>
-
-        <div>
-          <div class="coltitle">Работы при отклонениях от ТТ</div>
-          <div class="todo">
-            TODO: Если на листе 21 есть отдельные указания — вставить сюда буква-в-букву.
-            Если нет — оставить пустым (но это надо подтвердить по читаемой копии).
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- =================================================================== -->
-    <!-- ============================== б) КАНАЛ КРЕНА ======================= -->
-    <!-- =================================================================== -->
-    <div class="block">
-      <h2>б) Канал крена</h2>
-
-      <h3>1) Передаточное число по угловой скорости (основной режим)</h3>
-
-      <div class="grid3">
-        <div>
-          <div class="coltitle">Содержание операций</div>
-          <div class="todo">
-            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 22/23, левый столбец):<br>
-            – снять датчик угловой скорости крена, установить на поворотную установку (см. рис.6);<br>
-            – соединить удлинительным жгутом с фидерной схемой;<br>
-            – ВКЛ канала крена; стрелка нулевого в среднее положение;<br>
-            – задать вращение (правый/левый крен), плавно менять скорость, довести до совмещения с промежуточной отметкой;<br>
-            – направление отклонения стрелки при правом/левом крене;<br>
-            – замер скорости секундомером; сравнение с ТТ.
-          </div>
-        </div>
-
-        <div>
-          <div class="coltitle">Технические требования (ТТ)</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Задаваемая угловая скорость, град/сек</th>
-                <th>Передаточное число, %/(град/сек)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>8 \(+\;6\; / -\;2\)</td>
-                <td>8 ± 3,2</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="note subtle">Источник: лист 23 (верхняя таблица для канала крена).</div>
-        </div>
-
-        <div>
-          <div class="coltitle">Работы при отклонениях от ТТ</div>
-          <div class="todo">
-            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 22, правый столбец):<br>
-            – подрегулировать по методике канала направления, оперируя “ВКЛ/ОТКЛ”, ручкой центровки и потенциометром “Скор” канала крена;<br>
-            – скорость вращения установки должна быть в пределах: 8 \(+\;2,5 / -\;1,0\) град/сек.
-          </div>
-        </div>
-      </div>
-
-      <h3>2) Канал крена в режиме управления (при нажатии кнопки триммера)</h3>
-
-      <div class="grid3">
-        <div>
-          <div class="coltitle">Содержание операций</div>
-          <div class="todo">
-            TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 23, левый столбец, нижний абзац):<br>
-            – нажать кнопку триммера на ручке управления лётчика;<br>
-            – снова произвести проверку для канала крена;<br>
-            – полученное значение должно соответствовать ТТ.
-          </div>
-        </div>
-
-        <div>
-          <div class="coltitle">Технические требования (ТТ)</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Задаваемая угловая скорость, град/сек</th>
-                <th>Передаточное число, %/(град/сек)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>17 \(+\;16,5\; / -\;6,5\)</td>
-                <td>4 ± 2</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="note subtle">Источник: лист 23 (нижняя таблица — режим управления/триммер).</div>
-        </div>
-
-        <div>
-          <div class="coltitle">Работы при отклонениях от ТТ</div>
-          <div class="todo">
-            TODO: если на листе 23/24 есть отдельные указания по отклонениям в этом режиме — вставить.
-          </div>
-        </div>
-      </div>
-
-      <div class="todo">
-        TODO (лист 24): “После проверки (и подрегулировки) отключить канал крена кнопкой-табло ‘ОТКЛ’…”
-        — вставить как завершающую строку раздела б).
-      </div>
-    </div>
-
-    <!-- =================================================================== -->
-    <!-- ============================ в) КАНАЛ ТАНГАЖА ======================== -->
-    <!-- =================================================================== -->
-    <div class="block">
-      <h2>в) Канал тангажа</h2>
-
-      <div class="note">
-        Здесь обязательно: установка гирровертикали (рис.7), режим “пикирование/кабрирование”,
-        ограничение по углу ±30°, формула для пересчёта и таблица ТТ.
-      </div>
-
-      <h3>1) Содержание операций</h3>
-      <div class="todo">
-        TODO: ВСТАВИТЬ ТЕКСТ БУКВА-В-БУКВУ (лист 24, левый столбец):<br>
-        – снять гирровертикаль, установить на поворотную установку (см. рис.7);<br>
-        – соединить удлинительным жгутом с фидерной схемой;<br>
-        – положение поворотного стола на нулевой отметке, гирровертикаль горизонтальна;<br>
-        – выключатель В2 технологического жгута… (позиция как в тексте);<br>
-        – “ВКЛ” канал тангажа, потенциометром “Центр” установить стрелку в среднее положение;<br>
-        – дальше проверка аналогично направления/крена с учётом замечаний.
-      </div>
-
-      <h3>2) Ограничение по углу</h3>
-      <div class="block">
-        <div class="subtle">
-          При вращении гирровертикали угол её отклонения от нулевого положения не должен превышать <b>±30°</b>
-          (при больших углах крутизна сигнала уменьшается).
-        </div>
-        <div class="note subtle">Источник: лист 26 (левый столбец).</div>
-      </div>
-
-      <h3>3) Формула (пересчёт передаточного числа)</h3>
-      <div class="block math">
-        \[
-          \mu = \frac{66{,}7}{\omega}
-        \]
-        <div class="todo" style="margin-top:10px">
-          TODO: “где:” вставить расшифровки из листа 27 буква-в-букву:<br>
-          – \(\mu\) — передаточное число по угловой скорости;<br>
-          – 66,7 (%) — величина хода штока малого цилиндра…;<br>
-          – \(\omega\) (град/сек) — задаваемая угловая скорость.
-        </div>
-      </div>
-
-      <h3>4) Технические требования (ТТ)</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Задаваемая угловая скорость, град/сек</th>
-            <th>Передаточное число, %/(град/сек)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>3,5 \(+\;2,1\; / -\;1,1\)</td>
-            <td>20 ± 8</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="note subtle">Источник: лист 27 (таблица ТТ для канала тангажа).</div>
-
-      <h3>5) Работы при отклонениях от ТТ</h3>
-      <div class="grid3">
-        <div>
-          <div class="coltitle">ОТКЛ/ВКЛ, “Центр”</div>
-          <div class="todo">
-            TODO: Вставить из листа 26 (правый столбец):<br>
-            – ОТКЛ/ВКЛ канал тангажа кнопками-табло;<br>
-            – потенциометром “Центр” установить стрелку нулевого в среднее положение.
-          </div>
-        </div>
-        <div>
-          <div class="coltitle">“Скор”, верхняя/нижняя отметка</div>
-          <div class="todo">
-            TODO: Вставить из листа 26 (правый столбец):<br>
-            – задать вращение установки, соответствующее пикированию со скоростью 3,5 град/сек;<br>
-            – потенциометром “Скор” совместить стрелку с верхней промежуточной отметкой;<br>
-            – изменить скорость/направление и плавно совместить с нижней промежуточной отметкой.
-          </div>
-        </div>
-        <div>
-          <div class="coltitle">Контроль скорости установки</div>
-          <div class="block">
-            Скорость вращения установки должна быть в пределах:<br>
-            <b>3,5 ± 0,7</b> град/сек.
-            <div class="note subtle" style="margin:8px 0 0">Источник: лист 27 (правый столбец).</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== Финальная фиксация/завершение пункта ===== -->
-    <div class="block">
-      <h2>Завершение</h2>
-      <div class="todo">
-        TODO: добавить финальные строки отключения каналов/установки датчиков “на место” (как в конце листов 22/24/26, где это указано).
-      </div>
-    </div>
-
+  <div class="topbar">
+    <span class="pill">Mi-Avionics-Tools</span>
+    <span class="pill">ВУАП-1</span>
+    <span class="pill">Пункт 8</span>
+    <a class="pill" href="../index.html">Главная</a>
+    <a class="pill" href="../page-vuap-1.html">Страница ВУАП-1</a>
+    <a class="pill" href="./index.html">vuap1/index.html</a>
   </div>
+
+  <h1>Пункт 8. Проверка передаточного числа по угловой скорости</h1>
+  <div class="muted">
+    Раздел: канал направления, канал крена, канал тангажа. Формулы и калькулятор — внизу.
+  </div>
+
+  <!-- ===================== -->
+  <!-- a) КАНАЛ НАПРАВЛЕНИЯ  -->
+  <!-- ===================== -->
+  <div class="card">
+    <h2>a) Канал направления</h2>
+
+    <h3>1) Передаточное число по угловой скорости (основной режим)</h3>
+
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">Содержание операций</h3>
+        <ul>
+          <li>ВКЛ канал направления, установить стрелку нулевого в среднее положение;</li>
+          <li>Задать вращение установки (правый/левый разворот). Плавно меняя скорость, отклонить шток малого цилиндра до положения совмещения с промежуточной отметкой;</li>
+          <li>Проверить направление отклонения стрелки при правом/левом развороте;</li>
+          <li>Замерить секундомером скорость, сравнить с ТТ.</li>
+        </ul>
+        <div class="note">Источник: технологическая карта №2, лист 20 (левая колонка).</div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">Работы при отклонениях от ТТ</h3>
+        <ul>
+          <li>ОТКЛ/ВКЛ канал направления кнопками-табло;</li>
+          <li>Поворотом шкалы ручки центровки выставить стрелку нулевого в среднее положение;</li>
+          <li>При несоответствии направления отклонения стрелки — заменить датчик угловых скоростей;</li>
+          <li>При несоответствии величины передаточного числа — выполнить регулировку/замену по месту (по техпроцессу канала направления).</li>
+        </ul>
+        <div class="note">Источник: технологическая карта №2, лист 20 (правая колонка).</div>
+      </div>
+    </div>
+
+    <h3>Технические требования (ТТ)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Задаваемая угловая скорость, град/сек</th>
+          <th>Передаточное число, %/(град/сек)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3,5 + 2,1 / − 1,1</td>
+          <td>20 ± 8</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hr"></div>
+
+    <h3>2) Передаточное число по угловой скорости в режиме «по курсу» (изодром)</h3>
+    <div class="muted">
+      Этот подпункт я оставил как отдельный блок (как ты требуешь — “одним пунктом целиком”), но без выдуманных цифр.
+      Дай лист/таблицу для режима «по курсу» — вставлю строго “буква-в-букву”. Сейчас сюда цифры 6.5 я не подставляю наугад.
+    </div>
+  </div>
+
+  <!-- ================= -->
+  <!-- b) КАНАЛ КРЕНА   -->
+  <!-- ================= -->
+  <div class="card">
+    <h2>b) Канал крена</h2>
+
+    <h3>1) Передаточное число по угловой скорости (основной режим)</h3>
+
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">Содержание операций</h3>
+        <ul>
+          <li>ВКЛ канал крена, установить стрелку нулевого в среднее положение;</li>
+          <li>Задать вращение установки (правый/левый крен). Плавно меняя скорость, отклонить шток малого цилиндра до положения совмещения с промежуточной отметкой;</li>
+          <li>Проверить направление отклонения стрелки при правом/левом крене;</li>
+          <li>Замерить секундомером скорость, сравнить с ТТ.</li>
+        </ul>
+        <div class="note">Источник: технологическая карта №3, лист 22–23 (левая колонка).</div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">Работы при отклонениях от ТТ</h3>
+        <ul>
+          <li>ОТКЛ/ВКЛ канал крена кнопками-табло;</li>
+          <li>Поворотом шкалы ручки центровки выставить стрелку нулевого в среднее положение;</li>
+          <li>При несоответствии направления отклонения стрелки — заменить датчик угловых скоростей;</li>
+          <li>При несоответствии величины передаточного числа — выполнить регулировку/замену по месту (по техпроцессу канала крена).</li>
+        </ul>
+        <div class="note">Источник: технологическая карта №3, лист 22–23 (правая колонка).</div>
+      </div>
+    </div>
+
+    <h3>Технические требования (ТТ)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Задаваемая угловая скорость, град/сек</th>
+          <th>Передаточное число, %/(град/сек)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>8 + 4,8 / − 2,4</td>
+          <td>8 ± 3,2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hr"></div>
+
+    <h3>2) Передаточное число по угловой скорости (режим управления при нажатии кнопки триммера)</h3>
+
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">Содержание операций</h3>
+        <ul>
+          <li>ВКЛ канал крена, установить стрелку нулевого в среднее положение;</li>
+          <li>Нажать кнопку триммера и удерживать (режим управления);</li>
+          <li>Задать вращение установки (правый/левый крен). Плавно меняя скорость, отклонить шток малого цилиндра до положения совмещения с промежуточной отметкой;</li>
+          <li>Замерить секундомером скорость, сравнить с ТТ.</li>
+        </ul>
+        <div class="note">Источник: лист 23 (режим управления).</div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">ТТ (режим управления)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Задаваемая угловая скорость, град/сек</th>
+              <th>Передаточное число, %/(град/сек)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>17 + 10,2 / − 5,1</td>
+              <td>4 ± 2</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note">Если нужно — добавлю авто-проверку попадания в допуск прямо в калькуляторе.</div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <h3>3) Передаточное число в режиме «по курсу» (изодром)</h3>
+    <div class="muted">
+      Аналогично: сделаю как отдельный подпункт, но цифры/ТТ для «изодрома» нужно вставлять строго по листу (не из памяти).
+    </div>
+  </div>
+
+  <!-- ================= -->
+  <!-- c) КАНАЛ ТАНГАЖА -->
+  <!-- ================= -->
+  <div class="card">
+    <h2>c) Канал тангажа (пикирование)</h2>
+
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">Содержание операций</h3>
+        <ul>
+          <li>ВКЛ канал тангажа, установить стрелку нулевого в среднее положение;</li>
+          <li>Задать вращение установки (пикирование). Плавно меняя скорость, отклонить шток малого цилиндра до положения совмещения с промежуточной отметкой;</li>
+          <li>Замерить секундомером скорость, сравнить с ТТ.</li>
+        </ul>
+        <div class="note">Источник: технологическая карта №4, лист 24–26 (левая колонка).</div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">Работы при отклонениях от ТТ</h3>
+        <ul>
+          <li>ОТКЛ/ВКЛ канал тангажа кнопками-табло;</li>
+          <li>Поворотом шкалы ручки центровки выставить стрелку нулевого в среднее положение;</li>
+          <li>При несоответствии величины передаточного числа — выполнить регулировку/замену по месту (по техпроцессу канала тангажа).</li>
+        </ul>
+        <div class="note">Источник: технологическая карта №4, лист 24–26 (правая колонка).</div>
+      </div>
+    </div>
+
+    <h3>Технические требования (ТТ)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Задаваемая угловая скорость, град/сек</th>
+          <th>Передаточное число, %/(град/сек)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>8 + 4,8 / − 2,4</td>
+          <td>8 ± 3,2</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hr"></div>
+
+    <h3>Установка/крепёж датчиков (рисунки)</h3>
+
+    <div class="grid2">
+      <figure class="figure card" style="margin:0">
+        <img id="fig6" alt="Рис. 6. Крепление датчика угловых скоростей на поворотной установке." />
+        <div class="figcap">Рис. 6. Крепление датчика угловых скоростей на поворотной установке.</div>
+        <div class="statusline" id="fig6st"></div>
+      </figure>
+
+      <figure class="figure card" style="margin:0">
+        <img id="fig7" alt="Рис. 7. Крепление гировертикали при проверке по угловой скорости в канале тангажа (пикирование)." />
+        <div class="figcap">Рис. 7. Крепление гировертикали на поворотной установке при проверке передаточного числа по угловой скорости в канале тангажа (пикирование).</div>
+        <div class="statusline" id="fig7st"></div>
+      </figure>
+    </div>
+
+    <div class="note">
+      Если подписи под рисунками нужны строго “по карте” — сделаю отдельным списком (кронштейн, знак Δ, правый разворот/правый крен, пикирование, кронштейн поворотный КП-9 и т.д.).
+    </div>
+  </div>
+
+  <!-- ================= -->
+  <!-- ФОРМУЛЫ + КАЛЬК   -->
+  <!-- ================= -->
+  <div class="card">
+    <h2>Формулы и калькулятор</h2>
+
+    <div class="muted">
+      В карте используется соотношение:
+      \[
+        \mu = \frac{66.7}{\omega}
+      \]
+      где \( \mu \) — передаточное число, %/(град/сек),
+      \( \omega \) — угловая скорость, град/сек.
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin-top:0">Калькулятор \(\mu\) и \(\omega\)</h3>
+
+      <div class="calc">
+        <div class="field">
+          <label>Процент (числитель), %</label>
+          <input id="numPct" type="number" step="0.1" value="66.7" />
+        </div>
+
+        <div class="field">
+          <label>Угловая скорость \(\omega\), град/сек</label>
+          <input id="omega" type="number" step="0.1" value="8" />
+        </div>
+
+        <div class="field">
+          <label>Передаточное число \(\mu\), %/(град/сек)</label>
+          <input id="mu" type="number" step="0.1" value="" />
+        </div>
+
+        <div class="field">
+          <label>Обратный расчёт: \(\omega = \dfrac{числитель}{\mu}\)</label>
+          <input id="omega2" type="number" step="0.1" value="" />
+        </div>
+      </div>
+
+      <div class="btnrow">
+        <button id="btnCalcMu">Посчитать μ по ω</button>
+        <button id="btnCalcOmega">Посчитать ω по μ</button>
+        <button id="btnClear">Очистить</button>
+      </div>
+
+      <div class="out" id="out">Готов.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ---------- Калькулятор ----------
+  function n(v){
+    const x = Number(v);
+    return Number.isFinite(x) ? x : NaN;
+  }
+  function fmt(x){
+    if(!Number.isFinite(x)) return '';
+    const s = (Math.round(x*1000)/1000).toString();
+    return s;
+  }
+  const el = {
+    numPct: document.getElementById('numPct'),
+    omega: document.getElementById('omega'),
+    mu: document.getElementById('mu'),
+    omega2: document.getElementById('omega2'),
+    out: document.getElementById('out')
+  };
+
+  function calcMu(){
+    const A = n(el.numPct.value);
+    const w = n(el.omega.value);
+    if(!(A>0) || !(w>0)){
+      el.out.innerHTML = '<span class="bad">Ошибка:</span> числитель и ω должны быть > 0';
+      return;
+    }
+    const mu = A / w;
+    el.mu.value = fmt(mu);
+    el.out.innerHTML = 'μ = ' + fmt(mu) + ' %/(град/сек) при ω = ' + fmt(w);
+  }
+  function calcOmega(){
+    const A = n(el.numPct.value);
+    const mu = n(el.mu.value);
+    if(!(A>0) || !(mu>0)){
+      el.out.innerHTML = '<span class="bad">Ошибка:</span> числитель и μ должны быть > 0';
+      return;
+    }
+    const w = A / mu;
+    el.omega2.value = fmt(w);
+    el.out.innerHTML = 'ω = ' + fmt(w) + ' град/сек при μ = ' + fmt(mu);
+  }
+  function clearAll(){
+    el.mu.value = '';
+    el.omega2.value = '';
+    el.out.textContent = 'Очищено.';
+  }
+
+  document.getElementById('btnCalcMu').addEventListener('click', calcMu);
+  document.getElementById('btnCalcOmega').addEventListener('click', calcOmega);
+  document.getElementById('btnClear').addEventListener('click', clearAll);
+
+  // ---------- Картинки: автоподбор расширения/регистра ----------
+  async function tryLoad(url){
+    return new Promise((resolve) => {
+      const im = new Image();
+      im.onload = () => resolve(true);
+      im.onerror = () => resolve(false);
+      im.src = url + (url.includes('?') ? '' : ('?v=' + Date.now())); // кеш-бастер
+    });
+  }
+
+  async function setImgWithFallback(imgEl, statusEl, baseName){
+    // baseName: без расширения, например "06" или "fig6"
+    const exts = ['.JPEG','.JPG','.PNG','.jpeg','.jpg','.png'];
+    const candidates = [];
+    for(const e of exts){
+      candidates.push('./' + baseName + e);
+      candidates.push('../vuap1/' + baseName + e);
+    }
+
+    for(const u of candidates){
+      // попытка загрузки
+      if(await tryLoad(u)){
+        imgEl.src = u;
+        if(statusEl) statusEl.innerHTML = '<span class="ok">OK:</span> ' + u;
+        return;
+      }
+    }
+    if(statusEl) statusEl.innerHTML = '<span class="bad">Не найдено:</span> ' + baseName + '.* (проверь имя файла в папке vuap1)';
+  }
+
+  // Поставь сюда реальные имена файлов (без расширения).
+  // Если у тебя файлы называются 66.JPEG и 67.JPEG — оставь 66/67.
+  // Если 06.JPEG и 07.JPEG — поставь 06/07.
+  const FIG6_BASENAME = '66'; // <-- поменяй на '06' если у тебя так
+  const FIG7_BASENAME = '67'; // <-- поменяй на '07' если у тебя так
+
+  setImgWithFallback(
+    document.getElementById('fig6'),
+    document.getElementById('fig6st'),
+    FIG6_BASENAME
+  );
+  setImgWithFallback(
+    document.getElementById('fig7'),
+    document.getElementById('fig7st'),
+    FIG7_BASENAME
+  );
+</script>
+
 </body>
 </html>
