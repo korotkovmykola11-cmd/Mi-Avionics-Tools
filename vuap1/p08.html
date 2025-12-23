@@ -2,594 +2,539 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ВУАП-1 — Пункт 8. Проверка передаточного числа по угловой скорости</title>
 
   <!-- MathJax -->
   <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
-    };
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
   <style>
     :root{
-      --bg:#0b0f14;
-      --card:#121a23;
-      --card2:#0f1620;
-      --border:#223141;
-      --text:#e9eef6;
-      --muted:#9bb0c7;
-      --accent:#5aa7ff;
-      --ok:#2dd4bf;
-      --bad:#fb7185;
-      --warn:#fbbf24;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --bg:#0b0f14; --card:#121b23; --border:#243445;
+      --text:#e7eef7; --muted:#a9b9c9; --bad:#ff6b6b; --good:#42d392;
+      --chip:#0e2434;
     }
-    *{ box-sizing:border-box; }
+    *{box-sizing:border-box}
     body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:var(--sans); line-height:1.35;
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:var(--bg); color:var(--text);
     }
-    a{ color:var(--accent); text-decoration:none; }
-    a:hover{ text-decoration:underline; }
-    .wrap{
-      max-width:1100px; margin:0 auto; padding:20px 14px 70px;
-    }
+    a{color:#8fd3ff; text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1120px; margin:0 auto; padding:18px 14px 72px}
     .topbar{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      color:var(--muted); font-size:13px; margin-bottom:12px;
+      display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+      margin-bottom:14px;
     }
-    .pill{
-      display:inline-flex; align-items:center; gap:6px;
-      padding:4px 10px; border:1px solid var(--border);
-      border-radius:999px; background:rgba(255,255,255,0.02);
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:6px 10px; border:1px solid var(--border);
+      border-radius:999px; background:rgba(255,255,255,.02);
+      color:var(--muted); font-size:13px;
     }
-    h1{ font-size:20px; margin:8px 0 6px; }
-    .subtitle{ color:var(--muted); font-size:13px; margin-bottom:16px; }
-
+    .chip b{color:var(--text); font-weight:600}
+    h1{font-size:22px; margin:10px 0 6px}
+    .sub{color:var(--muted); font-size:13px; margin:0 0 14px}
     .card{
       background:var(--card); border:1px solid var(--border);
       border-radius:14px; padding:14px; margin:12px 0;
-      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      box-shadow:0 10px 20px rgba(0,0,0,.25);
     }
-    .card h2{ font-size:16px; margin:0 0 10px; }
-    .card h3{ font-size:14px; margin:14px 0 8px; }
-    .card h4{ font-size:13px; margin:12px 0 6px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.03em; }
-
-    .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    @media (max-width:980px){ .grid2{ grid-template-columns:1fr; } }
-
-    ul{ margin:8px 0 10px 18px; padding:0; }
-    li{ margin:6px 0; }
-    .muted{ color:var(--muted); }
-    .src{ color:var(--muted); font-size:12px; margin-top:6px; }
-
-    table{
-      width:100%; border-collapse:collapse; font-size:13px;
-      background:rgba(255,255,255,0.02);
-    }
-    th, td{
-      border:1px solid var(--border); padding:8px 10px; vertical-align:top;
-    }
-    th{ text-align:left; color:var(--muted); font-weight:700; }
-    .ttgrid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    @media (max-width:980px){ .ttgrid{ grid-template-columns:1fr; } }
-    .ttcard{
-      background:var(--card2); border:1px solid var(--border);
-      border-radius:12px; padding:10px;
-    }
-    .tttitle{ font-weight:800; margin:0 0 8px; }
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    @media (max-width: 980px){.grid2{grid-template-columns:1fr}}
+    h2{font-size:18px; margin:8px 0 10px}
+    h3{font-size:15px; margin:12px 0 8px; color:#dbe7f4}
+    .note{color:var(--muted); font-size:13px; margin:8px 0 0}
+    ul{margin:8px 0 0 18px}
+    li{margin:6px 0}
+    table{width:100%; border-collapse:collapse; font-size:13px; margin-top:8px}
+    th,td{border:1px solid var(--border); padding:8px; vertical-align:top}
+    th{background:rgba(255,255,255,.03); text-align:left}
     .kpi{
-      font-family:var(--mono); font-size:12px;
-      padding:2px 6px; border:1px solid var(--border);
-      border-radius:8px; background:rgba(255,255,255,0.03);
-      display:inline-block;
+      display:flex; flex-wrap:wrap; gap:8px; margin-top:8px
     }
-
-    .imggrid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    @media (max-width:980px){ .imggrid{ grid-template-columns:1fr; } }
-    figure{ margin:0; }
+    .kpi span{
+      background:var(--chip); border:1px solid var(--border);
+      padding:6px 10px; border-radius:10px; font-size:12px; color:var(--muted)
+    }
+    .kpi b{color:var(--text)}
+    figure{margin:0}
+    .figrow{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    @media (max-width: 980px){.figrow{grid-template-columns:1fr}}
     img{
-      width:100%; height:auto; display:block;
-      border:1px solid var(--border); border-radius:12px;
+      width:100%; border-radius:10px; border:1px solid var(--border);
       background:#0b0f14;
     }
-    figcaption{ color:var(--muted); font-size:12px; margin-top:6px; }
-    .imgerr{
-      display:none; margin-top:8px; color:var(--warn); font-size:12px;
-      border:1px dashed rgba(251,191,36,.5);
-      padding:8px 10px; border-radius:10px; background:rgba(251,191,36,.07);
+    figcaption{color:var(--muted); font-size:12px; margin-top:6px}
+    .err{color:var(--bad); font-weight:600}
+    .ok{color:var(--good); font-weight:700}
+    .formgrid{
+      display:grid; grid-template-columns:1fr 1fr; gap:10px;
+      margin-top:10px;
     }
-
-    .formula{
-      font-size:14px; padding:10px; border-radius:12px;
-      border:1px solid var(--border); background:rgba(255,255,255,0.02);
-      overflow:auto;
-    }
-
-    .calc{
-      display:grid; grid-template-columns:1fr 1fr; gap:12px;
-    }
-    @media (max-width:980px){ .calc{ grid-template-columns:1fr; } }
-
-    .field{
-      display:flex; flex-direction:column; gap:6px;
-    }
-    label{ font-size:12px; color:var(--muted); }
-    input, select, button, textarea{
-      font-family:var(--sans);
-      border:1px solid var(--border); border-radius:10px;
-      background:#0b1118; color:var(--text);
-      padding:10px 10px; font-size:14px;
+    @media (max-width: 980px){.formgrid{grid-template-columns:1fr}}
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:4px}
+    input,select,button,textarea{
+      width:100%; padding:10px 10px; border-radius:10px;
+      border:1px solid var(--border); background:#0c141c; color:var(--text);
       outline:none;
     }
-    input:focus, select:focus, textarea:focus{ border-color:rgba(90,167,255,.7); box-shadow:0 0 0 3px rgba(90,167,255,.15); }
-    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+    textarea{min-height:86px; resize:vertical}
     button{
-      cursor:pointer; background:rgba(90,167,255,.12);
-      border-color:rgba(90,167,255,.35);
+      cursor:pointer; background:rgba(143,211,255,.12);
+      border-color:rgba(143,211,255,.25);
       font-weight:700;
     }
-    button:hover{ background:rgba(90,167,255,.18); }
-    .btn2{ background:rgba(255,255,255,.06); border-color:var(--border); font-weight:700; }
+    button:hover{background:rgba(143,211,255,.18)}
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .btnrow button{width:auto}
     .out{
-      background:rgba(255,255,255,0.02);
-      border:1px solid var(--border); border-radius:12px;
-      padding:10px;
-      font-family:var(--mono); font-size:12px;
-      white-space:pre-wrap;
+      margin-top:10px; padding:10px; border-radius:10px;
+      border:1px dashed rgba(255,255,255,.22); background:rgba(0,0,0,.18);
+      color:var(--muted); font-size:13px; white-space:pre-wrap;
     }
-    .pass{ color:var(--ok); font-weight:900; }
-    .fail{ color:var(--bad); font-weight:900; }
-    .note{
-      color:var(--muted); font-size:12px; margin-top:8px;
-      border-left:3px solid rgba(90,167,255,.45); padding-left:10px;
-    }
-    .sep{ height:1px; background:var(--border); margin:14px 0; }
+    .small{font-size:12px; color:var(--muted)}
+    .toc a{margin-right:10px}
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-
-    <div class="topbar">
-      <span class="pill">Mi-Avionics-Tools</span>
-      <span class="pill">ВУАП-1</span>
-      <span class="pill">Пункт 8</span>
-      <span class="pill">vuap1/p08.html</span>
-    </div>
-
-    <h1>8. Проверка передаточного числа по угловой скорости</h1>
-    <div class="subtitle">
-      Структура: <span class="kpi">Рисунки</span> → <span class="kpi">Канал направления</span> → <span class="kpi">Канал крена</span> → <span class="kpi">Канал тангажа</span> → <span class="kpi">Формулы</span> → <span class="kpi">Калькулятор</span>
-    </div>
-
-    <!-- Рисунки -->
-    <div class="card" id="figures">
-      <h2>Рисунки</h2>
-
-      <div class="imggrid">
-        <figure>
-          <img src="./29.JPG" alt="Рис. 6" loading="lazy"
-               onerror="document.getElementById('imgerr6').style.display='block';">
-          <figcaption>
-            <b>Рис. 6.</b> Крепление датчика угловых скоростей на поворотной установке. (Также используется для канала крена.)
-            <div class="src">Файл: <span class="kpi">vuap1/29.JPG</span></div>
-            <div class="imgerr" id="imgerr6">
-              ❗ Не найден файл <b>29.JPG</b>. Проверь: (1) файл лежит именно в папке <b>vuap1/</b>, (2) имя строго <b>29.JPG</b> (регистр важен).
-            </div>
-          </figcaption>
-        </figure>
-
-        <figure>
-          <img src="./36.JPG" alt="Рис. 7" loading="lazy"
-               onerror="document.getElementById('imgerr7').style.display='block';">
-          <figcaption>
-            <b>Рис. 7.</b> Крепление левой гировертикали на поворотной установке при проверке канала тангажа (пикирование/кабрирование).
-            <div class="src">Файл: <span class="kpi">vuap1/36.JPG</span></div>
-            <div class="imgerr" id="imgerr7">
-              ❗ Не найден файл <b>36.JPG</b>. Проверь: (1) файл лежит в <b>vuap1/</b>, (2) имя строго <b>36.JPG</b> (регистр важен).
-            </div>
-          </figcaption>
-        </figure>
-      </div>
-
-      <div class="note">
-        Если вместо рисунков «битые» иконки — это почти всегда <b>неверный путь</b> или <b>не тот регистр имени файла</b> (JPG ≠ jpg).
-      </div>
-    </div>
-
-    <!-- A) Канал направления -->
-    <div class="card" id="yaw">
-      <h2>A. Канал направления (ω<sub>y</sub>)</h2>
-
-      <div class="grid2">
-        <div class="card" style="margin:0;">
-          <h3>Содержание операций</h3>
-          <p><b>8. Проверьте передаточное число по угловой скорости — канал направления.</b></p>
-
-          <ul>
-            <li>Снимите с вертолета датчик угловой скорости, установите его на установку <b>УПГ-56</b> с помощью кронштейна <b>6С4.132.020</b> и с помощью переходного жгута <b>6С6.640.046-1</b> соедините датчик со схемой вертолета.</li>
-
-            <li>Выключатель <b>В3</b> технологического жгута <b>246-9948-00</b> установите в положение <b>«Wy»</b>.</li>
-
-            <li>Нажмите кнопку-лампочку <b>«ВКЛ.»</b> на пульте управления и поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение.</li>
-
-            <li>Задайте с помощью установки вращение датчика, соответствующее правому (левому) развороту вертолета и, плавно меняя скорость вращения установки, отклоните шток малого цилиндра рулевого агрегата в положение, при котором подвижный индекс нулевого индикатора совместится с промежуточной отметкой.</li>
-
-            <li>Заметьте направление отклонения подвижного индекса нулевого индикатора от среднего положения.</li>
-
-            <li>Замерьте секундомером время поворота платформы установки на определенный угол и определите угловую скорость вращения как частное от деления величины угла на время поворота установки на этот угол.</li>
-
-            <li>Поставьте ноги на педали и произведите аналогичную проверку (<b>режим управления</b>).</li>
-
-            <li>Установите выключатель <b>В3</b> на панели технологического жгута в положение <b>«ОТКЛ.»</b>.</li>
-
-            <li>Проверьте работоспособность изодрома в цепи датчика, задав вращение платформы установки, соответствующее правому (левому) развороту.</li>
-
-            <li>Нажмите кнопку-лампочку <b>«ОТКЛ»</b> на пульте управления.</li>
-
-            <li>Снимите датчик с установки и установите на вертолет.</li>
-          </ul>
-
-          <div class="src">Источник: технологическая карта (канал направления).</div>
-        </div>
-
-        <div class="card" style="margin:0;">
-          <h3>Технические требования (ТТ)</h3>
-
-          <p>При вращении датчика в сторону правого (левого) разворота подвижный индекс нулевого индикатора должен отклоняться влево (вправо).</p>
-
-          <div class="ttgrid">
-            <div class="ttcard">
-              <div class="tttitle">Основной режим (по угловой скорости)</div>
-              <table>
-                <tr><th>Задаваемая угловая скорость</th><th>Передаточное число</th></tr>
-                <tr>
-                  <td>ω<sub>y</sub> = (3,5 + 2,1 / − 1,1) град/с</td>
-                  <td>i = (20 ± 8) % хода штока / (град/с)</td>
-                </tr>
-              </table>
-            </div>
-
-            <div class="ttcard">
-              <div class="tttitle">Режим «по курсу» (изодром)</div>
-              <table>
-                <tr><th>Задаваемая угловая скорость</th><th>Передаточное число</th></tr>
-                <tr>
-                  <td>ω<sub>y</sub> = (6,5 + 6,5 / − 2,0) град/с</td>
-                  <td>i = (10 ± 8) % хода штока / (град/с)</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-
-          <h3 style="margin-top:14px;">Работы, выполняемые при отклонениях от ТТ</h3>
-          <ul>
-            <li>Проверьте подсоединение датчика в схему вертолета и устраните недостаток.</li>
-            <li>Отключите и вновь включите канал направления кнопками-лампочками <b>«ОТКЛ»</b> и <b>«ВКЛ.»</b> на пульте управления.</li>
-            <li>Поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение.</li>
-            <li>Задайте вращение установке, соответствующее правому развороту, со скоростью <b>3,5 град/с</b>.</li>
-            <li><b>Поворотом подстроечного резистора «СКОР.» на пульте управления</b> добейтесь, чтобы подвижный индекс нулевого индикатора совместился с левой промежуточной отметкой.</li>
-            <li>Измените направление вращения установки (в сторону левого разворота) и плавным изменением скорости вращения совместите подвижный индекс нулевого индикатора с правой промежуточной отметкой.</li>
-            <li>Скорость вращения должна быть <b>(3,5 ± 0,7) град/с</b>.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- B) Канал крена -->
-    <div class="card" id="roll">
-      <h2>Б. Канал крена (ω<sub>x</sub>)</h2>
-
-      <div class="grid2">
-        <div class="card" style="margin:0;">
-          <h3>Содержание операций</h3>
-          <ul>
-            <li>Снимите с вертолета датчик угловой скорости, установите его на установку <b>УПГ-56</b> с помощью кронштейна <b>6С4.132.020</b> и с помощью переходного жгута <b>6С6.640.046-1</b> соедините датчик со схемой вертолета.</li>
-
-            <li>Нажмите кнопку-лампочку <b>«ВКЛ.»</b> на пульте управления и поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение.</li>
-
-            <li>Задайте датчику с помощью установки вращение, соответствующее правому (левому) крену и, плавно меняя скорость вращения установки, отклоните шток малого цилиндра рулевого агрегата до совмещения подвижного индекса нулевого индикатора с промежуточной отметкой.</li>
-
-            <li>Заметьте направление отклонения подвижного индекса нулевого индикатора.</li>
-
-            <li>Определите с помощью секундомера скорость вращения установки, соответствующую указанному положению штока.</li>
-
-            <li>Нажмите кнопку триммера на ручке управления вертолетом летчика и проведите аналогичную проверку (<b>режим управления</b>).</li>
-
-            <li>Нажмите кнопку-лампочку <b>«ОТКЛ.»</b> на пульте управления.</li>
-          </ul>
-
-          <div class="src">Примечание: Рис. 6 применяется и для канала крена.</div>
-        </div>
-
-        <div class="card" style="margin:0;">
-          <h3>Технические требования (ТТ)</h3>
-
-          <p>При вращении датчика в сторону правого (левого) крена подвижный индекс нулевого индикатора должен отклоняться влево (вправо).</p>
-
-          <div class="ttgrid">
-            <div class="ttcard">
-              <div class="tttitle">Основной режим (по угловой скорости)</div>
-              <table>
-                <tr><th>Задаваемая угловая скорость</th><th>Передаточное число</th></tr>
-                <tr>
-                  <td>ω = (8 + 6 / − 2) град/с</td>
-                  <td>i = (8 ± 3,2) % хода штока / (град/с)</td>
-                </tr>
-              </table>
-            </div>
-
-            <div class="ttcard">
-              <div class="tttitle">Режим управления (при нажатии кнопки триммера)</div>
-              <table>
-                <tr><th>Задаваемая угловая скорость</th><th>Передаточное число</th></tr>
-                <tr>
-                  <td>ω = (17 + 16,5 / − 6) град/с</td>
-                  <td>i = (4 ± 2) % хода штока / (град/с)</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-
-          <h3 style="margin-top:14px;">Работы, выполняемые при отклонениях от ТТ</h3>
-          <ul>
-            <li>Проверьте подсоединение датчика в схему вертолета и устраните недостаток.</li>
-            <li>Подрегулируйте передаточное число по методике, изложенной для канала направления (регулировка «СКОР.» и совмещение с промежуточными отметками).</li>
-            <li>Скорость вращения установки должна быть в пределах <b>(8 + 2,5 / − 1,0) град/с</b>.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- В) Канал тангажа -->
-    <div class="card" id="pitch">
-      <h2>В. Канал тангажа (пикирование/кабрирование)</h2>
-
-      <div class="grid2">
-        <div class="card" style="margin:0;">
-          <h3>Содержание операций</h3>
-          <ul>
-            <li>Снимите с вертолета левую гировертикаль, установите ее на поворотную установку <b>УПГ-56</b> с помощью кронштейна <b>КП-9</b> и с помощью переходного жгута <b>6С4.863.467-1</b> соедините со схемой вертолета.</li>
-
-            <li>Установите выключатель <b>В2</b> на панели технологического жгута в положение <b>«Wz»</b>.</li>
-
-            <li>Нажмите кнопку-лампочку <b>«ВКЛ.»</b> на пульте управления и поворотом потенциометра <b>«ЦЕНТР»</b> установите подвижный индекс нулевого индикатора в среднее положение.</li>
-
-            <li>Проверьте передаточное число по методике, аналогичной для каналов направления и крена.</li>
-
-            <li>Установите выключатель <b>В2</b> на панели технологического жгута в положение <b>«ОТКЛ.»</b>.</li>
-
-            <li>Нажмите кнопку-лампочку <b>«ОТКЛ»</b> на пульте управления.</li>
-          </ul>
-
-          <div class="src">Рис. 7: крепление гировертикали на установке УПГ-56 (КП-9).</div>
-        </div>
-
-        <div class="card" style="margin:0;">
-          <h3>Технические требования (ТТ)</h3>
-
-          <p>При вращении гировертикали на пикирование (кабрирование) подвижный индекс нулевого индикатора должен отклоняться вверх (вниз).</p>
-
-          <div class="ttcard">
-            <div class="tttitle">Режим по угловой скорости</div>
-            <table>
-              <tr><th>Задаваемая угловая скорость</th><th>Передаточное число</th></tr>
-              <tr>
-                <td>ω = (3,5 + 2,1 / − 1,1) град/с</td>
-                <td>i = (20 ± 8) % хода штока / (град/с)</td>
-              </tr>
-            </table>
-            <p class="muted" style="margin:8px 0 0;">
-              При вращении гировертикали угол ее отклонения от нулевого положения не должен превышать ±30°, так как при больших углах крутизна сигнала будет уменьшаться.
-            </p>
-          </div>
-
-          <h3 style="margin-top:14px;">Работы, выполняемые при отклонениях от ТТ</h3>
-          <ul>
-            <li>Отключите и вновь включите канал тангажа кнопками-лампочками <b>«ОТКЛ.»</b> и <b>«ВКЛ.»</b> на пульте управления.</li>
-            <li>Потенциометром <b>«ЦЕНТР»</b> установите подвижный индекс нулевого индикатора в среднее положение.</li>
-            <li>Задайте вращение установке, соответствующее пикированию, со скоростью <b>3,5 град/с</b>.</li>
-            <li>Поворотом потенциометра <b>«СКОР.»</b> на пульте управления совместите подвижный индекс с верхней промежуточной отметкой.</li>
-            <li>Измените направление вращения установки в сторону кабрирования и плавным изменением скорости вращения совместите подвижный индекс нулевого индикатора с нижней промежуточной отметкой.</li>
-            <li>Скорость вращения установки должна быть в пределах <b>(3,5 ± 0,7) град/с</b>.</li>
-            <li>Установите подвижный индекс нулевого индикатора в среднее положение с помощью потенциометра <b>«ЦЕНТР»</b> на пульте управления.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- Формулы -->
-    <div class="card" id="formulas">
-      <h2>Формулы</h2>
-
-      <div class="formula">
-        <div class="muted"><b>Определение угловой скорости вращения</b></div>
-        <div style="margin-top:8px;">\\(\omega = \\dfrac{\\Delta\\varphi}{t}\\)</div>
-        <div class="muted" style="margin-top:8px;">
-          где \\(\\Delta\\varphi\\) — угол поворота платформы, град; \\(t\\) — время поворота на этот угол, с; \\(\\omega\\) — угловая скорость, град/с.
-        </div>
-
-        <div class="sep"></div>
-
-        <div class="muted"><b>Определение передаточного числа по угловой скорости</b></div>
-        <div style="margin-top:8px;">\\( i = \\dfrac{S}{\\omega} \\)</div>
-        <div class="muted" style="margin-top:8px;">
-          где \\(S\\) — процент хода штока (в %), соответствующий положению «промежуточной отметки» (то, что ты фактически получаешь на индикаторе/штоке); \\(\\omega\\) — угловая скорость, град/с; \\(i\\) — % хода штока на 1 град/с.
-        </div>
-
-        <div class="note">
-          В твоих расчётах раньше стояло <b>66,7%</b> как “процент” (можно использовать как S по умолчанию), но в реальной проверке S берётся по фактическому положению штока/индекса на промежуточной отметке.
-        </div>
-      </div>
-    </div>
-
-    <!-- Калькулятор -->
-    <div class="card" id="calc">
-      <h2>Калькулятор (ω и i) + автоматическая проверка ТТ (PASS/FAIL)</h2>
-
-      <div class="calc">
-        <div>
-          <div class="field">
-            <label>Выбор режима ТТ</label>
-            <select id="mode">
-              <optgroup label="Канал направления">
-                <option value="yaw_main">Направление — основной режим (ωy=3,5; i=20±8)</option>
-                <option value="yaw_iso">Направление — по курсу/изодром (ωy=6,5; i=10±8)</option>
-              </optgroup>
-              <optgroup label="Канал крена">
-                <option value="roll_main">Крен — основной режим (ω≈8; i=8±3,2)</option>
-                <option value="roll_trim">Крен — режим управления (кнопка триммера) (ω≈17; i=4±2)</option>
-              </optgroup>
-              <optgroup label="Канал тангажа">
-                <option value="pitch">Тангаж — пикирование/кабрирование (ω≈3,5; i=20±8)</option>
-              </optgroup>
-            </select>
-          </div>
-
-          <div class="sep"></div>
-
-          <div class="grid2">
-            <div class="field">
-              <label>Угол поворота платформы Δφ (град)</label>
-              <input id="angle" type="number" inputmode="decimal" step="0.1" value="35">
-            </div>
-            <div class="field">
-              <label>Время поворота t (сек)</label>
-              <input id="time" type="number" inputmode="decimal" step="0.01" value="10">
-            </div>
-          </div>
-
-          <div class="field" style="margin-top:10px;">
-            <label>Процент хода штока S (%) — то, что использовано для расчёта i</label>
-            <input id="stroke" type="number" inputmode="decimal" step="0.1" value="66.7">
-          </div>
-
-          <div class="btnrow">
-            <button onclick="calcAll()">Посчитать ω и i + проверить ТТ</button>
-            <button class="btn2" onclick="fillNominalOmega()">Поставить ω номинал по ТТ</button>
-            <button class="btn2" onclick="resetAll()">Очистить</button>
-          </div>
-
-          <div class="note">
-            1) Сначала вводишь Δφ и t → считаем ω. 2) Вводишь S (%) → считаем i=S/ω. 3) Проверяем i на попадание в диапазон ТТ.
-          </div>
-        </div>
-
-        <div>
-          <div class="field">
-            <label>Результат</label>
-            <div class="out" id="out">Готов.</div>
-          </div>
-
-          <div class="note">
-            Если хочешь считать строго “как в карте” — ставь S тем значением, которое соответствует совмещению с промежуточной отметкой (то есть фактический % хода штока).
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" id="quicklinks">
-      <h2>Быстрая проверка ссылок</h2>
-      <ul>
-        <li>Эта страница: <span class="kpi">/Mi-Avionics-Tools/vuap1/p08.html</span></li>
-        <li>Папка: <span class="kpi">/Mi-Avionics-Tools/vuap1/</span></li>
-        <li>Рис.6: <span class="kpi">vuap1/29.JPG</span> → <span class="kpi">./29.JPG</span></li>
-        <li>Рис.7: <span class="kpi">vuap1/36.JPG</span> → <span class="kpi">./36.JPG</span></li>
-      </ul>
-    </div>
-
+<div class="wrap">
+
+  <div class="topbar">
+    <span class="chip"><b>Mi-Avionics-Tools</b></span>
+    <span class="chip">ВУАП-1</span>
+    <span class="chip"><b>Пункт 8</b></span>
+    <span class="chip">Страница: <b>vuap1/p08.html</b></span>
+    <span class="chip"><a href="index.html">⬅︎ Назад (vuap1/index.html)</a></span>
   </div>
 
-  <script>
-    const TT = {
-      yaw_main: { name:"Направление — основной", omega_nom:3.5, i_center:20, i_tol:8 },
-      yaw_iso:  { name:"Направление — изодром", omega_nom:6.5, i_center:10, i_tol:8 },
-      roll_main:{ name:"Крен — основной",       omega_nom:8.0, i_center:8,  i_tol:3.2 },
-      roll_trim:{ name:"Крен — триммер",        omega_nom:17.0,i_center:4,  i_tol:2 },
-      pitch:    { name:"Тангаж",               omega_nom:3.5, i_center:20, i_tol:8 }
-    };
+  <h1>8. Проверка передаточного числа по угловой скорости</h1>
+  <p class="sub">
+    Структура: <span class="toc">
+      <a href="#figs">Рисунки</a>
+      <a href="#dir">A. Канал направления</a>
+      <a href="#roll">Б. Канал крена</a>
+      <a href="#pitch">В. Канал тангажа</a>
+      <a href="#formulas">Формулы</a>
+      <a href="#calc">Калькулятор</a>
+    </span>
+  </p>
 
-    function n(v){
-      const x = Number(v);
-      return Number.isFinite(x) ? x : NaN;
+  <!-- РИСУНКИ -->
+  <div class="card" id="figs">
+    <h2>Рисунки</h2>
+    <div class="figrow">
+      <figure>
+        <!-- ВАЖНО: файл должен реально лежать в vuap1/ и имя должно совпадать РЕГИСТРОМ -->
+        <img src="29.JPG" alt="Рис. 6" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='<span class=err>Не загружено 29.JPG</span> (проверь: файл лежит в vuap1/ и имя EXACT: 29.JPG)';">
+        <figcaption>
+          <b>Рис. 6.</b> Крепление датчика угловой скорости на установке УПГ-56.
+          <br><span class="small">Примечание: Рис. 6 используется для <b>канала направления</b> и <b>канала крена</b>.</span>
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img src="36.JPG" alt="Рис. 7" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='<span class=err>Не загружено 36.JPG</span> (проверь: файл лежит в vuap1/ и имя EXACT: 36.JPG)';">
+        <figcaption>
+          <b>Рис. 7.</b> Крепление левой гировертикали на установке УПГ-56 при проверке в канале тангажа (пикирование).
+        </figcaption>
+      </figure>
+    </div>
+    <p class="note">
+      Если тут красное «Не загружено…» — это не “код плохой”, это значит <b>файла нет по указанному пути</b> или отличается регистр: <b>29.JPG ≠ 29.jpg</b> на GitHub Pages.
+    </p>
+  </div>
+
+  <!-- A. НАПРАВЛЕНИЕ -->
+  <div class="card" id="dir">
+    <h2>A. Канал направления</h2>
+
+    <div class="grid2">
+      <div>
+        <h3>Содержание операций</h3>
+        <p><b>8. Проверьте передаточное число по угловой скорости (канал направления), для чего:</b></p>
+        <ul>
+          <li>снимите с вертолета датчик угловой скорости, установите его на установку УПГ-56 с помощью кронштейна <b>6С4.132.020</b> и с помощью переходного жгута <b>6С6.640.046-1</b> соедините датчик со схемой вертолета;</li>
+          <li>выключатель <b>В3</b> технологического жгута <b>246-9948-00</b> установите в положение <b>"Wy"</b>;</li>
+          <li>нажмите кнопку-лампочку <b>"ВКЛ."</b> на пульте управления и поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение;</li>
+          <li>задайте с помощью установки вращение датчика, соответствующее правому (левому) развороту вертолета и, плавно меняя скорость вращения установки, отклоните шток малого цилиндра рулевого агрегата в положение, при котором подвижный индекс нулевого индикатора совместится с промежуточной отметкой;</li>
+          <li>заметьте направление отклонения подвижного индекса нулевого индикатора от среднего положения;</li>
+          <li>замерьте секундомером время поворота платформы установки на определенный угол и определите угловую скорость вращения, как частное от деления величины угла на время поворота установки на этот угол;</li>
+          <li>поставьте ноги на педали и произведите аналогичную проверку (режим управления);</li>
+          <li>установите выключатель <b>В3</b> на панели технологического жгута в положение <b>"ОТКЛ."</b>;</li>
+          <li>проверьте работоспособность изодрома в цепи датчика, задав вращение платформы установки, соответствующее правому (левому) развороту;</li>
+          <li>нажмите кнопку-лампочку <b>"ОТКЛ"</b> на пульте управления;</li>
+          <li>снимите датчик с установки и установите на вертолет.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+        <ul>
+          <li>проверьте подсоединение датчика в схему вертолета и устраните недостаток;</li>
+          <li>отключите и вновь включите канал направления кнопками-лампочками <b>"ОТКЛ"</b> и <b>"ВКЛ."</b> на пульте управления;</li>
+          <li>поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение;</li>
+          <li>задайте вращение установке, соответствующее правому развороту со скоростью <b>3,5 град/с</b>;</li>
+          <li>поворотом подстроечного резистора <b>"СКОР."</b> на пульте управления добейтесь, чтобы подвижный индекс нулевого индикатора совместился с <b>левой</b> промежуточной отметкой;</li>
+          <li>измените направление вращения установки (в сторону левого разворота) и плавным изменением скорости вращения совместите подвижный индекс нулевого индикатора с <b>правой</b> промежуточной отметкой;</li>
+          <li>скорость вращения должна быть <b>(3,5 ±0,7) град/с</b>.</li>
+        </ul>
+        <div class="kpi">
+          <span><b>В3</b>: "Wy" (проверка) / "ОТКЛ." (после)</span>
+          <span><b>СКОР.</b>: регулировка по совмещению индекса с промежуточными отметками</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Технические требования (ТТ)</h3>
+    <p class="note">
+      При вращении датчика в сторону правого (левого) разворота подвижный индекс нулевого индикатора должен отклоняться влево (вправо).
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40%">Режим</th>
+          <th style="width:30%">Задаваемая угловая скорость, град/с</th>
+          <th style="width:30%">Передаточное число, % хода штока / (град/с)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Основной режим (по угловой скорости)</b></td>
+          <td>(3,5 + 2,1 / − 1,1) → <b>2,4…5,6</b></td>
+          <td>(20 ± 8) → <b>12…28</b></td>
+        </tr>
+        <tr>
+          <td><b>Режим по курсу (изодром)</b></td>
+          <td>(6,5 + 6,5 / − 2,0) → <b>4,5…13,0</b></td>
+          <td>(10 ± 8) → <b>2…18</b></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Б. КРЕН -->
+  <div class="card" id="roll">
+    <h2>Б. Канал крена</h2>
+
+    <div class="grid2">
+      <div>
+        <h3>Содержание операций</h3>
+        <p><b>Канал крена, для чего:</b></p>
+        <ul>
+          <li>снимите с вертолета датчик угловой скорости, установите его на установку УПГ-56 с помощью кронштейна <b>6С4.132.020</b> и с помощью переходного жгута <b>6С6.640.046-1</b> соедините датчик со схемой вертолета;</li>
+          <li>нажмите кнопку-лампочку <b>"ВКЛ."</b> на пульте управления и поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение;</li>
+          <li>задайте датчику с помощью установки вращение, соответствующее правому (левому) крену и, плавно меняя скорость вращения установки, отклоните шток малого цилиндра рулевого агрегата до совмещения подвижного индекса нулевого индикатора с промежуточной отметкой;</li>
+          <li>заметьте направление отклонения подвижного индекса нулевого индикатора;</li>
+          <li>определите с помощью секундомера скорость вращения установки, соответствующую указанному положению штока;</li>
+          <li>нажмите кнопку триммера на ручке управления вертолетом летчика и проведите аналогичную проверку (режим управления);</li>
+          <li>нажмите кнопку-лампочку <b>"ОТКЛ."</b> на пульте управления.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+        <ul>
+          <li>проверьте подсоединение датчика в схему вертолета и устраните недостаток;</li>
+          <li>подрегулируйте передаточное число по методике, изложенной для канала направления;</li>
+          <li>скорость вращения установки при регулировке должна быть в пределах <b>(8 + 2,5 / − 1,0) → 7,0…10,5 град/с</b>.</li>
+        </ul>
+        <div class="kpi">
+          <span><b>Рис. 6</b>: крепление датчика (крен тоже)</span>
+          <span><b>Режим управления</b>: при нажатии кнопки триммера</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Технические требования (ТТ)</h3>
+    <p class="note">
+      При вращении датчика в сторону правого (левого) крена подвижный индекс нулевогоControlled нулевого индикатора должен отклоняться влево (вправо).
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40%">Режим</th>
+          <th style="width:30%">Задаваемая угловая скорость, град/с</th>
+          <th style="width:30%">Передаточное число, % хода штока / (град/с)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Основной режим</b></td>
+          <td>(8 + 6 / − 2) → <b>6,0…14,0</b></td>
+          <td>(8 ± 3,2) → <b>4,8…11,2</b></td>
+        </tr>
+        <tr>
+          <td><b>Режим управления (при нажатии кнопки триммера)</b></td>
+          <td>(17 + 16,5 / − 6) → <b>11,0…33,5</b></td>
+          <td>(4 ± 2) → <b>2,0…6,0</b></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- В. ТАНГАЖ -->
+  <div class="card" id="pitch">
+    <h2>В. Канал тангажа</h2>
+
+    <div class="grid2">
+      <div>
+        <h3>Содержание операций</h3>
+        <p><b>Канал тангажа, для чего:</b></p>
+        <ul>
+          <li>снимите с вертолета левую гировертикаль, установите ее на поворотную установку УПГ-56 с помощью кронштейна <b>КП-9</b> и с помощью переходного жгута <b>6С4.863.467-1</b> соедините со схемой вертолета;</li>
+          <li>установите выключатель <b>В2</b> на панели технологического жгута в положение <b>"Wz"</b>;</li>
+          <li>нажмите кнопку-лампочку <b>"ВКЛ."</b> на пульте управления и поворотом потенциометра <b>"ЦЕНТР"</b> установите подвижный индекс нулевого индикатора в среднее положение;</li>
+          <li>проверьте передаточное число по методике, аналогичной для каналов направления и крена;</li>
+          <li>установите выключатель <b>В2</b> на панели технологического жгута в положение <b>"ОТКЛ."</b>;</li>
+          <li>нажмите кнопку-лампочку <b>"ОТКЛ"</b> на пульте управления.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+        <ul>
+          <li>отключите и вновь включите канал тангажа кнопками-лампочками <b>"ОТКЛ."</b> и <b>"ВКЛ."</b> на пульте управления;</li>
+          <li>потенциометром <b>"ЦЕНТР"</b> установите подвижный индекс нулевого индикатора в среднее положение;</li>
+          <li>задайте вращение установке, соответствующее пикированию со скоростью <b>3,5 град/с</b>;</li>
+          <li>поворотом потенциометра <b>"СКОР."</b> на пульте управления совместите подвижный индекс с <b>верхней</b> промежуточной отметкой;</li>
+          <li>измените направление вращения установки в сторону кабрирования и плавным изменением скорости вращения совместите подвижный индекс нулевого индикатора с <b>нижней</b> промежуточной отметкой;</li>
+          <li>скорость вращения установки должна быть в пределах <b>(3,5 ±0,7) → 2,8…4,2 град/с</b>;</li>
+          <li>установите подвижный индекс нулевого индикатора в среднее положение с помощью потенциометра <b>"ЦЕНТР"</b> на пульте управления.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Технические требования (ТТ)</h3>
+    <p class="note">
+      При вращении гировертикали на пикирование (кабрирование) подвижный индекс нулевого индикатора должен отклоняться вверх (вниз).
+      <br>При вращении гировертикали угол ее отклонения от нулевого положения не должен превышать <b>±30°</b>, так как при больших углах крутизна сигнала будет уменьшаться.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40%">Режим</th>
+          <th style="width:30%">Задаваемая угловая скорость, град/с</th>
+          <th style="width:30%">Передаточное число, % хода штока / (град/с)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Основной режим</b></td>
+          <td>(3,5 + 2,1 / − 1,1) → <b>2,4…5,6</b></td>
+          <td>(20 ± 8) → <b>12…28</b></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="note"><b>Рис. 7 = 36.JPG</b> (должен лежать в <b>vuap1/36.JPG</b>).</p>
+  </div>
+
+  <!-- Формулы -->
+  <div class="card" id="formulas">
+    <h2>Формулы</h2>
+
+    <h3>Определение угловой скорости вращения</h3>
+    <p class="note">
+      Если \(\Delta \varphi\) — угол поворота платформы (град), \(t\) — время поворота на этот угол (с),
+      то угловая скорость:
+    </p>
+    <div class="card" style="margin:10px 0 0">
+      \[
+        \omega = \frac{\Delta \varphi}{t}
+      \]
+    </div>
+
+    <h3>Определение передаточного числа по угловой скорости</h3>
+    <p class="note">
+      Если \(S\) — процент хода штока малого цилиндра (в %), \(\omega\) — угловая скорость (град/с),
+      то передаточное число:
+    </p>
+    <div class="card" style="margin:10px 0 0">
+      \[
+        i_{\omega} = \frac{S}{\omega}
+      \]
+    </div>
+
+    <p class="note">
+      Для «полного хода» часто используют <b>S = 66,7%</b> (как в твоём рабочем калькуляторе ранее): тогда \(i_{\omega}=66{,}7/\omega\).
+    </p>
+  </div>
+
+  <!-- Калькулятор -->
+  <div class="card" id="calc">
+    <h2>Калькулятор (ω и iω) + автоматическая проверка по ТТ</h2>
+
+    <div class="formgrid">
+      <div>
+        <label>Выбор режима ТТ</label>
+        <select id="mode">
+          <option value="dir_main">Направление — основной режим (ω=2.4…5.6; iω=12…28)</option>
+          <option value="dir_iso">Направление — по курсу (изодром) (ω=4.5…13.0; iω=2…18)</option>
+          <option value="roll_main">Крен — основной режим (ω=6.0…14.0; iω=4.8…11.2)</option>
+          <option value="roll_trim">Крен — режим управления (кнопка триммера) (ω=11.0…33.5; iω=2…6)</option>
+          <option value="pitch_main">Тангаж — основной режим (ω=2.4…5.6; iω=12…28; угол GV ≤ ±30°)</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Процент хода штока S, % (по умолчанию 66,7)</label>
+        <input id="S" type="number" step="0.001" value="66.7">
+      </div>
+
+      <div>
+        <label>Угол поворота платформы Δφ, град</label>
+        <input id="ang" type="number" step="0.001" value="0">
+      </div>
+
+      <div>
+        <label>Время поворота t, c</label>
+        <input id="time" type="number" step="0.001" value="0">
+      </div>
+
+      <div>
+        <label>Угловая скорость ω, град/с (можно ввести вручную)</label>
+        <input id="omega" type="number" step="0.001" value="0">
+      </div>
+
+      <div>
+        <label>Передаточное число iω = S/ω, %/(град/с)</label>
+        <input id="iomega" type="number" step="0.001" value="0" readonly>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button id="btnOmega">Посчитать ω = Δφ / t</button>
+      <button id="btnI">Посчитать iω = S / ω</button>
+      <button id="btnAll">Посчитать всё + проверить ТТ</button>
+      <button id="btnClear">Очистить</button>
+    </div>
+
+    <div class="out" id="out">Готов.</div>
+
+    <p class="note">
+      <b>Важно:</b> если Δφ и t = 0 — ω не посчитается. Тогда просто введи ω вручную (как ты это делал раньше).
+    </p>
+  </div>
+
+</div>
+
+<script>
+  const $ = (id)=>document.getElementById(id);
+
+  // TT database: ranges
+  const TT = {
+    dir_main:  { name:'Направление — основной',  wMin:2.4, wMax:5.6,  iMin:12,  iMax:28 },
+    dir_iso:   { name:'Направление — изодром',   wMin:4.5, wMax:13.0, iMin:2,   iMax:18 },
+    roll_main: { name:'Крен — основной',         wMin:6.0, wMax:14.0, iMin:4.8, iMax:11.2 },
+    roll_trim: { name:'Крен — триммер',          wMin:11.0,wMax:33.5, iMin:2.0, iMax:6.0 },
+    pitch_main:{ name:'Тангаж — основной',       wMin:2.4, wMax:5.6,  iMin:12,  iMax:28, note:'Угол отклонения ГВ не более ±30°' },
+  };
+
+  function f3(x){ return (Math.round(x*1000)/1000).toFixed(3); }
+  function num(v){
+    const x = Number(String(v).replace(',','.'));
+    return Number.isFinite(x) ? x : NaN;
+  }
+
+  function calcOmega(){
+    const ang = num($('ang').value);
+    const t = num($('time').value);
+    if(!(ang>0) || !(t>0)) return NaN;
+    return ang / t;
+  }
+
+  function calcI(){
+    const S = num($('S').value);
+    const w = num($('omega').value);
+    if(!(S>0) || !(w>0)) return NaN;
+    return S / w;
+  }
+
+  function checkTT(modeKey, w, i){
+    const spec = TT[modeKey];
+    const wOK = (w>=spec.wMin && w<=spec.wMax);
+    const iOK = (i>=spec.iMin && i<=spec.iMax);
+    return { spec, wOK, iOK };
+  }
+
+  function renderReport(modeKey, w, i, fromOmegaCalc){
+    const {spec, wOK, iOK} = checkTT(modeKey, w, i);
+
+    let s = '';
+    s += `Режим ТТ: ${spec.name}\n`;
+    s += `ω = ${f3(w)} град/с  |  допуск: ${spec.wMin}…${spec.wMax}  =>  ${wOK ? 'PASS ✅' : 'FAIL ❌'}\n`;
+    s += `iω = ${f3(i)} %/(град/с)  |  допуск: ${spec.iMin}…${spec.iMax}  =>  ${iOK ? 'PASS ✅' : 'FAIL ❌'}\n`;
+    if(spec.note) s += `Примечание: ${spec.note}\n`;
+    if(fromOmegaCalc) s += `ω рассчитана как Δφ/t.\n`;
+    return s;
+  }
+
+  $('btnOmega').addEventListener('click', ()=>{
+    const w = calcOmega();
+    if(!Number.isFinite(w)){
+      $('out').textContent = 'Ошибка: чтобы посчитать ω, задай Δφ > 0 и t > 0.';
+      return;
     }
+    $('omega').value = f3(w);
+    $('out').textContent = `ω = Δφ/t = ${f3(w)} град/с`;
+  });
 
-    function fmt(x, d=3){
-      if(!Number.isFinite(x)) return "—";
-      return x.toFixed(d).replace(".", ",");
+  $('btnI').addEventListener('click', ()=>{
+    const i = calcI();
+    if(!Number.isFinite(i)){
+      $('out').textContent = 'Ошибка: чтобы посчитать iω, задай S > 0 и ω > 0.';
+      return;
     }
+    $('iomega').value = f3(i);
+    $('out').textContent = `iω = S/ω = ${f3(i)} %/(град/с)`;
+  });
 
-    function calcAll(){
-      const mode = document.getElementById('mode').value;
-      const cfg = TT[mode];
+  $('btnAll').addEventListener('click', ()=>{
+    let w = num($('omega').value);
+    let fromOmegaCalc = false;
 
-      const angle = n(document.getElementById('angle').value);
-      const time  = n(document.getElementById('time').value);
-      const stroke= n(document.getElementById('stroke').value);
-
-      let out = [];
-      out.push(`Режим: ${cfg.name}`);
-      out.push(`ТТ по i: ${cfg.i_center} ± ${cfg.i_tol}  (%/(град/с))`);
-      out.push(`Диапазон: [${fmt(cfg.i_center - cfg.i_tol, 3)} … ${fmt(cfg.i_center + cfg.i_tol, 3)}] %/(град/с)`);
-      out.push("");
-
-      // ω
-      let omega = NaN;
-      if(Number.isFinite(angle) && Number.isFinite(time) && time > 0){
-        omega = angle / time;
-        out.push(`ω = Δφ / t = ${fmt(angle,3)} / ${fmt(time,3)} = ${fmt(omega,3)} град/с`);
-      } else {
-        out.push("ω: ошибка входных данных (Δφ и t должны быть числами, t>0).");
+    // If omega not valid, try compute from angle/time
+    if(!(w>0)){
+      const w2 = calcOmega();
+      if(Number.isFinite(w2)){
+        w = w2;
+        $('omega').value = f3(w);
+        fromOmegaCalc = true;
       }
-
-      // i
-      let i = NaN;
-      if(Number.isFinite(omega) && Number.isFinite(stroke)){
-        i = stroke / omega;
-        out.push(`i = S / ω = ${fmt(stroke,3)} / ${fmt(omega,3)} = ${fmt(i,3)} %/(град/с)`);
-      } else {
-        out.push("i: не посчитано (проверь ω и S).");
-      }
-
-      out.push("");
-
-      // PASS/FAIL
-      if(Number.isFinite(i)){
-        const min = cfg.i_center - cfg.i_tol;
-        const max = cfg.i_center + cfg.i_tol;
-        const ok = (i >= min && i <= max);
-
-        out.push(`Проверка ТТ по i: ${ok ? "PASS" : "FAIL"}`);
-        out.push(ok ? "✅ В пределах допуска." : "❌ ВНЕ допуска — требуется устранение/регулировка по техпроцессу (в т.ч. «СКОР.»).");
-      }
-
-      document.getElementById('out').textContent = out.join("\n");
     }
 
-    function fillNominalOmega(){
-      const mode = document.getElementById('mode').value;
-      const cfg = TT[mode];
-      // Сделаем удобный способ: подставим ω номинал через Δφ=35°, t = 35/ω
-      const angle = n(document.getElementById('angle').value);
-      const baseAngle = Number.isFinite(angle) && angle > 0 ? angle : 35;
-      const t = baseAngle / cfg.omega_nom;
-      document.getElementById('angle').value = baseAngle;
-      document.getElementById('time').value = t.toFixed(3);
-      calcAll();
+    const i = (w>0) ? (num($('S').value) / w) : NaN;
+
+    if(!(w>0) || !Number.isFinite(i) || !(i>0)){
+      $('out').textContent =
+        'Ошибка: нужно иметь ω>0 (введи вручную или задай Δφ и t), и S>0.';
+      return;
     }
 
-    function resetAll(){
-      document.getElementById('angle').value = 35;
-      document.getElementById('time').value = 10;
-      document.getElementById('stroke').value = 66.7;
-      document.getElementById('out').textContent = "Готов.";
-    }
-  </script>
+    $('iomega').value = f3(i);
+
+    const modeKey = $('mode').value;
+    $('out').textContent = renderReport(modeKey, w, i, fromOmegaCalc);
+  });
+
+  $('btnClear').addEventListener('click', ()=>{
+    $('S').value = '66.7';
+    $('ang').value = '0';
+    $('time').value = '0';
+    $('omega').value = '0';
+    $('iomega').value = '0';
+    $('out').textContent = 'Готов.';
+    $('mode').value = 'dir_main';
+  });
+</script>
+
 </body>
 </html>
