@@ -275,120 +275,275 @@
     </div>
 
     <!-- КАЛЬКУЛЯТОР -->
-    <div class="calc" id="calc">
-      <h3>Калькулятор передаточного числа (скорость изменения высоты)</h3>
-      <p class="sub">
-        Формула: <span class="mono">μ = 66,7 / Vᵧ</span>, где <span class="mono">Vᵧ</span> — задаваемая вертикальная скорость.
-        Константа <span class="mono">66,7</span> фиксированная.
-      </p>
+  <section class="calc card" id="calc-vy">
+  <div class="cardTitle">Калькулятор передаточного числа (скорость изменения высоты)</div>
 
-      <div class="grid">
-        <div class="field">
-          <label for="vy">Vᵧ (задаваемая вертикальная скорость)</label>
-          <input id="vy" type="number" step="0.01" placeholder="например 3.5" />
-        </div>
+  <div class="calcSub">
+    Формула: <span class="mono">μ = 66,7 / V<sub>y</sub></span>,
+    где <span class="mono">V<sub>y</sub></span> — задаваемая вертикальная скорость.
+    Допуск (ТТ): <span class="mono">μ = 10 ± 4</span> ⇒ <span class="mono">6 … 14</span>.
+  </div>
 
-        <div class="field">
-          <label for="unit">Единицы Vᵧ</label>
-          <select id="unit">
-            <option value="ms">м/с</option>
-            <option value="mmin">м/мин</option>
-          </select>
-        </div>
+  <div class="calcGrid">
+    <div class="field">
+      <label for="vy">V<sub>y</sub> (задаваемая вертикальная скорость)</label>
+      <input id="vy" type="number" inputmode="decimal" step="0.1" placeholder="например 5.0">
+      <div class="hint">Введи значение скорости. Ноль и минус — нельзя.</div>
+    </div>
 
-        <div class="field">
-          <label>Результат</label>
-          <div class="out">
-            <div>Передаточное число: <span class="big" id="muOut">—</span></div>
-            <div style="color:var(--panelText2);font-size:12px" id="muUnit">%/(м/с)</div>
-          </div>
-        </div>
+    <div class="field">
+      <label for="vyUnit">Единицы V<sub>y</sub></label>
+      <select id="vyUnit">
+        <option value="ms" selected>м/с</option>
+        <option value="mmin">м/мин</option>
+      </select>
+      <div class="hint">Если выбрано м/мин — автоматически переведём в м/с.</div>
+    </div>
+
+    <div class="field">
+      <label>Результат</label>
+      <div class="resultBox">
+        <div id="muValue" class="muValue mono">—</div>
+        <div id="muUnit" class="muUnit">%(м/с)</div>
+        <div id="muBadge" class="badge neutral">Ожидание ввода</div>
       </div>
-
-      <div class="btnrow">
-        <button type="button" id="btnCalc">Посчитать μ</button>
-        <button type="button" id="btnClear">Очистить</button>
-      </div>
-
-      <div class="hint" id="hint">
-        • Если Vᵧ задано в м/мин — будет автоматически переведено в м/с (деление на 60).<br>
-        • В технологии иногда пишут Vᵧ как “вертикальная скорость”. Тут это один параметр.<br>
-        • Единицы результата отображаются справа (%/(м/с) или %/(м/мин) — по выбранным единицам входа).
-      </div>
+      <div id="muRange" class="hint mono">Допуск: μ ∈ [6; 14]</div>
     </div>
   </div>
 
-  <script>
-    (function(){
-      const $ = (id)=>document.getElementById(id);
+  <div class="btnRow">
+    <button class="btn primary" type="button" onclick="calcMuVy()">Посчитать</button>
+    <button class="btn" type="button" onclick="clearMuVy()">Очистить</button>
+  </div>
 
-      const vy = $('vy');
-      const unit = $('unit');
-      const muOut = $('muOut');
-      const muUnit = $('muUnit');
-      const btnCalc = $('btnCalc');
-      const btnClear = $('btnClear');
+  <div id="muMsg" class="msg neutral">
+    Введи V<sub>y</sub> и нажми «Посчитать».
+  </div>
+</section>
 
-      // Константа из технологии
-      const K = 66.7;
+<style>
+  /* Карточка в твоём синем стиле (подходит к текущему p11) */
+  .card{
+    margin: 18px auto 26px auto;
+    max-width: 980px;
+    background: rgba(10, 22, 40, .55);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 14px 14px 16px 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    color: #e9eef7;
+  }
+  .cardTitle{
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .calcSub{
+    font-size: 13px;
+    opacity: .92;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+  .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 
-      function toNumber(v){
-        const n = Number(String(v).replace(',', '.'));
-        return Number.isFinite(n) ? n : NaN;
+  .calcGrid{
+    display: grid;
+    grid-template-columns: 1.2fr .8fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 860px){
+    .calcGrid{ grid-template-columns: 1fr; }
+  }
+  .field label{
+    display:block;
+    font-size: 12px;
+    margin-bottom: 6px;
+    opacity: .95;
+  }
+  .field input, .field select{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.22);
+    color: #e9eef7;
+    outline: none;
+  }
+  .field input:focus, .field select:focus{
+    border-color: rgba(120,180,255,.55);
+    box-shadow: 0 0 0 3px rgba(120,180,255,.12);
+  }
+  .hint{
+    font-size: 11px;
+    opacity: .70;
+    margin-top: 6px;
+    line-height: 1.25;
+  }
+
+  .resultBox{
+    display:flex;
+    gap: 10px;
+    align-items: baseline;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,.18);
+    border: 1px solid rgba(255,255,255,.10);
+    flex-wrap: wrap;
+  }
+  .muValue{
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+  .muUnit{
+    font-size: 12px;
+    opacity: .8;
+  }
+  .badge{
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06);
+    opacity: .95;
+  }
+  .badge.ok{
+    border-color: rgba(60,255,0,.35);
+    background: rgba(60,255,0,.12);
+    color: #bfffb0;
+  }
+  .badge.bad{
+    border-color: rgba(255,59,59,.45);
+    background: rgba(255,59,59,.12);
+    color: #ffc2c2;
+  }
+  .badge.neutral{
+    color: rgba(233,238,247,.85);
+  }
+
+  .btnRow{
+    display:flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .btn{
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    color: #e9eef7;
+    padding: 9px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .btn:hover{ background: rgba(255,255,255,.10); }
+  .btn.primary{
+    border-color: rgba(120,180,255,.45);
+    background: rgba(120,180,255,.12);
+  }
+
+  .msg{
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.16);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .msg.ok{
+    border-color: rgba(60,255,0,.30);
+    background: rgba(60,255,0,.08);
+    color: #caffbe;
+  }
+  .msg.bad{
+    border-color: rgba(255,59,59,.35);
+    background: rgba(255,59,59,.08);
+    color: #ffd0d0;
+  }
+  .msg.neutral{
+    color: rgba(233,238,247,.85);
+  }
+</style>
+
+<script>
+  // Пункт 11: μ = 66.7 / Vy, допуск: 10 ± 4 => [6; 14]
+  function calcMuVy(){
+    const vyEl = document.getElementById('vy');
+    const unitEl = document.getElementById('vyUnit');
+
+    const muValueEl = document.getElementById('muValue');
+    const muUnitEl  = document.getElementById('muUnit');
+    const badgeEl   = document.getElementById('muBadge');
+    const msgEl     = document.getElementById('muMsg');
+
+    let Vy = parseFloat(String(vyEl.value).replace(',', '.'));
+    const unit = unitEl.value;
+
+    // Проверка ввода
+    if (!isFinite(Vy) || Vy <= 0){
+      muValueEl.textContent = '—';
+      muUnitEl.textContent = '%(м/с)';
+      badgeEl.className = 'badge bad';
+      badgeEl.textContent = 'Ошибка';
+      msgEl.className = 'msg bad';
+      msgEl.textContent = 'Ошибка ввода: Vу должно быть числом больше 0.';
+      return;
+    }
+
+    // Перевод м/мин -> м/с
+    let Vy_ms = Vy;
+    if (unit === 'mmin'){
+      Vy_ms = Vy / 60.0;
+      if (Vy_ms <= 0){
+        muValueEl.textContent = '—';
+        badgeEl.className = 'badge bad';
+        badgeEl.textContent = 'Ошибка';
+        msgEl.className = 'msg bad';
+        msgEl.textContent = 'Ошибка: после перевода в м/с получилось Vу ≤ 0.';
+        return;
       }
+    }
 
-      function calc(){
-        const vIn = toNumber(vy.value);
+    const mu = 66.7 / Vy_ms;
 
-        if(!Number.isFinite(vIn) || vIn <= 0){
-          muOut.textContent = '—';
-          muOut.style.color = 'var(--bad)';
-          muUnit.textContent = unit.value === 'mmin' ? '%/(м/мин)' : '%/(м/с)';
-          return;
-        }
+    // Допуск ТТ: 6…14
+    const muMin = 6.0;
+    const muMax = 14.0;
 
-        // Перевод в м/с для расчёта
-        const v_ms = (unit.value === 'mmin') ? (vIn / 60) : vIn;
+    muValueEl.textContent = mu.toFixed(2).replace('.', ',');
+    muUnitEl.textContent = '%(м/с)';
 
-        // μ = 66.7 / Vy
-        const mu = K / v_ms;
+    if (mu >= muMin && mu <= muMax){
+      badgeEl.className = 'badge ok';
+      badgeEl.textContent = 'В ДОПУСКЕ';
+      msgEl.className = 'msg ok';
+      msgEl.innerHTML =
+        'OK: μ = <span class="mono">' + mu.toFixed(2).replace('.', ',') +
+        '</span> %(м/с), допуск <span class="mono">[6; 14]</span>.';
+    } else {
+      badgeEl.className = 'badge bad';
+      badgeEl.textContent = 'ВНЕ ДОПУСКА';
+      msgEl.className = 'msg bad';
+      msgEl.innerHTML =
+        'FAIL: μ = <span class="mono">' + mu.toFixed(2).replace('.', ',') +
+        '</span> %(м/с), допуск <span class="mono">[6; 14]</span>.';
+    }
+  }
 
-        // Показываем в тех же единицах, что выбрал пользователь:
-        // если выбрал м/мин — пересчитаем отображение так, чтобы было “%/(м/мин)”
-        // т.е. μ_(per m/min) = 66.7 / (Vy_m/min) * 60  ? Нет.
-        // Проще: показываем одинаково по формуле μ=66.7/Vy, но Vy берём в выбранных единицах:
-        // Чтобы “видел как считает”, показываем отдельно:
-        let muDisplay, unitText;
-        if(unit.value === 'mmin'){
-          // считаем прямо по введённому (м/мин), как ты хочешь "я ввожу Vy и сразу μ"
-          // μ = 66.7 / Vy_(м/мин)
-          muDisplay = K / vIn;
-          unitText = '%/(м/мин)';
-        }else{
-          muDisplay = mu; // K / Vy_(м/с)
-          unitText = '%/(м/с)';
-        }
+  function clearMuVy(){
+    document.getElementById('vy').value = '';
+    document.getElementById('vyUnit').value = 'ms';
 
-        muOut.textContent = muDisplay.toFixed(3).replace('.', ',');
-        muOut.style.color = 'var(--ok)';
-        muUnit.textContent = unitText;
-      }
+    document.getElementById('muValue').textContent = '—';
+    document.getElementById('muUnit').textContent = '%(м/с)';
 
-      function clearAll(){
-        vy.value = '';
-        unit.value = 'ms';
-        muOut.textContent = '—';
-        muOut.style.color = 'var(--panelText)';
-        muUnit.textContent = '%/(м/с)';
-      }
+    const badgeEl = document.getElementById('muBadge');
+    badgeEl.className = 'badge neutral';
+    badgeEl.textContent = 'Ожидание ввода';
 
-      btnCalc.addEventListener('click', calc);
-      btnClear.addEventListener('click', clearAll);
-
-      // Автопересчёт при вводе
-      vy.addEventListener('input', calc);
-      unit.addEventListener('change', calc);
-    })();
-  </script>
-</body>
-</html>
+    const msgEl = document.getElementById('muMsg');
+    msgEl.className = 'msg neutral';
+    msgEl.innerHTML = 'Введи V<sub>y</sub> и нажми «Посчитать».';
+  }
+</script>
