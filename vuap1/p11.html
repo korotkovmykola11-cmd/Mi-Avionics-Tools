@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Пункт 10 — Проверка передаточного числа по угловой скорости (канал тангажа)</title>
+
+  <style>
+    :root{
+      --bg1:#081a3a;
+      --bg2:#071431;
+      --card:#0f254f;
+      --card2:#0c1f43;
+      --text:#eaf0ff;
+      --muted:#b9c6ea;
+      --line:#2b3a62;
+      --btn:#1a356d;
+      --btn2:#163064;
+      --danger:#ff5a6a;
+      --ok:#34d399;
+      --warn:#fbbf24;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 600px at 50% 0%, var(--bg1), var(--bg2));
+    }
+    .topbar{
+      height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.2px;
+      opacity:.9;
+      padding:0 10px;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:12px 14px 40px;
+    }
+
+    /* Белый "лист" */
+    .paper-wrap{
+      display:flex;
+      justify-content:center;
+    }
+    .paper-scroll{
+      width:100%;
+      overflow-x:auto;
+      padding-bottom:8px;
+    }
+    .paper{
+      background:#fff;
+      color:#000;
+      border-radius:10px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      border:1px solid rgba(0,0,0,.2);
+      padding:18px 18px 14px;
+      min-width:860px;
+      max-width:1060px;
+      margin:0 auto;
+    }
+    .paper h2{
+      font-size:18px;
+      margin:0 0 6px 0;
+      font-weight:700;
+    }
+    .paper .subtitle{
+      font-size:12px;
+      margin:0 0 10px 0;
+      opacity:.85;
+    }
+
+    table.tech{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+      font-size:12px;
+      line-height:1.25;
+    }
+    table.tech th, table.tech td{
+      border:1px solid #444;
+      vertical-align:top;
+      padding:8px 8px 10px;
+      word-wrap:break-word;
+    }
+    table.tech th{
+      font-weight:700;
+      text-align:center;
+    }
+    .col-ops{width:56%}
+    .col-tt{width:22%}
+    .col-dev{width:22%}
+
+    .figblock{
+      margin-top:10px;
+      border:1px solid #444;
+      padding:8px;
+    }
+    .figcap{
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+    .figimg{
+      width:100%;
+      height:auto;
+      display:block;
+      border:1px solid #bbb;
+      background:#f4f4f4;
+      max-height:520px;
+      object-fit:contain;
+    }
+
+    /* Калькулятор */
+    .calc{
+      margin-top:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 10px 24px rgba(0,0,0,.25);
+    }
+    .calc h3{
+      margin:0 0 6px;
+      font-size:14px;
+      font-weight:800;
+      color:var(--text);
+    }
+    .calc .formula{
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 12px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap:10px;
+    }
+    .field label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 4px;
+    }
+    select, input{
+      width:100%;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.18);
+      color:var(--text);
+      padding:10px 10px;
+      border-radius:10px;
+      outline:none;
+      font-size:14px;
+    }
+    input::placeholder{color:rgba(255,255,255,.35)}
+    .actions{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    button{
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, var(--btn), var(--btn2));
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:13px;
+    }
+    button:active{transform:translateY(1px)}
+    .out{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      font-size:13px;
+      min-height:44px;
+      white-space:pre-line;
+    }
+    .tag{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      margin-left:8px;
+      vertical-align:middle;
+    }
+    .tag.ok{background:rgba(52,211,153,.18); color:var(--ok); border:1px solid rgba(52,211,153,.35)}
+    .tag.bad{background:rgba(255,90,106,.18); color:var(--danger); border:1px solid rgba(255,90,106,.35)}
+    .tag.warn{background:rgba(251,191,36,.18); color:var(--warn); border:1px solid rgba(251,191,36,.35)}
+
+    @media (max-width:720px){
+      .grid{grid-template-columns:1fr}
+      .paper{min-width:860px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    Mi-Avionics-Tools / vuap1 / p10.html
+    <span style="margin-left:auto;opacity:.8">Пункт 10 — канал тангажа</span>
+  </div>
+
+  <div class="wrap">
+
+    <!-- БЕЛЫЙ ЛИСТ -->
+    <div class="paper-wrap">
+      <div class="paper-scroll">
+        <div class="paper">
+          <h2>Содержание операций</h2>
+          <p class="subtitle">8. Проверьте передаточное число по угловой скорости: <b> Канала тангажа</b></p>
+
+          <table class="tech">
+            <colgroup>
+              <col class="col-ops" />
+              <col class="col-tt" />
+              <col class="col-dev" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Содержание операций</th>
+                <th>Технические требования (ТТ)</th>
+                <th>Работы, выполняемые при отклонениях от ТТ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <b>9. Проверьте передаточное число по угловой скорости:</b><br><br>
+ Канала тангажа, для чего:
+ Снимите с вертолета левую гировертикаль, установите ее на поворотную установку УПГ-56 с помощью кронштейна КП-9 и с помощью переходного жгута 6С4.863.467-1 соедините со схемой вертолета;При этом положение поворотного стола должно быть на нулевой отметке,а гировертикаль горизонтально.
+ Установите выключатель В2 на панели технологического жгута в положение "Wz".
+ Нажмите кнопку-табло "ВКЛ." на пульте управления и поворотом потенциометра "ЦЕНТР" установите подвижный индекс нулевого индикатора в среднее положение;
+ Проверьте передаточное число по методике, аналогичной для каналов направления и крена.При это необходимо учесть,что при вращении гировертикали на пикирование (кабрирование),стрелка индикатора нулевого на пульте управления канала тангажа должна отклоняться вверх (вниз).
+ После прверки ( и регулировки) выключатель В2 поставить в положение "ОТКЛ".Затем включить канал тангажа и в том случае,если стрелка индикатора нулевого не будет в среднем положении,установить её в среднее положение потенциометром "ЦЕНТР" на пульте управления канала тангажа.Нажать кнопку-табло "ОТКЛ" на пульте управления.
+ ПРИМИЧАНИЕ: ПРИ ВРАЩЕНИИ ГИРОВЕРТИКАЛИ УГОЛ ЕЁ ОТКЛОНЕНИЯ ОТ НУЛЕВОГО ПОЛОЖЕНИЯ НЕ ДОЛЖЕН ПРЕВЫШАТЬ ПЛЮС МИНУС 30 ГРАДУСОВ,Т.К ПРИ БОЛЬШИХ УГЛАХ КРУТИЗНА СИГНАЛА БУДЕТ УМЕНЬШАТЬСЯ.
+ Заметьте направление отклонения подвижного индекса нулевого индикатора от среднего положения;
+ При вращении датчика в сторону правого (левого) крена подвижный индекс нулевого индикатора должен отклоняться влево (вправо).
+ Задаваемая угловая скорость (3,5+2,1-1,1) град/с, Передаточное число (20 ±8) % хода штока / град/с.
+ После проверки и регулировки, отключить канал тангажа кнопкой табло "ОТКЛ" на пульте управления и установить гировертикаль на место.
+            </td>
+
+            <td class="pre">Технические требования (ТТ)
+Поворотная установка должна быть повернута на 90° вокруг горизонтальной оси, гировертикаль в кронштейне КП-9 должна устанавливаться так, чтобы стрелка направления полета, размещенная на корпусе, была сверху, а горизонтальные оси находились в горизонтальном положении
+При вращении гировертикали на пикирование  (кабрирование) подвижный индекс нулевого индикатора должен отклоняться вверх (вниз). Задаваемая угловая скорость
+(3,5+2,1-1,1) град/с
+Передаточное число
+(20 ±8) % хода штока / град/с
+</td>
+
+            <td class="pre">Работы, выполняемые при отклонениях от ТТ
+Отключите и вновь включите канал тангажа кнопкой- табло "ОТКЛ." и "'ВКЛ." на пульте управления Потенциометром "ЦЕНТР" установите подвижный индекс нулевого индикатора в среднее положение. Задайте вращение установке, соответствующее пикированию со скоростью 3,5 град /с Поворотом потенциометра "СКОР." на пульте управления совместите подвижный индекс с верхней промежуточной. Измените направление вращения установки в сторону кабрирования и плавным изменением скорости вращения совместите подвижный индекс нулевого индикатора с нижней промежуточной отметкой. Скорость вращения установки должна быть в пределах
+(3,5 ±0,7) град/с.
+</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- РИСУНОК ДЛЯ ТАНГАЖА -->
+          <div class="figblock">
+            <div class="figcap">Рис. 7 (36.JPEG)</div>
+            <img class="figimg" src="./36.JPEG" alt="Рис. 7 (36.JPEG)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- КАЛЬКУЛЯТОР (канал тангажа) — только ω -> μ -->
+    <div class="calc" id="calc-mu">
+      <h3>Калькулятор передаточного числа &mu; (канал тангажа)</h3>
+      <div class="formula">
+        Формула: <b>&mu; = 66,7 / &omega;</b>, где <b>&omega;</b> — угловая скорость, град/с.
+        Вводишь только &omega; → получаешь &mu; и PASS/FAIL по ТТ.
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label>Режим проверки</label>
+          <select id="modeSel">
+            <option value="pitch">Передаточное число по угловой скорости (канал тангажа)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="omegaIn">Угловая скорость &omega;, град/с</label>
+          <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 3,5">
+        </div>
+
+        <div class="field">
+          <label for="muOut">Передаточное число &mu;, %/(град/с)</label>
+          <input id="muOut" type="text" readonly placeholder="—">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="btnCalc">Рассчитать</button>
+        <button type="button" id="btnClear">Очистить</button>
+      </div>
+
+      <div class="out" id="out">Введи ω и нажми «Рассчитать».</div>
+    </div>
+
+  </div>
+
+  <script>
+    (function(){
+      const CONST_S = 66.7;
+
+      // ТТ: канал тангажа (из твоего текста)
+      // ω = (3,5+2,1-1,1) => 2,4…5,6
+      // μ = (20 ±8) => 12…28
+      const TT = {
+        omega0: 3.5, plus: 2.1, minus: 1.1,
+        mu0: 20, tol: 8
+      };
+
+      const omegaIn = document.getElementById('omegaIn');
+      const muOut   = document.getElementById('muOut');
+      const out     = document.getElementById('out');
+      const btnCalc = document.getElementById('btnCalc');
+      const btnClear= document.getElementById('btnClear');
+
+      function toNum(s){
+        if (s == null) return NaN;
+        s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
+        const n = Number(s);
+        return Number.isFinite(n) ? n : NaN;
+      }
+
+      function fmt(n, d){
+        return Number(n).toFixed(d).replace('.', ',');
+      }
+
+      function fmtSmart(n){
+        const isInt = Math.abs(n - Math.round(n)) < 1e-9;
+        return isInt ? fmt(n,0) : fmt(n,1);
+      }
+
+      function calc(){
+        const omegaMin = TT.omega0 - TT.minus;
+        const omegaMax = TT.omega0 + TT.plus;
+        const muMin = TT.mu0 - TT.tol;
+        const muMax = TT.mu0 + TT.tol;
+
+        const w = toNum(omegaIn.value);
+        muOut.value = '';
+
+        if(!Number.isFinite(w) || w <= 0){
+          out.innerHTML = `Ошибка ввода: введи ω &gt; 0.<span class="tag warn">CHECK</span>`;
+          return;
+        }
+
+        const mu = CONST_S / w;
+        muOut.value = fmt(mu,3);
+
+        const okW  = (w  >= omegaMin && w  <= omegaMax);
+        const okMu = (mu >= muMin    && mu <= muMax);
+        const okAll = okW && okMu;
+
+        const tag = okAll ? '<span class="tag ok">PASS</span>' : '<span class="tag bad">FAIL</span>';
+
+        out.innerHTML =
+`Формула: μ = 66,7 / ω
+
+Ввод: ω = <b>${fmt(w,3)}</b> град/с
+Расчёт: μ = <b>${fmt(mu,3)}</b> %/(град/с)
+
+ТТ ω: ${fmtSmart(omegaMin)}…${fmtSmart(omegaMax)}  → ${okW ? 'PASS' : 'FAIL'}
+ТТ μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)}        → ${okMu ? 'PASS' : 'FAIL'}
+
+ИТОГ: ${tag}`;
+      }
+
+      function clearAll(){
+        omegaIn.value = '';
+        muOut.value = '';
+        out.textContent = 'Введи ω и нажми «Рассчитать».';
+      }
+
+      btnCalc.addEventListener('click', calc);
+      btnClear.addEventListener('click', clearAll);
+      omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
+    })();
+  </script>
+
+</body>
+</html>
