@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ВУАП-1 — Пункт 4: Крутизна сигнала (ОС)</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a;
+  --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff;
+  --muted:#b7c7dd;
+
+  --ok:#7CFF9E;
+  --bad:#FF9A9A;
+  --wait:#FFD27C;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
+
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+.brand{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:14px 18px;
+  backdrop-filter:blur(6px);
+}
+.brand h1{margin:0;font-size:18px;letter-spacing:.3px}
+.brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+
+.nav{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+a.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 12px;border-radius:12px;text-decoration:none;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:13px;font-weight:700;
+}
+a.btn:hover{background:rgba(255,255,255,.14)}
+.badge{
+  padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.12);
+  font-size:12px;white-space:nowrap;color:var(--muted);
+}
+
+.sheet{
+  background:rgba(255,255,255,.92);
+  color:#111;
+  border-radius:18px;
+  border:1px solid rgba(0,0,0,.12);
+  box-shadow:0 18px 40px rgba(0,0,0,.30);
+  padding:18px;
+}
+
+.hdr{
+  font-family: "Times New Roman", Times, serif;
+  font-weight:700;
+  font-size:20px;
+  margin:0 0 6px;
+}
+.sub{
+  font-family: "Times New Roman", Times, serif;
+  font-size:13px;
+  margin:0 0 12px;
+}
+
+.tbl{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-family:"Times New Roman", Times, serif;
+  font-size:13px;
+  line-height:1.25;
+}
+.tbl th, .tbl td{
+  border:1px solid #333;
+  vertical-align:top;
+  padding:8px 10px;
+  word-wrap:break-word;
+}
+.tbl th{
+  text-align:center;
+  font-weight:700;
+}
+.col-op{width:58%}
+.col-tt{width:20%}
+.col-fix{width:22%}
+
+.figrow{
+  margin-top:12px;
+  border:1px solid #333;
+  padding:8px 10px;
+  font-family:"Times New Roman", Times, serif;
+  font-size:13px;
+}
+.figcap{font-weight:700;margin-bottom:6px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px 18px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.20);
+  margin-top:14px;
+}
+.card h2{margin:0 0 8px;font-size:16px}
+.card .p{color:var(--muted);font-size:13px;line-height:1.4;margin:0 0 12px}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;
+}
+.field{grid-column:span 6}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+
+select,button{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+}
+.actions{grid-column:span 12;display:flex;gap:12px}
+button{cursor:pointer;font-weight:800}
+button.primary{background:linear-gradient(180deg,#ffffff,#e6f0ff);color:#000}
+
+.out{
+  margin-top:12px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+  font-size:13px;
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+
+@media(max-width:900px){
+  .sheet{padding:14px}
+  .col-op,.col-tt,.col-fix{width:auto}
+  .field{grid-column:span 12}
+  .actions{flex-direction:column}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <h1>Mi-Avionics-Tools / vuap1 / p04.html</h1>
+      <p>Пункт 4 · Проверка крутизны сигнала (ОС)</p>
+    </div>
+    <div class="nav">
+      <a class="btn" href="../index.html">← На главную</a>
+      <div class="badge">ВУАП-1 · Пункт 4</div>
+    </div>
+  </div>
+
+  <!-- ЛИСТ (3 ГРАФЫ) -->
+  <section class="sheet">
+    <h2 class="hdr">Содержание операций</h2>
+    <p class="sub"><b>4.</b> Проверка крутизны сигнала в цепи обратной связи (ОС)</p>
+
+    <table class="tbl">
+      <colgroup>
+        <col class="col-op">
+        <col class="col-tt">
+        <col class="col-fix">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Содержание операций</th>
+          <th>Технические требования (ТТ)</th>
+          <th>Работы, выполняемые при отклонениях от ТТ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            Проверка крутизны сигнала в цепи обратной связи. Выполняеться с включённой наземной гидроустановкой.
+            а)Канал Направления:
+            Нажать кнопку-табло "ВКЛ" на пульте управления канала направления.
+            Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки) на 2-3 оборота отклонить шток малого цилиндра рулевого агрегата в крайнее положение.
+            Заметить положение стрелки индикатора нулевого.
+            Примечание: При отклонении штока малого цилиндра до упора будет работать "перегонка".Поэтому необходимо ногами удерживать педали в нейтральном положении,не нажимая при этом на подпидальники.
+            По окончании проверки отключить канал напрвления кнопкой-табло "ОТКЛ" на пульте управления.
+            б)Канал крена,тангажа и высоты:
+            Проделать анологичную для канала направления проверку.При этом для отклонения штока малого цилиндра каналов крена и тангажа необходимо пользоваться шкалами ручек центровки соответствующих пультов управления,
+            а для канала ВЫСОТЫ тумблером "КОНТРОЛЬ" на пульте управления канала высоты.
+            
+            
+          </td>
+          <td>
+            Для всех каналов стрелка индикатора нулевого должна устанавливаться в совмещённое с крайними отметками положение с точностью до толщины стрелки.
+          </td>
+          <td>
+            <!-- ВСТАВЬ РАБОТЫ ПРИ ОТКЛОНЕНИЯХ СЛОВО-В-СЛОВО -->
+            ВСТАВЬ ТВОЙ ТЕКСТ СЮДА СЛОВО-В-СЛОВО
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- РИСУНОК: если для пункта 4 нужен — раскомментируй блок ниже и укажи файл -->
+    <!--
+    <div class="figrow">
+      <div class="figcap">Рис. X (NN.JPEG)</div>
+      <img src="./NN.JPEG" alt="Рис. X." style="max-width:100%;height:auto;display:block;">
+      <div style="margin-top:6px;font-size:12px;color:#333;">
+        Если картинка не открылась: имя файла и регистр должны совпадать (например <b>NN.JPEG</b>), и файл лежит рядом с <b>p04.html</b>.
+      </div>
+    </div>
+    -->
+  </section>
+
+  <!-- КАЛЬКУЛЯТОР / ФИКСАЦИЯ (PASS/FAIL) -->
+  <section class="card">
+    <h2>Калькулятор / фиксация результата (крутизна сигнала, ОС)</h2>
+    <p class="p">
+      Выбираешь канал и фиксируешь факт по ТТ. Цвет меняется автоматически: <b>OK</b> / <b>НЕ НОРМА</b>.
+      (Только пункт 4 — без передаточных чисел.)
+    </p>
+
+    <div class="form">
+      <div class="field">
+        <label>Канал</label>
+        <select id="ch">
+          <option value="Направления">Направления</option>
+          <option value="Крена">Крена</option>
+          <option value="Тангажа">Тангажа</option>
+          <option value="Высоты">Высоты</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Результат по ТТ</label>
+        <select id="fact">
+          <option value="">— выбрать —</option>
+          <option value="yes">Да (ТТ выполнено)</option>
+          <option value="no">Нет (ТТ не выполнено)</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="button" onclick="calc()">Проверить ТТ</button>
+        <button type="button" onclick="clr()">Сброс</button>
+      </div>
+    </div>
+
+    <div class="out" id="out">
+      <span class="status wait">ОЖИДАЕТ</span><br>
+      Выбери канал и результат.
+    </div>
+  </section>
+
+</div>
+
+<script>
+function esc(s){
+  return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function calc(){
+  const ch = document.getElementById('ch').value;
+  const fact = document.getElementById('fact').value;
+  const out = document.getElementById('out');
+
+  if(!fact){
+    out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери результат по ТТ.';
+    return;
+  }
+
+  if(fact === 'yes'){
+    out.innerHTML =
+      '<span class="status ok">OK</span><br>' +
+      'Канал <b>'+esc(ch)+'</b>: стрелка установилась на крайнюю отметку (с точностью до толщины стрелки) — <b>ТТ выполнено</b>.';
+  }else{
+    out.innerHTML =
+      '<span class="status bad">НЕ НОРМА</span><br>' +
+      'Канал <b>'+esc(ch)+'</b>: стрелка не установилась по требованию — <b>ТТ не выполнено</b>.<br>' +
+      '<b>Действия:</b> выполнить операции «Работы при отклонениях от ТТ» по технологии (ОТКЛ/ВКЛ, регулировка «ИН», повторная проверка).';
+  }
+}
+
+function clr(){
+  document.getElementById('ch').value = 'Направления';
+  document.getElementById('fact').value = '';
+  document.getElementById('out').innerHTML =
+    '<span class="status wait">ОЖИДАЕТ</span><br>Выбери канал и результат.';
+}
+</script>
+
+</body>
+</html>
