@@ -284,7 +284,7 @@
       </div>
     </div>
 
-    <!-- КАЛЬКУЛЯТОР (канал направления) — версия без "угла платформы", только ω -->
+   <!-- КАЛЬКУЛЯТОР (канал направления) — только ω -> μ, два режима: основной и режим курса -->
 <div class="calc card" id="calc-mu">
   <h2>Калькулятор передаточного числа &mu; (канал направления)</h2>
 
@@ -295,17 +295,17 @@
 
   <div class="calc-grid">
     <div class="field">
-      <label for="modeSel">Режим ТТ</label>
+      <label for="modeSel">Режим проверки</label>
       <select id="modeSel">
-        <option value="main">Основной режим: ω = (3,5+2,1−1,1) град/с; μ = (20 ±8)</option>
-        <option value="course">Режим «по курсу/изодром»: ω = (6,5+6,5−2,0) град/с; μ = (10 ±8)</option>
+        <option value="main">Передаточное число по угловой скорости (основной)</option>
+        <option value="course">Передаточное число по угловой скорости в режиме курса</option>
       </select>
     </div>
 
     <div class="field">
       <label for="omegaIn">Угловая скорость &omega;, град/с</label>
       <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 3.5">
-      <div class="hint">Вводи только &omega;. Константа 66,7 фиксированная.</div>
+      <div class="hint">Вводишь только &omega;. Константа 66,7 фиксированная.</div>
     </div>
 
     <div class="field">
@@ -326,89 +326,26 @@
   </div>
 </div>
 
-<!-- (опционально) Проверка изодрома — текстом, без “симуляции” -->
-<div class="calc card" id="iso-check">
-  <h2>Проверка работоспособности изодрома (цепь датчика угловой скорости)</h2>
-  <p class="isoText">
-    Проверьте работоспособность изодрома в цепи датчика, задав вращение платформы установки,
-    соответствующее правому (левому) развороту. Подвижный индекс нулевого индикатора должен
-    отклониться в противоположную сторону, а затем вернуться в среднее (нейтральное) положение.
-  </p>
-</div>
-
-<style>
-  /* ВАЖНО: этот CSS влияет ТОЛЬКО на карточки калькулятора, технологию и рисунок не трогает */
-  .card{
-    background:rgba(0,0,0,.18);
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:14px;
-    padding:14px 16px;
-    margin:14px 0;
-  }
-  .calc h2{margin:0 0 8px 0; font-size:16px}
-  .formula{opacity:.9; font-size:13px; margin:6px 0 12px 0}
-  .calc-grid{
-    display:grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    gap:12px;
-  }
-  .field label{display:block; font-size:12px; opacity:.9; margin:0 0 6px 0}
-  .field input, .field select{
-    width:100%;
-    box-sizing:border-box;
-    padding:10px 10px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,.14);
-    background:rgba(0,0,0,.28);
-    color:#eaeef7;
-    outline:none;
-  }
-  .field input:focus, .field select:focus{border-color:rgba(140,180,255,.55)}
-  .hint{font-size:11px; opacity:.75; margin-top:6px; line-height:1.25}
-  .btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
-  .btn-row button{
-    padding:10px 12px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,.14);
-    background:rgba(40,90,180,.35);
-    color:#eaeef7;
-    cursor:pointer;
-  }
-  .btn-row button.ghost{background:rgba(0,0,0,.20)}
-  .status{
-    margin-top:12px;
-    padding:10px 12px;
-    border-radius:12px;
-    border:1px dashed rgba(255,255,255,.16);
-    background:rgba(0,0,0,.14);
-  }
-  .status .tt{font-size:12px; opacity:.92; margin-bottom:6px}
-  .status .res{font-size:12px}
-  .pass{color:#39d98a; font-weight:700}
-  .fail{color:#ff6b6b; font-weight:700}
-
-  .isoText{margin:0; font-size:13px; opacity:.9; line-height:1.35}
-
-  /* Мобильный вид — чтобы калькулятор НЕ превращался в “узкую колонку” */
-  @media (max-width: 900px){
-    .calc-grid{grid-template-columns:1fr}
-  }
-</style>
-
 <script>
 (function(){
-  // ТТ: направления
-  // Основной режим: ω = (3,5 +2,1 −1,1) => 2,4…5,6 ; μ = 20±8 => 12…28
-  // По курсу/изодром: ω = (6,5 +6,5 −2,0) => 4,5…13,0 ; μ = 10±8 => 2…18
+  // Константа из твоей логики калькулятора (не трогаем)
+  const CONST_S = 66.7;
 
-  const TT = {
-    main:   { wMin: 2.4,  wMax: 5.6,  muMin: 12, muMax: 28,
-              label: 'Основной режим' },
-    course: { wMin: 4.5,  wMax: 13.0, muMin: 2,  muMax: 18,
-              label: 'Режим «по курсу/изодром»' }
+  // ТТ: канал направления
+  // Основной: ω = (3,5+2,1−1,1) => 2,4…5,6 ; μ = 20±8 => 12…28
+  // Режим курса: ω = (6,5+6,5−2,0) => 4,5…13,0 ; μ = 10±8 => 2…18
+  const MODES = {
+    main: {
+      title: 'Передаточное число по угловой скорости (основной)',
+      omega0: 3.5, plus: 2.1, minus: 1.1,
+      mu0: 20, tol: 8
+    },
+    course: {
+      title: 'Передаточное число по угловой скорости в режиме курса',
+      omega0: 6.5, plus: 6.5, minus: 2.0,
+      mu0: 10, tol: 8
+    }
   };
-
-  const k = 66.7;
 
   const modeSel = document.getElementById('modeSel');
   const omegaIn = document.getElementById('omegaIn');
@@ -421,78 +358,70 @@
 
   function toNum(s){
     if(s == null) return NaN;
-    // поддержка запятой
-    s = String(s).trim().replace(',', '.');
-    // убрать пробелы
-    s = s.replace(/\s+/g,'');
+    s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
     const n = Number(s);
     return Number.isFinite(n) ? n : NaN;
   }
 
-  function fmt(n, d=2){
+  function fmt(n, d=3){
     return Number(n).toFixed(d).replace('.', ',');
   }
 
-  function setTTText(){
-    const t = TT[modeSel.value];
+  function setTT(){
+    const m = MODES[modeSel.value];
+    const omegaMin = m.omega0 - m.minus;
+    const omegaMax = m.omega0 + m.plus;
+    const muMin = m.mu0 - m.tol;
+    const muMax = m.mu0 + m.tol;
+
     ttLine.textContent =
-      `${t.label}: допуск ω = ${fmt(t.wMin,1)}…${fmt(t.wMax,1)} град/с; ` +
-      `допуск μ = ${fmt(t.muMin,0)}…${fmt(t.muMax,0)} %/(град/с). ` +
-      `Расчёт: μ = 66,7 / ω.`;
+      `${m.title}. Допуск ω: ${fmt(omegaMin,1)}…${fmt(omegaMax,1)} град/с. ` +
+      `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)} %/(град/с). Формула: μ = 66,7 / ω.`;
+
     muRangeHint.textContent =
-      `Диапазон μ по ТТ: ${fmt(t.muMin,0)}…${fmt(t.muMax,0)} (мин/макс).`;
+      `Диапазон μ по ТТ: ${fmt(muMin,0)}…${fmt(muMax,0)} (мин/макс).`;
   }
 
   function calc(){
-    const t = TT[modeSel.value];
-    const w = toNum(omegaIn.value);
+    const m = MODES[modeSel.value];
+    const omegaMin = m.omega0 - m.minus;
+    const omegaMax = m.omega0 + m.plus;
+    const muMin = m.mu0 - m.tol;
+    const muMax = m.mu0 + m.tol;
 
+    const w = toNum(omegaIn.value);
     muOut.value = '';
-    resLine.className = 'res';
 
     if(!Number.isFinite(w) || w <= 0){
-      resLine.innerHTML = `Ошибка ввода: введи ω &gt; 0 (град/с).`;
+      resLine.textContent = 'Ошибка ввода: введи ω > 0.';
       return;
     }
 
-    const mu = k / w;
-    muOut.value = fmt(mu, 3);
+    const mu = CONST_S / w;
+    muOut.value = fmt(mu,3);
 
-    const wOk  = (w >= t.wMin && w <= t.wMax);
-    const muOk = (mu >= t.muMin && mu <= t.muMax);
+    const okW = (w >= omegaMin && w <= omegaMax);
+    const okMu = (mu >= muMin && mu <= muMax);
 
-    const wTag  = wOk  ? '<span class="pass">PASS</span>' : '<span class="fail">FAIL</span>';
-    const muTag = muOk ? '<span class="pass">PASS</span>' : '<span class="fail">FAIL</span>';
+    const verdict = (okW && okMu) ? 'PASS по ТТ' : 'FAIL по ТТ';
 
     resLine.innerHTML =
-      `Введено ω = <b>${fmt(w,3)}</b> град/с → рассчитано μ = <b>${fmt(mu,3)}</b> %/(град/с).<br>` +
-      `Проверка ω по ТТ (${fmt(t.wMin,1)}…${fmt(t.wMax,1)}): ${wTag}. ` +
-      `Проверка μ по ТТ (${fmt(t.muMin,0)}…${fmt(t.muMax,0)}): ${muTag}.`;
+      `Введено ω = <b>${fmt(w,3)}</b> град/с → μ = <b>${fmt(mu,3)}</b> %/(град/с). ` +
+      `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)}. Итог: <b>${verdict}</b>.`;
   }
 
   function clearAll(){
     omegaIn.value = '';
     muOut.value = '';
-    resLine.className = 'res';
     resLine.textContent = 'Введи ω и нажми «Рассчитать».';
   }
 
-  modeSel.addEventListener('change', function(){
-    setTTText();
-    // не ломаем ввод — просто обновим подсказки и результат
-    if(omegaIn.value.trim()) calc();
-  });
-
+  modeSel.addEventListener('change', ()=>{ setTT(); if(omegaIn.value.trim()) calc(); });
   btnCalc.addEventListener('click', calc);
   btnClr.addEventListener('click', clearAll);
+  omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
 
-  // Enter = посчитать
-  omegaIn.addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){ e.preventDefault(); calc(); }
-  });
-
-  // Инициализация
-  setTTText();
+  setTT();
 })();
 </script>
 
