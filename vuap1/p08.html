@@ -284,121 +284,215 @@
       </div>
     </div>
 
-    <!-- КАЛЬКУЛЯТОР -->
-    <div class="calc" id="calc">
-      <h3>Калькулятор передаточного числа (канал направления)</h3>
-      <div class="formula">
-        Формула: <b>&mu; = S / &omega;</b>, где <b>S</b> — ход штока, %, <b>&omega;</b> — угловая скорость, град/с
-      </div>
+    <!-- КАЛЬКУЛЯТОР (канал направления) — версия без "угла платформы", только ω -->
+<div class="calc card" id="calc-mu">
+  <h2>Калькулятор передаточного числа &mu; (канал направления)</h2>
 
-      <div class="grid">
-        <div class="field">
-          <label>Режим ТТ</label>
-          <select id="mode">
-            <option value="main">Основной режим (ω = 3,5+2,1−1,1; μ = 20±8)</option>
-            <option value="course">Режим по курсу (ω = 6,5+6,5−2,0; μ = 10±8)</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Угловая скорость ω, град/с</label>
-          <input id="omega" inputmode="decimal" placeholder="например 3.5" />
-        </div>
-
-        <div class="field">
-          <label>Ход штока S, %</label>
-          <input id="stroke" inputmode="decimal" placeholder="например 66.7" />
-        </div>
-      </div>
-
-      <div class="actions">
-        <button id="btnCalc">Посчитать μ = S / ω</button>
-        <button id="btnClear">Очистить</button>
-      </div>
-
-      <div class="out" id="out">Готово.</div>
-    </div>
-
+  <div class="formula">
+    Формула: <b>&mu; = 66,7 / &omega;</b>,
+    где <b>&omega;</b> — угловая скорость, град/с.
   </div>
 
-  <script>
-    (function(){
-      const $ = (id)=>document.getElementById(id);
+  <div class="calc-grid">
+    <div class="field">
+      <label for="modeSel">Режим ТТ</label>
+      <select id="modeSel">
+        <option value="main">Основной режим: ω = (3,5+2,1−1,1) град/с; μ = (20 ±8)</option>
+        <option value="course">Режим «по курсу/изодром»: ω = (6,5+6,5−2,0) град/с; μ = (10 ±8)</option>
+      </select>
+    </div>
 
-      // режимы ТТ
-      // ω-диапазон берём из вида (a + b - c): min = a - c, max = a + b
-      const TT = {
-        main:   { name:'Основной режим', omegaMin: 3.5 - 1.1, omegaMax: 3.5 + 2.1, muMin: 20 - 8, muMax: 20 + 8 },
-        course: { name:'Режим по курсу', omegaMin: 6.5 - 2.0, omegaMax: 6.5 + 6.5, muMin: 10 - 8, muMax: 10 + 8 }
-      };
+    <div class="field">
+      <label for="omegaIn">Угловая скорость &omega;, град/с</label>
+      <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 3.5">
+      <div class="hint">Вводи только &omega;. Константа 66,7 фиксированная.</div>
+    </div>
 
-      function parseNum(v){
-        if(v===null || v===undefined) return NaN;
-        v = String(v).trim().replace(/\s+/g,'').replace(',','.');
-        if(v==='') return NaN;
-        const n = Number(v);
-        return Number.isFinite(n) ? n : NaN;
-      }
-      function fmt(n, d=3){
-        if(!Number.isFinite(n)) return '—';
-        return n.toFixed(d).replace(/\.?0+$/,'');
-      }
+    <div class="field">
+      <label for="muOut">Передаточное число &mu;, %/(град/с)</label>
+      <input id="muOut" type="text" readonly placeholder="—">
+      <div class="hint" id="muRangeHint">—</div>
+    </div>
+  </div>
 
-      function tag(cls, text){
-        return ' <span class="tag '+cls+'">'+text+'</span>';
-      }
+  <div class="btn-row">
+    <button type="button" id="btnCalcMu">Рассчитать</button>
+    <button type="button" id="btnClearMu" class="ghost">Очистить</button>
+  </div>
 
-      function calc(){
-        const modeKey = $('mode').value;
-        const t = TT[modeKey];
+  <div class="status" id="statusBox">
+    <div class="tt" id="ttLine">—</div>
+    <div class="res" id="resLine">Введи &omega; и нажми «Рассчитать».</div>
+  </div>
+</div>
 
-        const omega = parseNum($('omega').value);
-        const S = parseNum($('stroke').value);
+<!-- (опционально) Проверка изодрома — текстом, без “симуляции” -->
+<div class="calc card" id="iso-check">
+  <h2>Проверка работоспособности изодрома (цепь датчика угловой скорости)</h2>
+  <p class="isoText">
+    Проверьте работоспособность изодрома в цепи датчика, задав вращение платформы установки,
+    соответствующее правому (левому) развороту. Подвижный индекс нулевого индикатора должен
+    отклониться в противоположную сторону, а затем вернуться в среднее (нейтральное) положение.
+  </p>
+</div>
 
-        // Валидация
-        if(!Number.isFinite(omega) || omega<=0){
-          $('out').textContent =
-            'Ошибка ввода: введи ω (число > 0).\n' +
-            t.name + ': ω ∈ [' + fmt(t.omegaMin) + '; ' + fmt(t.omegaMax) + '] град/с, μ ∈ [' + fmt(t.muMin) + '; ' + fmt(t.muMax) + '] %/(град/с)';
-          return;
-        }
-        if(!Number.isFinite(S)){
-          $('out').textContent =
-            'Ошибка ввода: введи S (ход штока, %).\n' +
-            t.name + ': ω ∈ [' + fmt(t.omegaMin) + '; ' + fmt(t.omegaMax) + '] град/с, μ ∈ [' + fmt(t.muMin) + '; ' + fmt(t.muMax) + '] %/(град/с)';
-          return;
-        }
+<style>
+  /* ВАЖНО: этот CSS влияет ТОЛЬКО на карточки калькулятора, технологию и рисунок не трогает */
+  .card{
+    background:rgba(0,0,0,.18);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
+    padding:14px 16px;
+    margin:14px 0;
+  }
+  .calc h2{margin:0 0 8px 0; font-size:16px}
+  .formula{opacity:.9; font-size:13px; margin:6px 0 12px 0}
+  .calc-grid{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap:12px;
+  }
+  .field label{display:block; font-size:12px; opacity:.9; margin:0 0 6px 0}
+  .field input, .field select{
+    width:100%;
+    box-sizing:border-box;
+    padding:10px 10px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(0,0,0,.28);
+    color:#eaeef7;
+    outline:none;
+  }
+  .field input:focus, .field select:focus{border-color:rgba(140,180,255,.55)}
+  .hint{font-size:11px; opacity:.75; margin-top:6px; line-height:1.25}
+  .btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  .btn-row button{
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(40,90,180,.35);
+    color:#eaeef7;
+    cursor:pointer;
+  }
+  .btn-row button.ghost{background:rgba(0,0,0,.20)}
+  .status{
+    margin-top:12px;
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px dashed rgba(255,255,255,.16);
+    background:rgba(0,0,0,.14);
+  }
+  .status .tt{font-size:12px; opacity:.92; margin-bottom:6px}
+  .status .res{font-size:12px}
+  .pass{color:#39d98a; font-weight:700}
+  .fail{color:#ff6b6b; font-weight:700}
 
-        const mu = S / omega;
+  .isoText{margin:0; font-size:13px; opacity:.9; line-height:1.35}
 
-        // PASS/FAIL по μ
-        const muPass = (mu >= t.muMin && mu <= t.muMax);
-        const omegaPass = (omega >= t.omegaMin && omega <= t.omegaMax);
+  /* Мобильный вид — чтобы калькулятор НЕ превращался в “узкую колонку” */
+  @media (max-width: 900px){
+    .calc-grid{grid-template-columns:1fr}
+  }
+</style>
 
-        // Подсказка: какие S должны быть при текущей ω для попадания в μ диапазон
-        const Smin = t.muMin * omega;
-        const Smax = t.muMax * omega;
+<script>
+(function(){
+  // ТТ: направления
+  // Основной режим: ω = (3,5 +2,1 −1,1) => 2,4…5,6 ; μ = 20±8 => 12…28
+  // По курсу/изодром: ω = (6,5 +6,5 −2,0) => 4,5…13,0 ; μ = 10±8 => 2…18
 
-        let line1 = 'μ = S / ω = ' + fmt(S) + ' / ' + fmt(omega) + ' = ' + fmt(mu) + ' %/(град/с)';
-        line1 += muPass ? tag('ok','PASS по μ') : tag('bad','FAIL по μ');
+  const TT = {
+    main:   { wMin: 2.4,  wMax: 5.6,  muMin: 12, muMax: 28,
+              label: 'Основной режим' },
+    course: { wMin: 4.5,  wMax: 13.0, muMin: 2,  muMax: 18,
+              label: 'Режим «по курсу/изодром»' }
+  };
 
-        let line2 = t.name + ': μ ∈ [' + fmt(t.muMin) + '; ' + fmt(t.muMax) + '], ω ∈ [' + fmt(t.omegaMin) + '; ' + fmt(t.omegaMax) + ']';
-        line2 += omegaPass ? tag('ok','ω в норме') : tag('warn','ω вне диапазона');
+  const k = 66.7;
 
-        let line3 = 'Для этой ω: чтобы попасть в ТТ по μ, нужно S ∈ [' + fmt(Smin) + '; ' + fmt(Smax) + '] %';
+  const modeSel = document.getElementById('modeSel');
+  const omegaIn = document.getElementById('omegaIn');
+  const muOut   = document.getElementById('muOut');
+  const ttLine  = document.getElementById('ttLine');
+  const resLine = document.getElementById('resLine');
+  const muRangeHint = document.getElementById('muRangeHint');
+  const btnCalc = document.getElementById('btnCalcMu');
+  const btnClr  = document.getElementById('btnClearMu');
 
-        $('out').innerHTML = line1 + '\n' + line2 + '\n' + line3;
-      }
+  function toNum(s){
+    if(s == null) return NaN;
+    // поддержка запятой
+    s = String(s).trim().replace(',', '.');
+    // убрать пробелы
+    s = s.replace(/\s+/g,'');
+    const n = Number(s);
+    return Number.isFinite(n) ? n : NaN;
+  }
 
-      function clearAll(){
-        $('omega').value='';
-        $('stroke').value='';
-        $('out').textContent='Готово.';
-      }
+  function fmt(n, d=2){
+    return Number(n).toFixed(d).replace('.', ',');
+  }
 
-      $('btnCalc').addEventListener('click', calc);
-      $('btnClear').addEventListener('click', clearAll);
-    })();
-  </script>
-</body>
-</html>
+  function setTTText(){
+    const t = TT[modeSel.value];
+    ttLine.textContent =
+      `${t.label}: допуск ω = ${fmt(t.wMin,1)}…${fmt(t.wMax,1)} град/с; ` +
+      `допуск μ = ${fmt(t.muMin,0)}…${fmt(t.muMax,0)} %/(град/с). ` +
+      `Расчёт: μ = 66,7 / ω.`;
+    muRangeHint.textContent =
+      `Диапазон μ по ТТ: ${fmt(t.muMin,0)}…${fmt(t.muMax,0)} (мин/макс).`;
+  }
+
+  function calc(){
+    const t = TT[modeSel.value];
+    const w = toNum(omegaIn.value);
+
+    muOut.value = '';
+    resLine.className = 'res';
+
+    if(!Number.isFinite(w) || w <= 0){
+      resLine.innerHTML = `Ошибка ввода: введи ω &gt; 0 (град/с).`;
+      return;
+    }
+
+    const mu = k / w;
+    muOut.value = fmt(mu, 3);
+
+    const wOk  = (w >= t.wMin && w <= t.wMax);
+    const muOk = (mu >= t.muMin && mu <= t.muMax);
+
+    const wTag  = wOk  ? '<span class="pass">PASS</span>' : '<span class="fail">FAIL</span>';
+    const muTag = muOk ? '<span class="pass">PASS</span>' : '<span class="fail">FAIL</span>';
+
+    resLine.innerHTML =
+      `Введено ω = <b>${fmt(w,3)}</b> град/с → рассчитано μ = <b>${fmt(mu,3)}</b> %/(град/с).<br>` +
+      `Проверка ω по ТТ (${fmt(t.wMin,1)}…${fmt(t.wMax,1)}): ${wTag}. ` +
+      `Проверка μ по ТТ (${fmt(t.muMin,0)}…${fmt(t.muMax,0)}): ${muTag}.`;
+  }
+
+  function clearAll(){
+    omegaIn.value = '';
+    muOut.value = '';
+    resLine.className = 'res';
+    resLine.textContent = 'Введи ω и нажми «Рассчитать».';
+  }
+
+  modeSel.addEventListener('change', function(){
+    setTTText();
+    // не ломаем ввод — просто обновим подсказки и результат
+    if(omegaIn.value.trim()) calc();
+  });
+
+  btnCalc.addEventListener('click', calc);
+  btnClr.addEventListener('click', clearAll);
+
+  // Enter = посчитать
+  omegaIn.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); calc(); }
+  });
+
+  // Инициализация
+  setTTText();
+})();
+</script>
+
