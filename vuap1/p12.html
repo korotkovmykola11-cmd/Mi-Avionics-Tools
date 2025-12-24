@@ -271,179 +271,319 @@ i = α /30 град / км/ч  где:
       </div>
     </div>
 
-    <!-- КАЛЬКУЛЯТОР (ТОЛЬКО ЭТО МЕНЯЕМ) -->
-    <div class="calc" id="calc">
-      <h3>Калькулятор передаточного числа (по воздушной скорости)</h3>
-      <p class="sub">
-        Формула (как в карте): <b>i<sub>v</sub> = α / 30</b> &nbsp;[град/(км/час)].
-        По умолчанию ΔV = 30 км/час (как в технологии), но можно задать своё ΔV.
-      </p>
+    <!-- ===================== КАЛЬКУЛЯТОР (P12) START ===================== -->
+<style>
+  /* Калькулятор – стиль под твой "синий" фон */
+  .calc-card{
+    width: min(980px, 94vw);
+    margin: 18px auto 40px;
+    background: rgba(10, 28, 58, 0.72);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    padding: 14px 16px 16px;
+    color: #e9eef7;
+  }
+  .calc-title{
+    font-weight: 700;
+    margin: 0 0 6px;
+    font-size: 15px;
+  }
+  .calc-sub{
+    margin: 0 0 10px;
+    font-size: 12px;
+    color: rgba(233,238,247,.82);
+    line-height: 1.35;
+  }
+  .calc-grid{
+    display: grid;
+    grid-template-columns: 1.25fr 1.25fr 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  @media (max-width: 920px){
+    .calc-grid{ grid-template-columns: 1fr; }
+  }
 
-      <div class="formula" aria-label="Формула красивым видом">
-        <span style="color:#fff"><b>i<sub>v</sub></b> =</span>
-        <span class="frac">
-          <span class="top"><b>&alpha;</b></span>
-          <span class="bot"><b>&Delta;V</b></span>
-        </span>
-        <span class="mono">[град/(км/час)]</span>
-        <span style="opacity:.8">, где &alpha; — угол поворота шкалы, &Delta;V — изменение воздушной скорости.</span>
-      </div>
+  .field{
+    background: rgba(0,0,0,.14);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 10px;
+  }
+  .field label{
+    display:block;
+    font-size: 12px;
+    color: rgba(233,238,247,.85);
+    margin-bottom: 6px;
+  }
+  .row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media (max-width: 520px){
+    .row{ grid-template-columns: 1fr; }
+  }
+  .inp, .sel{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(2, 8, 20, .55);
+    color: #e9eef7;
+    outline: none;
+    font-size: 14px;
+  }
+  .inp::placeholder{ color: rgba(233,238,247,.35); }
 
-      <div class="grid" style="margin-top:10px;">
-        <div class="field">
-          <div class="label">α (угол поворота шкалы ручки центровки), град</div>
-          <input id="alpha" inputmode="decimal" placeholder="например 4.5" />
+  .btns{
+    display:flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .btn{
+    cursor:pointer;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.07);
+    color:#e9eef7;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .btn:hover{ background: rgba(255,255,255,.10); }
+  .btn:active{ transform: translateY(1px); }
+
+  .result{
+    margin-top: 10px;
+    background: rgba(0,0,0,.14);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .badge{
+    display:inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .3px;
+    border: 1px solid rgba(255,255,255,.18);
+  }
+  .ok{
+    background: rgba(30, 160, 70, .22);
+    color: #9ff2b7;
+    border-color: rgba(30,160,70,.45);
+  }
+  .bad{
+    background: rgba(190, 45, 60, .22);
+    color: #ffb3bc;
+    border-color: rgba(190,45,60,.45);
+  }
+  .neutral{
+    background: rgba(255,255,255,.08);
+    color: rgba(233,238,247,.90);
+  }
+
+  .tt{
+    font-size: 12px;
+    color: rgba(233,238,247,.85);
+    line-height: 1.35;
+  }
+  .tt b{ color:#fff; }
+  .mono{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  .err{
+    color: #ffb3bc;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+</style>
+
+<section class="calc-card" id="calcP12">
+  <h3 class="calc-title">Калькулятор передаточного числа (по воздушной скорости)</h3>
+  <p class="calc-sub">
+    Формула (как в карте): <span class="mono">μ = α / ΔV</span>, где
+    <span class="mono">α</span> — угол поворота шкалы ручки центровки (град),
+    <span class="mono">ΔV</span> — изменение воздушной скорости (км/ч).
+  </p>
+
+  <div class="calc-grid">
+    <!-- Ввод -->
+    <div class="field">
+      <label>Ввод данных</label>
+
+      <div class="row">
+        <div>
+          <label for="p12_alpha">α (угол поворота шкалы), град</label>
+          <input id="p12_alpha" class="inp" type="text" inputmode="decimal" placeholder="например 4.5">
         </div>
-
-        <div class="field">
-          <div class="label">ΔV (изменение воздушной скорости), км/час</div>
-          <input id="dv" inputmode="decimal" value="30" />
-        </div>
-
-        <div class="field">
-          <div class="label">Проверка по допуску (необязательно)</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-            <div>
-              <div class="label" style="margin:0 0 6px;">i<sub>v</sub> min</div>
-              <input id="ivMin" inputmode="decimal" placeholder="например 0.10" />
-            </div>
-            <div>
-              <div class="label" style="margin:0 0 6px;">i<sub>v</sub> max</div>
-              <input id="ivMax" inputmode="decimal" placeholder="например 0.20" />
-            </div>
-          </div>
+        <div>
+          <label for="p12_dv">ΔV (изменение воздушной скорости), км/ч</label>
+          <input id="p12_dv" class="inp" type="text" inputmode="decimal" placeholder="например 30">
         </div>
       </div>
 
       <div class="btns">
-        <button type="button" id="btnIv">Посчитать i<sub>v</sub> = α / ΔV</button>
-        <button type="button" id="btnAlpha">Посчитать α = i<sub>v</sub> · ΔV</button>
-        <button type="button" id="btnClear">Очистить</button>
+        <button class="btn" type="button" id="p12_calc">Посчитать μ = α / ΔV</button>
+        <button class="btn" type="button" id="p12_fill">Подставить типовые (α=4.5, ΔV=30)</button>
+        <button class="btn" type="button" id="p12_clear">Очистить</button>
       </div>
 
-      <div class="out" id="out">
-        <div id="outText">Готов. Введи α и ΔV и нажми “Посчитать”.</div>
-        <div class="badge neutral" id="badge">—</div>
-      </div>
+      <div id="p12_err" class="err" style="display:none;"></div>
+    </div>
 
-      <div class="hint">
-        • Если i<sub>v</sub> min/max не заполнены — подсветка PASS/FAIL не применяется.<br>
-        • Десятичные можно вводить точкой или запятой.
+    <!-- ТТ -->
+    <div class="field">
+      <label>Технические требования (ТТ) – показываем диапазоны</label>
+      <div class="tt">
+        Угол поворота шкалы ручки центровки:<br>
+        <b>α = 4,5 ± 1,0</b> град → <span class="mono" id="p12_tt_alpha">[3,5 … 5,5]</span><br><br>
+
+        Передаточное число:<br>
+        <b>μ = 0,15 ± 0,06</b> град/(км/ч) → <span class="mono" id="p12_tt_mu">[0,09 … 0,21]</span>
+      </div>
+    </div>
+
+    <!-- Результат -->
+    <div class="field">
+      <label>Результат</label>
+      <div class="result" id="p12_out">
+        Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».
       </div>
     </div>
   </div>
+</section>
 
-  <script>
-    // --- helpers ---
-    function parseNum(v){
-      if (v === null || v === undefined) return NaN;
-      const s = String(v).trim().replace(',', '.');
-      if (!s) return NaN;
-      const n = Number(s);
-      return Number.isFinite(n) ? n : NaN;
-    }
-    function fmt(n, digits=3){
-      if (!Number.isFinite(n)) return '—';
-      return n.toFixed(digits).replace('.', ',');
-    }
-    function setBadge(type, text){
-      const b = document.getElementById('badge');
-      b.className = 'badge ' + (type || 'neutral');
-      b.textContent = text || '—';
+<script>
+  (function(){
+    // ======= ТТ (фиксированные значения по карте) =======
+    const TT_ALPHA_NOM = 4.5;
+    const TT_ALPHA_PM  = 1.0;
+
+    const TT_MU_NOM = 0.15;
+    const TT_MU_PM  = 0.06;
+
+    const alphaMin = TT_ALPHA_NOM - TT_ALPHA_PM; // 3.5
+    const alphaMax = TT_ALPHA_NOM + TT_ALPHA_PM; // 5.5
+    const muMin    = TT_MU_NOM - TT_MU_PM;       // 0.09
+    const muMax    = TT_MU_NOM + TT_MU_PM;       // 0.21
+
+    // Показ диапазонов (чтобы “видно допуск”)
+    document.getElementById('p12_tt_alpha').textContent =
+      `[${alphaMin.toFixed(1).replace('.', ',')} … ${alphaMax.toFixed(1).replace('.', ',')}]`;
+    document.getElementById('p12_tt_mu').textContent =
+      `[${muMin.toFixed(2).replace('.', ',')} … ${muMax.toFixed(2).replace('.', ',')}]`;
+
+    // ======= helpers =======
+    const $alpha = document.getElementById('p12_alpha');
+    const $dv    = document.getElementById('p12_dv');
+    const $out   = document.getElementById('p12_out');
+    const $err   = document.getElementById('p12_err');
+
+    function parseNum(val){
+      if (typeof val !== 'string') return NaN;
+      // разрешаем запятую
+      const s = val.trim().replace(',', '.');
+      return Number(s);
     }
 
-    function applyTolerance(iv){
-      const min = parseNum(document.getElementById('ivMin').value);
-      const max = parseNum(document.getElementById('ivMax').value);
-      const hasTol = Number.isFinite(min) && Number.isFinite(max) && max >= min;
+    function showErr(msg){
+      $err.style.display = 'block';
+      $err.textContent = msg;
+    }
+    function hideErr(){
+      $err.style.display = 'none';
+      $err.textContent = '';
+    }
 
-      if (!hasTol){
-        setBadge('neutral', 'без допуска');
+    function badge(ok, textOk='В допуске', textBad='ВНЕ допуска'){
+      return `<span class="badge ${ok ? 'ok' : 'bad'}">${ok ? textOk : textBad}</span>`;
+    }
+
+    function fmt(x, digits){
+      if (!isFinite(x)) return '—';
+      return x.toFixed(digits).replace('.', ',');
+    }
+
+    function inRange(x, a, b){
+      return x >= a && x <= b;
+    }
+
+    // ======= calc =======
+    function calc(){
+      hideErr();
+
+      const alpha = parseNum($alpha.value);
+      const dv    = parseNum($dv.value);
+
+      if (!isFinite(alpha) || !isFinite(dv)){
+        showErr('Ошибка ввода: α и ΔV должны быть числами (можно с запятой).');
+        $out.innerHTML = `Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».`;
+        return;
+      }
+      if (dv === 0){
+        showErr('Ошибка ввода: ΔV не может быть 0 (деление на ноль).');
+        $out.innerHTML = `Введите корректное значение <span class="mono">ΔV</span> (не 0).`;
+        return;
+      }
+      if (dv < 0){
+        showErr('Ошибка ввода: ΔV должно быть положительным (изменение скорости берём по модулю).');
+        $out.innerHTML = `Введите корректное значение <span class="mono">ΔV</span> (> 0).`;
+        return;
+      }
+      if (alpha < 0){
+        showErr('Ошибка ввода: α должно быть положительным (угол поворота берём по модулю).');
+        $out.innerHTML = `Введите корректное значение <span class="mono">α</span> (≥ 0).`;
         return;
       }
 
-      if (!Number.isFinite(iv)){
-        setBadge('bad', 'FAIL');
-        return;
-      }
+      const mu = alpha / dv;
 
-      if (iv >= min && iv <= max){
-        setBadge('ok', 'PASS');
-      } else {
-        setBadge('bad', 'FAIL');
-      }
+      const alphaOk = inRange(alpha, alphaMin, alphaMax);
+      const muOk    = inRange(mu, muMin, muMax);
+
+      $out.innerHTML = `
+        <div>Введено: <span class="mono">α = ${fmt(alpha, 2)} град</span>, <span class="mono">ΔV = ${fmt(dv, 2)} км/ч</span></div>
+        <div style="margin-top:6px;">
+          Расчёт: <span class="mono">μ = α/ΔV = ${fmt(alpha,2)} / ${fmt(dv,2)} = ${fmt(mu, 4)} град/(км/ч)</span>
+        </div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:10px 0;">
+        <div>Проверка α: ${badge(alphaOk)} <span class="mono">допуск [${fmt(alphaMin,1)} … ${fmt(alphaMax,1)}]</span></div>
+        <div style="margin-top:6px;">Проверка μ: ${badge(muOk)} <span class="mono">допуск [${fmt(muMin,2)} … ${fmt(muMax,2)}]</span></div>
+      `;
     }
 
-    // --- calc ---
-    function calcIv(){
-      const alpha = parseNum(document.getElementById('alpha').value);
-      const dv = parseNum(document.getElementById('dv').value);
+    // ======= buttons =======
+    document.getElementById('p12_calc').addEventListener('click', calc);
 
-      const outText = document.getElementById('outText');
-
-      if (!Number.isFinite(alpha) || !Number.isFinite(dv) || dv === 0){
-        outText.textContent = 'Ошибка ввода: проверь α и ΔV (ΔV не должно быть 0).';
-        setBadge('bad', 'FAIL');
-        return;
-      }
-
-      const iv = alpha / dv; // i_v = α / ΔV
-      outText.innerHTML =
-        'i<sub>v</sub> = α / ΔV = ' +
-        fmt(alpha, 3) + ' / ' + fmt(dv, 3) +
-        ' = <b>' + fmt(iv, 4) + '</b> град/(км/час)';
-      applyTolerance(iv);
-    }
-
-    function calcAlpha(){
-      const iv = parseNum(prompt('Введи i_v (град/(км/час)):', '0.15'));
-      const dv = parseNum(document.getElementById('dv').value);
-
-      const outText = document.getElementById('outText');
-
-      if (!Number.isFinite(iv) || !Number.isFinite(dv)){
-        outText.textContent = 'Отмена/ошибка ввода i_v или ΔV.';
-        setBadge('neutral', '—');
-        return;
-      }
-
-      const alpha = iv * dv; // α = i_v · ΔV
-      document.getElementById('alpha').value = String(alpha).replace('.', ',');
-      outText.innerHTML =
-        '&alpha; = i<sub>v</sub> · ΔV = ' +
-        fmt(iv, 4) + ' · ' + fmt(dv, 3) +
-        ' = <b>' + fmt(alpha, 3) + '</b> град';
-      // допуск относится к i_v — проверим его
-      applyTolerance(iv);
-    }
-
-    function clearAll(){
-      document.getElementById('alpha').value = '';
-      document.getElementById('dv').value = '30';
-      document.getElementById('ivMin').value = '';
-      document.getElementById('ivMax').value = '';
-      document.getElementById('outText').textContent = 'Готов. Введи α и ΔV и нажми “Посчитать”.';
-      setBadge('neutral', '—');
-    }
-
-    document.getElementById('btnIv').addEventListener('click', calcIv);
-    document.getElementById('btnAlpha').addEventListener('click', calcAlpha);
-    document.getElementById('btnClear').addEventListener('click', clearAll);
-
-    // Автопересчёт i_v при вводе (если оба поля заполнены корректно)
-    ['alpha','dv','ivMin','ivMax'].forEach(id=>{
-      document.getElementById(id).addEventListener('input', ()=>{
-        const a = parseNum(document.getElementById('alpha').value);
-        const dv = parseNum(document.getElementById('dv').value);
-        if (Number.isFinite(a) && Number.isFinite(dv) && dv !== 0){
-          const iv = a/dv;
-          // обновим только подсветку, чтобы не “мигало” текстом
-          applyTolerance(iv);
-        } else {
-          setBadge('neutral', '—');
-        }
-      });
+    document.getElementById('p12_fill').addEventListener('click', function(){
+      $alpha.value = '4,5';
+      $dv.value = '30';
+      calc();
     });
-  </script>
-</body>
-</html>
+
+    document.getElementById('p12_clear').addEventListener('click', function(){
+      hideErr();
+      $alpha.value = '';
+      $dv.value = '';
+      $out.innerHTML = `Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».`;
+    });
+
+    // Авто-пересчёт при вводе (чтобы сразу подсветка появлялась)
+    [$alpha, $dv].forEach(el => el.addEventListener('input', function(){
+      // если оба поля не пустые — пересчитываем
+      if ($alpha.value.trim() !== '' && $dv.value.trim() !== '') calc();
+    }));
+  })();
+</script>
+<!-- ===================== КАЛЬКУЛЯТОР (P12) END ===================== -->
+
