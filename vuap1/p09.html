@@ -283,9 +283,9 @@
       </div>
     </div>
 
-   <!-- КАЛЬКУЛЯТОР (канал направления) — только ω -> μ, два режима: основной и режим курса -->
+  <!-- КАЛЬКУЛЯТОР (канал крена) — только ω -> μ, два режима: основной и режим управления (кнопка триммера) -->
 <div class="calc card" id="calc-mu">
-  <h2>Калькулятор передаточного числа &mu; (канал направления)</h2>
+  <h2>Калькулятор передаточного числа &mu; (канал крена)</h2>
 
   <div class="formula">
     Формула: <b>&mu; = 66,7 / &omega;</b>,
@@ -296,14 +296,14 @@
     <div class="field">
       <label for="modeSel">Режим проверки</label>
       <select id="modeSel">
-        <option value="main">Передаточное число по угловой скорости (основной)</option>
-        <option value="course">Передаточное число по угловой скорости в режиме курса</option>
+        <option value="main">Передаточное число по угловой скорости (канал крена)</option>
+        <option value="trim">Передаточное число по угловой скорости (режим управления по крену, кнопка триммера)</option>
       </select>
     </div>
 
     <div class="field">
       <label for="omegaIn">Угловая скорость &omega;, град/с</label>
-      <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 3.5">
+      <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 8.0">
       <div class="hint">Вводишь только &omega;. Константа 66,7 фиксированная.</div>
     </div>
 
@@ -327,22 +327,22 @@
 
 <script>
 (function(){
-  // Константа из твоей логики калькулятора (не трогаем)
+  // Константа (оставляем как у тебя в p08/p09)
   const CONST_S = 66.7;
 
-  // ТТ: канал направления
-  // Основной: ω = (3,5+2,1−1,1) => 2,4…5,6 ; μ = 20±8 => 12…28
-  // Режим курса: ω = (6,5+6,5−2,0) => 4,5…13,0 ; μ = 10±8 => 2…18
+  // ТТ: канал крена (из твоего текста в p09)
+  // 1) ω = (8+6-2) => 6…14 ; μ = (8 ±3,2) => 4,8…11,2
+  // 2) ω = (17+16,5-6) => 11…33,5 ; μ = (4 ±2) => 2…6
   const MODES = {
     main: {
-      title: 'Передаточное число по угловой скорости (основной)',
-      omega0: 3.5, plus: 2.1, minus: 1.1,
-      mu0: 20, tol: 8
+      title: 'Передаточное число по угловой скорости (канал крена)',
+      omega0: 8.0, plus: 6.0, minus: 2.0,
+      mu0: 8.0, tol: 3.2
     },
-    course: {
-      title: 'Передаточное число по угловой скорости в режиме курса',
-      omega0: 6.5, plus: 6.5, minus: 2.0,
-      mu0: 10, tol: 8
+    trim: {
+      title: 'Передаточное число по угловой скорости (режим управления по крену, кнопка триммера)',
+      omega0: 17.0, plus: 16.5, minus: 6.0,
+      mu0: 4.0, tol: 2.0
     }
   };
 
@@ -366,6 +366,12 @@
     return Number(n).toFixed(d).replace('.', ',');
   }
 
+  // умный формат: если число целое — без .0, если нет — 1 знак после запятой
+  function fmtSmart(n){
+    const isInt = Math.abs(n - Math.round(n)) < 1e-9;
+    return (isInt ? fmt(n,0) : fmt(n,1));
+  }
+
   function setTT(){
     const m = MODES[modeSel.value];
     const omegaMin = m.omega0 - m.minus;
@@ -374,11 +380,11 @@
     const muMax = m.mu0 + m.tol;
 
     ttLine.textContent =
-      `${m.title}. Допуск ω: ${fmt(omegaMin,1)}…${fmt(omegaMax,1)} град/с. ` +
-      `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)} %/(град/с). Формула: μ = 66,7 / ω.`;
+      `${m.title}. Допуск ω: ${fmtSmart(omegaMin)}…${fmtSmart(omegaMax)} град/с. ` +
+      `Допуск μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)} %/(град/с). Формула: μ = 66,7 / ω.`;
 
     muRangeHint.textContent =
-      `Диапазон μ по ТТ: ${fmt(muMin,0)}…${fmt(muMax,0)} (мин/макс).`;
+      `Диапазон μ по ТТ: ${fmtSmart(muMin)}…${fmtSmart(muMax)} (мин/макс).`;
   }
 
   function calc(){
@@ -401,12 +407,11 @@
 
     const okW = (w >= omegaMin && w <= omegaMax);
     const okMu = (mu >= muMin && mu <= muMax);
-
     const verdict = (okW && okMu) ? 'PASS по ТТ' : 'FAIL по ТТ';
 
     resLine.innerHTML =
       `Введено ω = <b>${fmt(w,3)}</b> град/с → μ = <b>${fmt(mu,3)}</b> %/(град/с). ` +
-      `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)}. Итог: <b>${verdict}</b>.`;
+      `Допуск μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)}. Итог: <b>${verdict}</b>.`;
   }
 
   function clearAll(){
