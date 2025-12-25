@@ -1,129 +1,215 @@
-<!-- ===== ВУАП-1 · ОБЩАЯ СТРАНИЦА-НАВИГАТОР (02–14) ===== -->
-<section class="card">
+<!-- ===== ВУАП-1 · ОДНА СТРАНИЦА-КАЛЬКУЛЯТОР (02–14) ===== -->
+<section class="card" id="vuap1-hub">
   <h2>ВУАП-1 · Калькулятор проверок (пункты 02–14)</h2>
-  <div class="p">Открывай нужный пункт — он загрузится как отдельная страница из своей папки.</div>
+  <div class="p">
+    Выбирай пункт слева — он откроется <b>внутри этой страницы</b>. Никаких переходов по ссылкам.
+  </div>
 
-  <div class="nav-grid">
+  <div class="hub">
+    <!-- ЛЕВО: СПИСОК -->
+    <div class="menu" id="vuapMenu"></div>
 
-    <!-- 02 -->
-    <a class="btn" href="./02/index.html">
-      <span class="num">02</span>
-      <span class="ttl">Проверка передаточного числа по углу (направление)</span>
-    </a>
+    <!-- ПРАВО: ОКНО -->
+    <div class="viewer">
+      <div class="viewerTop">
+        <div class="viewerTitle" id="viewerTitle">Выбери пункт 02–14</div>
+        <div class="viewerBtns">
+          <a class="btn mini" id="openNewTab" href="#" target="_blank" rel="noopener">Открыть отдельно</a>
+          <button class="btn mini" type="button" onclick="reloadFrame()">Обновить</button>
+        </div>
+      </div>
 
-    <!-- 03 -->
-    <a class="btn" href="./03/index.html">
-      <span class="num">03</span>
-      <span class="ttl">Проверка передаточного числа по углу (крен)</span>
-    </a>
+      <iframe id="vuapFrame" class="frame" src="" loading="lazy"></iframe>
 
-    <!-- 04 -->
-    <a class="btn" href="./04/index.html">
-      <span class="num">04</span>
-      <span class="ttl">Проверка крутизны сигнала в цепи обратной связи (ОС)</span>
-    </a>
-
-    <!-- 05 -->
-    <a class="btn" href="./05/index.html">
-      <span class="num">05</span>
-      <span class="ttl">Проверка передаточного числа по углу (тангаж)</span>
-    </a>
-
-    <!-- 06 -->
-    <a class="btn" href="./06/index.html">
-      <span class="num">06</span>
-      <span class="ttl">Проверка передаточного числа по углу (высота)</span>
-    </a>
-
-    <!-- 07 -->
-    <a class="btn" href="./07/index.html">
-      <span class="num">07</span>
-      <span class="ttl">Проверка работоспособности (по технологии)</span>
-    </a>
-
-    <!-- 08 -->
-    <a class="btn" href="./08/index.html">
-      <span class="num">08</span>
-      <span class="ttl">Передаточное число по угловой скорости — канал направления</span>
-    </a>
-
-    <!-- 09 -->
-    <a class="btn" href="./09/index.html">
-      <span class="num">09</span>
-      <span class="ttl">Передаточное число по угловой скорости — канал крена</span>
-    </a>
-
-    <!-- 10 -->
-    <a class="btn" href="./10/index.html">
-      <span class="num">10</span>
-      <span class="ttl">Передаточное число по угловой скорости — канал тангажа</span>
-    </a>
-
-    <!-- 11 -->
-    <a class="btn" href="./11/index.html">
-      <span class="num">11</span>
-      <span class="ttl">Передаточное число по скорости изменения высоты</span>
-    </a>
-
-    <!-- 12 -->
-    <a class="btn" href="./12/index.html">
-      <span class="num">12</span>
-      <span class="ttl">Передаточное число по воздушной скорости</span>
-    </a>
-
-    <!-- 13 -->
-    <a class="btn" href="./13/index.html">
-      <span class="num">13</span>
-      <span class="ttl">Передаточное число (угол поворота шкалы / ход штока)</span>
-    </a>
-
-    <!-- 14 -->
-    <a class="btn" href="./14/index.html">
-      <span class="num">14</span>
-      <span class="ttl">Передаточное число по КДК (Δδ / (Δδ + 4,5))</span>
-    </a>
-
+      <div class="note">
+        Если внутри пункта картинки не грузятся — проверь, что они лежат в той же папке, что и index.html пункта,
+        и что регистр букв совпадает (например <b>70.jpg</b> ≠ <b>70.JPG</b>).
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
-/* ===== стили навигации ===== */
-.nav-grid{
+/* ===== HUB layout ===== */
+#vuap1-hub .hub{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(460px,1fr));
-  gap:12px;
+  grid-template-columns: 380px 1fr;
+  gap:14px;
   margin-top:14px;
 }
-.nav-grid .btn{
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-  padding:14px 16px;
-  border-radius:14px;
+#vuap1-hub .menu{
   border:1px solid var(--stroke);
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  text-decoration:none;
+  background:rgba(0,0,0,.18);
+  border-radius:16px;
+  padding:10px;
+  max-height: 78vh;
+  overflow:auto;
 }
-.nav-grid .btn:hover{background:rgba(255,255,255,.16)}
-.nav-grid .num{
+#vuap1-hub .item{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  cursor:pointer;
+  user-select:none;
+  margin-bottom:10px;
+}
+#vuap1-hub .item:hover{background:rgba(255,255,255,.10)}
+#vuap1-hub .item.active{
+  background:rgba(255,255,255,.14);
+  border-color:rgba(255,255,255,.28);
+}
+#vuap1-hub .num{
   min-width:44px;
   display:inline-flex;
   justify-content:center;
   align-items:center;
   padding:6px 10px;
   border-radius:12px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.20);
-  font-weight:800;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.22);
+  font-weight:900;
 }
-.nav-grid .ttl{
+#vuap1-hub .ttl{
   font-size:14px;
-  font-weight:700;
+  font-weight:800;
+  line-height:1.2;
+}
+#vuap1-hub .sub{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
   line-height:1.25;
 }
-@media(max-width:900px){
-  .nav-grid{grid-template-columns:1fr}
+
+/* ===== viewer ===== */
+#vuap1-hub .viewer{
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.12);
+  border-radius:16px;
+  padding:10px;
+}
+#vuap1-hub .viewerTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:8px 8px 10px;
+}
+#vuap1-hub .viewerTitle{
+  font-weight:900;
+  font-size:14px;
+}
+#vuap1-hub .viewerBtns{
+  display:flex;
+  gap:10px;
+}
+#vuap1-hub .btn.mini{
+  padding:8px 10px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  text-decoration:none;
+  font-size:12px;
+  font-weight:800;
+}
+#vuap1-hub .btn.mini:hover{background:rgba(255,255,255,.16)}
+
+#vuap1-hub .frame{
+  width:100%;
+  height: 72vh;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;
+  background:rgba(0,0,0,.25);
+}
+
+/* ===== responsive ===== */
+@media(max-width:980px){
+  #vuap1-hub .hub{grid-template-columns:1fr}
+  #vuap1-hub .frame{height:70vh}
 }
 </style>
-<!-- ===== /ВУАП-1 НАВИГАЦИЯ ===== -->
+
+<script>
+/*
+  ВАЖНО: здесь ты правишь пути ОДИН РАЗ.
+  Сейчас стоит вариант: папка/NN/index.html
+  Пример: ./08/index.html
+*/
+const VUAP_ITEMS = [
+  { id:'02', title:'Проверка передаточного числа по углу (направление)', path:'./02/index.html' },
+  { id:'03', title:'Проверка передаточного числа по углу (крен)',       path:'./03/index.html' },
+  { id:'04', title:'Проверка крутизны сигнала в цепи обратной связи (ОС)',path:'./04/index.html' },
+  { id:'05', title:'Проверка передаточного числа по углу (тангаж)',      path:'./05/index.html' },
+  { id:'06', title:'Проверка передаточного числа по углу (высота)',      path:'./06/index.html' },
+  { id:'07', title:'Проверка работоспособности (по технологии)',         path:'./07/index.html' },
+
+  { id:'08', title:'Передаточное число по угловой скорости — направление',path:'./08/index.html' },
+  { id:'09', title:'Передаточное число по угловой скорости — крен',       path:'./09/index.html' },
+  { id:'10', title:'Передаточное число по угловой скорости — тангаж',     path:'./10/index.html' },
+  { id:'11', title:'Передаточное число по скорости изменения высоты',     path:'./11/index.html' },
+  { id:'12', title:'Передаточное число по воздушной скорости',            path:'./12/index.html' },
+  { id:'13', title:'Передаточное число (угол поворота шкалы / ход штока)',path:'./13/index.html' },
+  { id:'14', title:'Передаточное число по КДК (Δδ / (Δδ + 4,5))',         path:'./14/index.html' },
+];
+
+const menu = document.getElementById('vuapMenu');
+const frame = document.getElementById('vuapFrame');
+const viewerTitle = document.getElementById('viewerTitle');
+const openNewTab = document.getElementById('openNewTab');
+
+function buildMenu(){
+  menu.innerHTML = '';
+  VUAP_ITEMS.forEach((it, idx) => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.dataset.idx = String(idx);
+    div.innerHTML =
+      `<span class="num">${it.id}</span>
+       <div>
+         <div class="ttl">${it.title}</div>
+         <div class="sub">${it.path}</div>
+       </div>`;
+    div.addEventListener('click', () => openItem(idx));
+    menu.appendChild(div);
+  });
+}
+
+function setActive(idx){
+  [...menu.querySelectorAll('.item')].forEach(el => el.classList.remove('active'));
+  const cur = menu.querySelector(`.item[data-idx="${idx}"]`);
+  if(cur) cur.classList.add('active');
+}
+
+function openItem(idx){
+  const it = VUAP_ITEMS[idx];
+  if(!it) return;
+
+  setActive(idx);
+
+  // Обход кэша: добавляем параметр версии по времени
+  const url = it.path + (it.path.includes('?') ? '&' : '?') + 'v=' + Date.now();
+
+  frame.src = url;
+  viewerTitle.textContent = `Пункт ${it.id} · ${it.title}`;
+  openNewTab.href = url;
+}
+
+function reloadFrame(){
+  if(!frame.src) return;
+  // форсим обновление
+  const base = frame.src.split('?')[0];
+  frame.src = base + '?v=' + Date.now();
+}
+
+buildMenu();
+
+// если хочешь — можно открывать первый пункт автоматически
+// openItem(0);
+</script>
+<!-- ===== /ВУАП-1 HUB ===== -->
