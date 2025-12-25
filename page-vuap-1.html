@@ -1,298 +1,289 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ВУАП-1 — Пункт 4: Проверка крутизны сигнала (ОС)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>ВУАП-1 — единый вход</title>
 
-<style>
-:root{
-  --bg1:#0b1a2a;
-  --bg2:#153a5a;
-  --card:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.18);
-  --text:#e9f2ff;
-  --muted:#b7c7dd;
-  --ok:#7CFF9E;
-  --bad:#FF9A9A;
-  --wait:#FFD27C;
-}
+  <style>
+    :root{
+      --bg1:#0b1a2a;
+      --bg2:#153a5a;
+      --card:rgba(255,255,255,.08);
+      --stroke:rgba(255,255,255,.18);
+      --text:#e9f2ff;
+      --muted:#b7c7dd;
+      --btn:rgba(255,255,255,.10);
+      --btnH:rgba(255,255,255,.14);
+      --active:rgba(255,255,255,.22);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:20px 16px 28px}
+    .top{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .brand{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:14px 18px;
+      backdrop-filter:blur(6px);
+    }
+    .brand h1{margin:0;font-size:18px;letter-spacing:.4px}
+    .brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    .nav{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    }
+    a.btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:9px 12px;border-radius:12px;text-decoration:none;
+      border:1px solid var(--stroke);
+      background:var(--btn);
+      color:var(--text);
+      font-size:13px;font-weight:700;
+    }
+    a.btn:hover{background:var(--btnH)}
+    .badge{
+      padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);
+      background:rgba(255,255,255,.12);
+      font-size:12px;white-space:nowrap;
+    }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
-    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
-}
+    .grid{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:14px;
+      align-items:start;
+    }
 
-.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
+    .panel, .viewer{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      backdrop-filter:blur(6px);
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+    }
 
-.top{
-  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-  margin-bottom:20px;
-}
+    .panel{padding:14px}
+    .panel h2{margin:0 0 10px;font-size:15px}
+    .panel .hint{margin:0 0 12px;font-size:13px;color:var(--muted);line-height:1.35}
 
-.brand{
-  background:var(--card);
-  border:1px solid var(--stroke);
-  border-radius:16px;
-  padding:14px 18px;
-  backdrop-filter:blur(6px);
-}
-.brand h1{margin:0;font-size:18px;letter-spacing:.4px}
-.brand p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .menu button{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--stroke);
+      background:var(--btn);
+      color:var(--text);
+      font-size:14px;
+      font-weight:800;
+      text-align:left;
+      cursor:pointer;
+    }
+    .menu button:hover{background:var(--btnH)}
+    .menu button.active{background:var(--active)}
+    .menu small{display:block;color:var(--muted);font-weight:600;margin-top:2px}
 
-.badge{
-  padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);
-  background:rgba(255,255,255,.12);
-  font-size:12px;white-space:nowrap;
-}
+    .viewer{
+      padding:0;
+      overflow:hidden;
+    }
+    .viewerTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--stroke);
+      background:rgba(0,0,0,.15);
+    }
+    .viewerTop .title{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:70%;
+    }
+    .viewerTop .tools{
+      display:flex;gap:8px;flex-wrap:wrap;
+    }
+    .toolBtn{
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background:var(--btn);
+      color:var(--text);
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .toolBtn:hover{background:var(--btnH)}
 
-.nav{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-a.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:9px 12px;border-radius:12px;text-decoration:none;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  font-size:13px;font-weight:700;
-}
-a.btn:hover{background:rgba(255,255,255,.14)}
+    iframe{
+      width:100%;
+      height:calc(100vh - 210px);
+      min-height:720px;
+      border:0;
+      background:white;
+    }
 
-.card{
-  background:var(--card);
-  border:1px solid var(--stroke);
-  border-radius:18px;
-  padding:18px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 18px 40px rgba(0,0,0,.25);
-  margin-bottom:16px;
-}
-.card h2{margin:0 0 10px;font-size:18px}
-.card h3{margin:14px 0 6px;font-size:15px}
-
-.p{font-size:14px;line-height:1.45;color:var(--muted)}
-.hr{height:1px;background:var(--stroke);margin:14px 0}
-
-.form{
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  gap:14px;
-  margin-top:12px;
-}
-
-.field{grid-column:span 6}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-
-select,button{
-  width:100%;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  font-size:14px;
-}
-button{cursor:pointer;font-weight:700}
-button.primary{background:linear-gradient(180deg,#ffffff,#e6f0ff);color:#000}
-.actions{display:flex;gap:12px;grid-column:span 12}
-
-.result{
-  margin-top:14px;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.25);
-  font-size:14px;
-}
-
-.status{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  margin-bottom:8px;
-}
-.ok{background:rgba(124,255,158,.18);color:var(--ok)}
-.bad{background:rgba(255,154,154,.18);color:var(--bad)}
-.wait{background:rgba(255,210,124,.18);color:var(--wait)}
-
-.note{
-  margin-top:10px;
-  padding:12px 14px;
-  border-radius:14px;
-  border:1px dashed rgba(255,255,255,.25);
-  background:rgba(0,0,0,.18);
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
-}
-
-@media(max-width:900px){
-  .field{grid-column:span 12;}
-  .actions{flex-direction:column;}
-}
-</style>
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
+      iframe{height:80vh;min-height:640px}
+      .viewerTop .title{max-width:60%}
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <h1>ВУАП-1</h1>
+        <p>Единый вход · открытие пунктов p04…p12 из папки <b>/vuap1/</b></p>
+      </div>
 
-  <div class="top">
-    <div class="brand">
-      <h1>ВУАП-1</h1>
-      <p>Инженерная инструкция · Пошаговый контроль допусков</p>
+      <div class="nav">
+        <a class="btn" href="./index.html">← На главную</a>
+        <div class="badge">page-vuap-1.html</div>
+      </div>
     </div>
 
-    <div class="nav">
-      <a class="btn" href="./index.html">← На главную</a>
-      <div class="badge">Пункт 4 · Крутизна сигнала (ОС)</div>
+    <div class="grid">
+      <!-- ЛЕВОЕ МЕНЮ -->
+      <div class="panel">
+        <h2>Пункты</h2>
+        <p class="hint">
+          Нажми пункт — он откроется справа.<br>
+          В ссылку добавляется <b>?v=время</b>, чтобы GitHub Pages не показывал старую версию.
+        </p>
+
+        <div class="menu" id="menu">
+          <button data-file="p04.html">
+            Пункт 4 — Крутизна сигнала (ОС)
+            <small>vuap1/p04.html</small>
+          </button>
+
+          <button data-file="p08.html">
+            Пункт 8 — Угловая скорость (направление)
+            <small>vuap1/p08.html</small>
+          </button>
+
+          <button data-file="p09.html">
+            Пункт 9 — Угловая скорость (крен)
+            <small>vuap1/p09.html</small>
+          </button>
+
+          <button data-file="p10.html">
+            Пункт 10 — Угловая скорость (тангаж)
+            <small>vuap1/p10.html</small>
+          </button>
+
+          <button data-file="p11.html">
+            Пункт 11 — Скорость изменения высоты
+            <small>vuap1/p11.html</small>
+          </button>
+
+          <button data-file="p12.html">
+            Пункт 12 — Воздушная скорость
+            <small>vuap1/p12.html</small>
+          </button>
+        </div>
+      </div>
+
+      <!-- ПРАВЫЙ ПРОСМОТР -->
+      <div class="viewer">
+        <div class="viewerTop">
+          <div class="title" id="currentTitle">Не выбрано</div>
+
+          <div class="tools">
+            <button class="toolBtn" id="btnReload" type="button">Обновить</button>
+            <button class="toolBtn" id="btnOpenNew" type="button">Открыть в новой вкладке</button>
+          </div>
+        </div>
+
+        <iframe id="frame" title="VUAP-1 viewer" src=""></iframe>
+      </div>
     </div>
   </div>
 
-  <!-- УСЛОВИЯ -->
-  <section class="card">
-    <h2>Условия проведения проверки</h2>
-    <div class="p">
-      Проверка выполняется <b>с включённой наземной гидроустановкой</b>.
-    </div>
-  </section>
-
-  <!-- СОДЕРЖАНИЕ ОПЕРАЦИИ -->
-  <section class="card">
-    <h2>4. Проверка крутизны сигнала в цепи обратной связи</h2>
-
-    <h3>а) Канал направления</h3>
-    <div class="p">
-      Нажать кнопку-табло «ВКЛ» на пульте управления канала направления.<br>
-      Поворотом шкалы ручки центровки по часовой стрелке (против часовой стрелки)
-      на 2–3 оборота отклонить шток малого цилиндра рулевого агрегата в крайнее положение.<br>
-      Заметить положение стрелки индикатора нулевого.
-    </div>
-
-    <div class="note">
-      <b>Примечание.</b> При отклонении штока малого цилиндра до упора будет работать «перегонка».
-      Поэтому необходимо ногами удерживать педали в нейтральном положении, не нажимая при этом на подпедальники.
-    </div>
-
-    <h3>б) Каналы крена, тангажа и высоты</h3>
-    <div class="p">
-      Проделать аналогичную описанной для канала направления проверку.<br>
-      При этом для отклонения штока малого цилиндра каналов крена и тангажа необходимо
-      пользоваться шкалами ручек центровки соответствующих пультов управления,
-      а для канала высоты — тумблером «Контроль» на пульте управления канала высоты.
-    </div>
-  </section>
-
-  <!-- ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ -->
-  <section class="card">
-    <h2>Технические требования (ТТ)</h2>
-    <div class="p">
-      Для всех каналов стрелка индикатора нулевого должна устанавливаться
-      в совмещённое с крайними отметками положение с точностью до толщины стрелки.
-    </div>
-  </section>
-
-  <!-- РАБОТЫ ПРИ ОТКЛОНЕНИЯХ -->
-  <section class="card">
-    <h2>Работы, выполняемые при отклонениях от ТТ</h2>
-    <div class="p">
-      Отключить и вновь включить проверяемый канал кнопками-табло «ОТКЛ» и «ВКЛ» на пульте управления.<br>
-      Поворотом шкалы ручки центровки по часовой стрелке на 2–3 оборота отклонить шток малого цилиндра
-      рулевого агрегата в крайнее положение и поворотом подстроечного резистора «ИН» на пульте управления
-      данного канала установить стрелку индикатора нулевого в совмещённое положение с крайней отметкой.
-    </div>
-
-    <div class="note">
-      <b>Важно.</b> После регулировки подстроечного резистора «ИН» необходимо перепроверить передаточные числа
-      соответствующего канала: <b>по углу</b>, <b>по угловой скорости</b>, <b>по высоте</b> — в соответствии с пунктом 3 технологии.
-    </div>
-  </section>
-
-  <!-- ФИКСАЦИЯ РЕЗУЛЬТАТА -->
-  <section class="card">
-    <h2>Фиксация результата (в программу)</h2>
-
-    <div class="form">
-      <div class="field">
-        <label>Канал</label>
-        <select id="channel">
-          <option value="direction">Направления</option>
-          <option value="roll">Крена</option>
-          <option value="pitch">Тангажа</option>
-          <option value="height">Высоты</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Стрелка индикатора нулевого стала на крайнюю отметку (с точностью до толщины стрелки)?</label>
-        <select id="fact">
-          <option value="">— выбрать —</option>
-          <option value="yes">Да (ТТ выполнено)</option>
-          <option value="no">Нет (ТТ не выполнено)</option>
-        </select>
-      </div>
-
-      <div class="actions">
-        <button class="primary" onclick="checkTT()">Проверить ТТ</button>
-        <button onclick="resetForm()">Сброс</button>
-      </div>
-    </div>
-
-    <div class="result" id="out">
-      <span class="status wait">ОЖИДАЕТ</span><br>
-      Выбери канал и факт установки стрелки по ТТ.
-    </div>
-  </section>
-
-</div>
-
 <script>
-function channelName(v){
-  return {
-    direction:'канал направления',
-    roll:'канал крена',
-    pitch:'канал тангажа',
-    height:'канал высоты'
-  }[v] || 'канал';
-}
+  const frame = document.getElementById('frame');
+  const currentTitle = document.getElementById('currentTitle');
+  const menu = document.getElementById('menu');
+  const btnReload = document.getElementById('btnReload');
+  const btnOpenNew = document.getElementById('btnOpenNew');
 
-function checkTT(){
-  const ch = document.getElementById('channel').value;
-  const fact = document.getElementById('fact').value;
-  const out = document.getElementById('out');
+  let currentFile = '';
 
-  if(!fact){
-    out.innerHTML = '<span class="status wait">ОЖИДАЕТ</span><br>Выбери факт наблюдения.';
-    return;
+  function buildUrl(file){
+    // анти-кэш: всегда свежая версия
+    return './vuap1/' + file + '?v=' + Date.now();
   }
 
-  if(fact === 'yes'){
-    out.innerHTML =
-      '<span class="status ok">OK</span><br>' +
-      channelName(ch) + ': стрелка установилась на крайнюю отметку (с точностью до толщины стрелки) — ТТ выполнено.';
-  }else{
-    out.innerHTML =
-      '<span class="status bad">НЕ НОРМА</span><br>' +
-      channelName(ch) + ': стрелка не установилась по требованию — ТТ не выполнено.<br>' +
-      '<b>Действия по технологии:</b> выполнить операции раздела «Работы при отклонениях от ТТ» (ОТКЛ/ВКЛ, отклонение 2–3 оборота, регулировка «ИН»).<br>' +
-      '<b>Важно:</b> после регулировки «ИН» перепроверить передаточные числа: по углу, по угловой скорости, по высоте (п. 3).';
+  function setActive(btn){
+    menu.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
   }
-}
 
-function resetForm(){
-  document.getElementById('channel').value = 'direction';
-  document.getElementById('fact').value = '';
-  document.getElementById('out').innerHTML =
-    '<span class="status wait">ОЖИДАЕТ</span><br>' +
-    'Выбери канал и факт установки стрелки по ТТ.';
-}
+  function openFile(file, btn){
+    currentFile = file;
+    const url = buildUrl(file);
+    frame.src = url;
+
+    // заголовок сверху
+    const label = btn ? btn.childNodes[0].textContent.trim() : file;
+    currentTitle.textContent = label + ' — ' + 'vuap1/' + file;
+
+    if(btn) setActive(btn);
+  }
+
+  // клики по меню
+  menu.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-file]');
+    if(!btn) return;
+    openFile(btn.dataset.file, btn);
+  });
+
+  // Обновить текущий
+  btnReload.addEventListener('click', () => {
+    if(!currentFile){
+      alert('Сначала выбери пункт слева.');
+      return;
+    }
+    frame.src = buildUrl(currentFile);
+  });
+
+  // Открыть в новой вкладке
+  btnOpenNew.addEventListener('click', () => {
+    if(!currentFile){
+      alert('Сначала выбери пункт слева.');
+      return;
+    }
+    window.open('./vuap1/' + currentFile + '?v=' + Date.now(), '_blank', 'noopener');
+  });
+
+  // Авто-открытие при первом запуске (пункт 4)
+  // Если хочешь другой — поменяй здесь:
+  const first = menu.querySelector('button[data-file="p04.html"]');
+  if(first) openFile(first.dataset.file, first);
 </script>
 
 </body>
