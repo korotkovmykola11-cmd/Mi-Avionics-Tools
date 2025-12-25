@@ -319,13 +319,26 @@ iкдк = Δδ/δ + 4,5  мм/мм где:
       kdkMark(pass);
 
       const html =
-        '<div class="mono">' +
-        'Δδ = |L − N| + |R − N| = |' + kdkFmt(L.v,3) + ' − ' + kdkFmt(N.v,3) + '| + |' + kdkFmt(R.v,3) + ' − ' + kdkFmt(N.v,3) + '|<br>' +
-        'Δδ = ' + kdkFmt(dL,3) + ' + ' + kdkFmt(dR,3) + ' = <b>' + kdkFmt(dSum,3) + ' мм</b><br><br>' +
-        'iₖдк = Δδ / (Δδ + 4,5) = ' + kdkFmt(dSum,3) + ' / (' + kdkFmt(dSum,3) + ' + ' + kdkFmt(C.v,3) + ')<br>' +
-        'iₖдк = ' + kdkFmt(dSum,3) + ' / ' + kdkFmt(denom,3) + ' = <b>' + kdkFmt(ikdk,3) + ' мм/мм</b><br><br>' +
-        'Допуск: <b>' + kdkFmt(MIN.v,2) + ' … ' + kdkFmt(MAX.v,2) + '</b>' +
-        '</div>';
+  '<div class="mono">' +
+  'Δδ = |L − N| + |R − N| = |' +
+    kdkFmt(L.v,0) + ' − ' + kdkFmt(N.v,0) + '| + |' +
+    kdkFmt(R.v,0) + ' − ' + kdkFmt(N.v,0) + '|<br>' +
+
+  'Δδ = ' + kdkFmt(dL,3) + ' + ' + kdkFmt(dR,3) +
+  ' = <b>' + kdkFmt(dSum,3) + ' мм</b><br><br>' +
+
+  'iₖдк = Δδ / (Δδ + 4,5) = ' +
+    kdkFmt(dSum,3) + ' / (' + kdkFmt(dSum,3) +
+    ' + ' + kdkFmt(C.v,3) + ')<br>' +
+
+  'iₖдк = ' + kdkFmt(dSum,3) + ' / ' +
+    kdkFmt(denom,3) + ' = <b>' +
+    kdkFmt(ikdk,3) + ' мм/мм</b><br><br>' +
+
+  'Допуск: <b>' + kdkFmt(MIN.v,2) +
+  ' … ' + kdkFmt(MAX.v,2) + '</b>' +
+  '</div>';
+
 
       if(pass){
         kdkSetStatus(out,'ok','ПРОХОДИТ', html);
