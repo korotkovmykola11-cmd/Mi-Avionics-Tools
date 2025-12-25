@@ -177,25 +177,35 @@ iкдк = Δδ/δ + 4,5  мм/мм где:
     <img src="71.jpg" alt="Рисунок 71">
   </div>
 
-<!-- КАЛЬКУЛЯТОР: Передаточное число по КДК -->
+<!-- КАЛЬКУЛЯТОР: Передаточное число по КДК (нейтраль/влево/вправо) -->
 <div class="card">
   <h2>Калькулятор: передаточное число по КДК</h2>
 
   <div class="p">
-    Формула:  
-    <b>i<sub>кдк</sub> = Δδ / (Δδ + 4,5)</b> мм/мм<br>
+    Δδ = |L − N| + |R − N|, мм<br>
+    i<sub>кдк</sub> = Δδ / (Δδ + 4,5), мм/мм<br>
     Допуск: <b>0,5 ± 0,2</b> ⇒ <b>0,3 … 0,7 мм/мм</b>
   </div>
 
   <div class="form">
     <div class="field">
-      <label>Δδ — суммарный (замеренный) ход штока, мм</label>
-      <input id="dd" type="number" step="any" placeholder="например 4.5" oninput="calcKDK(true)">
+      <label>N — измеренная нейтраль, мм</label>
+      <input id="n" type="number" step="any" placeholder="например 10.0" oninput="calcKDK(true)">
     </div>
 
     <div class="field">
-      <label>Константа (Δδ + 4,5), мм</label>
-      <input type="text" value="+ 4,5" readonly>
+      <label>L — ход влево, мм</label>
+      <input id="l" type="number" step="any" placeholder="например 7.0" oninput="calcKDK(true)">
+    </div>
+
+    <div class="field">
+      <label>R — ход вправо, мм</label>
+      <input id="r" type="number" step="any" placeholder="например 13.0" oninput="calcKDK(true)">
+    </div>
+
+    <div class="field">
+      <label>Константа 4,5 мм (фикс.)</label>
+      <input id="k" type="number" step="any" value="4.5" readonly>
     </div>
 
     <div class="field">
@@ -211,15 +221,16 @@ iкдк = Δδ/δ + 4,5  мм/мм где:
 
   <div class="result" id="out">
     <span class="status wait">ОЖИДАЕТ</span><br>
-    Введи Δδ — получишь расчёт и результат.
+    Введи N, L, R — увидишь Δδ, расчёт i и результат.
   </div>
 </div>
 <script>
 /* ===== П14 — КДК =====
- i_kdk = Δδ / (Δδ + 4.5)   [мм/мм]
- допуск: 0.5 ± 0.2 => 0.3..0.7
+Ввод: N (нейтраль), L (влево), R (вправо)  [мм]
+Δδ = |L − N| + |R − N|  [мм]
+i_kdk = Δδ / (Δδ + 4.5) [мм/мм]
+Допуск i: 0.5 ± 0.2 => 0.3..0.7
 */
-
 const ADD = 4.5;
 
 const I_NOM = 0.5;
@@ -231,53 +242,68 @@ function f(n, d=3){ return Number(n).toFixed(d); }
 
 function setWait(){
   document.getElementById('out').innerHTML =
-    `<span class="status wait">ОЖИДАЕТ</span><br>Введи Δδ и нажми «Рассчитать».`;
+    `<span class="status wait">ОЖИДАЕТ</span><br>Введи N, L, R и нажми «Рассчитать».`;
 }
 
 function resetKDK(){
-  document.getElementById('dd').value = '';
+  document.getElementById('n').value = '';
+  document.getElementById('l').value = '';
+  document.getElementById('r').value = '';
   setWait();
 }
 
-function calcKDK(fromInput){
-  const ddEl = document.getElementById('dd');
-  const out  = document.getElementById('out');
+function toNum(id){
+  const v = (document.getElementById(id).value || '').replace(',', '.').trim();
+  if(v === '') return { ok:false, val:NaN };
+  const x = parseFloat(v);
+  return { ok:isFinite(x), val:x };
+}
 
-  const raw = (ddEl.value || '').replace(',', '.').trim();
-  if(fromInput && raw === ''){
+function calcKDK(fromInput){
+  const out = document.getElementById('out');
+
+  const N = toNum('n');
+  const L = toNum('l');
+  const R = toNum('r');
+
+  if(fromInput && (!N.ok || !L.ok || !R.ok)){
     setWait();
     return;
   }
 
-  const dd = parseFloat(raw);
-  if(!isFinite(dd) || dd <= 0){
-    out.innerHTML =
-      `<span class="status wait">ОШИБКА</span><br>Δδ должно быть числом больше 0.`;
+  if(!N.ok || !L.ok || !R.ok){
+    out.innerHTML = `<span class="status wait">ОШИБКА</span><br>Заполни N, L и R (числа).`;
     return;
   }
 
-  const denom = dd + ADD;
-  const i = dd / denom;
+  const dL = Math.abs(L.val - N.val);
+  const dR = Math.abs(R.val - N.val);
+  const dSum = dL + dR;               // Δδ
+  const denom = dSum + ADD;
+  const i = dSum / denom;
 
   const pass = (i >= I_MIN && i <= I_MAX);
 
-  const calcLine =
-    `iкдк = Δδ / (Δδ + 4,5) = ${f(dd)} / (${f(dd)} + 4,5) = ${f(dd)} / ${f(denom)} = <b>${f(i)}</b> мм/мм`;
+  const deltaLine =
+    `Δδ = |L − N| + |R − N| = |${f(L.val)} − ${f(N.val)}| + |${f(R.val)} − ${f(N.val)}| = ${f(dL)} + ${f(dR)} = <b>${f(dSum)}</b> мм`;
+
+  const iLine =
+    `iкдк = Δδ / (Δδ + 4,5) = ${f(dSum)} / (${f(dSum)} + 4,5) = ${f(dSum)} / ${f(denom)} = <b>${f(i)}</b> мм/мм`;
 
   if(pass){
     out.innerHTML =
       `<span class="status ok">ПРОХОДИТ</span><br>
-       ${calcLine}<br>
+       ${deltaLine}<br>
+       ${iLine}<br>
        Допуск: <b>${f(I_MIN,2)} … ${f(I_MAX,2)}</b><br>
        Запас до min: ${f(i - I_MIN)} · до max: ${f(I_MAX - i)}`;
   }else{
     out.innerHTML =
       `<span class="status bad">НЕ ПРОХОДИТ</span><br>
-       ${calcLine}<br>
+       ${deltaLine}<br>
+       ${iLine}<br>
        Допуск: <b>${f(I_MIN,2)} … ${f(I_MAX,2)}</b><br>
-       Отклонение: ${i < I_MIN
-         ? `ниже min на ${f(I_MIN - i)}`
-         : `выше max на ${f(i - I_MAX)}`}`;
+       Отклонение: ${i < I_MIN ? `ниже min на ${f(I_MIN - i)}` : `выше max на ${f(i - I_MAX)}`}`;
   }
 }
 
