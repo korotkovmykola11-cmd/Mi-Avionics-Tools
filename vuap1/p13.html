@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ВУАП-1 — Пункт 13</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a;
+  --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff;
+  --muted:#b7c7dd;
+  --ok:#7CFF9E;
+  --bad:#FF9A9A;
+  --wait:#FFD27C;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:18px;
+  backdrop-filter:blur(6px);
+  margin-bottom:16px;
+}
+
+h1,h2{margin:0 0 10px}
+h1{font-size:20px}
+h2{font-size:18px}
+
+.p{font-size:14px;line-height:1.45;color:var(--muted)}
+
+.table{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.cell{
+  padding:12px;
+  border-right:1px solid var(--stroke);
+  border-bottom:1px solid var(--stroke);
+  font-size:13px;
+  min-height:160px;
+}
+
+.cell.head{
+  background:rgba(255,255,255,.12);
+  font-weight:700;
+  min-height:auto;
+}
+
+.table .cell:nth-child(3n){border-right:none}
+.table .cell:nth-last-child(-n+3){border-bottom:none}
+
+.figure{text-align:center}
+.figure img{
+  max-width:100%;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+}
+.figcap{margin-bottom:8px;font-size:13px;color:var(--muted)}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:14px;
+}
+.field{grid-column:span 4}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+
+input,button{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+}
+
+button.primary{
+  background:linear-gradient(180deg,#ffffff,#e6f0ff);
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+}
+
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>ВУАП-1 · Пункт 13</h1>
+    <div class="p">Текст технологии вводится в три графы.</div>
+  </div>
+
+  <!-- ТЕХНОЛОГИЯ -->
+  <div class="card">
+    <h2>Содержание операции</h2>
+
+    <div class="table">
+      <div class="cell head">Содержание операций</div>
+      <div class="cell head">Технические требования (ТТ)</div>
+      <div class="cell head">Работы при отклонениях</div>
+
+      <div class="cell">
+       Проверьте передаточное число от ручки управления вертолетом летчика к КДТ.Для чего:
+       Нажмите кнопку-табло "ОТКЛ." на пульте управления канала тангажа, отклоните ручку управления вертолетом летчика на себя (от себя) до упора и заметьте положение шкалы ручки центровки на пульте управления;
+       медленно отпуская ручку управления вертолетом летчика в обратную сторону до упора, определите угол поворота шкалы ручки центровки на пульте управления.
+
+      </div>
+
+      <div class="cell">
+       Угол поворота шкалы (44 +5-4) град . Передаточное число
+(0,6 ±0,06) град/мм
+Передаточное число подсчитывается по формуле:
+i = α /l град/мм где: 
+α - угол поворота шкалы ручки центровки в град.; 
+l - полный ход штока рулевого агрегата ка-нала тангажа, равный 74 мм
+
+      </div>
+
+      <div class="cell">
+      Отклоните ручку управления вертолетом летчика на себя до упора и заметьте положение шкалы ручки центровки на пульте управления. Изменением плеча рычага КДТ добейтесь, чтобы при медленном отклонении ручки управления вертолетом летчика от себя до упора угол поворота шкалы ручки центровки был равен 44°. Медленно отклоняя ручку управления вертолетом летчика на себя до упора, определите угол поворота шкалы ручки центровка. Угол поворота шкалы ручки центровки должен быть в пределах 44° ±4°.
+      ДЛЯ РЕГУЛИРОВКИ ПЕРЕДАТОЧНОГО ЧИСЛА ПО КДТ.ТЯГА,КОГДА УТАПЛИВАЕТСЯ МЫ УВЕЛИЧИВАЕМ РАЗМАХ Т.Е ЗНАЧЕНИЕ ОТ СЕБЯ НА СЕБЯ УВЕЛИЧИВАЕТЬСЯ.ЧТОБЫ УМЕНШИТЬ ЗНАЧЕНИЕ (44  +5-4) ТЯГУ ТЯНЕМ ВВЕРХ,РАЗМАХ УМЕНЬШАЕТЬСЯ.ТАНДЕРОМ МЫ РЕГУЛИРУЕМ ЦЕНТР ПРИ ЗАШТЫРЕНОЙРУЧКЕ В ПРОДОЛЬНОМ УПРАВЛЕНИИ.  
+      </div>
+    </div>
+  </div>
+
+  <!-- РИСУНОК -->
+  <div class="card figure">
+    <div class="figcap">Рис. 70</div>
+    <img src="70.jpg" alt="Рисунок 70">
+  </div>
+
+  <!-- КАЛЬКУЛЯТОР -->
+  <div class="card">
+    <h2>Калькулятор передаточного числа</h2>
+
+    <div class="form">
+      <div class="field">
+        <label>Задаваемый параметр X</label>
+        <input id="x" type="number" step="any">
+      </div>
+      <div class="field">
+        <label>Константа K</label>
+        <input id="k" type="number" step="any" value="66.7">
+      </div>
+      <div class="field">
+        <label>μ min</label>
+        <input id="min" type="number" step="any">
+      </div>
+      <div class="field">
+        <label>μ max</label>
+        <input id="max" type="number" step="any">
+      </div>
+
+      <div class="field" style="grid-column:span 12">
+        <button class="primary" onclick="calc()">Рассчитать</button>
+      </div>
+    </div>
+
+    <div class="result" id="out">
+      <span class="status wait">ОЖИДАЕТ</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function calc(){
+  const x = parseFloat(xEl.value);
+  const k = parseFloat(kEl.value);
+  const min = parseFloat(minEl.value);
+  const max = parseFloat(maxEl.value);
+  const out = document.getElementById('out');
+
+  if(!x || !k){
+    out.innerHTML = '<span class="status wait">ОШИБКА ВВОДА</span>';
+    return;
+  }
+
+  const mu = k / x;
+  const v = mu.toFixed(3);
+
+  if(!isNaN(min) && !isNaN(max)){
+    if(mu >= min && mu <= max){
+      out.innerHTML = `<span class="status ok">ПРОХОДИТ</span><br>μ = ${v}`;
+    }else{
+      out.innerHTML = `<span class="status bad">НЕ ПРОХОДИТ</span><br>μ = ${v}`;
+    }
+  }else{
+    out.innerHTML = `<span class="status wait">БЕЗ ДОПУСКА</span><br>μ = ${v}`;
+  }
+}
+
+const xEl = document.getElementById('x');
+const kEl = document.getElementById('k');
+const minEl = document.getElementById('min');
+const maxEl = document.getElementById('max');
+</script>
+
+</body>
+</html>
