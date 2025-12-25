@@ -177,135 +177,175 @@ iкдк = Δδ/δ + 4,5  мм/мм где:
     <img src="71.jpg" alt="Рисунок 71">
   </div>
 
-<!-- КАЛЬКУЛЯТОР: Передаточное число по КДК (нейтраль/влево/вправо) -->
-<div class="card">
+<!-- ===== КАЛЬКУЛЯТОР: Передаточное число по КДК (P14) ===== -->
+<section class="card" id="calc-kdk">
   <h2>Калькулятор: передаточное число по КДК</h2>
 
-  <div class="p">
-    Δδ = |L − N| + |R − N|, мм<br>
-    i<sub>кдк</sub> = Δδ / (Δδ + 4,5), мм/мм<br>
-    Допуск: <b>0,5 ± 0,2</b> ⇒ <b>0,3 … 0,7 мм/мм</b>
+  <div class="p" style="margin-top:8px">
+    Формулы:
+    <br><b>Δδ = |L − N| + |R − N|</b> (мм)
+    <br><b>i<sub>кдк</sub> = Δδ / (Δδ + 4,5)</b> (мм/мм)
+    <br>Допуск: <b>0,5 ± 0,2</b> → диапазон <b>0,30 … 0,70</b>
   </div>
 
-  <div class="form">
+  <div class="form" style="margin-top:14px">
     <div class="field">
       <label>N — измеренная нейтраль, мм</label>
-      <input id="n" type="number" step="any" placeholder="например 10.0" oninput="calcKDK(true)">
+      <input id="kdkN" type="text" inputmode="decimal" placeholder="например 41" />
     </div>
 
     <div class="field">
       <label>L — ход влево, мм</label>
-      <input id="l" type="number" step="any" placeholder="например 7.0" oninput="calcKDK(true)">
+      <input id="kdkL" type="text" inputmode="decimal" placeholder="например 45" />
     </div>
 
     <div class="field">
       <label>R — ход вправо, мм</label>
-      <input id="r" type="number" step="any" placeholder="например 13.0" oninput="calcKDK(true)">
+      <input id="kdkR" type="text" inputmode="decimal" placeholder="например 37" />
     </div>
 
     <div class="field">
-      <label>Константа 4,5 мм (фикс.)</label>
-      <input id="k" type="number" step="any" value="4.5" readonly>
+      <label>Константа, мм (фикс)</label>
+      <input id="kdkC" type="text" value="4,5" inputmode="decimal" />
     </div>
 
     <div class="field">
-      <label>Допуск i<sub>кдк</sub></label>
-      <input type="text" value="0,30 … 0,70 мм/мм" readonly>
+      <label>Допуск i<sub>кдк</sub> min</label>
+      <input id="kdkMin" type="text" value="0,30" inputmode="decimal" />
     </div>
 
-    <div class="field" style="grid-column:span 12">
-      <button class="primary" type="button" onclick="calcKDK(false)">Рассчитать</button>
-      <button type="button" onclick="resetKDK()" style="margin-top:10px;">Сброс</button>
+    <div class="field">
+      <label>Допуск i<sub>кдк</sub> max</label>
+      <input id="kdkMax" type="text" value="0,70" inputmode="decimal" />
+    </div>
+
+    <div class="actions">
+      <button class="primary" type="button" onclick="kdkCalc()">Рассчитать</button>
+      <button type="button" onclick="kdkReset()">Сброс</button>
     </div>
   </div>
 
-  <div class="result" id="out">
+  <div class="result" id="kdkOut">
     <span class="status wait">ОЖИДАЕТ</span><br>
-    Введи N, L, R — увидишь Δδ, расчёт i и результат.
+    Введи N, L, R (мм) и нажми «Рассчитать».
   </div>
-</div>
-<script>
-/* ===== П14 — КДК =====
-Ввод: N (нейтраль), L (влево), R (вправо)  [мм]
-Δδ = |L − N| + |R − N|  [мм]
-i_kdk = Δδ / (Δδ + 4.5) [мм/мм]
-Допуск i: 0.5 ± 0.2 => 0.3..0.7
-*/
-const ADD = 4.5;
 
-const I_NOM = 0.5;
-const I_TOL = 0.2;
-const I_MIN = I_NOM - I_TOL; // 0.3
-const I_MAX = I_NOM + I_TOL; // 0.7
+  <style>
+    /* локальные стили полей калькулятора, чтобы не ломать остальную страницу */
+    #calc-kdk input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      font-size:14px;
+      outline:none;
+    }
+    #calc-kdk input:focus{border-color:rgba(255,255,255,.35)}
+    #calc-kdk .kdk-pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
+    #calc-kdk .kdk-fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
+    #calc-kdk .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+  </style>
 
-function f(n, d=3){ return Number(n).toFixed(d); }
+  <script>
+    function kdkParse(id){
+      const el = document.getElementById(id);
+      const raw = (el.value || "").trim().replace(/\s+/g,'');
+      // разрешаем запятую
+      const v = Number(raw.replace(',', '.'));
+      return { el, raw, v, ok: Number.isFinite(v) };
+    }
 
-function setWait(){
-  document.getElementById('out').innerHTML =
-    `<span class="status wait">ОЖИДАЕТ</span><br>Введи N, L, R и нажми «Рассчитать».`;
-}
+    function kdkFmt(x, digits){
+      // аккуратный вывод с точкой, но можно заменить на запятую если хочешь
+      const s = x.toFixed(digits);
+      return s.replace('.', ',');
+    }
 
-function resetKDK(){
-  document.getElementById('n').value = '';
-  document.getElementById('l').value = '';
-  document.getElementById('r').value = '';
-  setWait();
-}
+    function kdkSetStatus(outEl, statusClass, statusText, html){
+      outEl.innerHTML =
+        '<span class="status ' + statusClass + '">' + statusText + '</span><br>' + html;
+    }
 
-function toNum(id){
-  const v = (document.getElementById(id).value || '').replace(',', '.').trim();
-  if(v === '') return { ok:false, val:NaN };
-  const x = parseFloat(v);
-  return { ok:isFinite(x), val:x };
-}
+    function kdkClearHighlight(){
+      ['kdkN','kdkL','kdkR','kdkC','kdkMin','kdkMax'].forEach(id=>{
+        const el = document.getElementById(id);
+        el.classList.remove('kdk-pass','kdk-fail');
+      });
+    }
 
-function calcKDK(fromInput){
-  const out = document.getElementById('out');
+    function kdkMark(pass){
+      const cls = pass ? 'kdk-pass' : 'kdk-fail';
+      ['kdkN','kdkL','kdkR'].forEach(id=>document.getElementById(id).classList.add(cls));
+    }
 
-  const N = toNum('n');
-  const L = toNum('l');
-  const R = toNum('r');
+    function kdkCalc(){
+      const out = document.getElementById('kdkOut');
+      kdkClearHighlight();
 
-  if(fromInput && (!N.ok || !L.ok || !R.ok)){
-    setWait();
-    return;
-  }
+      const N = kdkParse('kdkN');
+      const L = kdkParse('kdkL');
+      const R = kdkParse('kdkR');
+      const C = kdkParse('kdkC');
+      const MIN = kdkParse('kdkMin');
+      const MAX = kdkParse('kdkMax');
 
-  if(!N.ok || !L.ok || !R.ok){
-    out.innerHTML = `<span class="status wait">ОШИБКА</span><br>Заполни N, L и R (числа).`;
-    return;
-  }
+      // базовая валидация
+      const bad = [N,L,R,C,MIN,MAX].filter(x=>!x.ok || x.raw==="" );
+      if(bad.length){
+        kdkSetStatus(out,'bad','ОШИБКА ВВОДА',
+          'Заполни все поля числами. Разделитель десятичный: <b>точка</b> или <b>запятая</b>.'
+        );
+        return;
+      }
 
-  const dL = Math.abs(L.val - N.val);
-  const dR = Math.abs(R.val - N.val);
-  const dSum = dL + dR;               // Δδ
-  const denom = dSum + ADD;
-  const i = dSum / denom;
+      // вычисления в ММ, без *1000
+      const dL = Math.abs(L.v - N.v);
+      const dR = Math.abs(R.v - N.v);
+      const dSum = dL + dR;              // Δδ
+      const denom = dSum + C.v;          // (Δδ + 4,5)
+      if(denom === 0){
+        kdkSetStatus(out,'bad','ОШИБКА',
+          'Деление на ноль: Δδ + 4,5 = 0. Проверь исходные данные.'
+        );
+        return;
+      }
+      const ikdk = dSum / denom;
 
-  const pass = (i >= I_MIN && i <= I_MAX);
+      const pass = (ikdk >= MIN.v && ikdk <= MAX.v);
 
-  const deltaLine =
-    `Δδ = |L − N| + |R − N| = |${f(L.val)} − ${f(N.val)}| + |${f(R.val)} − ${f(N.val)}| = ${f(dL)} + ${f(dR)} = <b>${f(dSum)}</b> мм`;
+      // подсветка полей
+      kdkMark(pass);
 
-  const iLine =
-    `iкдк = Δδ / (Δδ + 4,5) = ${f(dSum)} / (${f(dSum)} + 4,5) = ${f(dSum)} / ${f(denom)} = <b>${f(i)}</b> мм/мм`;
+      const html =
+        '<div class="mono">' +
+        'Δδ = |L − N| + |R − N| = |' + kdkFmt(L.v,3) + ' − ' + kdkFmt(N.v,3) + '| + |' + kdkFmt(R.v,3) + ' − ' + kdkFmt(N.v,3) + '|<br>' +
+        'Δδ = ' + kdkFmt(dL,3) + ' + ' + kdkFmt(dR,3) + ' = <b>' + kdkFmt(dSum,3) + ' мм</b><br><br>' +
+        'iₖдк = Δδ / (Δδ + 4,5) = ' + kdkFmt(dSum,3) + ' / (' + kdkFmt(dSum,3) + ' + ' + kdkFmt(C.v,3) + ')<br>' +
+        'iₖдк = ' + kdkFmt(dSum,3) + ' / ' + kdkFmt(denom,3) + ' = <b>' + kdkFmt(ikdk,3) + ' мм/мм</b><br><br>' +
+        'Допуск: <b>' + kdkFmt(MIN.v,2) + ' … ' + kdkFmt(MAX.v,2) + '</b>' +
+        '</div>';
 
-  if(pass){
-    out.innerHTML =
-      `<span class="status ok">ПРОХОДИТ</span><br>
-       ${deltaLine}<br>
-       ${iLine}<br>
-       Допуск: <b>${f(I_MIN,2)} … ${f(I_MAX,2)}</b><br>
-       Запас до min: ${f(i - I_MIN)} · до max: ${f(I_MAX - i)}`;
-  }else{
-    out.innerHTML =
-      `<span class="status bad">НЕ ПРОХОДИТ</span><br>
-       ${deltaLine}<br>
-       ${iLine}<br>
-       Допуск: <b>${f(I_MIN,2)} … ${f(I_MAX,2)}</b><br>
-       Отклонение: ${i < I_MIN ? `ниже min на ${f(I_MIN - i)}` : `выше max на ${f(i - I_MAX)}`}`;
-  }
-}
+      if(pass){
+        kdkSetStatus(out,'ok','ПРОХОДИТ', html);
+      }else{
+        kdkSetStatus(out,'bad','НЕ ПРОХОДИТ', html);
+      }
+    }
 
-document.addEventListener('DOMContentLoaded', setWait);
-</script>
+    function kdkReset(){
+      document.getElementById('kdkN').value = '';
+      document.getElementById('kdkL').value = '';
+      document.getElementById('kdkR').value = '';
+      document.getElementById('kdkC').value = '4,5';
+      document.getElementById('kdkMin').value = '0,30';
+      document.getElementById('kdkMax').value = '0,70';
+      kdkClearHighlight();
+      document.getElementById('kdkOut').innerHTML =
+        '<span class="status wait">ОЖИДАЕТ</span><br>' +
+        'Введи N, L, R (мм) и нажми «Рассчитать».';
+    }
+  </script>
+</section>
+<!-- ===== /КАЛЬКУЛЯТОР ===== -->
