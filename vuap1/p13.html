@@ -168,72 +168,133 @@ l - полный ход штока рулевого агрегата ка-нал
     <img src="70.jpg" alt="Рисунок 70">
   </div>
 
-  <!-- КАЛЬКУЛЯТОР -->
-  <div class="card">
-    <h2>Калькулятор передаточного числа</h2>
+ <!-- КАЛЬКУЛЯТОР (по технологии: i = α / l) -->
+<div class="card">
+  <h2>Калькулятор передаточного числа</h2>
 
-    <div class="form">
-      <div class="field">
-        <label>Задаваемый параметр X</label>
-        <input id="x" type="number" step="any">
-      </div>
-      <div class="field">
-        <label>Константа K</label>
-        <input id="k" type="number" step="any" value="66.7">
-      </div>
-      <div class="field">
-        <label>μ min</label>
-        <input id="min" type="number" step="any">
-      </div>
-      <div class="field">
-        <label>μ max</label>
-        <input id="max" type="number" step="any">
-      </div>
+  <div class="p">
+    Формула: <b>i = α / l</b> (град/мм), где <b>l = 74 мм</b><br>
+    Норма по углу: <b>α = 44<sup>+5</sup><sub>−4</sub> град</b> ⇒ <b>40 … 49 град</b><br>
+    Допуск: <b>i = 0,6 ± 0,06</b> ⇒ <b>0,54 … 0,66 град/мм</b>
+  </div>
 
-      <div class="field" style="grid-column:span 12">
-        <button class="primary" onclick="calc()">Рассчитать</button>
-      </div>
+  <div class="form">
+    <div class="field">
+      <label>α — угол поворота шкалы, град</label>
+      <input id="alpha" type="number" step="any" placeholder="например 44" oninput="calc_i(true)">
     </div>
 
-    <div class="result" id="out">
-      <span class="status wait">ОЖИДАЕТ</span>
+    <div class="field">
+      <label>l — полный ход штока, мм (фикс.)</label>
+      <input id="lmm" type="number" step="any" value="74" readonly>
+    </div>
+
+    <div class="field">
+      <label>Допуск i (авто)</label>
+      <input id="itol" type="text" value="0.54 … 0.66 (град/мм)" readonly>
+    </div>
+
+    <div class="field" style="grid-column:span 12">
+      <button class="primary" type="button" onclick="calc_i(false)">Рассчитать</button>
+      <button type="button" onclick="reset_i()" style="margin-top:10px;">Сброс</button>
     </div>
   </div>
 
+  <div class="result" id="i_out">
+    <span class="status wait">ОЖИДАЕТ</span><br>
+    Введи α и нажми «Рассчитать».
+  </div>
 </div>
-
 <script>
-function calc(){
-  const x = parseFloat(xEl.value);
-  const k = parseFloat(kEl.value);
-  const min = parseFloat(minEl.value);
-  const max = parseFloat(maxEl.value);
-  const out = document.getElementById('out');
+/* ===== П13 (по технологии) =====
+ i = α / l   [град/мм]
+ α норма: 44 +5 -4  => 40..49 град
+ l = 74 мм (фикс)
+ i допуск: 0.6 ± 0.06 => 0.54..0.66 град/мм
+*/
+const L_MM   = 74;
 
-  if(!x || !k){
-    out.innerHTML = '<span class="status wait">ОШИБКА ВВОДА</span>';
+const ALPHA_NOM = 44;
+const ALPHA_MIN = 40;  // 44 - 4
+const ALPHA_MAX = 49;  // 44 + 5
+
+const I_NOM = 0.6;
+const I_TOL = 0.06;
+const I_MIN = I_NOM - I_TOL; // 0.54
+const I_MAX = I_NOM + I_TOL; // 0.66
+
+function f(n, d=3){
+  return Number(n).toFixed(d);
+}
+
+function setWait(){
+  const out = document.getElementById('i_out');
+  out.innerHTML = `<span class="status wait">ОЖИДАЕТ</span><br>Введи α и нажми «Рассчитать».`;
+}
+
+function reset_i(){
+  document.getElementById('alpha').value = '';
+  setWait();
+}
+
+function calc_i(fromInput){
+  const aEl = document.getElementById('alpha');
+  const out = document.getElementById('i_out');
+
+  const raw = (aEl.value || '').replace(',', '.').trim();
+
+  // если автопересчёт при вводе и поле пустое — просто ожидание
+  if(fromInput && raw === ''){
+    setWait();
     return;
   }
 
-  const mu = k / x;
-  const v = mu.toFixed(3);
-
-  if(!isNaN(min) && !isNaN(max)){
-    if(mu >= min && mu <= max){
-      out.innerHTML = `<span class="status ok">ПРОХОДИТ</span><br>μ = ${v}`;
-    }else{
-      out.innerHTML = `<span class="status bad">НЕ ПРОХОДИТ</span><br>μ = ${v}`;
-    }
-  }else{
-    out.innerHTML = `<span class="status wait">БЕЗ ДОПУСКА</span><br>μ = ${v}`;
+  const alpha = parseFloat(raw);
+  if(!isFinite(alpha)){
+    out.innerHTML = `<span class="status wait">ОШИБКА</span><br>Введи α (число).`;
+    return;
   }
+
+  const i = alpha / L_MM;
+
+  // Проверка по углу (α) и по передаточному числу (i)
+  const alpha_ok = (alpha >= ALPHA_MIN && alpha <= ALPHA_MAX);
+  const i_ok = (i >= I_MIN && i <= I_MAX);
+
+  // Сообщения по α
+  let alphaMsg = '';
+  if(alpha_ok){
+    alphaMsg = `α в норме (40…49). Запас: до min ${f(alpha - ALPHA_MIN,1)}°, до max ${f(ALPHA_MAX - alpha,1)}°`;
+  }else if(alpha < ALPHA_MIN){
+    alphaMsg = `α ниже нормы на ${f(ALPHA_MIN - alpha,1)}° (норма 40…49)`;
+  }else{
+    alphaMsg = `α выше нормы на ${f(alpha - ALPHA_MAX,1)}° (норма 40…49)`;
+  }
+
+  // Сообщения по i
+  let iMsg = '';
+  if(i_ok){
+    iMsg = `i в допуске (0.54…0.66). Запас: до min ${f(i - I_MIN)}, до max ${f(I_MAX - i)}`;
+  }else if(i < I_MIN){
+    iMsg = `i ниже допуска на ${f(I_MIN - i)} (допуск 0.54…0.66)`;
+  }else{
+    iMsg = `i выше допуска на ${f(i - I_MAX)} (допуск 0.54…0.66)`;
+  }
+
+  // Итог
+  const status = (alpha_ok && i_ok)
+    ? `<span class="status ok">ПРОХОДИТ</span>`
+    : `<span class="status bad">НЕ ПРОХОДИТ</span>`;
+
+  out.innerHTML =
+    `${status}<br>
+     <b>i = α / l = ${alpha} / 74 = ${f(i)} град/мм</b><br>
+     Допуск i: <b>${I_MIN}…${I_MAX}</b> (0.6 ± 0.06)<br>
+     ${alphaMsg}<br>
+     ${iMsg}`;
 }
 
-const xEl = document.getElementById('x');
-const kEl = document.getElementById('k');
-const minEl = document.getElementById('min');
-const maxEl = document.getElementById('max');
+// стартовое состояние
+document.addEventListener('DOMContentLoaded', setWait);
 </script>
 
-</body>
-</html>
