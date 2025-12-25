@@ -1,215 +1,247 @@
-<!-- ===== ВУАП-1 · ОДНА СТРАНИЦА-КАЛЬКУЛЯТОР (02–14) ===== -->
-<section class="card" id="vuap1-hub">
-  <h2>ВУАП-1 · Калькулятор проверок (пункты 02–14)</h2>
-  <div class="p">
-    Выбирай пункт слева — он откроется <b>внутри этой страницы</b>. Никаких переходов по ссылкам.
-  </div>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ВУАП-1 — Пункты 02–14</title>
 
-  <div class="hub">
-    <!-- ЛЕВО: СПИСОК -->
-    <div class="menu" id="vuapMenu"></div>
+  <style>
+    :root{
+      --bg1:#0b1a2a; --bg2:#153a5a;
+      --card:rgba(255,255,255,.08);
+      --stroke:rgba(255,255,255,.18);
+      --text:#e9f2ff; --muted:#b7c7dd;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+    }
+    .wrap{max-width:1300px;margin:0 auto;padding:18px 14px 30px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      padding:14px;
+      backdrop-filter:blur(6px);
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+    }
+    h1{margin:0 0 6px;font-size:18px}
+    .p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
 
-    <!-- ПРАВО: ОКНО -->
-    <div class="viewer">
-      <div class="viewerTop">
-        <div class="viewerTitle" id="viewerTitle">Выбери пункт 02–14</div>
-        <div class="viewerBtns">
-          <a class="btn mini" id="openNewTab" href="#" target="_blank" rel="noopener">Открыть отдельно</a>
-          <button class="btn mini" type="button" onclick="reloadFrame()">Обновить</button>
+    .hub{margin-top:12px;display:grid;grid-template-columns:380px 1fr;gap:12px}
+    .menu{
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(0,0,0,.18);
+      max-height:78vh; overflow:auto;
+    }
+    .item{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      cursor:pointer; user-select:none;
+      margin-bottom:10px;
+    }
+    .item:hover{background:rgba(255,255,255,.10)}
+    .item.active{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
+    .num{
+      min-width:44px; display:inline-flex; justify-content:center; align-items:center;
+      padding:6px 10px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.22);
+      font-weight:900;
+    }
+    .ttl{font-size:14px;font-weight:800;line-height:1.15}
+    .sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .viewer{
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(0,0,0,.12);
+    }
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 6px 10px}
+    .title{font-weight:900;font-size:14px}
+    .btn{
+      padding:8px 10px;border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      text-decoration:none;
+      font-size:12px;font-weight:800;
+      cursor:pointer;
+    }
+    .btn:hover{background:rgba(255,255,255,.16)}
+    iframe{
+      width:100%; height:74vh;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:14px;
+      background:rgba(0,0,0,.25);
+    }
+    .warn{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.25);
+      background:rgba(0,0,0,.18);
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+
+    @media(max-width:980px){
+      .hub{grid-template-columns:1fr}
+      iframe{height:70vh}
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>ВУАП-1 · Пункты 02–14</h1>
+    <p class="p">Нажми пункт слева — откроется справа внутри этой же страницы. Если файла нет — покажет, какие пути пробовал.</p>
+
+    <div class="hub">
+      <div class="menu" id="menu"></div>
+
+      <div class="viewer">
+        <div class="top">
+          <div class="title" id="title">Выбери пункт</div>
+          <div style="display:flex;gap:10px">
+            <a class="btn" id="openNew" href="#" target="_blank" rel="noopener">Открыть отдельно</a>
+            <button class="btn" type="button" onclick="reloadFrame()">Обновить</button>
+          </div>
         </div>
-      </div>
 
-      <iframe id="vuapFrame" class="frame" src="" loading="lazy"></iframe>
+        <iframe id="frame" src=""></iframe>
 
-      <div class="note">
-        Если внутри пункта картинки не грузятся — проверь, что они лежат в той же папке, что и index.html пункта,
-        и что регистр букв совпадает (например <b>70.jpg</b> ≠ <b>70.JPG</b>).
+        <div class="warn" id="warn">
+          Подсказка: 404 обычно значит, что внутри папки не <b>index.html</b>, или файл назван <b>Index.html</b>/<b>P02.html</b> и т.п. (регистр важен).
+        </div>
       </div>
     </div>
   </div>
-</section>
-
-<style>
-/* ===== HUB layout ===== */
-#vuap1-hub .hub{
-  display:grid;
-  grid-template-columns: 380px 1fr;
-  gap:14px;
-  margin-top:14px;
-}
-#vuap1-hub .menu{
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.18);
-  border-radius:16px;
-  padding:10px;
-  max-height: 78vh;
-  overflow:auto;
-}
-#vuap1-hub .item{
-  display:flex;
-  gap:10px;
-  align-items:flex-start;
-  padding:12px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-  cursor:pointer;
-  user-select:none;
-  margin-bottom:10px;
-}
-#vuap1-hub .item:hover{background:rgba(255,255,255,.10)}
-#vuap1-hub .item.active{
-  background:rgba(255,255,255,.14);
-  border-color:rgba(255,255,255,.28);
-}
-#vuap1-hub .num{
-  min-width:44px;
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  padding:6px 10px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.22);
-  font-weight:900;
-}
-#vuap1-hub .ttl{
-  font-size:14px;
-  font-weight:800;
-  line-height:1.2;
-}
-#vuap1-hub .sub{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:4px;
-  line-height:1.25;
-}
-
-/* ===== viewer ===== */
-#vuap1-hub .viewer{
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.12);
-  border-radius:16px;
-  padding:10px;
-}
-#vuap1-hub .viewerTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:8px 8px 10px;
-}
-#vuap1-hub .viewerTitle{
-  font-weight:900;
-  font-size:14px;
-}
-#vuap1-hub .viewerBtns{
-  display:flex;
-  gap:10px;
-}
-#vuap1-hub .btn.mini{
-  padding:8px 10px;
-  border-radius:12px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  text-decoration:none;
-  font-size:12px;
-  font-weight:800;
-}
-#vuap1-hub .btn.mini:hover{background:rgba(255,255,255,.16)}
-
-#vuap1-hub .frame{
-  width:100%;
-  height: 72vh;
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:14px;
-  background:rgba(0,0,0,.25);
-}
-
-/* ===== responsive ===== */
-@media(max-width:980px){
-  #vuap1-hub .hub{grid-template-columns:1fr}
-  #vuap1-hub .frame{height:70vh}
-}
-</style>
+</div>
 
 <script>
-/*
-  ВАЖНО: здесь ты правишь пути ОДИН РАЗ.
-  Сейчас стоит вариант: папка/NN/index.html
-  Пример: ./08/index.html
-*/
-const VUAP_ITEMS = [
-  { id:'02', title:'Проверка передаточного числа по углу (направление)', path:'./02/index.html' },
-  { id:'03', title:'Проверка передаточного числа по углу (крен)',       path:'./03/index.html' },
-  { id:'04', title:'Проверка крутизны сигнала в цепи обратной связи (ОС)',path:'./04/index.html' },
-  { id:'05', title:'Проверка передаточного числа по углу (тангаж)',      path:'./05/index.html' },
-  { id:'06', title:'Проверка передаточного числа по углу (высота)',      path:'./06/index.html' },
-  { id:'07', title:'Проверка работоспособности (по технологии)',         path:'./07/index.html' },
+  // НАЗВАНИЯ пунктов (как ты хочешь — не просто цифры)
+  const items = [
+    {id:'02', title:'Проверка передаточного числа по углу (направление)'},
+    {id:'03', title:'Проверка передаточного числа по углу (крен)'},
+    {id:'04', title:'Проверка крутизны сигнала (ОС)'},
+    {id:'05', title:'Проверка передаточного числа по углу (тангаж)'},
+    {id:'06', title:'Проверка передаточного числа по углу (высота)'},
+    {id:'07', title:'Проверка работоспособности (по технологии)'},
+    {id:'08', title:'Передаточное число по угловой скорости — направление'},
+    {id:'09', title:'Передаточное число по угловой скорости — крен'},
+    {id:'10', title:'Передаточное число по угловой скорости — тангаж'},
+    {id:'11', title:'Передаточное число по скорости изменения высоты'},
+    {id:'12', title:'Передаточное число по воздушной скорости'},
+    {id:'13', title:'Передаточное число (угол/ход штока)'},
+    {id:'14', title:'Передаточное число по КДК'},
+  ];
 
-  { id:'08', title:'Передаточное число по угловой скорости — направление',path:'./08/index.html' },
-  { id:'09', title:'Передаточное число по угловой скорости — крен',       path:'./09/index.html' },
-  { id:'10', title:'Передаточное число по угловой скорости — тангаж',     path:'./10/index.html' },
-  { id:'11', title:'Передаточное число по скорости изменения высоты',     path:'./11/index.html' },
-  { id:'12', title:'Передаточное число по воздушной скорости',            path:'./12/index.html' },
-  { id:'13', title:'Передаточное число (угол поворота шкалы / ход штока)',path:'./13/index.html' },
-  { id:'14', title:'Передаточное число по КДК (Δδ / (Δδ + 4,5))',         path:'./14/index.html' },
-];
+  // ГДЕ МОЖЕТ ЛЕЖАТЬ ФАЙЛ: пробуем по очереди (убирает 404-угадайку)
+  function candidatePaths(id){
+    const nn = id;                    // "02"
+    const p  = 'p' + id + '.html';    // "p02.html"
+    return [
+      `./${nn}/index.html`,
+      `./${nn}/${p}`,
+      `./${p}`
+    ];
+  }
 
-const menu = document.getElementById('vuapMenu');
-const frame = document.getElementById('vuapFrame');
-const viewerTitle = document.getElementById('viewerTitle');
-const openNewTab = document.getElementById('openNewTab');
+  const menu = document.getElementById('menu');
+  const frame = document.getElementById('frame');
+  const titleEl = document.getElementById('title');
+  const openNew = document.getElementById('openNew');
+  const warn = document.getElementById('warn');
 
-function buildMenu(){
-  menu.innerHTML = '';
-  VUAP_ITEMS.forEach((it, idx) => {
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.dataset.idx = String(idx);
-    div.innerHTML =
-      `<span class="num">${it.id}</span>
-       <div>
-         <div class="ttl">${it.title}</div>
-         <div class="sub">${it.path}</div>
-       </div>`;
-    div.addEventListener('click', () => openItem(idx));
-    menu.appendChild(div);
-  });
-}
+  function build(){
+    menu.innerHTML='';
+    items.forEach((it, idx)=>{
+      const d=document.createElement('div');
+      d.className='item';
+      d.dataset.idx=idx;
+      d.innerHTML =
+        `<span class="num">${it.id}</span>
+         <div>
+           <div class="ttl">${it.title}</div>
+           <div class="sub">Открою: ${candidatePaths(it.id).join('  |  ')}</div>
+         </div>`;
+      d.onclick=()=>open(idx);
+      menu.appendChild(d);
+    });
+  }
 
-function setActive(idx){
-  [...menu.querySelectorAll('.item')].forEach(el => el.classList.remove('active'));
-  const cur = menu.querySelector(`.item[data-idx="${idx}"]`);
-  if(cur) cur.classList.add('active');
-}
+  function setActive(idx){
+    [...menu.querySelectorAll('.item')].forEach(x=>x.classList.remove('active'));
+    const el = menu.querySelector(`.item[data-idx="${idx}"]`);
+    if(el) el.classList.add('active');
+  }
 
-function openItem(idx){
-  const it = VUAP_ITEMS[idx];
-  if(!it) return;
+  async function exists(url){
+    try{
+      const res = await fetch(url, { method:'GET', cache:'no-store' });
+      return res.ok;
+    }catch(e){
+      return false;
+    }
+  }
 
-  setActive(idx);
+  async function resolvePath(id){
+    const list = candidatePaths(id);
+    // добавляем анти-кэш при проверке
+    for(const p of list){
+      const test = p + '?v=' + Date.now();
+      if(await exists(test)) return test;
+    }
+    return null;
+  }
 
-  // Обход кэша: добавляем параметр версии по времени
-  const url = it.path + (it.path.includes('?') ? '&' : '?') + 'v=' + Date.now();
+  async function open(idx){
+    const it = items[idx];
+    if(!it) return;
+    setActive(idx);
+    titleEl.textContent = `Пункт ${it.id} · ${it.title}`;
+    warn.textContent = 'Проверяю файлы...';
 
-  frame.src = url;
-  viewerTitle.textContent = `Пункт ${it.id} · ${it.title}`;
-  openNewTab.href = url;
-}
+    const url = await resolvePath(it.id);
+    if(!url){
+      frame.src = 'about:blank';
+      warn.innerHTML =
+        `❌ <b>ФАЙЛ НЕ НАЙДЕН (404)</b><br>
+         Я пробовал открыть:<br>
+         <span style="font-family:ui-monospace,monospace">${candidatePaths(it.id).join('<br>')}</span><br><br>
+         ✅ Решение: положи файл в один из этих путей, или переименуй файл в <b>index.html</b> внутри папки <b>${it.id}</b>.`;
+      openNew.href = '#';
+      return;
+    }
 
-function reloadFrame(){
-  if(!frame.src) return;
-  // форсим обновление
-  const base = frame.src.split('?')[0];
-  frame.src = base + '?v=' + Date.now();
-}
+    frame.src = url;
+    openNew.href = url;
+    warn.innerHTML = `✅ Открываю: <span style="font-family:ui-monospace,monospace">${url.split('?')[0]}</span>`;
+  }
 
-buildMenu();
+  function reloadFrame(){
+    if(!frame.src || frame.src==='about:blank') return;
+    const base = frame.src.split('?')[0];
+    frame.src = base + '?v=' + Date.now();
+  }
 
-// если хочешь — можно открывать первый пункт автоматически
-// openItem(0);
+  build();
+  // при желании автозагрузка первого пункта:
+  // open(0);
 </script>
-<!-- ===== /ВУАП-1 HUB ===== -->
+</body>
+</html>
