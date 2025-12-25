@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ВУАП-1 — Пункт 14</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a;
+  --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff;
+  --muted:#b7c7dd;
+  --ok:#7CFF9E;
+  --bad:#FF9A9A;
+  --wait:#FFD27C;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:18px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+  margin-bottom:16px;
+}
+h1,h2{margin:0 0 10px}
+h1{font-size:20px}
+h2{font-size:18px}
+.p{font-size:14px;line-height:1.45;color:var(--muted)}
+.hr{height:1px;background:var(--stroke);margin:14px 0}
+
+.table{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  overflow:hidden;
+}
+.cell{
+  padding:12px;
+  border-right:1px solid var(--stroke);
+  border-bottom:1px solid var(--stroke);
+  font-size:13px;
+  min-height:180px;
+  color:var(--muted);
+}
+.cell.head{
+  background:rgba(255,255,255,.12);
+  font-weight:700;
+  min-height:auto;
+  color:var(--text);
+}
+.table .cell:nth-child(3n){border-right:none}
+.table .cell:nth-last-child(-n+3){border-bottom:none}
+
+.figure{text-align:center}
+.figure img{
+  max-width:100%;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+}
+.figcap{margin-bottom:8px;font-size:13px;color:var(--muted)}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:14px;
+  margin-top:10px;
+}
+.field{grid-column:span 4}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+
+input,button{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+}
+button{cursor:pointer;font-weight:700}
+button.primary{background:linear-gradient(180deg,#ffffff,#e6f0ff);color:#000}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+  font-size:14px;
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+
+@media(max-width:900px){
+  .table{grid-template-columns:1fr}
+  .field{grid-column:span 12}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <h1>ВУАП-1 · Пункт 14</h1>
+    <div class="p">Параметр: <b>Передаточное число по КДК</b>. Текст технологии заполняешь сам.</div>
+  </div>
+
+  <!-- ТЕХНОЛОГИЯ (3 ГРАФЫ) -->
+  <div class="card">
+    <h2>Содержание операции</h2>
+
+    <div class="table">
+      <div class="cell head">Содержание операций</div>
+      <div class="cell head">Технические требования (ТТ)</div>
+      <div class="cell head">Работы при отклонениях</div>
+
+      <div class="cell">
+Проверьте передаточное число по КДК для чего:
+- установите ручку управления вертолетом летчика в среднее положение;
+- нажмите кнопку-табло "ВКЛ" на пульте управления канала крена и поворотом шкалы ручки центровки на пульте управления установите подвижный индекс нулевого индикатора в среднее положение;
+- установите выключатель В4 на панели технологического жгута в положение "КДК";
+- ручкой управления вертолетом летчика установите подвижный индекс нулевого индикатора в среднее положение (при этом потенциометр "ДК" на пульте управления канала крена не должен находиться на нулевой отметке);
+- замерьте с помощью линейки положение штока рулевого агрегата канала крена;
+- отклоните ручку управления вертолетом летчика влево (вправо) на величину, при которой подвижней индекс нулевого индикатора совместится с правой (левой) промежуточной отметкой;
+- замерьте с помощью линейки величину смещения выходного штока от первоначального положения
+  
+
+      </div>
+
+      <div class="cell">
+       Передаточное число(0.5 ±0,2)мм/мм, которое определяется по формуле: 
+iкдк = Δδ/δ + 4,5  мм/мм где: 
+Δδ - суммарная (замеренная) величина хода штока рулевого агрегата, мм; 
+4,5 - величина хода штока рулевого агрегата от сигналов САУ, соответствующая отклонению подвижного индекса нулевого индикатора от среднего положения до промежуточной отметки, мм
+
+      </div>
+
+      <div class="cell">
+Ручкой управления вертолетом датчика установите подвижный индекс нулевого индикатора на пульте управления в среднее положение (при этом потенциометр "ДК" на пульте управления канала крена не должен находиться на нулевой отметке).
+Потенциометр "ДК" на пульте управления поверните против часовой стрелки до упора. Замерьте с помощью линейки положение выходного штока рулевого агрегата. Отклоните ручку управления вертолетом летчика влево на величину, при которой шток рулевого агрегата переместится на 9 мм от ранее замеренного положения. Поворачивая потенциометр "ДК" по часовой стрелке, уменьшите перемещение выходного штока рулевого агрегата, вызванное отклонением ручки управления вертолетом летчика до 4,5 мм. Ручкой управления вертолетом летчика установите подвижный индекс нулевого индикатора в среднее положение.
+Замерьте с помощью линейки положение выходного штока рулевого агрегата. Отклоните ручку управления вертолетом летчика вправо на величину, при которой подвижный индекс нулевого индикатора совместится с левой промежуточной отметкой. Замерьте с помощью линейки величину смещения штока от ранее замеренного положения, которая долгана быть в пределах (4,5 +2,0-1,5)мм
+      </div>
+    </div>
+  </div>
+
+  <!-- РИСУНОК -->
+  <div class="card figure">
+    <div class="figcap">Рис. (71.jpg)</div>
+    <img src="71.jpg" alt="Рисунок 71">
+  </div>
+
+<!-- КАЛЬКУЛЯТОР: Передаточное число по КДК -->
+<div class="card">
+  <h2>Калькулятор: передаточное число по КДК</h2>
+
+  <div class="p">
+    Формула:  
+    <b>i<sub>кдк</sub> = Δδ / (Δδ + 4,5)</b> мм/мм<br>
+    Допуск: <b>0,5 ± 0,2</b> ⇒ <b>0,3 … 0,7 мм/мм</b>
+  </div>
+
+  <div class="form">
+    <div class="field">
+      <label>Δδ — суммарный (замеренный) ход штока, мм</label>
+      <input id="dd" type="number" step="any" placeholder="например 4.5" oninput="calcKDK(true)">
+    </div>
+
+    <div class="field">
+      <label>Константа (Δδ + 4,5), мм</label>
+      <input type="text" value="+ 4,5" readonly>
+    </div>
+
+    <div class="field">
+      <label>Допуск i<sub>кдк</sub></label>
+      <input type="text" value="0,30 … 0,70 мм/мм" readonly>
+    </div>
+
+    <div class="field" style="grid-column:span 12">
+      <button class="primary" type="button" onclick="calcKDK(false)">Рассчитать</button>
+      <button type="button" onclick="resetKDK()" style="margin-top:10px;">Сброс</button>
+    </div>
+  </div>
+
+  <div class="result" id="out">
+    <span class="status wait">ОЖИДАЕТ</span><br>
+    Введи Δδ — получишь расчёт и результат.
+  </div>
+</div>
+<script>
+/* ===== П14 — КДК =====
+ i_kdk = Δδ / (Δδ + 4.5)   [мм/мм]
+ допуск: 0.5 ± 0.2 => 0.3..0.7
+*/
+
+const ADD = 4.5;
+
+const I_NOM = 0.5;
+const I_TOL = 0.2;
+const I_MIN = I_NOM - I_TOL; // 0.3
+const I_MAX = I_NOM + I_TOL; // 0.7
+
+function f(n, d=3){ return Number(n).toFixed(d); }
+
+function setWait(){
+  document.getElementById('out').innerHTML =
+    `<span class="status wait">ОЖИДАЕТ</span><br>Введи Δδ и нажми «Рассчитать».`;
+}
+
+function resetKDK(){
+  document.getElementById('dd').value = '';
+  setWait();
+}
+
+function calcKDK(fromInput){
+  const ddEl = document.getElementById('dd');
+  const out  = document.getElementById('out');
+
+  const raw = (ddEl.value || '').replace(',', '.').trim();
+  if(fromInput && raw === ''){
+    setWait();
+    return;
+  }
+
+  const dd = parseFloat(raw);
+  if(!isFinite(dd) || dd <= 0){
+    out.innerHTML =
+      `<span class="status wait">ОШИБКА</span><br>Δδ должно быть числом больше 0.`;
+    return;
+  }
+
+  const denom = dd + ADD;
+  const i = dd / denom;
+
+  const pass = (i >= I_MIN && i <= I_MAX);
+
+  const calcLine =
+    `iкдк = Δδ / (Δδ + 4,5) = ${f(dd)} / (${f(dd)} + 4,5) = ${f(dd)} / ${f(denom)} = <b>${f(i)}</b> мм/мм`;
+
+  if(pass){
+    out.innerHTML =
+      `<span class="status ok">ПРОХОДИТ</span><br>
+       ${calcLine}<br>
+       Допуск: <b>${f(I_MIN,2)} … ${f(I_MAX,2)}</b><br>
+       Запас до min: ${f(i - I_MIN)} · до max: ${f(I_MAX - i)}`;
+  }else{
+    out.innerHTML =
+      `<span class="status bad">НЕ ПРОХОДИТ</span><br>
+       ${calcLine}<br>
+       Допуск: <b>${f(I_MIN,2)} … ${f(I_MAX,2)}</b><br>
+       Отклонение: ${i < I_MIN
+         ? `ниже min на ${f(I_MIN - i)}`
+         : `выше max на ${f(i - I_MAX)}`}`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', setWait);
+</script>
