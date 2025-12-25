@@ -61,7 +61,7 @@
 
     .grid{
       display:grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 340px 1fr;
       gap:14px;
       align-items:start;
     }
@@ -157,7 +157,7 @@
     <div class="top">
       <div class="brand">
         <h1>ВУАП-1</h1>
-        <p>Единый вход · открытие пунктов p04…p12 из папки <b>/vuap1/</b></p>
+        <p>Единый вход · открытие пунктов из папки <b>/vuap1/</b></p>
       </div>
 
       <div class="nav">
@@ -172,37 +172,63 @@
         <h2>Пункты</h2>
         <p class="hint">
           Нажми пункт — он откроется справа.<br>
-          В ссылку добавляется <b>?v=время</b>, чтобы GitHub Pages не показывал старую версию.
+          Добавляем <b>?v=время</b>, чтобы Pages не показывал старую версию.
         </p>
 
         <div class="menu" id="menu">
+          <!-- ВАЖНО: названия файлов как у тебя: p02.html, p03.html, p04.html, ... -->
+          <button data-file="p02.html">
+            Пункт 2
+            <small>vuap1/p02.html</small>
+          </button>
+
+          <button data-file="p03.html">
+            Пункт 3
+            <small>vuap1/p03.html</small>
+          </button>
+
           <button data-file="p04.html">
             Пункт 4 — Крутизна сигнала (ОС)
             <small>vuap1/p04.html</small>
           </button>
 
+          <button data-file="p05.html">
+            Пункт 5
+            <small>vuap1/p05.html</small>
+          </button>
+
+          <button data-file="p06.html">
+            Пункт 6
+            <small>vuap1/p06.html</small>
+          </button>
+
+          <button data-file="p07.html">
+            Пункт 7
+            <small>vuap1/p07.html</small>
+          </button>
+
           <button data-file="p08.html">
-            Пункт 8 — Угловая скорость (направление)
+            Пункт 8
             <small>vuap1/p08.html</small>
           </button>
 
           <button data-file="p09.html">
-            Пункт 9 — Угловая скорость (крен)
+            Пункт 9
             <small>vuap1/p09.html</small>
           </button>
 
           <button data-file="p10.html">
-            Пункт 10 — Угловая скорость (тангаж)
+            Пункт 10
             <small>vuap1/p10.html</small>
           </button>
 
           <button data-file="p11.html">
-            Пункт 11 — Скорость изменения высоты
+            Пункт 11
             <small>vuap1/p11.html</small>
           </button>
 
           <button data-file="p12.html">
-            Пункт 12 — Воздушная скорость
+            Пункт 12
             <small>vuap1/p12.html</small>
           </button>
         </div>
@@ -234,7 +260,6 @@
   let currentFile = '';
 
   function buildUrl(file){
-    // анти-кэш: всегда свежая версия
     return './vuap1/' + file + '?v=' + Date.now();
   }
 
@@ -245,24 +270,20 @@
 
   function openFile(file, btn){
     currentFile = file;
-    const url = buildUrl(file);
-    frame.src = url;
+    frame.src = buildUrl(file);
 
-    // заголовок сверху
     const label = btn ? btn.childNodes[0].textContent.trim() : file;
     currentTitle.textContent = label + ' — ' + 'vuap1/' + file;
 
     if(btn) setActive(btn);
   }
 
-  // клики по меню
   menu.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-file]');
     if(!btn) return;
     openFile(btn.dataset.file, btn);
   });
 
-  // Обновить текущий
   btnReload.addEventListener('click', () => {
     if(!currentFile){
       alert('Сначала выбери пункт слева.');
@@ -271,7 +292,6 @@
     frame.src = buildUrl(currentFile);
   });
 
-  // Открыть в новой вкладке
   btnOpenNew.addEventListener('click', () => {
     if(!currentFile){
       alert('Сначала выбери пункт слева.');
@@ -280,8 +300,7 @@
     window.open('./vuap1/' + currentFile + '?v=' + Date.now(), '_blank', 'noopener');
   });
 
-  // Авто-открытие при первом запуске (пункт 4)
-  // Если хочешь другой — поменяй здесь:
+  // Авто-открытие при старте: пункт 4 (меняй если хочешь)
   const first = menu.querySelector('button[data-file="p04.html"]');
   if(first) openFile(first.dataset.file, first);
 </script>
