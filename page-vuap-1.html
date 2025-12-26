@@ -108,10 +108,16 @@
 <div class="wrap">
   <div class="card">
     <h1>ВУАП-1 · Пункты 02–14</h1>
-    <p class="p">Нажми пункт слева — откроется справа внутри этой же страницы. Путь нормальный: <b>/vuap1/p02.html … /vuap1/p14.html</b>.</p>
+    <p class="p" id="hintTop">
+      Нажми пункт слева — откроется справа внутри этой же страницы.
+    </p>
 
     <div class="hub">
-      <div class="menu" id="menu"></div>
+      <div class="menu" id="menu">
+        <div class="warn">
+          Если это сообщение не исчезло — значит JS не выполнился или файл не сохранился. Проверь, что ты реально заменил содержимое файла.
+        </div>
+      </div>
 
       <div class="viewer">
         <div class="top">
@@ -125,7 +131,7 @@
         <iframe id="frame" src=""></iframe>
 
         <div class="warn" id="warn">
-          Подсказка: если 404 — значит файла реально нет по пути <b>/vuap1/pXX.html</b>, или он назван иначе (регистр важен).
+          Подсказка: если 404 — значит файла реально нет по нужному пути или он назван иначе (регистр важен).
         </div>
       </div>
     </div>
@@ -133,10 +139,17 @@
 </div>
 
 <script>
-  // 1) Папка, где лежат все p02..p14.html
-  const BASE = './vuap1/';
+  // ===== 1) Определяем базу автоматически =====
+  // Если page-vuap-1.html лежит в /vuap1/ -> BASE = './'
+  // Если лежит в корне -> BASE = './vuap1/'
+  (function(){
+    const path = (location.pathname || '').toLowerCase();
+    window.__VUAP_BASE__ = path.includes('/vuap1/') ? './' : './vuap1/';
+  })();
 
-  // 2) Названия пунктов (не просто цифры)
+  const BASE = window.__VUAP_BASE__;
+
+  // ===== 2) Названия пунктов =====
   const items = [
     {id:'02', title:'Проверка передаточного числа по углу (направление)'},
     {id:'03', title:'Проверка передаточного числа по углу (крен)'},
@@ -153,14 +166,13 @@
     {id:'14', title:'Передаточное число по КДК'},
   ];
 
-  // 3) Реальные кандидаты для твоей структуры
-  // У тебя НЕ папки 02/index.html, у тебя ФАЙЛЫ p02.html… в /vuap1/
+  // В твоей структуре это именно p02.html...p14.html
   function candidatePaths(id){
     const p = `p${id}.html`;
     return [
-      `${BASE}${p}`,        // ✅ основное: ./vuap1/p02.html
-      `./vuap1/${p}`,       // дубль (на всякий)
-      `./${p}`              // если вдруг файл лежит в корне (редко)
+      `${BASE}${p}`,  // ✅ главный путь (подстраивается)
+      `./vuap1/${p}`, // запасной
+      `./${p}`        // запасной
     ];
   }
 
@@ -169,6 +181,9 @@
   const titleEl= document.getElementById('title');
   const openNew= document.getElementById('openNew');
   const warn   = document.getElementById('warn');
+  const hintTop= document.getElementById('hintTop');
+
+  hintTop.innerHTML = `Нажми пункт слева — откроется справа. Твой путь сейчас: <b>${BASE}p02.html … ${BASE}p14.html</b>`;
 
   function build(){
     menu.innerHTML='';
@@ -176,12 +191,11 @@
       const d=document.createElement('div');
       d.className='item';
       d.dataset.idx=idx;
-      const paths = candidatePaths(it.id);
       d.innerHTML =
         `<span class="num">${it.id}</span>
          <div>
            <div class="ttl">${it.title}</div>
-           <div class="sub">Путь: ${paths[0]}</div>
+           <div class="sub">Файл: ${candidatePaths(it.id)[0]}</div>
          </div>`;
       d.onclick=()=>open(idx);
       menu.appendChild(d);
@@ -190,14 +204,12 @@
 
   function setActive(idx){
     [...menu.querySelectorAll('.item')].forEach(x=>x.classList.remove('active'));
-    const el = menu.querySelector(\`.item[data-idx="\${idx}"]\`);
+    const el = menu.querySelector(`.item[data-idx="${idx}"]`);
     if(el) el.classList.add('active');
   }
 
   async function exists(url){
     try{
-      // IMPORTANT: для GitHub Pages GET с cache:no-store может всё равно кэшироваться,
-      // но нам достаточно просто res.ok.
       const res = await fetch(url, { method:'GET' });
       return res.ok;
     }catch(e){
@@ -207,7 +219,6 @@
 
   async function resolvePath(id){
     const list = candidatePaths(id);
-    // Добавляем анти-кэш к проверке
     for(const p of list){
       const test = p + '?v=' + Date.now();
       if(await exists(test)) return test;
@@ -226,11 +237,12 @@
     const url = await resolvePath(it.id);
     if(!url){
       frame.src = 'about:blank';
-      const tried = candidatePaths(it.id).map(x=>`<div style="font-family:ui-monospace,monospace">${x}</div>`).join('');
+      const tried = candidatePaths(it.id)
+        .map(x=>`<div style="font-family:ui-monospace,monospace">${x}</div>`).join('');
       warn.innerHTML =
         `❌ <b>ФАЙЛ НЕ НАЙДЕН (404)</b><br>
          Я пробовал открыть:<br>${tried}<br>
-         ✅ Проверь, что файл реально называется <b>p${it.id}.html</b> и лежит в папке <b>/vuap1/</b>.`;
+         ✅ Проверь, что файл реально называется <b>p${it.id}.html</b> и лежит именно там, где BASE: <b>${BASE}</b>`;
       openNew.href = '#';
       return;
     }
@@ -246,10 +258,8 @@
     frame.src = base + '?v=' + Date.now();
   }
 
+  // Запуск
   build();
-
-  // Автооткрытие первого пункта (можешь выключить, если не надо)
-  open(0);
 </script>
 </body>
 </html>
