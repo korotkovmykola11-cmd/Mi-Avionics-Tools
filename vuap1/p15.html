@@ -86,7 +86,8 @@ h2{margin:0 0 10px;font-size:16px}
   font-size:13px;
   line-height:1.45;
 }
-.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
+.fill b{color:var(--text)}
+.small{font-size:12px;color:rgba(255,255,255,.65);margin-top:8px}
 
 .form{
   display:grid;
@@ -159,74 +160,84 @@ button:hover{background:rgba(255,255,255,.16)}
     <a class="btn" href="../page-vuap-1.html">← ВУАП-1 (общее меню)</a>
   </div>
 
- Замерить выходое напряжение усилителей блока БВ-24, для чего подключить тестер (диапазон измерения постоянного напряжения 100 мВ).
-  к следующим контактам контрольного разъёма САУ РМ Ш3,расположенного в радиоотсеке.
-  К контактам 16 и 6 для сигнала Z (боковое перемещение).
-  К контактам 17 и 6 для сигнала Yз (регулировка крутизны выхоного сигнала заданого угла крена).
-  К контактам 18 и 6 для сигнала X (продольное перемещение).
-  К контактам 19 и 6 для сигнала Uз (регулировка крутизны выходного сигнала заданого угла тангажа).
+  <!-- ===== ТЕХНОЛОГИЯ В 3 ГРАФЫ ===== -->
   <section class="card">
     <h2>Содержание операций / Технические требования / Работы при отклонениях от ТТ</h2>
 
     <div class="grid3">
+
+      <!-- Содержание операций -->
       <div class="col">
         <h3>Содержание операций</h3>
         <div class="fill" id="op">
-          Напряжение, снимаемое с контактов 16 и 6 должно быть в пределах 0-50 мВ.
-          Напряжение, снимаемое с контактов 17 и 6 должно быть в пределах 0-50 мВ.
-          Напряжение, снимаемое с контактов 18 и 6 должно быть в пределах 0-50 мВ.
-          Напряжение, снимаемое с контактов 19 и 6 должно быть в пределах 0-50 мВ.
+          Замерить выходное напряжение усилителей блока <b>БВ-24</b>, для чего подключить тестер
+          (диапазон измерения постоянного напряжения <b>100 мВ</b>) к следующим контактам контрольного
+          разъёма САУ <b>РМ Ш3</b>, расположенного в радиоотсеке:<br><br>
+
+          • к контактам <b>16</b> и <b>6</b> — для сигнала <b>Z</b> (боковое перемещение);<br>
+          • к контактам <b>17</b> и <b>6</b> — для сигнала <b>Yз</b> (<b>γ<sub>зад</sub></b>, регулировка крутизны выходного сигнала заданного угла крена);<br>
+          • к контактам <b>18</b> и <b>6</b> — для сигнала <b>X</b> (продольное перемещение);<br>
+          • к контактам <b>19</b> и <b>6</b> — для сигнала <b>Uз</b> (<b>ϑ<sub>зад</sub></b>, регулировка крутизны выходного сигнала заданного угла тангажа).
         </div>
-        <div class="hint">Вставь сюда “Содержание операций” как в оригинальной технологии.</div>
+        <div class="small">Если надо «слово в слово» — просто замени текст внутри этого блока.</div>
       </div>
 
+      <!-- Технические требования -->
       <div class="col">
         <h3>Технические требования (ТТ)</h3>
         <div class="fill" id="tt">
-          <!-- ВСТАВЬ ТЕКСТ СЮДА (слово в слово) -->
+          Напряжение, снимаемое с контактов разъёма <b>РМ Ш3</b> по сигналам <b>Z</b>, <b>Yз</b>, <b>X</b>, <b>Uз</b>,
+          должно быть в пределах:<br><br>
+          <b>0 … 50 мВ</b>
         </div>
-        <div class="hint">Требование: 0…50 mV для всех сигналов (если так в твоём документе).</div>
+        <div class="small">Допуск одинаковый для всех четырёх сигналов.</div>
       </div>
 
+      <!-- Работы при отклонениях -->
       <div class="col">
         <h3>Работы, выполняемые при отклонениях от ТТ</h3>
         <div class="fill" id="dev">
-          <!-- ВСТАВЬ ТЕКСТ СЮДА (слово в слово) -->
+          Вращая ось подстроечного резистора блока <b>БВ-24</b>, добиться, чтобы величина напряжения по тестеру была
+          в пределах <b>0 … 50 мВ</b>:<br><br>
+
+          • <b>R38</b> — для сигнала <b>Z</b> (контакты 16/6);<br>
+          • <b>R39</b> — для сигнала <b>Yз</b> (<b>γ<sub>зад</sub></b>, контакты 17/6);<br>
+          • <b>R40</b> — для сигнала <b>X</b> (контакты 18/6);<br>
+          • <b>R41</b> — для сигнала <b>Uз</b> (<b>ϑ<sub>зад</sub></b>, контакты 19/6).
         </div>
-        <div class="hint">Сюда — действия при выходе за допуск.</div>
+        <div class="small">Если у тебя в технологии другое соответствие «Rxx ↔ сигнал» — поправь тут.</div>
       </div>
+
     </div>
   </section>
 
-  Вращая ось подстроечного резистора R38 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
-  Вращая ось подстроечного резистора R39 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
-  Вращая ось подстроечного резистора R40 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
-  Вращая ось подстроечного резистора R41 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
+  <!-- ===== КАЛЬКУЛЯТОР (4 СИГНАЛА ПО ТЕХНОЛОГИИ) ===== -->
   <section class="card" id="calc-bv24">
     <h2>Калькулятор: центровка выходов усилителей БВ-24</h2>
 
     <div class="p">
-      Допуск для всех сигналов: <b>0 … 50 mV</b><br>
-      Z — сигнал заданного угла крена <b>γ<sub>зад</sub></b><br>
-      X — сигнал заданного угла тангажа <b>ϑ<sub>зад</sub></b>
+      Вводи измеренные значения (мВ) для 4 сигналов по разъёму <b>РМ Ш3</b>:<br>
+      <b>Z</b> — 16/6 (боковое перемещение), <b>Yз</b> — 17/6 (<b>γ<sub>зад</sub></b> крен),
+      <b>X</b> — 18/6 (продольное перемещение), <b>Uз</b> — 19/6 (<b>ϑ<sub>зад</sub></b> тангаж).<br>
+      Допуск для каждого: <b>0 … 50 мВ</b>.
     </div>
 
     <div class="form">
       <div class="field">
-        <label>Z (γ<sub>зад</sub>), mV</label>
-        <input id="Z" inputmode="decimal" placeholder="например 12,5">
+        <label>Z (конт. 16/6), mV</label>
+        <input id="Zin" inputmode="decimal" placeholder="например 12,5">
       </div>
       <div class="field">
-        <label>X (ϑ<sub>зад</sub>), mV</label>
-        <input id="X" inputmode="decimal" placeholder="например 8">
+        <label>Yз = γ<sub>зад</sub> (конт. 17/6), mV</label>
+        <input id="Yzin" inputmode="decimal" placeholder="например 8">
       </div>
       <div class="field">
-        <label>Y, mV</label>
-        <input id="Y" inputmode="decimal" placeholder="например 3">
+        <label>X (конт. 18/6), mV</label>
+        <input id="Xin" inputmode="decimal" placeholder="например 3">
       </div>
       <div class="field">
-        <label>Ω, mV</label>
-        <input id="O" inputmode="decimal" placeholder="например 0">
+        <label>Uз = ϑ<sub>зад</sub> (конт. 19/6), mV</label>
+        <input id="Uzin" inputmode="decimal" placeholder="например 0">
       </div>
 
       <div class="actions">
@@ -237,7 +248,7 @@ button:hover{background:rgba(255,255,255,.16)}
 
     <div class="result" id="out">
       <span class="status wait">ОЖИДАЕТ</span><br>
-      Введите значения всех четырёх сигналов (mV) и нажмите «Проверить».
+      Введите значения всех четырёх сигналов (мВ) и нажмите «Проверить».
     </div>
   </section>
 
@@ -245,31 +256,29 @@ button:hover{background:rgba(255,255,255,.16)}
 
 <script>
 function pNum(id){
-  const el=document.getElementById(id);
-  const raw=(el.value||'').trim().replace(/\s+/g,'');
-  const v=Number(raw.replace(',','.'));
-  return {el,raw,v,ok:Number.isFinite(v) && raw!==''};
+  const el = document.getElementById(id);
+  const raw = (el.value || '').trim().replace(/\s+/g,'');
+  const v = Number(raw.replace(',','.'));
+  return { el, raw, v, ok: Number.isFinite(v) && raw !== '' };
 }
 function fmt(x){ return x.toFixed(2).replace('.',','); }
-function inRange(v){ return v>=0 && v<=50; }
+function inRange(v){ return v >= 0 && v <= 50; }
 
 function bvCalc(){
-  const out=document.getElementById('out');
+  const out = document.getElementById('out');
 
-  const sigs=[
-    {k:'Z', name:'Z (γзад)', o:pNum('Z')},
-    {k:'X', name:'X (ϑзад)', o:pNum('X')},
-    {k:'Y', name:'Y',      o:pNum('Y')},
-    {k:'Ω', name:'Ω',      o:pNum('O')}
+  const sigs = [
+    {k:'Z',  name:'Z (16/6)',                 o:pNum('Zin')},
+    {k:'Yз', name:'Yз = γзад (17/6)',         o:pNum('Yzin')},
+    {k:'X',  name:'X (18/6)',                 o:pNum('Xin')},
+    {k:'Uз', name:'Uз = ϑзад (19/6)',         o:pNum('Uzin')}
   ];
 
-  // очистка подсветки
-  sigs.forEach(s=>s.o.el.classList.remove('pass','fail'));
+  sigs.forEach(s => s.o.el.classList.remove('pass','fail'));
 
-  // все 4 обязательны
-  const miss=sigs.filter(s=>!s.o.ok);
+  const miss = sigs.filter(s => !s.o.ok);
   if(miss.length){
-    miss.forEach(s=>s.o.el.classList.add('fail'));
+    miss.forEach(s => s.o.el.classList.add('fail'));
     out.innerHTML =
       '<span class="status bad">НЕТ ДАННЫХ</span><br>' +
       'Нужно заполнить <b>все 4 сигнала</b>: ' + miss.map(x=>x.k).join(', ') +
@@ -277,32 +286,32 @@ function bvCalc(){
     return;
   }
 
-  let all=true;
-  let html='<div class="mono">Допуск: 0,00 … 50,00 mV<br><br>';
+  let all = true;
+  let html = '<div class="mono">Допуск: 0,00 … 50,00 мВ<br><br>';
 
   sigs.forEach(s=>{
-    const pass=inRange(s.o.v);
+    const pass = inRange(s.o.v);
     all = all && pass;
-    s.o.el.classList.add(pass?'pass':'fail');
-    html += `${s.k}: ${s.name} = <b>${fmt(s.o.v)} mV</b> → ${pass?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}<br>`;
+    s.o.el.classList.add(pass ? 'pass' : 'fail');
+    html += `${s.k}: ${s.name} = <b>${fmt(s.o.v)} мВ</b> → ${pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ'}<br>`;
   });
 
-  html+='</div>';
+  html += '</div>';
 
   out.innerHTML =
-    `<span class="status ${all?'ok':'bad'}">${all?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}</span><br>` +
+    `<span class="status ${all ? 'ok' : 'bad'}">${all ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ'}</span><br>` +
     html;
 }
 
 function bvReset(){
-  ['Z','X','Y','O'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.value='';
+  ['Zin','Yzin','Xin','Uzin'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.value = '';
     el.classList.remove('pass','fail');
   });
   document.getElementById('out').innerHTML =
     '<span class="status wait">ОЖИДАЕТ</span><br>' +
-    'Введите значения всех четырёх сигналов (mV) и нажмите «Проверить».';
+    'Введите значения всех четырёх сигналов (мВ) и нажмите «Проверить».';
 }
 </script>
 
