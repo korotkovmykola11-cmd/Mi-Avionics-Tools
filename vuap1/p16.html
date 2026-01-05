@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ВУАП-1 · p16 · Проверка ограничений выходных сигналов</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a; --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff; --muted:#b7c7dd;
+  --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{max-width:1200px;margin:0 auto;padding:18px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+}
+h1,h2,h3{margin:0 0 10px}
+.p{color:var(--muted);font-size:14px;line-height:1.45}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+.col{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px;
+  background:rgba(0,0,0,.14);
+}
+.fill{
+  min-height:220px;
+  border:1px dashed rgba(255,255,255,.25);
+  border-radius:12px;
+  padding:10px;
+  color:var(--muted);
+}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;
+}
+.field{grid-column:span 6}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+}
+.actions{grid-column:span 12;display:flex;gap:12px}
+
+button{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-weight:800;
+  cursor:pointer;
+}
+button.primary{background:#fff;color:#000}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+
+@media(max-width:900px){
+  .grid3{grid-template-columns:1fr}
+  .field{grid-column:span 12}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h1>ВУАП-1 · p16</h1>
+<p class="p">Проверка ограничений выходных сигналов </p>
+
+<section class="card">
+  <div class="grid3">
+    <div class="col">
+      <h3>Содержание операций</h3>
+      <div class="fill">
+      Сигнал ϑз.
+        Включить тумблер В7 изделия 24-7100-70. Задать от ПК ДИСС-15 задачу №1.
+        Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС (установлен в радиоотсеке) поставить в положение "ВКЛ".
+        Нажать на кнопку-табло "ВКЛ"  на пульте управления ТАНГАЖА.Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" пульта ПВМ-24 и поворотом
+        ручки центровки установить стрелку индикатора нулевого пульта "Т" в среднее положение (начальное положение шкалы).
+        Отпустить кнопку "ВИСЕНИЕ".Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+        Через 30-60 секунд поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+        Задать от ПК ДИСС-15 задачу №2. Через 30-60 секунд поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+        Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+      Сигнал γз.
+         Включить тумблер В7 изделия 24-7100-70. Задать от ПК ДИСС-15 задачу №2.
+         Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС (установлен в радиоотсеке) поставить в положение "ВКЛ".
+         Нажать на кнопку-табло "ВКЛ"  на пульте управления КРЕНА.Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" пульта ПВМ-24 и поворотом
+         ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение (начальное положение шкалы).
+         Отпустить кнопку "ВИСЕНИЕ".Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+         Через 30-60 секунд поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+         Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Технические требования (ТТ)</h3>
+      <div class="fill">
+        Угол поворота шкалы центровки: <b>5 ± 1 град</b><br><br>
+        Ограничение выходного сигнала заданного угла тангажа
+        <b>ϑ<sub>зад</sub></b>: <b>5 ± 1 град</b><br><br>
+        Ограничение выходного сигнала заданного угла крена
+        <b>γ<sub>зад</sub></b>: <b>5 ± 1 град</b>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Работы при отклонениях от ТТ</h3>
+      <div class="fill">
+        Включить тумблер В7 изделия 24-7100-70.Задать от ПК ДИСС-15 задачу №1 (задачу №2).Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС (установлен в радиоотсеке) поставить в положение "ВКЛ".
+        Нажать на кнопку-табло "ВКЛ"  на пульте управления ТАНГАЖА.Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" пульта ПВМ-24 и поворотом
+        ручки центровки установить стрелку индикатора нулевого пульта "Т" в среднее положение (начальное положение шкалы).Отпустить кнопку "ВИСЕНИЕ".
+        От начального положения плавным поворотом ручки центровки против (по) часовой стрелки задать угол 5 градусов по шкале центровки.Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+        Через 30-60 секунд , вращая ось регулировочного сопротивления ϑз в блоке БВ-24,установить стрелку индикатора в среднее положение.
+        Включить тумблер В7 изделия 24-7100-70.Задать от ПК ДИСС-15 задачу №2 .Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС (установлен в радиоотсеке) поставить в положение "ВКЛ".
+        Нажать на кнопку-табло "ВКЛ"  на пульте управления КРЕНА.Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" пульта ПВМ-24 и поворотом
+        ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение (начальное положение шкалы).Отпустить кнопку "ВИСЕНИЕ".
+        От начального положения плавным поворотом ручки центровки против (по) часовой стрелки задать угол 5 градусов по шкале центровки.Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+        Через 30-60 секунд , вращая ось регулировочного сопротивления γз в блоке БВ-24,установить стрелку индикатора в среднее положение.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Калькулятор проверки ограничений</h2>
+
+  <div class="form">
+    <div class="field">
+      <label>ϑ<sub>зад</sub> — ограничение тангажа, град</label>
+      <input id="pitch">
+    </div>
+
+    <div class="field">
+      <label>γ<sub>зад</sub> — ограничение крена, град</label>
+      <input id="roll">
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="check()">Проверить</button>
+      <button onclick="resetAll()">Сброс</button>
+    </div>
+  </div>
+
+  <div class="result" id="out">
+    <span class="status wait">ОЖИДАЕТ</span>
+  </div>
+</section>
+
+</div>
+
+<script>
+function num(v){return Number((v||'').replace(',','.'))}
+
+function inTol(v){return v>=4 && v<=6}
+
+function check(){
+  const p=num(document.getElementById('pitch').value);
+  const r=num(document.getElementById('roll').value);
+
+  if(!isFinite(p)||!isFinite(r)){
+    out.innerHTML='<span class="status bad">ОШИБКА</span> Введите оба значения';
+    return;
+  }
+
+  const okP=inTol(p);
+  const okR=inTol(r);
+
+  out.innerHTML=
+    `<span class="status ${(okP&&okR)?'ok':'bad'}">
+      ${(okP&&okR)?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+     </span><br><br>
+     ϑ<sub>зад</sub> = ${p}° → ${okP?'норма':'не норма'}<br>
+     γ<sub>зад</sub> = ${r}° → ${okR?'норма':'не норма'}`;
+}
+
+function resetAll(){
+  pitch.value='';
+  roll.value='';
+  out.innerHTML='<span class="status wait">ОЖИДАЕТ</span>';
+}
+</script>
+
+</body>
+</html>
