@@ -190,7 +190,7 @@ button:hover{background:rgba(255,255,255,.16)}
           должно быть в пределах:<br><br>
           <b>0 … 50 мВ</b>
         </div>
-        <div class="small">Допуск одинаковый для всех четырёх сигналов.</div>
+       
       </div>
 
       <!-- Работы при отклонениях -->
@@ -217,26 +217,26 @@ button:hover{background:rgba(255,255,255,.16)}
 
     <div class="p">
       Вводи измеренные значения (мВ) для 4 сигналов по разъёму <b>РМ Ш3</b>:<br>
-      <b>Z</b> — 16/6 (боковое перемещение), <b>Yз</b> — 17/6 (<b>γ<sub>зад</sub></b> крен),
-      <b>X</b> — 18/6 (продольное перемещение), <b>Uз</b> — 19/6 (<b>ϑ<sub>зад</sub></b> тангаж).<br>
+      <b>Z</b> — 16 и 6 (боковое перемещение), <b>Yз</b> — 17 и 6 (<b>γ<sub>зад</sub></b> крен),
+      <b>X</b> — 18 и 6 (продольное перемещение), <b>Uз</b> — 19 и 6 (<b>ϑ<sub>зад</sub></b> тангаж).<br>
       Допуск для каждого: <b>0 … 50 мВ</b>.
     </div>
 
     <div class="form">
       <div class="field">
-        <label>Z (конт. 16/6), mV</label>
+        <label>Z (конт. 16 и 6), mV</label>
         <input id="Zin" inputmode="decimal" placeholder="например 12,5">
       </div>
       <div class="field">
-        <label>Yз = γ<sub>зад</sub> (конт. 17/6), mV</label>
+        <label>Yз = γ<sub>зад</sub> (конт. 17 и 6), mV</label>
         <input id="Yzin" inputmode="decimal" placeholder="например 8">
       </div>
       <div class="field">
-        <label>X (конт. 18/6), mV</label>
+        <label>X (конт. 18 и 6), mV</label>
         <input id="Xin" inputmode="decimal" placeholder="например 3">
       </div>
       <div class="field">
-        <label>Uз = ϑ<sub>зад</sub> (конт. 19/6), mV</label>
+        <label>Uз = ϑ<sub>зад</sub> (конт. 19 и 6), mV</label>
         <input id="Uzin" inputmode="decimal" placeholder="например 0">
       </div>
 
@@ -268,10 +268,10 @@ function bvCalc(){
   const out = document.getElementById('out');
 
   const sigs = [
-    {k:'Z',  name:'Z (16/6)',                 o:pNum('Zin')},
-    {k:'Yз', name:'Yз = γзад (17/6)',         o:pNum('Yzin')},
-    {k:'X',  name:'X (18/6)',                 o:pNum('Xin')},
-    {k:'Uз', name:'Uз = ϑзад (19/6)',         o:pNum('Uzin')}
+    {k:'Z',  name:'Z (16 и 6)',                 o:pNum('Zin')},
+    {k:'Yз', name:'Yз = γзад (17 и 6)',         o:pNum('Yzin')},
+    {k:'X',  name:'X (18 и 6)',                 o:pNum('Xin')},
+    {k:'Uз', name:'Uз = ϑзад (19 и 6)',         o:pNum('Uzin')}
   ];
 
   sigs.forEach(s => s.o.el.classList.remove('pass','fail'));
