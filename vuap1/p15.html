@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ВУАП-1 · p15 · Центровка выходов усилителей БВ-24</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a; --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff; --muted:#b7c7dd;
+  --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{max-width:1200px;margin:0 auto;padding:18px}
+
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.brand{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px 16px;
+  backdrop-filter:blur(6px);
+}
+.brand h1{margin:0;font-size:18px;letter-spacing:.2px}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+a.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 12px;border-radius:12px;text-decoration:none;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:13px;font-weight:800;
+}
+a.btn:hover{background:rgba(255,255,255,.16)}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+h2{margin:0 0 10px;font-size:16px}
+.p{color:var(--muted);font-size:14px;line-height:1.45}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-top:10px;
+}
+.col{
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.14);
+  border-radius:16px;
+  padding:12px;
+}
+.col h3{
+  margin:0 0 8px;
+  font-size:14px;
+  font-weight:900;
+}
+.fill{
+  min-height:260px;
+  border:1px dashed rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:10px 12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;
+  margin-top:12px;
+}
+.field{grid-column:span 6}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+}
+input:focus{border-color:rgba(255,255,255,.35)}
+.actions{grid-column:span 12;display:flex;gap:12px;flex-wrap:wrap}
+button{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-weight:900;
+  cursor:pointer;
+}
+button.primary{background:linear-gradient(180deg,#fff,#e6f0ff);color:#000}
+button:hover{background:rgba(255,255,255,.16)}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+.pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
+.fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+@media(max-width:980px){
+  .grid3{grid-template-columns:1fr}
+  .field{grid-column:span 12}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <h1>ВУАП-1 · p15</h1>
+      <p>Центровка выходов усилителей БВ-24</p>
+    </div>
+    <a class="btn" href="../page-vuap-1.html">← ВУАП-1 (общее меню)</a>
+  </div>
+
+ Замерить выходое напряжение усилителей блока БВ-24, для чего подключить тестер (диапазон измерения постоянного напряжения 100 мВ).
+  к следующим контактам контрольного разъёма САУ РМ Ш3,расположенного в радиоотсеке.
+  К контактам 16 и 6 для сигнала Z (боковое перемещение).
+  К контактам 17 и 6 для сигнала Yз (регулировка крутизны выхоного сигнала заданого угла крена).
+  К контактам 18 и 6 для сигнала X (продольное перемещение).
+  К контактам 19 и 6 для сигнала Uз (регулировка крутизны выходного сигнала заданого угла тангажа).
+  <section class="card">
+    <h2>Содержание операций / Технические требования / Работы при отклонениях от ТТ</h2>
+
+    <div class="grid3">
+      <div class="col">
+        <h3>Содержание операций</h3>
+        <div class="fill" id="op">
+          Напряжение, снимаемое с контактов 16 и 6 должно быть в пределах 0-50 мВ.
+          Напряжение, снимаемое с контактов 17 и 6 должно быть в пределах 0-50 мВ.
+          Напряжение, снимаемое с контактов 18 и 6 должно быть в пределах 0-50 мВ.
+          Напряжение, снимаемое с контактов 19 и 6 должно быть в пределах 0-50 мВ.
+        </div>
+        <div class="hint">Вставь сюда “Содержание операций” как в оригинальной технологии.</div>
+      </div>
+
+      <div class="col">
+        <h3>Технические требования (ТТ)</h3>
+        <div class="fill" id="tt">
+          <!-- ВСТАВЬ ТЕКСТ СЮДА (слово в слово) -->
+        </div>
+        <div class="hint">Требование: 0…50 mV для всех сигналов (если так в твоём документе).</div>
+      </div>
+
+      <div class="col">
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+        <div class="fill" id="dev">
+          <!-- ВСТАВЬ ТЕКСТ СЮДА (слово в слово) -->
+        </div>
+        <div class="hint">Сюда — действия при выходе за допуск.</div>
+      </div>
+    </div>
+  </section>
+
+  Вращая ось подстроечного резистора R38 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
+  Вращая ось подстроечного резистора R39 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
+  Вращая ось подстроечного резистора R40 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
+  Вращая ось подстроечного резистора R41 блока БВ-24,добиться, чтобы величина напряжения по тестеру была в пределах 0-50 мВ.
+  <section class="card" id="calc-bv24">
+    <h2>Калькулятор: центровка выходов усилителей БВ-24</h2>
+
+    <div class="p">
+      Допуск для всех сигналов: <b>0 … 50 mV</b><br>
+      Z — сигнал заданного угла крена <b>γ<sub>зад</sub></b><br>
+      X — сигнал заданного угла тангажа <b>ϑ<sub>зад</sub></b>
+    </div>
+
+    <div class="form">
+      <div class="field">
+        <label>Z (γ<sub>зад</sub>), mV</label>
+        <input id="Z" inputmode="decimal" placeholder="например 12,5">
+      </div>
+      <div class="field">
+        <label>X (ϑ<sub>зад</sub>), mV</label>
+        <input id="X" inputmode="decimal" placeholder="например 8">
+      </div>
+      <div class="field">
+        <label>Y, mV</label>
+        <input id="Y" inputmode="decimal" placeholder="например 3">
+      </div>
+      <div class="field">
+        <label>Ω, mV</label>
+        <input id="O" inputmode="decimal" placeholder="например 0">
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="button" onclick="bvCalc()">Проверить</button>
+        <button type="button" onclick="bvReset()">Сброс</button>
+      </div>
+    </div>
+
+    <div class="result" id="out">
+      <span class="status wait">ОЖИДАЕТ</span><br>
+      Введите значения всех четырёх сигналов (mV) и нажмите «Проверить».
+    </div>
+  </section>
+
+</div>
+
+<script>
+function pNum(id){
+  const el=document.getElementById(id);
+  const raw=(el.value||'').trim().replace(/\s+/g,'');
+  const v=Number(raw.replace(',','.'));
+  return {el,raw,v,ok:Number.isFinite(v) && raw!==''};
+}
+function fmt(x){ return x.toFixed(2).replace('.',','); }
+function inRange(v){ return v>=0 && v<=50; }
+
+function bvCalc(){
+  const out=document.getElementById('out');
+
+  const sigs=[
+    {k:'Z', name:'Z (γзад)', o:pNum('Z')},
+    {k:'X', name:'X (ϑзад)', o:pNum('X')},
+    {k:'Y', name:'Y',      o:pNum('Y')},
+    {k:'Ω', name:'Ω',      o:pNum('O')}
+  ];
+
+  // очистка подсветки
+  sigs.forEach(s=>s.o.el.classList.remove('pass','fail'));
+
+  // все 4 обязательны
+  const miss=sigs.filter(s=>!s.o.ok);
+  if(miss.length){
+    miss.forEach(s=>s.o.el.classList.add('fail'));
+    out.innerHTML =
+      '<span class="status bad">НЕТ ДАННЫХ</span><br>' +
+      'Нужно заполнить <b>все 4 сигнала</b>: ' + miss.map(x=>x.k).join(', ') +
+      '. Разделитель: точка или запятая.';
+    return;
+  }
+
+  let all=true;
+  let html='<div class="mono">Допуск: 0,00 … 50,00 mV<br><br>';
+
+  sigs.forEach(s=>{
+    const pass=inRange(s.o.v);
+    all = all && pass;
+    s.o.el.classList.add(pass?'pass':'fail');
+    html += `${s.k}: ${s.name} = <b>${fmt(s.o.v)} mV</b> → ${pass?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}<br>`;
+  });
+
+  html+='</div>';
+
+  out.innerHTML =
+    `<span class="status ${all?'ok':'bad'}">${all?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}</span><br>` +
+    html;
+}
+
+function bvReset(){
+  ['Z','X','Y','O'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.value='';
+    el.classList.remove('pass','fail');
+  });
+  document.getElementById('out').innerHTML =
+    '<span class="status wait">ОЖИДАЕТ</span><br>' +
+    'Введите значения всех четырёх сигналов (mV) и нажмите «Проверить».';
+}
+</script>
+
+</body>
+</html>
