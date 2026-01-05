@@ -167,12 +167,12 @@ button.primary{background:#fff;color:#000}
 
   <div class="form">
     <div class="field">
-      <label>ϑ<sub>зад</sub> — ограничение тангажа, град</label>
+      <label>ϑ<sub>з</sub> — ограничение тангажа, град</label>
       <input id="pitch">
     </div>
 
     <div class="field">
-      <label>γ<sub>зад</sub> — ограничение крена, град</label>
+     <label>γ<sub>з</sub> — ограничение крена, град</label>
       <input id="roll">
     </div>
 
@@ -210,8 +210,8 @@ function check(){
     `<span class="status ${(okP&&okR)?'ok':'bad'}">
       ${(okP&&okR)?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
      </span><br><br>
-     ϑ<sub>зад</sub> = ${p}° → ${okP?'норма':'не норма'}<br>
-     γ<sub>зад</sub> = ${r}° → ${okR?'норма':'не норма'}`;
+     ϑ<sub>з</sub> = ${p}° → ${okP?'норма':'не норма'}<br>
+     γ<sub>з</sub> = ${r}° → ${okR?'норма':'не норма'}`;
 }
 
 function resetAll(){
