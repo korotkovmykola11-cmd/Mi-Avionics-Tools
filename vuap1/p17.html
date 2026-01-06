@@ -246,78 +246,85 @@ button:hover{background:rgba(255,255,255,.16)}
   </section>
 
  <!-- ===== КАЛЬКУЛЯТОР: p17 (iWx / iWz) ===== -->
-<section class="card" id="calc-p17">
-  <h2>Калькулятор передаточного числа (как в технологии)</h2>
+<!-- ===== КАЛЬКУЛЯТОР p17: только по углу (как в технологии) ===== -->
+<section class="card" id="calc-p17-angle">
+  <h2>Калькулятор проверки (как в технологии): только по углу поворота шкалы</h2>
 
   <div class="p" style="margin-top:8px">
-    Технические требования (для каждого направления):<br>
-    <b>α = 1,5 ± 0,6 град</b> → диапазон <b>0,9 … 2,1 град</b><br>
-    <b>iW = 1,50 ± 0,60 град/(м/с)</b> → диапазон <b>0,90 … 2,10 град/(м/с)</b><br>
-    Формула: <b>iW = α / W</b>, где <b>W</b> — величина задания (м/с).<br>
-    <span style="color:var(--muted)">Если в твоей задаче W = 1,0 м/с — iW численно равен α.</span>
+    Техническое требование (для каждого направления):<br>
+    <b>α = 1,5 ± 0,6°</b> → допустимый диапазон <b>0,9 … 2,1°</b><br>
+    Ввод: измеренный угол поворота шкалы (град).
   </div>
 
   <div class="form" style="margin-top:14px">
+    <!-- ПРОДОЛЬНОЕ -->
+    <div class="card" style="grid-column:span 12; padding:14px; background:rgba(0,0,0,.14)">
+      <h3 style="margin:0 0 10px">Продольное направление</h3>
 
-    <!-- ПРОДОЛЬНОЕ / iWx -->
-    <div class="card" style="grid-column:span 12; background:rgba(0,0,0,.14); border-radius:16px; padding:12px">
-      <h3 style="margin:0 0 10px;font-size:14px;font-weight:900">Продольное направление — iW<sub>x</sub></h3>
-
-      <div class="form" style="margin-top:0">
+      <div class="form">
         <div class="field">
           <label>α<sub>x</sub> — угол поворота шкалы, град</label>
-          <input id="p17_ax" type="text" inputmode="decimal" placeholder="например 1,5">
+          <input id="ax" type="text" inputmode="decimal" placeholder="например 1,5">
         </div>
 
         <div class="field">
-          <label>W<sub>x</sub> — величина задания, м/с (обычно 1,0)</label>
-          <input id="p17_wx" type="text" inputmode="decimal" value="1,0">
+          <label>Номинал α<sub>ном</sub>, град (фикс по ТТ)</label>
+          <input id="anom" type="text" inputmode="decimal" value="1,5">
         </div>
 
-        <div class="actions">
-          <button class="primary" type="button" onclick="p17_calc('x')">Рассчитать</button>
-          <button type="button" onclick="p17_reset('x')">Сброс</button>
+        <div class="field">
+          <label>Допуск ±, град (фикс по ТТ)</label>
+          <input id="atol" type="text" inputmode="decimal" value="0,6">
+        </div>
+
+        <div class="actions" style="grid-column:span 12">
+          <button class="primary" type="button" onclick="p17Calc('x')">Проверить (продольное)</button>
+          <button type="button" onclick="p17Reset('x')">Сброс</button>
         </div>
       </div>
 
-      <div class="result" id="p17_out_x">
+      <div class="result" id="outx" style="margin-top:12px">
         <span class="status wait">ОЖИДАЕТ</span><br>
-        Введи α<sub>x</sub> и нажми «Рассчитать».
+        Введи α<sub>x</sub> (град) и нажми «Проверить».
       </div>
     </div>
 
-    <!-- ПОПЕРЕЧНОЕ / iWz -->
-    <div class="card" style="grid-column:span 12; background:rgba(0,0,0,.14); border-radius:16px; padding:12px">
-      <h3 style="margin:0 0 10px;font-size:14px;font-weight:900">Поперечное направление — iW<sub>z</sub></h3>
+    <!-- ПОПЕРЕЧНОЕ -->
+    <div class="card" style="grid-column:span 12; padding:14px; background:rgba(0,0,0,.14)">
+      <h3 style="margin:0 0 10px">Поперечное направление</h3>
 
-      <div class="form" style="margin-top:0">
+      <div class="form">
         <div class="field">
           <label>α<sub>z</sub> — угол поворота шкалы, град</label>
-          <input id="p17_az" type="text" inputmode="decimal" placeholder="например 1,5">
+          <input id="az" type="text" inputmode="decimal" placeholder="например 1,5">
         </div>
 
         <div class="field">
-          <label>W<sub>z</sub> — величина задания, м/с (обычно 1,0)</label>
-          <input id="p17_wz" type="text" inputmode="decimal" value="1,0">
+          <label>Номинал α<sub>ном</sub>, град (фикс по ТТ)</label>
+          <input id="anom2" type="text" inputmode="decimal" value="1,5">
         </div>
 
-        <div class="actions">
-          <button class="primary" type="button" onclick="p17_calc('z')">Рассчитать</button>
-          <button type="button" onclick="p17_reset('z')">Сброс</button>
+        <div class="field">
+          <label>Допуск ±, град (фикс по ТТ)</label>
+          <input id="atol2" type="text" inputmode="decimal" value="0,6">
+        </div>
+
+        <div class="actions" style="grid-column:span 12">
+          <button class="primary" type="button" onclick="p17Calc('z')">Проверить (поперечное)</button>
+          <button type="button" onclick="p17Reset('z')">Сброс</button>
         </div>
       </div>
 
-      <div class="result" id="p17_out_z">
+      <div class="result" id="outz" style="margin-top:12px">
         <span class="status wait">ОЖИДАЕТ</span><br>
-        Введи α<sub>z</sub> и нажми «Рассчитать».
+        Введи α<sub>z</sub> (град) и нажми «Проверить».
       </div>
     </div>
-
   </div>
 
   <style>
-    /* локально для p17 */
-    #calc-p17 input{
+    /* локально — чтобы не ломать страницу */
+    #calc-p17-angle input{
       width:100%;
       padding:10px 12px;
       border-radius:12px;
@@ -327,119 +334,94 @@ button:hover{background:rgba(255,255,255,.16)}
       font-size:14px;
       outline:none;
     }
-    #calc-p17 input:focus{border-color:rgba(255,255,255,.35)}
-    #calc-p17 .pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
-    #calc-p17 .fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
-    #calc-p17 .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    #calc-p17-angle input:focus{border-color:rgba(255,255,255,.35)}
+    #calc-p17-angle .pass{
+      background:rgba(124,255,158,.18)!important;
+      border-color:rgba(124,255,158,.35)!important;
+    }
+    #calc-p17-angle .fail{
+      background:rgba(255,154,154,.18)!important;
+      border-color:rgba(255,154,154,.35)!important;
+    }
+    #calc-p17-angle .mono{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:12.5px;
+      line-height:1.45;
+    }
   </style>
 
   <script>
-    // Допуски ИЗ ТЕХНОЛОГИИ:
-    // α = 1,5 ± 0,6 (град)  => 0,9..2,1
-    // iW = 1,50 ± 0,60 (град/(м/с)) => 0,90..2,10
-    const P17 = {
-      a_nom: 1.5,
-      a_tol: 0.6,
-      i_nom: 1.50,
-      i_tol: 0.60
-    };
-
-    function p17_parse(id){
+    function p17Parse(id){
       const el = document.getElementById(id);
       const raw = (el.value || "").trim().replace(/\s+/g,'');
       const v = Number(raw.replace(',', '.'));
       return { el, raw, v, ok: Number.isFinite(v) && raw !== "" };
     }
-    function p17_fmt(x, d){
-      return Number(x).toFixed(d).replace('.', ',');
-    }
-    function p17_range(nom, tol){
-      return { min: nom - tol, max: nom + tol };
-    }
-    function p17_in(v, min, max){
-      return v >= min && v <= max;
-    }
-    function p17_set(outEl, statusClass, statusText, html){
-      outEl.innerHTML = '<span class="status ' + statusClass + '">' + statusText + '</span><br>' + html;
+
+    function p17Fmt(x, d){
+      return x.toFixed(d).replace('.', ',');
     }
 
-    function p17_calc(axis){ // axis: 'x' or 'z'
-      const axId = axis === 'x' ? 'p17_ax' : 'p17_az';
-      const wId  = axis === 'x' ? 'p17_wx' : 'p17_wz';
-      const outId= axis === 'x' ? 'p17_out_x' : 'p17_out_z';
+    function p17Set(outEl, cls, txt, html){
+      outEl.innerHTML = '<span class="status ' + cls + '">' + txt + '</span><br>' + html;
+    }
 
-      const A = p17_parse(axId);
-      const W = p17_parse(wId);
-      const out = document.getElementById(outId);
+    function p17Calc(axis){
+      const isX = axis === 'x';
+      const aInp = p17Parse(isX ? 'ax' : 'az');
+      const aNom = p17Parse(isX ? 'anom' : 'anom2');
+      const aTol = p17Parse(isX ? 'atol' : 'atol2');
+      const out  = document.getElementById(isX ? 'outx' : 'outz');
 
-      // clear highlight
-      [A.el, W.el].forEach(e=>e.classList.remove('pass','fail'));
+      // очистка подсветки
+      [aInp, aNom, aTol].forEach(o => o.el.classList.remove('pass','fail'));
 
-      if(!A.ok || !W.ok){
-        if(!A.ok) A.el.classList.add('fail');
-        if(!W.ok) W.el.classList.add('fail');
-        p17_set(out,'bad','ОШИБКА ВВОДА',
-          'Заполни поля числами. Разделитель: <b>точка</b> или <b>запятая</b>.'
-        );
-        return;
-      }
-      if(W.v === 0){
-        W.el.classList.add('fail');
-        p17_set(out,'bad','ОШИБКА',
-          'Нельзя делить на ноль: W = 0.'
+      if(!aInp.ok || !aNom.ok || !aTol.ok){
+        [aInp, aNom, aTol].forEach(o => { if(!o.ok) o.el.classList.add('fail'); });
+        p17Set(out, 'bad', 'ОШИБКА ВВОДА',
+          'Заполни числами. Десятичный разделитель: <b>точка</b> или <b>запятая</b>.'
         );
         return;
       }
 
-      // limits
-      const ar = p17_range(P17.a_nom, P17.a_tol);
-      const ir = p17_range(P17.i_nom, P17.i_tol);
+      const min = aNom.v - aTol.v;
+      const max = aNom.v + aTol.v;
 
-      // calc
-      const iW = A.v / W.v;
+      const pass = (aInp.v >= min && aInp.v <= max);
 
-      const aPass = p17_in(A.v, ar.min, ar.max);
-      const iPass = p17_in(iW, ir.min, ir.max);
-      const pass = aPass && iPass;
-
-      A.el.classList.add(aPass ? 'pass' : 'fail');
-      W.el.classList.add('pass'); // W обычно константа задания; подсветим нейтрально как "ok"
-
-      const axisName = axis === 'x' ? 'x' : 'z';
+      // подсветка
+      aInp.el.classList.add(pass ? 'pass' : 'fail');
+      aNom.el.classList.add('pass');
+      aTol.el.classList.add('pass');
 
       const html =
         '<div class="mono">' +
-        'Проверка угла:<br>' +
-        `α<sub>${axisName}</sub> = <b>${p17_fmt(A.v,2)} град</b>, допуск <b>${p17_fmt(ar.min,2)} … ${p17_fmt(ar.max,2)} град</b> → ` +
-        (aPass ? '<b style="color:var(--ok)">ПРОХОДИТ</b>' : '<b style="color:var(--bad)">НЕ ПРОХОДИТ</b>') +
-        '<br><br>' +
-        'Расчёт передаточного числа:<br>' +
-        `iW<sub>${axisName}</sub> = α<sub>${axisName}</sub> / W<sub>${axisName}</sub> = ` +
-        `${p17_fmt(A.v,2)} / ${p17_fmt(W.v,2)} = <b>${p17_fmt(iW,2)} град/(м/с)</b><br>` +
-        `Допуск iW: <b>${p17_fmt(ir.min,2)} … ${p17_fmt(ir.max,2)} град/(м/с)</b> → ` +
-        (iPass ? '<b style="color:var(--ok)">ПРОХОДИТ</b>' : '<b style="color:var(--bad)">НЕ ПРОХОДИТ</b>') +
+          'Дано по ТТ: α = αном ± допуск<br>' +
+          'αном = ' + p17Fmt(aNom.v,2) + '°; допуск = ±' + p17Fmt(aTol.v,2) + '°<br>' +
+          'Диапазон: [' + p17Fmt(min,2) + ' … ' + p17Fmt(max,2) + ']°<br><br>' +
+          'Измерено: α' + (isX ? 'x' : 'z') + ' = <b>' + p17Fmt(aInp.v,2) + '°</b><br>' +
+          'Результат: ' + (pass ? '<b>в допуске</b>' : '<b>вне допуска</b>') +
         '</div>';
 
-      p17_set(out, pass ? 'ok' : 'bad', pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ', html);
+      p17Set(out, pass ? 'ok' : 'bad', pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ', html);
     }
 
-    function p17_reset(axis){
-      const axId = axis === 'x' ? 'p17_ax' : 'p17_az';
-      const wId  = axis === 'x' ? 'p17_wx' : 'p17_wz';
-      const outId= axis === 'x' ? 'p17_out_x' : 'p17_out_z';
-
-      document.getElementById(axId).value = '';
-      document.getElementById(wId).value  = '1,0';
-
-      [axId, wId].forEach(id=>{
-        const el=document.getElementById(id);
+    function p17Reset(axis){
+      const isX = axis === 'x';
+      const ids = isX ? ['ax','anom','atol'] : ['az','anom2','atol2'];
+      ids.forEach(id=>{
+        const el = document.getElementById(id);
+        if(id === 'anom' || id === 'anom2') el.value = '1,5';
+        else if(id === 'atol' || id === 'atol2') el.value = '0,6';
+        else el.value = '';
         el.classList.remove('pass','fail');
       });
-
-      document.getElementById(outId).innerHTML =
+      const out  = document.getElementById(isX ? 'outx' : 'outz');
+      out.innerHTML =
         '<span class="status wait">ОЖИДАЕТ</span><br>' +
-        'Введи α и нажми «Рассчитать».';
+        'Введи α<sub>' + (isX ? 'x' : 'z') + '</sub> (град) и нажми «Проверить».';
     }
   </script>
 </section>
 <!-- ===== /КАЛЬКУЛЯТОР p17 ===== -->
+
