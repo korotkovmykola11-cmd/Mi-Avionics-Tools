@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ВУАП-1 · p17 · Передаточное число (продольное/поперечное)</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a; --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff; --muted:#b7c7dd;
+  --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{max-width:1200px;margin:0 auto;padding:18px}
+
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.brand{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px 16px;
+  backdrop-filter:blur(6px);
+}
+.brand h1{margin:0;font-size:18px;letter-spacing:.2px}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+a.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 12px;border-radius:12px;text-decoration:none;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:13px;font-weight:900;
+}
+a.btn:hover{background:rgba(255,255,255,.16)}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+h2{margin:0 0 10px;font-size:16px}
+.p{color:var(--muted);font-size:14px;line-height:1.45}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-top:10px;
+}
+.col{
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.14);
+  border-radius:16px;
+  padding:12px;
+}
+.col h3{margin:0 0 8px;font-size:14px;font-weight:900}
+.block{
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.06);
+  border-radius:14px;
+  padding:10px 12px;
+  margin-bottom:10px;
+}
+.block h4{margin:0 0 8px;font-size:13px;font-weight:900}
+.fill{
+  min-height:150px;
+  border:1px dashed rgba(255,255,255,.22);
+  border-radius:12px;
+  padding:10px 12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:6px}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;
+  margin-top:10px;
+}
+.field{grid-column:span 6}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+}
+input:focus{border-color:rgba(255,255,255,.35)}
+.actions{grid-column:span 12;display:flex;gap:12px;flex-wrap:wrap}
+button{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-weight:900;
+  cursor:pointer;
+}
+button.primary{background:linear-gradient(180deg,#fff,#e6f0ff);color:#000}
+button:hover{background:rgba(255,255,255,.16)}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+.pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
+.fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+
+@media(max-width:980px){
+  .grid3{grid-template-columns:1fr}
+  .field{grid-column:span 12}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <h1>ВУАП-1 · p17</h1>
+      <p>Проверка и регулировка передаточного числа — продольное / поперечное направление</p>
+    </div>
+    <a class="btn" href="../page-vuap-1.html">← ВУАП-1 (общее меню)</a>
+  </div>
+
+  <!-- ===== ТЕХНОЛОГИЯ: 3 колонки ===== -->
+  <section class="card">
+    <h2>Технология (как в регламенте): раздельно для продольного и поперечного</h2>
+
+    <div class="grid3">
+      <!-- СОДЕРЖАНИЕ ОПЕРАЦИЙ -->
+      <div class="col">
+        <h3>Содержание операций</h3>
+
+        <div class="block">
+          <h4>Продольное направление</h4>
+          <div class="fill" id="op-long">
+          Передаточное число IWx.
+            Включить тумблеры В7,В8 изделия 24-7100-70.
+            Задать от ПК ДИСС-15 задачу №1.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+            Нажать на пульте управления "Т" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+            Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+            Поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+            Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+          
+          </div>
+          <div class="hint">Сюда — “проверка/регулировка” для продольного направления (слово в слово).</div>
+        </div>
+
+        <div class="block">
+          <h4>Поперечное направление</h4>
+          <div class="fill" id="op-lat">
+           Передаточное число IWz.
+           Включить тумблеры В7,В8 изделия 24-7100-70.
+           Задать от ПК ДИСС-15 задачу №2.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+           Нажать на пульте управления "К" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+           Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+           Поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+           Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+          </div>
+          <div class="hint">Сюда — “проверка/регулировка” для поперечного направления (слово в слово).</div>
+        </div>
+      </div>
+
+      <!-- ТТ -->
+      <div class="col">
+        <h3>Технические требования (ТТ)</h3>
+        <div class="fill" id="tt">
+          Угол поворота шкалы ручки центровки 1,5° ± 0,6°. 
+          Передаточное число (1,5 ±0,6) град / м/с
+          <!-- Если ТТ разные для продольного/поперечного — сделай тут 2 подпункта. -->
+        </div>
+        <div class="hint">Тут можно указать отдельно допуски “продольное / поперечное”, если в документе так.</div>
+      </div>
+
+      <!-- ОТКЛОНЕНИЯ -->
+      <div class="col">
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+
+        <div class="block">
+          <h4>Продольное направление</h4>
+          <div class="fill" id="dev-long">
+            Включить тумблеры В7,В8 изделия 24-7100-70.
+            Задать от ПК ДИСС-15 задачу №1.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+            Нажать на пульте управления "Т" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+            Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+            От начального положения плавным поворотом ручки центровки против часовой стрелки задать угол 1,5°.Вращая ось подстроечного резистора "IWx" в блоке БВ-24,установить стрелку индикатора нулевого в среднее положение.
+          </div>
+          <div class="hint">Сюда — действия при отклонениях (продольное).</div>
+        </div>
+
+        <div class="block">
+          <h4>Поперечное направление</h4>
+          <div class="fill" id="dev-lat">
+           Передаточное число IWz.
+           Включить тумблеры В7,В8 изделия 24-7100-70.
+           Задать от ПК ДИСС-15 задачу №2.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+           Нажать на пульте управления "К" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+           Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+           От начального положения плавным поворотом ручки центровки против часовой стрелки задать угол 1,5°.Вращая ось подстроечного резистора "IWz" в блоке БВ-24,установить стрелку индикатора нулевого в среднее положение.
+          </div>
+          <div class="hint">Сюда — действия при отклонениях (поперечное).</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== КАЛЬКУЛЯТОР (2 направления) ===== -->
+  <section class="card" id="calc">
+    <h2>Калькулятор передаточного числа</h2>
+
+    <div class="p">
+      Формула (универсально): <b>i = α / l</b> (град/мм)<br>
+      Где: <b>α</b> — угол поворота (град), <b>l</b> — полный ход (мм).<br>
+      Введи допуск как в технологии (номинал и ±).
+    </div>
+
+    <div class="grid3" style="grid-template-columns:1fr 1fr; margin-top:12px">
+      <!-- ПРОДОЛЬНОЕ -->
+      <div class="col">
+        <h3>Продольное направление</h3>
+
+        <div class="form">
+          <div class="field">
+            <label>α (угол), град</label>
+            <input id="L_alpha" inputmode="decimal" placeholder="например 44">
+          </div>
+          <div class="field">
+            <label>l (ход), мм</label>
+            <input id="L_l" inputmode="decimal" placeholder="например 74">
+          </div>
+
+          <div class="field">
+            <label>Номинал i, град/мм</label>
+            <input id="L_nom" inputmode="decimal" placeholder="например 0,60">
+          </div>
+          <div class="field">
+            <label>Допуск ±, град/мм</label>
+            <input id="L_tol" inputmode="decimal" placeholder="например 0,06">
+          </div>
+
+          <div class="actions">
+            <button class="primary" type="button" onclick="calcOne('L')">Рассчитать</button>
+            <button type="button" onclick="resetOne('L')">Сброс</button>
+          </div>
+        </div>
+
+        <div class="result" id="L_out">
+          <span class="status wait">ОЖИДАЕТ</span><br>
+          Заполни α, l, номинал и допуск.
+        </div>
+      </div>
+
+      <!-- ПОПЕРЕЧНОЕ -->
+      <div class="col">
+        <h3>Поперечное направление</h3>
+
+        <div class="form">
+          <div class="field">
+            <label>α (угол), град</label>
+            <input id="T_alpha" inputmode="decimal" placeholder="например 44">
+          </div>
+          <div class="field">
+            <label>l (ход), мм</label>
+            <input id="T_l" inputmode="decimal" placeholder="например 74">
+          </div>
+
+          <div class="field">
+            <label>Номинал i, град/мм</label>
+            <input id="T_nom" inputmode="decimal" placeholder="например 0,60">
+          </div>
+          <div class="field">
+            <label>Допуск ±, град/мм</label>
+            <input id="T_tol" inputmode="decimal" placeholder="например 0,06">
+          </div>
+
+          <div class="actions">
+            <button class="primary" type="button" onclick="calcOne('T')">Рассчитать</button>
+            <button type="button" onclick="resetOne('T')">Сброс</button>
+          </div>
+        </div>
+
+        <div class="result" id="T_out">
+          <span class="status wait">ОЖИДАЕТ</span><br>
+          Заполни α, l, номинал и допуск.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function parseNum(id){
+  const el = document.getElementById(id);
+  const raw = (el.value || '').trim().replace(/\s+/g,'');
+  const v = Number(raw.replace(',', '.'));
+  return { el, raw, v, ok: Number.isFinite(v) && raw !== '' };
+}
+function fmt(x, d){
+  return x.toFixed(d).replace('.', ',');
+}
+function setStatus(outEl, cls, text, html){
+  outEl.innerHTML = `<span class="status ${cls}">${text}</span><br>${html}`;
+}
+function clearMarks(prefix){
+  ['alpha','l','nom','tol'].forEach(s=>{
+    const el = document.getElementById(prefix+'_'+s);
+    el.classList.remove('pass','fail');
+  });
+}
+function markAll(prefix, pass){
+  const cls = pass ? 'pass' : 'fail';
+  ['alpha','l','nom','tol'].forEach(s=>{
+    document.getElementById(prefix+'_'+s).classList.add(cls);
+  });
+}
+
+function calcOne(prefix){
+  const out = document.getElementById(prefix+'_out');
+  clearMarks(prefix);
+
+  const A = parseNum(prefix+'_alpha'); // град
+  const L = parseNum(prefix+'_l');     // мм
+  const N = parseNum(prefix+'_nom');   // град/мм
+  const T = parseNum(prefix+'_tol');   // град/мм
+
+  const miss = [A,L,N,T].filter(x=>!x.ok);
+  if(miss.length){
+    miss.forEach(x=>x.el.classList.add('fail'));
+    setStatus(out,'bad','ОШИБКА ВВОДА',
+      'Заполни все поля числами. Десятичный разделитель: точка или запятая.'
+    );
+    return;
+  }
+  if(L.v === 0){
+    A.el.classList.add('fail'); L.el.classList.add('fail');
+    setStatus(out,'bad','ОШИБКА','Деление на ноль: l = 0 мм. Проверь ход.');
+    return;
+  }
+
+  const i = A.v / L.v; // град/мм
+  const min = N.v - Math.abs(T.v);
+  const max = N.v + Math.abs(T.v);
+  const pass = (i >= min && i <= max);
+
+  markAll(prefix, pass);
+
+  const html =
+    `<div class="mono">
+      i = α / l = ${fmt(A.v,3)} / ${fmt(L.v,3)} = <b>${fmt(i,3)} град/мм</b><br>
+      Допуск: ${fmt(N.v,3)} ± ${fmt(Math.abs(T.v),3)} → <b>${fmt(min,3)} … ${fmt(max,3)}</b>
+    </div>`;
+
+  setStatus(out, pass?'ok':'bad', pass?'ПРОХОДИТ':'НЕ ПРОХОДИТ', html);
+}
+
+function resetOne(prefix){
+  ['alpha','l','nom','tol'].forEach(s=>{
+    const el = document.getElementById(prefix+'_'+s);
+    el.value = '';
+    el.classList.remove('pass','fail');
+  });
+  document.getElementById(prefix+'_out').innerHTML =
+    '<span class="status wait">ОЖИДАЕТ</span><br>Заполни α, l, номинал и допуск.';
+}
+</script>
+
+</body>
+</html>
