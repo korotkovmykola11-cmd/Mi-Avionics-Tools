@@ -1,1 +1,487 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ВУАП-1 · p18 · Проверка и регулировка передаточных чисел по перемещению (iX / iZ)</title>
 
+<style>
+/* ===== разделение внутри 1-й колонки: iX / iZ ===== */
+.split{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+.subcard{
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.10);
+  border-radius:14px;
+  padding:10px;
+}
+.subttl{
+  font-size:13px;
+  font-weight:900;
+  margin:0 0 8px;
+}
+
+/* ===== базовая тема ===== */
+:root{
+  --bg1:#0b1a2a; --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff; --muted:#b7c7dd;
+  --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{max-width:1200px;margin:0 auto;padding:18px}
+
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.brand{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px 16px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+.brand h1{margin:0;font-size:18px;letter-spacing:.2px}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+a.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 12px;border-radius:12px;text-decoration:none;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:13px;font-weight:800;
+}
+a.btn:hover{background:rgba(255,255,255,.16)}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+h2{margin:0 0 10px;font-size:16px}
+.p{color:var(--muted);font-size:14px;line-height:1.45}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-top:10px;
+}
+.col{
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.14);
+  border-radius:16px;
+  padding:12px;
+}
+.col h3{
+  margin:0 0 8px;
+  font-size:14px;
+  font-weight:900;
+}
+.fill{
+  min-height:240px;
+  border:1px dashed rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:10px 12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
+
+.calcGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+.box{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px;
+  background:rgba(0,0,0,.14);
+}
+.box h3{margin:0 0 8px;font-size:14px;font-weight:900}
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;
+  margin-top:10px;
+}
+.field{grid-column:span 6}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+}
+input:focus{border-color:rgba(255,255,255,.35)}
+.actions{grid-column:span 12;display:flex;gap:12px;flex-wrap:wrap}
+button{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-weight:900;
+  cursor:pointer;
+}
+button.primary{background:linear-gradient(180deg,#fff,#e6f0ff);color:#000}
+button:hover{background:rgba(255,255,255,.16)}
+
+.result{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+.pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
+.fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+.small{font-size:12px;color:var(--muted);line-height:1.35}
+@media(max-width:980px){
+  .grid3{grid-template-columns:1fr}
+  .calcGrid{grid-template-columns:1fr}
+  .field{grid-column:span 12}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <h1>ВУАП-1 · p18</h1>
+      <p>Проверка и регулировка передаточных чисел по перемещению в продольном (iX) и поперечном (iZ) направлениях</p>
+    </div>
+    <!-- если p18 лежит в папке /18/ — то вверх на уровень -->
+    <a class="btn" href="../page-vuap-1.html">← ВУАП-1 (общее меню)</a>
+  </div>
+
+  <!-- ===== ТЕХНОЛОГИЯ (3 графы) ===== -->
+  <section class="card">
+    <h2>Технология (3 графы)</h2>
+
+    <div class="grid3">
+
+      <!-- 1) Содержание операций (разделено iX / iZ) -->
+      <div class="col">
+        <h3>Содержание операций</h3>
+
+        <div class="split">
+          <div class="subcard">
+            <div class="subttl">A) Продольное направление — передаточное число iX</div>
+            <div class="fill" contenteditable="true" id="op-ix">
+Передаточное число ix.
+Включить тумблеры В7,В8 изделия 24-7100-70.
+Задать от ПК ДИСС-15 задачу №1.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+Нажать на пульте управления "Т" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+Поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+Поворотом шкалы ручки центровки в том же направлении задать по шкале угол,равный замеренному,от скомпенсированного положения. Одновременно с отпусканием кнопки-табло "ВИСЕНИЕ" включить секундомер.
+При прохождении стрелкой индикатора нулевого среднего положения отключить секундомер, замеряв время t.
+Передаточное число определить по формуле ix = iwx /t где: iwx - передаточное число по сигналу wx; t - время, замеренное секундомером; ix - передаточное число по сигналу перемещения вертолёта в продольном направлении.
+Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+            </div>
+          </div>
+
+          <div class="subcard">
+            <div class="subttl">B) Поперечное направление — передаточное число iZ</div>
+            <div class="fill" contenteditable="true" id="op-iz">
+Передаточное число iz.
+Включить тумблеры В7,В8 изделия 24-7100-70.
+Задать от ПК ДИСС-15 задачу №2.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+Нажать на пульте управления "К" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+Поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+Поворотом шкалы ручки центровки в том же направлении задать по шкале угол,равный замеренному,от скомпенсированного положения. Одновременно с отпусканием кнопки-табло "ВИСЕНИЕ" включить секундомер.
+При прохождении стрелкой индикатора нулевого среднего положения отключить секундомер, замеряв время t.
+Передаточное число определить по формуле iz = iwz /t где: iwz - передаточное число по сигналу wz; t - время, замеренное секундомером; iz- передаточное число по сигналу перемещения вертолёта в поперечном направлении.
+Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+            </div>
+          </div>
+        </div>
+
+        <div class="hint">Содержание операций разделено на iX и iZ. Текст не трогал.</div>
+      </div>
+
+      <!-- 2) Технические требования -->
+      <div class="col">
+        <h3>Технические требования (ТТ)</h3>
+        <div class="fill">
+          Формулы (как в технологии):<br>
+          <b>iX = iW<sub>x</sub> / t</b>, град/м<br>
+          <b>iZ = iW<sub>z</sub> / t</b>, град/м<br><br>
+
+          Допуск времени: <b>t = 7,5 +5,0 / −2,5</b> с → <b>5,0 … 12,5</b> с<br>
+          Допуск передаточного числа: <b>0,2 ± 0,08</b> град/м → <b>0,12 … 0,28</b> град/м
+        </div>
+        <div class="hint">Если надо — допишешь примечания.</div>
+      </div>
+
+      <!-- 3) Работы при отклонениях (разделено iX / iZ) -->
+      <div class="col">
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+
+        <div class="split">
+          <div class="subcard">
+            <div class="subttl">A) Продольное направление — регулировка iX</div>
+            <div class="fill" contenteditable="true" id="dev-ix">
+Установите выключатели В7 и В8 на панели технологического жгута в положение "ВКЛ.". Задайте от пульта контроля ДИСС-15Д задачу № 1. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д в положение "ВКЛ.". Нажмите, не отпуская, на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ. Нажмите на кнопку-лампочку "ВКЛ." на пульте управления канала тангажа и по воротом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение.
+Запомните положение шкалы ручки центровки. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д в положение "ОТКЛ.". Поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение. Определите угол поворота шкалы ручки центровки от запомненного положения. Поворотом шкалы ручки центровки в том же направлении задайте по шкале ручки центровки угол, равный запомненному, от скомпенсированного положения. Отпустите кнопку-табло "ВИСЕНИЕ" на пульте ПВМ и одновременно включите секундомер.
+Вращением ручки подстроечного резистора "ix "добейтесь, чтобы величина передаточ-ного числа, замеренная в соответствии с указаниями графы "Содержание операций", составляла (0,2 ±0,08)град/м.
+ПРИМЕЧАНИЕ: При регулировке передаточного числа ix допускается подрегулировка вращением оси резистора "Mwx"
+            </div>
+          </div>
+
+          <div class="subcard">
+            <div class="subttl">B) Поперечное направление — регулировка iZ</div>
+            <div class="fill" contenteditable="true" id="dev-iz">
+Установите выключатели В7 и В8 на панели технологического жгута в положение "ВКЛ.". Задайте от пульта контроля ДИСС-15Д задачу № 2. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д, в положение "ВКЛ.". Нажмите, не отпуская, на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ. Нажмите на пульте управления канала крена на кнопку- лампочку "ВКЛ." поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение.
+Запомните положение шкалы ручки центровки. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д в положение "ОТКЛ.". Поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение. Определите угол поворота шкалы ручки цен-тровки от запомненного положения. Поворотом шкалы ручки центровки в том же направлении задайте по шкале ручки центровки угол, равный определенному, от скомпенсированного положения. Отпустите кнопку-табло "ВИСЕНИЕ" на пульте ПВМ и одно-ременно включите секундомер.
+Вращением ручки подстроечного резистора "iz" добейтесь, чтобы величина передаточного числа, замеренная в соответствии с указаниями графы "Содержание операций", составляла 0,2 ±0,08 град/м.
+ПРИМЕЧАНИЕ: При регулировке передаточного числа допускается подрегулировка вращением оси резистора "Mwx".
+            </div>
+          </div>
+        </div>
+
+        <div class="hint">Работы при отклонениях разделены на iX и iZ. Текст не трогал.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== КАЛЬКУЛЯТОР (НЕ ТРОГАЮ ТВОЙ РАСЧЁТ) ===== -->
+  <section class="card" id="calc-move">
+    <h2>Калькулятор (как в технологии): iX / iZ</h2>
+    <div class="p">
+      Вводишь <b>iW</b> (град/(м/с)) и <b>t</b> (с). Калькулятор считает <b>i = iW / t</b> (град/м) и проверяет по допускам технологии.<br>
+      Допуски: <b>t = 5,0 … 12,5 с</b>; <b>i = 0,12 … 0,28 град/м</b>.
+    </div>
+
+    <div class="calcGrid">
+      <!-- ===== ПРОДОЛЬНОЕ ===== -->
+      <div class="box" id="boxX">
+        <h3>Продольное направление — iX</h3>
+
+        <div class="form">
+          <div class="field">
+            <label>iW<sub>x</sub>, град/(м/с)</label>
+            <input id="iwx" inputmode="decimal" placeholder="например 1,50">
+          </div>
+
+          <div class="field">
+            <label>t, с</label>
+            <input id="tx" inputmode="decimal" placeholder="например 7,5">
+          </div>
+
+          <div class="field">
+            <label>t min, с</label>
+            <input id="tmin" inputmode="decimal" value="5,0">
+          </div>
+          <div class="field">
+            <label>t max, с</label>
+            <input id="tmax" inputmode="decimal" value="12,5">
+          </div>
+
+          <div class="field">
+            <label>i min, град/м</label>
+            <input id="imin" inputmode="decimal" value="0,12">
+          </div>
+          <div class="field">
+            <label>i max, град/м</label>
+            <input id="imax" inputmode="decimal" value="0,28">
+          </div>
+
+          <div class="actions">
+            <button class="primary" type="button" onclick="calcX()">Рассчитать</button>
+            <button type="button" onclick="resetX()">Сброс</button>
+          </div>
+        </div>
+
+        <div class="result" id="outX">
+          <span class="status wait">ОЖИДАЕТ</span><br>
+          Заполни iW<sub>x</sub> и t.
+        </div>
+
+        <div class="small" style="margin-top:8px">
+          Проверка по технологии: <span class="mono">iX = iW<sub>x</sub> / t</span>
+        </div>
+      </div>
+
+      <!-- ===== ПОПЕРЕЧНОЕ ===== -->
+      <div class="box" id="boxZ">
+        <h3>Поперечное направление — iZ</h3>
+
+        <div class="form">
+          <div class="field">
+            <label>iW<sub>z</sub>, град/(м/с)</label>
+            <input id="iwz" inputmode="decimal" placeholder="например 1,50">
+          </div>
+
+          <div class="field">
+            <label>t, с</label>
+            <input id="tz" inputmode="decimal" placeholder="например 7,5">
+          </div>
+
+          <div class="actions">
+            <button class="primary" type="button" onclick="calcZ()">Рассчитать</button>
+            <button type="button" onclick="resetZ()">Сброс</button>
+          </div>
+        </div>
+
+        <div class="result" id="outZ">
+          <span class="status wait">ОЖИДАЕТ</span><br>
+          Заполни iW<sub>z</sub> и t.
+        </div>
+
+        <div class="small" style="margin-top:8px">
+          Проверка по технологии: <span class="mono">iZ = iW<sub>z</sub> / t</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // --- парсинг чисел с запятой ---
+  function pNum(id){
+    const el=document.getElementById(id);
+    const raw=(el.value||'').trim().replace(/\s+/g,'');
+    const v=Number(raw.replace(',','.'));
+    return {el,raw,v,ok:Number.isFinite(v) && raw!==''};
+  }
+  function fmt(x, d){
+    return x.toFixed(d).replace('.',',');
+  }
+  function setStatus(outEl, cls, txt, html){
+    outEl.innerHTML = `<span class="status ${cls}">${txt}</span><br>${html||''}`;
+  }
+
+  function clearMarks(ids){
+    ids.forEach(id=>{
+      const el=document.getElementById(id);
+      el.classList.remove('pass','fail');
+    });
+  }
+  function mark(el, pass){
+    el.classList.add(pass?'pass':'fail');
+  }
+
+  // общие допуски (из полей)
+  function getTol(){
+    const tmin=pNum('tmin'), tmax=pNum('tmax'), imin=pNum('imin'), imax=pNum('imax');
+    const bad=[tmin,tmax,imin,imax].filter(x=>!x.ok);
+    if(bad.length) return null;
+    return {tmin:tmin.v, tmax:tmax.v, imin:imin.v, imax:imax.v};
+  }
+
+  function calcCore(iwId, tId, outId, label){
+    const out=document.getElementById(outId);
+
+    const tol=getTol();
+    if(!tol){
+      setStatus(out,'bad','ОШИБКА ВВОДА','Проверь поля допусков (t min/max, i min/max).');
+      return;
+    }
+
+    const iw=pNum(iwId);
+    const t=pNum(tId);
+
+    clearMarks([iwId,tId]);
+
+    if(!iw.ok || !t.ok){
+      if(!iw.ok) mark(iw.el,false);
+      if(!t.ok)  mark(t.el,false);
+      setStatus(out,'bad','ОШИБКА ВВОДА','Заполни оба поля числами. Разделитель: точка или запятая.');
+      return;
+    }
+
+    if(t.v === 0){
+      mark(t.el,false);
+      setStatus(out,'bad','ОШИБКА','t = 0 → деление на ноль.');
+      return;
+    }
+
+    const i = iw.v / t.v;
+
+    const passT = (t.v >= tol.tmin && t.v <= tol.tmax);
+    const passI = (i   >= tol.imin && i   <= tol.imax);
+    const all   = passT && passI;
+
+    mark(t.el, passT);
+    mark(iw.el, passI);
+
+    const html =
+      `<div class="mono">
+        Формула: ${label} = iW / t<br><br>
+        Время: t = <b>${fmt(t.v,2)} с</b> ; допуск <b>${fmt(tol.tmin,2)} … ${fmt(tol.tmax,2)} с</b> → ${passT?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}<br>
+        Расчёт: ${label} = ${fmt(iw.v,3)} / ${fmt(t.v,2)} = <b>${fmt(i,3)} град/м</b><br>
+        Допуск: <b>${fmt(tol.imin,2)} … ${fmt(tol.imax,2)} град/м</b> → ${passI?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+      </div>`;
+
+    setStatus(out, all?'ok':'bad', all?'ПРОХОДИТ':'НЕ ПРОХОДИТ', html);
+  }
+
+  function calcX(){ calcCore('iwx','tx','outX','iX'); }
+  function calcZ(){ calcCore('iwz','tz','outZ','iZ'); }
+
+  function resetX(){
+    ['iwx','tx'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.value='';
+      el.classList.remove('pass','fail');
+    });
+    setStatus(document.getElementById('outX'),'wait','ОЖИДАЕТ','Заполни iW<sub>x</sub> и t.');
+  }
+  function resetZ(){
+    ['iwz','tz'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.value='';
+      el.classList.remove('pass','fail');
+    });
+    setStatus(document.getElementById('outZ'),'wait','ОЖИДАЕТ','Заполни iW<sub>z</sub> и t.');
+  }
+</script>
+
+</body>
+</html>
