@@ -60,7 +60,7 @@ a.btn:hover{background:rgba(255,255,255,.16)}
   box-shadow:0 18px 40px rgba(0,0,0,.25);
 }
 h2{margin:0 0 10px;font-size:16px}
-.p{color:var(--muted);font-size:14px;line-height:1.45;margin:0 0 10px}
+.p{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 10px}
 
 .grid3{
   display:grid;
@@ -86,8 +86,12 @@ h2{margin:0 0 10px;font-size:16px}
   padding:10px 12px;
   color:var(--muted);
   font-size:13px;
-  line-height:1.45;
+  line-height:1.55;
+
+  /* ВАЖНО: сохраняем абзацы и переносы строк (текст НЕ меняем, только отображение) */
+  white-space:pre-wrap;
 }
+
 .hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
 
 .split{display:grid;gap:12px}
@@ -164,8 +168,15 @@ button:hover{background:rgba(255,255,255,.16)}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
 .pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
 .fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
+
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .small{font-size:12px;color:var(--muted);line-height:1.35}
+
+hr.sep{
+  border:0;
+  border-top:1px solid rgba(255,255,255,.14);
+  margin:10px 0;
+}
 
 @media(max-width:980px){
   .grid3{grid-template-columns:1fr}
@@ -173,6 +184,15 @@ button:hover{background:rgba(255,255,255,.16)}
   .field{grid-column:span 12}
 }
 </style>
+
+<!-- MathJax для красивых формул -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
@@ -231,16 +251,23 @@ button:hover{background:rgba(255,255,255,.16)}
       <!-- 2) ТТ -->
       <div class="col">
         <h3>Технические требования (ТТ)</h3>
+
+        <!-- Текст ТТ не трогаем (оставляем редактируемым), но сверху добавим красивый блок формул -->
         <div class="fill" contenteditable="true" id="tt">
-<b>Формула (как в технологии):</b><br>
-i = φ / ΔH<br><br>
-где:<br>
-φ — угол поворота шкалы ручки центровки, град<br>
-ΔH — изменение геометрической высоты, м<br><br>
-<b>Допуск i:</b> (вставь как в ТТ, например i = ...)<br>
-<b>Если в ТТ есть угол шкалы/ограничение — вставь сюда тоже.</b>
+<b>Формула (как в технологии):</b>
+
+\( i_H = \dfrac{66{,}7}{\Delta H} \)
+
+где:
+\(66{,}7\) — величина хода штока малого цилиндра;
+\(\Delta H\) — отклонение от заданной высоты, м.
+
+<b>Допуски (как в технологии):</b>
+\(\Delta H = 7{,}5^{+3{,}5}_{-2{,}5}\ \Rightarrow\ 5{,}0 \ldots 11{,}0\ \text{м}\)
+\(i_H = 9 \pm 4\ \% \text{хода штока}/\text{м} \Rightarrow 5 \ldots 13\)
         </div>
-        <div class="hint">ТТ — строго как в документе. Тут поле редактируемое.</div>
+
+        <div class="hint">ТТ — строго как в документе. Поле редактируемое.</div>
       </div>
 
       <!-- 3) Работы при отклонениях -->
@@ -273,34 +300,50 @@ i = φ / ΔH<br><br>
     </div>
   </section>
 
-  <!-- ===== КАЛЬКУЛЯТОР (без лишнего, строго расчет i) ===== -->
+  <!-- ===== КАЛЬКУЛЯТОР (строго под твою технологию) ===== -->
   <section class="card" id="calc-h">
-    <h2>Калькулятор (по технологии): i = φ / ΔH</h2>
+    <h2>Калькулятор (по технологии)</h2>
+
     <p class="p">
-      Вводишь <b>φ</b> (град) и <b>ΔH</b> (м). Калькулятор считает <b>i</b> (град/м) и проверяет по допуску, который ты вводишь как <b>i min / i max</b>.
+      Расчёт выполняется по формуле:
+      <b>\( i_H = \dfrac{66{,}7}{\Delta H} \)</b>
+      <br>
+      Проверяются два условия:
+      <br>1) \(\Delta H\) попадает в допуск технологии;
+      <br>2) \(i_H\) попадает в допуск технологии.
     </p>
 
     <div class="calcGrid">
       <div class="box">
-        <h3>Расчёт передаточного числа</h3>
+        <h3>Ввод данных</h3>
 
         <div class="form">
           <div class="field">
-            <label>φ — угол поворота шкалы, град</label>
-            <input id="phi" inputmode="decimal" placeholder="например 15,0">
-          </div>
-          <div class="field">
-            <label>ΔH — изменение геометрической высоты, м</label>
-            <input id="dH" inputmode="decimal" placeholder="например 10,0">
+            <label>ΔH — отклонение от заданной высоты, м</label>
+            <input id="dH" inputmode="decimal" placeholder="например 7,5">
           </div>
 
           <div class="field">
-            <label>i min, град/м (как в ТТ)</label>
-            <input id="imin" inputmode="decimal" placeholder="например 0,12">
+            <label>66,7 — ход штока малого цилиндра (как в технологии)</label>
+            <input id="stroke" inputmode="decimal" value="66,7">
+          </div>
+
+          <div class="field">
+            <label>ΔH min, м</label>
+            <input id="dhmin" inputmode="decimal" value="5,0">
           </div>
           <div class="field">
-            <label>i max, град/м (как в ТТ)</label>
-            <input id="imax" inputmode="decimal" placeholder="например 0,28">
+            <label>ΔH max, м</label>
+            <input id="dhmax" inputmode="decimal" value="11,0">
+          </div>
+
+          <div class="field">
+            <label>iH min</label>
+            <input id="ihmin" inputmode="decimal" value="5">
+          </div>
+          <div class="field">
+            <label>iH max</label>
+            <input id="ihmax" inputmode="decimal" value="13">
           </div>
 
           <div class="actions">
@@ -311,11 +354,26 @@ i = φ / ΔH<br><br>
 
         <div class="result" id="out">
           <span class="status wait">ОЖИДАЕТ</span><br>
-          Заполни φ, ΔH и допуск i (min/max).
+          Заполни ΔH (и при необходимости поправь допуски).
         </div>
 
-        <div class="small" style="margin-top:8px">
-          Формула: <span class="mono">i = φ / ΔH</span>
+        <hr class="sep">
+
+        <div class="small">
+          Формула: <span class="mono">iH = 66,7 / ΔH</span>
+        </div>
+      </div>
+
+      <div class="box">
+        <h3>Пояснение (как считать)</h3>
+        <div class="p">
+          1) Вводишь \(\Delta H\) (м).<br>
+          2) Берём константу 66,7 (ход штока) — по технологии.<br>
+          3) Считаем \(i_H\).<br>
+          4) Сравниваем \(\Delta H\) и \(i_H\) с допусками.
+        </div>
+        <div class="small">
+          Если у тебя в ТТ в этом пункте другие границы — просто поменяй поля допусков.
         </div>
       </div>
     </div>
@@ -330,13 +388,15 @@ function pNum(id){
   const v=Number(raw.replace(',','.'));
   return {el, raw, v, ok:Number.isFinite(v) && raw!==''};
 }
-function fmt(x, d){ return x.toFixed(d).replace('.',','); }
-
+function fmt(x, d){
+  const s = x.toFixed(d);
+  return s.replace('.',',');
+}
 function setStatus(outEl, cls, txt, html){
   outEl.innerHTML = `<span class="status ${cls}">${txt}</span><br>${html||''}`;
 }
 function clearMarks(){
-  ['phi','dH','imin','imax'].forEach(id=>{
+  ['dH','stroke','dhmin','dhmax','ihmin','ihmax'].forEach(id=>{
     document.getElementById(id).classList.remove('pass','fail');
   });
 }
@@ -346,17 +406,19 @@ function calc(){
   const out=document.getElementById('out');
   clearMarks();
 
-  const phi=pNum('phi');
   const dH=pNum('dH');
-  const imin=pNum('imin');
-  const imax=pNum('imax');
+  const stroke=pNum('stroke');
+  const dhmin=pNum('dhmin');
+  const dhmax=pNum('dhmax');
+  const ihmin=pNum('ihmin');
+  const ihmax=pNum('ihmax');
 
   let bad=false;
-  [phi,dH,imin,imax].forEach(x=>{
+  [dH,stroke,dhmin,dhmax,ihmin,ihmax].forEach(x=>{
     if(!x.ok){ mark(x.el,false); bad=true; }
   });
   if(bad){
-    setStatus(out,'bad','ОШИБКА ВВОДА','Заполни φ, ΔH и i min / i max числами. Разделитель: точка или запятая.');
+    setStatus(out,'bad','ОШИБКА ВВОДА','Заполни поля числами. Разделитель: точка или запятая.');
     return;
   }
 
@@ -366,35 +428,46 @@ function calc(){
     return;
   }
 
-  const i = phi.v / dH.v;
+  const DHmin=Math.min(dhmin.v, dhmax.v);
+  const DHmax=Math.max(dhmin.v, dhmax.v);
+  const IHmin=Math.min(ihmin.v, ihmax.v);
+  const IHmax=Math.max(ihmin.v, ihmax.v);
 
-  const min = Math.min(imin.v, imax.v);
-  const max = Math.max(imin.v, imax.v);
+  const iH = stroke.v / dH.v;
 
-  const ok = (i>=min && i<=max);
+  const passDH = (dH.v>=DHmin && dH.v<=DHmax);
+  const passIH = (iH>=IHmin && iH<=IHmax);
+  const all = passDH && passIH;
 
-  mark(phi.el, ok);
-  mark(dH.el, ok);
-  mark(imin.el, true);
-  mark(imax.el, true);
+  mark(dH.el, passDH);
+  mark(stroke.el, true);
+
+  // подсветим допуски зелёным (они обычно не «ошибочные»)
+  mark(dhmin.el, true); mark(dhmax.el, true);
+  mark(ihmin.el, true); mark(ihmax.el, true);
 
   const html = `
   <div class="mono">
-    Формула: i = φ / ΔH<br><br>
-    Подстановка: i = ${fmt(phi.v,2)} / ${fmt(dH.v,2)} = <b>${fmt(i,3)} град/м</b><br>
-    Допуск: <b>${fmt(min,3)} … ${fmt(max,3)} град/м</b> → ${ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+    Формула: iH = 66,7 / ΔH<br><br>
+
+    Проверка ΔH:<br>
+    ΔH = <b>${fmt(dH.v,2)} м</b> ; допуск <b>${fmt(DHmin,2)} … ${fmt(DHmax,2)} м</b> → ${passDH?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}<br><br>
+
+    Расчёт iH:<br>
+    iH = ${fmt(stroke.v,1)} / ${fmt(dH.v,2)} = <b>${fmt(iH,2)}</b><br>
+    Допуск iH: <b>${fmt(IHmin,2)} … ${fmt(IHmax,2)}</b> → ${passIH?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
   </div>`;
 
-  setStatus(out, ok?'ok':'bad', ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ', html);
+  setStatus(out, all?'ok':'bad', all?'ПРОХОДИТ':'НЕ ПРОХОДИТ', html);
+
+  // перерендер MathJax внутри результата (на всякий случай)
+  if(window.MathJax && window.MathJax.typeset) window.MathJax.typeset();
 }
 
 function resetAll(){
-  ['phi','dH','imin','imax'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.value='';
-    el.classList.remove('pass','fail');
-  });
-  setStatus(document.getElementById('out'),'wait','ОЖИДАЕТ','Заполни φ, ΔH и допуск i (min/max).');
+  clearMarks();
+  document.getElementById('dH').value='';
+  setStatus(document.getElementById('out'),'wait','ОЖИДАЕТ','Заполни ΔH (и при необходимости поправь допуски).');
 }
 </script>
 
