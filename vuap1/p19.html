@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ВУАП-1 · p19 · Передаточное число по сигналу курса в канал крена</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a; --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff; --muted:#b7c7dd;
+  --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{max-width:1200px;margin:0 auto;padding:18px}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+}
+h1,h2,h3{margin:0 0 10px}
+.p{color:var(--muted);font-size:14px;line-height:1.45}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+.col{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px;
+  background:rgba(0,0,0,.14);
+}
+
+.split{display:grid;gap:12px}
+.subcard{
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:10px;
+  background:rgba(0,0,0,.10);
+}
+.subttl{font-weight:900;font-size:13px;margin-bottom:6px}
+
+.fill{
+  min-height:200px;
+  border:1px dashed rgba(255,255,255,.25);
+  border-radius:12px;
+  padding:10px;
+  color:var(--muted);
+}
+
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;
+}
+.field{grid-column:span 6}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+}
+.actions{grid-column:span 12;display:flex;gap:12px}
+
+button{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-weight:900;
+  cursor:pointer;
+}
+button.primary{background:#fff;color:#000}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+
+@media(max-width:900px){
+  .grid3{grid-template-columns:1fr}
+  .field{grid-column:span 12}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h1>ВУАП-1 · p19</h1>
+<p class="p">Проверка и регулировка передаточного числа по сигналу курса Δψ в канал крена γ</p>
+
+<!-- ===== ТЕХНОЛОГИЯ ===== -->
+<section class="card">
+  <h2>Технология</h2>
+
+  <div class="grid3">
+    <div class="col">
+      <h3>Содержание операций</h3>
+
+      <div class="split">
+        <div class="subcard">
+          <div class="subttl">A) Проверка передаточного числа</div>
+          <div class="fill" contenteditable="true">
+Проверка ограничения 𝛾з в режиме "МАРШРУТ" (перед проверкой ограничения 𝛾з произвести проверку передаточного числа по сигналу курса в канал крена iΔψγ​ это следующий пункт Б) (следующая проверка)).
+Выставить на курсовой системе угол курса,равный нулю,для чего:
+            а) режим работы КС установить ЗК;
+            б) установить на КМ склонение,равное 0;
+            в) соглосовать КС на этом ЗК.
+Включить тумблер В7 изделия 24-7100-70.Нажать на кнопку табло "ВКЛ" на пульте управления "К". Нажать на кнопку-табло "МАРШРУТ" пульта ПВМ.
+Поворотом ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение (исходное положение шкалы).
+Задать на ЗПУ 50 градусов (310 градусов).
+Поворотом ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение.
+По шкале центровки пульта управления "К" заметить угол поворота от исходного положения.
+Установить исходное положение ЗПУ.
+Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+            
+
+          </div>
+        </div>
+
+        <div class="subcard">
+          <div class="subttl">B) Регулировка передаточного числа</div>
+          <div class="fill" contenteditable="true">
+Проверка и регулировка передаточного числа по сигналу курса в канал крена iΔψγ​.
+    Задать от ПК ДИСС-15 задачу №3, а затем переключить в режим "ПАМЯТЬ".
+    Включить тумблер В7 изделия 24-7100-70.
+    Выставить на курсовой системе угол курса,равный нулю,для чего:
+            а) режим работы КС установить ЗК;
+            б) установить на КМ склонение,равное 0;
+            в) соглосовать КС на этом ЗК.
+    Вращая ручку ЗПУ, установить на его шкале угол ψ=0.
+    Нажать на кнопку-табло "МАРШРУТ" пульта ПВМ.
+    Поворотом ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение (начальное положение шкалы).
+    Вращая ручку ЗПУ по (против) часовой стерлки, задать по счётчику угол 10 градусов (350 градусов).
+    Поворотом ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение. 
+    По шкале центровки пульта управления "К" заметить угол поворота от начального положения.
+    Вращая ручку ЗПУ,установить счётчик ЗПУ в нулевое положение. Передаточное число определить по формуле:
+    iγ Δ ψ  = φ /10,где
+    ​​iΔψγ-передаточное число по сигналу курса в канал крена;
+    φ-угол поворота шкалы центровки;
+    10-угол,задаваемый по ЗПУ-24.
+    Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.       
+    
+    
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Технические требования (ТТ)</h3>
+      <div class="fill">
+        Формула (по технологии):<br><br>
+        <b>i<sub>Δψ</sub><sup>γ</sup> = ψ / 10</b><br><br>
+
+        где:<br>
+        ψ — угол поворота шкалы центровки, град<br><br>
+
+        Допуск:<br>
+        <b>i<sub>Δψ</sub><sup>γ</sup> = 1 ± 0,4 град/град</b>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Работы при отклонениях от ТТ</h3>
+
+      <div class="split">
+        <div class="subcard">
+          <div class="subttl">A) При проверке</div>
+          <div class="fill" contenteditable="true">
+
+          </div>
+        </div>
+
+        <div class="subcard">
+          <div class="subttl">B) При регулировке</div>
+          <div class="fill" contenteditable="true">
+Задать от ПК ДИСС-15 задачу №3, а затем переключить в режим "ПАМЯТЬ".
+ Включить тумблер В7 изделия 24-7100-70.
+    Выставить на курсовой системе угол курса,равный нулю,для чего:
+            а) режим работы КС установить ЗК;
+            б) установить на КМ склонение,равное 0;
+            в) соглосовать КС на этом ЗК.
+    Вращая ручку ЗПУ, установить на его шкале угол ψ=0.
+    Нажать на кнопку-табло "МАРШРУТ" пульта ПВМ.
+    Поворотом ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение (начальное положение шкалы).
+    Вращая ручку ЗПУ по  часовой стерлки, задать по счётчику угол 10 градусов.
+    Поворотом шкалы ручки центровки установить угол 10 градусов.
+    Вращая ось подстроечного резистора "iγ Δ ψ" в блоке БВ-24,установить стрелку индикатора нулевого в среднее положение.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== КАЛЬКУЛЯТОР ===== -->
+<section class="card">
+  <h2>Калькулятор (по технологии)</h2>
+
+  <div class="form">
+    <div class="field">
+      <label>ψ — угол поворота шкалы, град</label>
+      <input id="psi">
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="calc()">Рассчитать</button>
+      <button onclick="resetAll()">Сброс</button>
+    </div>
+  </div>
+
+  <div class="result" id="out">
+    <span class="status wait">ОЖИДАЕТ</span>
+  </div>
+</section>
+
+</div>
+
+<script>
+function num(v){return Number((v||'').replace(',','.'))}
+
+function calc(){
+  const psi=num(document.getElementById('psi').value);
+  if(!isFinite(psi)){
+    out.innerHTML='<span class="status bad">ОШИБКА</span> Введите угол ψ';
+    return;
+  }
+
+  const i=psi/10;
+  const ok=(i>=0.6 && i<=1.4);
+
+  out.innerHTML=
+   `<span class="status ${ok?'ok':'bad'}">
+     ${ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+    </span><br><br>
+    Формула: i<sub>Δψ</sub><sup>γ</sup> = ψ / 10<br>
+    Расчёт: ${psi} / 10 = <b>${i.toFixed(2)}</b> град/град<br>
+    Допуск: 0,6 … 1,4`;
+}
+
+function resetAll(){
+  psi.value='';
+  out.innerHTML='<span class="status wait">ОЖИДАЕТ</span>';
+}
+</script>
+
+</body>
+</html>
