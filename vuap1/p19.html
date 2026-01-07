@@ -59,12 +59,16 @@ h1,h2,h3{margin:0 0 10px}
   border-radius:12px;
   padding:10px;
   color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  white-space:pre-wrap;
 }
 
 .form{
   display:grid;
   grid-template-columns:repeat(12,1fr);
   gap:12px;
+  margin-top:10px;
 }
 .field{grid-column:span 6}
 label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
@@ -75,8 +79,10 @@ input{
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.10);
   color:var(--text);
+  outline:none;
 }
-.actions{grid-column:span 12;display:flex;gap:12px}
+input:focus{border-color:rgba(255,255,255,.35)}
+.actions{grid-column:span 12;display:flex;gap:12px;flex-wrap:wrap}
 
 button{
   padding:10px 14px;
@@ -94,16 +100,25 @@ button.primary{background:#fff;color:#000}
   padding:14px;
   border-radius:14px;
   border:1px solid var(--stroke);
+  background:rgba(0,0,0,.18);
 }
 .status{
   display:inline-block;
   padding:6px 10px;
   border-radius:999px;
   font-size:12px;
+  margin-bottom:10px;
 }
 .ok{background:rgba(124,255,158,.18);color:var(--ok)}
 .bad{background:rgba(255,154,154,.18);color:var(--bad)}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+
+hr.sep{
+  border:0;
+  border-top:1px solid rgba(255,255,255,.14);
+  margin:12px 0;
+}
 
 @media(max-width:900px){
   .grid3{grid-template-columns:1fr}
@@ -116,19 +131,20 @@ button.primary{background:#fff;color:#000}
 <div class="wrap">
 
 <h1>ВУАП-1 · p19</h1>
-<p class="p">Проверка и регулировка передаточного числа по сигналу курса Δψ в канал крена γ</p>
+<p class="p">Проверка ограничения γз в режиме «МАРШРУТ» и проверка/регулировка передаточного числа по сигналу курса Δψ в канал крена γ</p>
 
 <!-- ===== ТЕХНОЛОГИЯ ===== -->
 <section class="card">
   <h2>Технология</h2>
 
   <div class="grid3">
+    <!-- ===== 1 колонка ===== -->
     <div class="col">
       <h3>Содержание операций</h3>
 
       <div class="split">
         <div class="subcard">
-          <div class="subttl">A) Проверка передаточного числа</div>
+          <div class="subttl">A) Проверка ограничения γз в режиме «МАРШРУТ»</div>
           <div class="fill" contenteditable="true">
 Проверка ограничения 𝛾з в режиме "МАРШРУТ" (перед проверкой ограничения 𝛾з произвести проверку передаточного числа по сигналу курса в канал крена iΔψγ​ это следующий пункт Б) (следующая проверка)).
 Выставить на курсовой системе угол курса,равный нулю,для чего:
@@ -142,13 +158,11 @@ button.primary{background:#fff;color:#000}
 По шкале центровки пульта управления "К" заметить угол поворота от исходного положения.
 Установить исходное положение ЗПУ.
 Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
-            
-
           </div>
         </div>
 
         <div class="subcard">
-          <div class="subttl">B) Регулировка передаточного числа</div>
+          <div class="subttl">B) Проверка и регулировка i<sub>Δψ</sub><sup>γ</sup></div>
           <div class="fill" contenteditable="true">
 Проверка и регулировка передаточного числа по сигналу курса в канал крена iΔψγ​.
     Задать от ПК ДИСС-15 задачу №3, а затем переключить в режим "ПАМЯТЬ".
@@ -169,40 +183,48 @@ button.primary{background:#fff;color:#000}
     φ-угол поворота шкалы центровки;
     10-угол,задаваемый по ЗПУ-24.
     Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.       
-    
-    
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ===== 2 колонка ===== -->
     <div class="col">
       <h3>Технические требования (ТТ)</h3>
       <div class="fill">
-        Формула (по технологии):<br><br>
-        <b>i<sub>Δψ</sub><sup>γ</sup> = ψ / 10</b><br><br>
+<b>1) Проверка ограничения γз (режим «МАРШРУТ»)</b><br>
+Угол поворота шкалы ручки центровки, град: <b>15° ± 3°</b><br>
+Величина ограничения γз, град: <b>15° ± 3°</b><br>
+(то есть диапазон: <b>12° … 18°</b>)<br>
 
-        где:<br>
-        ψ — угол поворота шкалы центровки, град<br><br>
+<hr class="sep">
 
-        Допуск:<br>
-        <b>i<sub>Δψ</sub><sup>γ</sup> = 1 ± 0,4 град/град</b>
+<b>2) Передаточное число по сигналу курса Δψ в канал крена γ</b><br><br>
+Формула (по технологии):<br>
+<b>i<sub>Δψ</sub><sup>γ</sup> = ψ / 10</b>  (град/град)<br><br>
+где:<br>
+ψ — угол поворота шкалы центровки, град<br>
+10 — угол, задаваемый по ЗПУ-24, град<br><br>
+
+Допуск:<br>
+<b>i<sub>Δψ</sub><sup>γ</sup> = 1 ± 0,4</b> град/град → <b>0,6 … 1,4</b>
       </div>
     </div>
 
+    <!-- ===== 3 колонка ===== -->
     <div class="col">
-      <h3>Работы при отклонениях от ТТ</h3>
+      <h3>Работы, выполняемые при отклонениях от ТТ</h3>
 
       <div class="split">
         <div class="subcard">
-          <div class="subttl">A) При проверке</div>
-          <div class="fill" contenteditable="true">
-
+          <div class="subttl">A) При проверке ограничения γз</div>
+          <div class="fill">
+Замените блок БВ-24
           </div>
         </div>
 
         <div class="subcard">
-          <div class="subttl">B) При регулировке</div>
+          <div class="subttl">B) При проверке/регулировке i<sub>Δψ</sub><sup>γ</sup></div>
           <div class="fill" contenteditable="true">
 Задать от ПК ДИСС-15 задачу №3, а затем переключить в режим "ПАМЯТЬ".
  Включить тумблер В7 изделия 24-7100-70.
@@ -227,50 +249,145 @@ button.primary{background:#fff;color:#000}
 <section class="card">
   <h2>Калькулятор (по технологии)</h2>
 
-  <div class="form">
-    <div class="field">
-      <label>ψ — угол поворота шкалы, град</label>
-      <input id="psi">
-    </div>
-
-    <div class="actions">
-      <button class="primary" onclick="calc()">Рассчитать</button>
-      <button onclick="resetAll()">Сброс</button>
-    </div>
+  <div class="p">
+    <b>A)</b> Проверка ограничения <b>γз</b> в режиме «МАРШРУТ»: сравнение с <b>15° ± 3°</b> (12…18).<br>
+    <b>B)</b> Передаточное число по курсу в канал крена: <span class="mono">i<sub>Δψ</sub><sup>γ</sup> = ψ / 10</span>, допуск <b>0,6…1,4</b>.
   </div>
 
-  <div class="result" id="out">
-    <span class="status wait">ОЖИДАЕТ</span>
+  <div class="grid3" style="grid-template-columns:1fr 1fr 1fr; gap:12px;">
+    <div class="col">
+      <h3>A) Ограничение γз («МАРШРУТ»)</h3>
+      <div class="form">
+        <div class="field">
+          <label>φ — измеренный угол поворота шкалы центровки, град</label>
+          <input id="phi_lim" inputmode="decimal" placeholder="например 15">
+        </div>
+        <div class="actions">
+          <button class="primary" type="button" onclick="calcLimit()">Проверить</button>
+          <button type="button" onclick="resetLimit()">Сброс</button>
+        </div>
+      </div>
+      <div class="result" id="outLimit">
+        <span class="status wait">ОЖИДАЕТ</span><br>
+        Введите φ и нажмите «Проверить».
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>B) i<sub>Δψ</sub><sup>γ</sup> = ψ / 10</h3>
+      <div class="form">
+        <div class="field">
+          <label>ψ — угол поворота шкалы центровки, град</label>
+          <input id="psi" inputmode="decimal" placeholder="например 10">
+        </div>
+        <div class="actions">
+          <button class="primary" type="button" onclick="calcIGamma()">Рассчитать</button>
+          <button type="button" onclick="resetIGamma()">Сброс</button>
+        </div>
+      </div>
+      <div class="result" id="outIGamma">
+        <span class="status wait">ОЖИДАЕТ</span><br>
+        Введите ψ и нажмите «Рассчитать».
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>Справка по допускам</h3>
+      <div class="fill">
+<b>Ограничение γз:</b><br>
+Номинал: 15°<br>
+Допуск: ±3°<br>
+Диапазон: <b>12° … 18°</b><br><br>
+
+<b>i<sub>Δψ</sub><sup>γ</sup>:</b><br>
+Номинал: 1<br>
+Допуск: ±0,4<br>
+Диапазон: <b>0,6 … 1,4</b><br><br>
+
+Формула:<br>
+<b>i<sub>Δψ</sub><sup>γ</sup> = ψ / 10</b>
+      </div>
+    </div>
   </div>
 </section>
 
 </div>
 
 <script>
-function num(v){return Number((v||'').replace(',','.'))}
+function toNum(val){
+  const raw = String(val ?? '').trim().replace(/\s+/g,'');
+  const v = Number(raw.replace(',','.'));
+  return { raw, v, ok: Number.isFinite(v) && raw !== '' };
+}
 
-function calc(){
-  const psi=num(document.getElementById('psi').value);
-  if(!isFinite(psi)){
-    out.innerHTML='<span class="status bad">ОШИБКА</span> Введите угол ψ';
+function fmt(x, d=2){
+  return x.toFixed(d).replace('.',',');
+}
+
+function setOut(el, cls, title, html){
+  el.innerHTML = `<span class="status ${cls}">${title}</span><br>${html || ''}`;
+}
+
+/* ===== A) Ограничение γз ===== */
+function calcLimit(){
+  const out = document.getElementById('outLimit');
+  const inp = document.getElementById('phi_lim');
+  const phi = toNum(inp.value);
+
+  if(!phi.ok){
+    setOut(out, 'bad', 'ОШИБКА', 'Введите угол φ (град). Разделитель: точка или запятая.');
     return;
   }
 
-  const i=psi/10;
-  const ok=(i>=0.6 && i<=1.4);
+  const min = 12, max = 18; // 15 ± 3
+  const pass = (phi.v >= min && phi.v <= max);
 
-  out.innerHTML=
-   `<span class="status ${ok?'ok':'bad'}">
-     ${ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
-    </span><br><br>
-    Формула: i<sub>Δψ</sub><sup>γ</sup> = ψ / 10<br>
-    Расчёт: ${psi} / 10 = <b>${i.toFixed(2)}</b> град/град<br>
-    Допуск: 0,6 … 1,4`;
+  const html = `
+  <div class="mono">
+    ТТ: φ = 15° ± 3°  →  12° … 18°<br>
+    Факт: φ = <b>${fmt(phi.v,2)}°</b><br>
+    Результат: ${pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ'}<br><br>
+    (по ТТ: «Угол поворота шкалы ручки центровки» и «Величина ограничения γз» — оба <b>15° ± 3°</b>)
+  </div>`;
+
+  setOut(out, pass ? 'ok' : 'bad', pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ', html);
 }
 
-function resetAll(){
-  psi.value='';
-  out.innerHTML='<span class="status wait">ОЖИДАЕТ</span>';
+function resetLimit(){
+  document.getElementById('phi_lim').value = '';
+  const out = document.getElementById('outLimit');
+  setOut(out, 'wait', 'ОЖИДАЕТ', 'Введите φ и нажмите «Проверить».');
+}
+
+/* ===== B) iΔψ^γ ===== */
+function calcIGamma(){
+  const out = document.getElementById('outIGamma');
+  const inp = document.getElementById('psi');
+  const psi = toNum(inp.value);
+
+  if(!psi.ok){
+    setOut(out, 'bad', 'ОШИБКА', 'Введите угол ψ (град). Разделитель: точка или запятая.');
+    return;
+  }
+
+  const i = psi.v / 10;
+  const min = 0.6, max = 1.4; // 1 ± 0.4
+  const pass = (i >= min && i <= max);
+
+  const html = `
+  <div class="mono">
+    Формула: i<sub>Δψ</sub><sup>γ</sup> = ψ / 10<br>
+    Расчёт: ${fmt(psi.v,2)} / 10 = <b>${fmt(i,2)}</b> град/град<br>
+    Допуск: 0,6 … 1,4 → ${pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ'}
+  </div>`;
+
+  setOut(out, pass ? 'ok' : 'bad', pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ', html);
+}
+
+function resetIGamma(){
+  document.getElementById('psi').value = '';
+  const out = document.getElementById('outIGamma');
+  setOut(out, 'wait', 'ОЖИДАЕТ', 'Введите ψ и нажмите «Рассчитать».');
 }
 </script>
 
