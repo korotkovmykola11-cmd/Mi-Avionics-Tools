@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ВУАП-1 · p21 · Проверка коэффициента соотношения передаточного числа по вертикальной скорости и по высоте</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a; --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff; --muted:#b7c7dd;
+
+  /* статусы */
+  --ok:#7CFF9E;
+  --bad:#FF9A9A;
+  --wait:#FFD27C;
+
+  --okBg:rgba(124,255,158,.18);
+  --badBg:rgba(255,154,154,.18);
+  --waitBg:rgba(255,210,124,.18);
+
+  --panel:rgba(0,0,0,.14);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+.wrap{max-width:1200px;margin:0 auto;padding:18px}
+
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.brand{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px 16px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+.brand h1{margin:0;font-size:18px;letter-spacing:.2px}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+a.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:9px 12px;border-radius:12px;text-decoration:none;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:13px;font-weight:900;
+}
+a.btn:hover{background:rgba(255,255,255,.16)}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+h2{margin:0 0 10px;font-size:16px}
+.p{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 10px}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin-top:10px;
+}
+.col{
+  border:1px solid var(--stroke);
+  background:var(--panel);
+  border-radius:16px;
+  padding:12px;
+}
+.col h3{
+  margin:0 0 8px;
+  font-size:14px;
+  font-weight:900;
+}
+
+/* ВАЖНО: текст НЕ меняем. Просто делаем переносы читабельными */
+.fill{
+  min-height:220px;
+  border:1px dashed rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:10px 12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.65;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
+
+/* блок “красиво формула” */
+.math{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.18);
+}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.math .mono{font-size:13px;line-height:1.55}
+.bigFormula{
+  display:flex;align-items:center;justify-content:center;
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.20);
+  font-weight:900;
+}
+.bigFormula span{font-size:16px}
+
+/* калькулятор */
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:12px;
+  margin-top:10px;
+}
+.field{grid-column:span 6}
+.field.small{grid-column:span 4}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-size:14px;
+  outline:none;
+}
+input:focus{border-color:rgba(255,255,255,.35)}
+.actions{grid-column:span 12;display:flex;gap:12px;flex-wrap:wrap}
+button{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.10);
+  color:var(--text);
+  font-weight:900;
+  cursor:pointer;
+}
+button.primary{background:linear-gradient(180deg,#fff,#e6f0ff);color:#000}
+button:hover{background:rgba(255,255,255,.16)}
+
+.result{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-bottom:8px;
+  font-weight:900;
+}
+.ok{background:var(--okBg);color:var(--ok)}
+.bad{background:var(--badBg);color:var(--bad)}
+.wait{background:var(--waitBg);color:var(--wait)}
+
+.pass{background:var(--okBg)!important;border-color:rgba(124,255,158,.35)!important}
+.fail{background:var(--badBg)!important;border-color:rgba(255,154,154,.35)!important}
+
+.kpiRow{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.kpi{
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:12px;
+  background:rgba(0,0,0,.18);
+  padding:10px 12px;
+}
+.kpi b{color:var(--text)}
+.smallNote{font-size:12px;color:var(--muted);line-height:1.45}
+
+@media(max-width:980px){
+  .grid3{grid-template-columns:1fr}
+  .field{grid-column:span 12}
+  .field.small{grid-column:span 12}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <h1>ВУАП-1 · p21</h1>
+      <p>Проверка коэффициента соотношения передаточного числа по вертикальной скорости и по высоте</p>
+    </div>
+    <a class="btn" href="./page-vuap-1.html">← ВУАП-1 (общее меню)</a>
+  </div>
+
+  <!-- ===== ТЕХНОЛОГИЯ (3 графы) ===== -->
+  <section class="card">
+    <h2>Технология (3 графы)</h2>
+
+    <div class="grid3">
+      <!-- 1) Содержание операций -->
+      <div class="col">
+        <h3>Содержание операций</h3>
+        <div class="fill" contenteditable="true" id="op">
+Включить тумблер В7,В8 изделия 24-7100-70.
+          Задать от ПК ДИСС задачу №1.
+          Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".
+          Задать от КПА РВ сигнал H РВ=40 метров (исходная величина). Через 4-5 минут нажать на кнопку-табло "ВЫСОТА" на пульте ПВП.
+          Поворотом потенциометра "ЦЕНТР" на пульте управления "В" установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+          Отключить выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС.Через 4-5 минут,задавая от КПА РВ плавно изменяющейся сигнал ΔH, установить стрелку индикатора нулевого в среднее положение.
+          Коэфициент отношения "К" определить по формуле:
+                  К=ΔH/4,5,где
+                  ΔH- отклонение от заданной (исходной) высоты,задаваемое от КПА РВ (м).
+          Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+        </div>
+        <div class="hint">Текст без изменений. Переносы строк сохраняются.</div>
+      </div>
+
+      <!-- 2) ТТ -->
+      <div class="col">
+        <h3>Технические требования (ТТ)</h3>
+        <div class="fill" id="tt">
+Коэффициент соотношения:
+
+k = Δh / 4,5
+
+где:
+Δh — отклонение от заданной (“исходной”) высоты, задаваемой от КПА РВ, м.
+
+(сюда добавишь допуск k из технологии, если он указан)
+        </div>
+
+        <div class="math">
+          <div class="mono">Формула (красиво):</div>
+          <div class="bigFormula">
+            <span>k = Δh / 4,5</span>
+          </div>
+          <div class="smallNote" style="margin-top:8px;">
+            Здесь <b>Δh</b> — именно отклонение от исходной высоты (например, 40 → 18 даёт Δh = 22 м).
+          </div>
+        </div>
+      </div>
+
+      <!-- 3) Работы при отклонениях -->
+      <div class="col">
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+        <div class="fill" contenteditable="true" id="dev">
+Включить тумблер В7,В8 изделия 24-7100-70.
+          Задать от ПК ДИСС задачу №1.
+          Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".
+          Задать от КПА РВ сигнал H РВ=40 метров (исходная величина). Через 4-5 минут нажать на кнопку-табло "ВЫСОТА" на пульте ПВП.
+          Поворотом потенциометра "ЦЕНТР" на пульте управления "В" установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+          Отключить выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС.Через 4-5 минут,задавая от КПА РВ сигнал 18 метров на спуск.
+          Вращая ось подстроечного резистора "IWy" в блоке БСВ-24,установить подвижную стрелку индикатора нулевого в среднее положение.
+        </div>
+        <div class="hint">Текст без изменений. Тут один параметр — как ты и сказал.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== КАЛЬКУЛЯТОР ===== -->
+  <section class="card" id="calc">
+    <h2>Калькулятор (по технологии): k = Δh / 4,5</h2>
+    <p class="p">
+      Делаем так, чтобы <b>Δh</b> было видно всегда: можно ввести <b>Δh</b> напрямую, либо посчитать его как разность
+      между <b>H₀ (исходная)</b> и <b>H₁ (заданная/полученная)</b>.
+    </p>
+
+    <div class="form">
+      <div class="field">
+        <label>H₀ — исходная высота (как в технологии), м</label>
+        <input id="h0" inputmode="decimal" value="40">
+      </div>
+
+      <div class="field">
+        <label>H₁ — высота после задания, м</label>
+        <input id="h1" inputmode="decimal" placeholder="например 18">
+      </div>
+
+      <div class="field">
+        <label>Δh — отклонение от исходной высоты, м (можно оставить пустым)</label>
+        <input id="dh" inputmode="decimal" placeholder="если пусто — посчитаю как |H₁ − H₀|">
+      </div>
+
+      <div class="field">
+        <label>4,5 (постоянная по технологии)</label>
+        <input id="c" inputmode="decimal" value="4,5">
+      </div>
+
+      <div class="field">
+        <label>k min (если есть в ТТ)</label>
+        <input id="kmin" inputmode="decimal" placeholder="необязательно">
+      </div>
+
+      <div class="field">
+        <label>k max (если есть в ТТ)</label>
+        <input id="kmax" inputmode="decimal" placeholder="необязательно">
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="button" onclick="calcK()">Рассчитать</button>
+        <button type="button" onclick="resetAll()">Сброс</button>
+      </div>
+    </div>
+
+    <div class="result" id="out">
+      <span class="status wait">ОЖИДАЕТ</span><br>
+      Заполни H₁ (или Δh), и нажми «Рассчитать».
+    </div>
+
+    <div class="kpiRow">
+      <div class="kpi">
+        <div class="mono">
+          Формула: <b>k = Δh / 4,5</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function pNum(id){
+  const el=document.getElementById(id);
+  const raw=(el.value||'').trim().replace(/\s+/g,'');
+  const v=Number(raw.replace(',','.'));
+  return {el, raw, v, ok:Number.isFinite(v) && raw!==''};
+}
+function fmt(x, d){ return x.toFixed(d).replace('.',','); }
+
+function setStatus(cls, txt, html){
+  const out=document.getElementById('out');
+  out.innerHTML = `<span class="status ${cls}">${txt}</span><br>${html||''}`;
+}
+function mark(el, pass){
+  el.classList.remove('pass','fail');
+  el.classList.add(pass?'pass':'fail');
+}
+function clearMarks(){
+  ['h0','h1','dh','c','kmin','kmax'].forEach(id=>{
+    document.getElementById(id).classList.remove('pass','fail');
+  });
+}
+
+function calcK(){
+  clearMarks();
+
+  const h0=pNum('h0');
+  const h1=pNum('h1');
+  const dh=pNum('dh');
+  const c =pNum('c');
+  const kmin=pNum('kmin');
+  const kmax=pNum('kmax');
+
+  if(!c.ok || c.v===0){
+    mark(c.el,false);
+    setStatus('bad','ОШИБКА','Проверь 4,5 (деление на ноль нельзя).');
+    return;
+  }
+
+  // Δh: либо введён, либо считаем как |H1 - H0|
+  let delta = null;
+  let deltaFrom = '';
+
+  if(dh.ok){
+    delta = dh.v;
+    deltaFrom = 'Δh введено вручную';
+  }else{
+    if(!h0.ok) mark(h0.el,false);
+    if(!h1.ok) mark(h1.el,false);
+
+    if(!h0.ok || !h1.ok){
+      setStatus('bad','ОШИБКА ВВОДА','Заполни H₀ и H₁ (или введи Δh напрямую). Разделитель: точка или запятая.');
+      return;
+    }
+    delta = Math.abs(h1.v - h0.v);
+    deltaFrom = 'Δh рассчитано как |H₁ − H₀|';
+  }
+
+  if(delta === 0){
+    mark(dh.ok ? dh.el : h1.el, false);
+    setStatus('bad','ОШИБКА','Δh = 0 → k = 0 (проверь исходную и заданную высоты).');
+    return;
+  }
+
+  const k = delta / c.v;
+
+  // подсветка ключевых полей
+  mark(c.el,true);
+  if(dh.ok){
+    mark(dh.el,true);
+  }else{
+    mark(h0.el,true);
+    mark(h1.el,true);
+  }
+
+  const hasTol = (kmin.ok && kmax.ok);
+
+  if(!hasTol){
+    setStatus('ok','РАСЧИТАНО',
+      `<div class="mono">
+        ${deltaFrom}<br>
+        Δh = <b>${fmt(delta,2)} м</b><br><br>
+        Формула: <b>k = Δh / 4,5</b><br>
+        Расчёт: k = ${fmt(delta,2)} / ${fmt(c.v,2)} = <b>${fmt(k,3)}</b>
+      </div>`);
+    return;
+  }
+
+  const min = Math.min(kmin.v, kmax.v);
+  const max = Math.max(kmin.v, kmax.v);
+  const ok = (k>=min && k<=max);
+
+  // подсветка по результату
+  if(dh.ok){
+    mark(dh.el, ok);
+  }else{
+    mark(h0.el, ok);
+    mark(h1.el, ok);
+  }
+  mark(kmin.el,true);
+  mark(kmax.el,true);
+
+  setStatus(ok?'ok':'bad', ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ',
+    `<div class="mono">
+      ${deltaFrom}<br>
+      Δh = <b>${fmt(delta,2)} м</b><br><br>
+      Формула: <b>k = Δh / 4,5</b><br>
+      Расчёт: k = ${fmt(delta,2)} / ${fmt(c.v,2)} = <b>${fmt(k,3)}</b><br>
+      Допуск: <b>${fmt(min,3)} … ${fmt(max,3)}</b> → ${ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+    </div>`);
+}
+
+function resetAll(){
+  ['h1','dh','kmin','kmax'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.value='';
+    el.classList.remove('pass','fail');
+  });
+  document.getElementById('h0').value='40';
+  document.getElementById('c').value='4,5';
+  ['h0','c'].forEach(id=>document.getElementById(id).classList.remove('pass','fail'));
+  setStatus('wait','ОЖИДАЕТ','Заполни H₁ (или Δh), и нажми «Рассчитать».');
+}
+</script>
+
+</body>
+</html>
