@@ -278,126 +278,107 @@ button:hover{background:rgba(255,255,255,.16)}
   </section>
 
   <!-- ===== КАЛЬКУЛЯТОР ===== -->
-  <section class="card" id="calc">
-    <h2>Калькулятор (по технологии): k = ΔH / 4,5</h2>
-    <p class="p">Введи ΔH (м). Калькулятор посчитает k. Если допуск k известен — введи k min / k max (необязательно).</p>
+<section class="card" id="calc">
+  <h2>Калькулятор (по технологии)</h2>
+  <p class="p">
+    Исходная высота H₀ = 40 м (фиксированная).<br>
+    Вводится высота H, задаваемая от КПА РВ.<br>
+    Калькулятор автоматически определяет ΔH и коэффициент k.
+  </p>
 
-    <div class="form">
-      <div class="field">
-        <label>ΔH — отклонение от исходной высоты, м</label>
-        <input id="dh" inputmode="decimal" placeholder="например 7,5">
-      </div>
-
-      <div class="field">
-        <label>4,5 (постоянная по технологии)</label>
-        <input id="c" inputmode="decimal" value="4,5">
-      </div>
-
-      <div class="field">
-        <label>k min (если есть в ТТ)</label>
-        <input id="kmin" inputmode="decimal" placeholder="необязательно">
-      </div>
-
-      <div class="field">
-        <label>k max (если есть в ТТ)</label>
-        <input id="kmax" inputmode="decimal" placeholder="необязательно">
-      </div>
-
-      <div class="actions">
-        <button class="primary" type="button" onclick="calcK()">Рассчитать</button>
-        <button type="button" onclick="resetAll()">Сброс</button>
-      </div>
+  <div class="form">
+    <div class="field">
+      <label>H₀ — исходная высота (постоянная), м</label>
+      <input value="40" readonly>
     </div>
 
-    <div class="result" id="out">
-      <span class="status wait">ОЖИДАЕТ</span><br>
-      Заполни ΔH.
+    <div class="field">
+      <label>H — высота, задаваемая от КПА РВ, м</label>
+      <input id="h" inputmode="decimal" placeholder="например 18">
     </div>
 
-    <div class="math">
-      <div class="mono">
-        <b>k = ΔH / 4,5</b>
-      </div>
+    <div class="field">
+      <label>ΔH = |40 − H|, м</label>
+      <input id="dh" readonly>
     </div>
-  </section>
 
-</div>
+    <div class="field">
+      <label>k = ΔH / 4,5</label>
+      <input id="k" readonly>
+    </div>
+
+    <div class="actions">
+      <button class="primary" type="button" onclick="calcK()">Рассчитать</button>
+      <button type="button" onclick="resetCalc()">Сброс</button>
+    </div>
+  </div>
+
+  <div class="result" id="out">
+    <span class="status wait">ОЖИДАЕТ</span><br>
+    Введи высоту H.
+  </div>
+
+  <div class="math">
+    <div class="mono">
+      ΔH = |40 − H|<br>
+      k = ΔH / 4,5
+    </div>
+  </div>
 
 <script>
-function pNum(id){
-  const el=document.getElementById(id);
-  const raw=(el.value||'').trim().replace(/\s+/g,'');
-  const v=Number(raw.replace(',','.'));
-  return {el, raw, v, ok:Number.isFinite(v) && raw!==''};
-}
-function fmt(x, d){ return x.toFixed(d).replace('.',','); }
-
-function setStatus(cls, txt, html){
-  const out=document.getElementById('out');
-  out.innerHTML = `<span class="status ${cls}">${txt}</span><br>${html||''}`;
-}
-function mark(el, pass){
-  el.classList.remove('pass','fail');
-  el.classList.add(pass?'pass':'fail');
-}
-function clearMarks(){
-  ['dh','c','kmin','kmax'].forEach(id=>{
-    document.getElementById(id).classList.remove('pass','fail');
-  });
+function num(v){
+  return Number((v||'').replace(',','.'));
 }
 
 function calcK(){
-  clearMarks();
+  const H0 = 40;
+  const C  = 4.5;
 
-  const dh=pNum('dh');
-  const c =pNum('c');
-  const kmin=pNum('kmin');
-  const kmax=pNum('kmax');
+  const hEl = document.getElementById('h');
+  const dhEl = document.getElementById('dh');
+  const kEl = document.getElementById('k');
+  const out = document.getElementById('out');
 
-  if(!dh.ok){ mark(dh.el,false); setStatus('bad','ОШИБКА ВВОДА','Введите ΔH (м).'); return; }
-  if(!c.ok || c.v===0){ mark(c.el,false); setStatus('bad','ОШИБКА','Проверь 4,5 (деление на ноль нельзя).'); return; }
+  const H = num(hEl.value);
 
-  const k = dh.v / c.v;
+  hEl.classList.remove('pass','fail');
 
-  const hasTol = (kmin.ok && kmax.ok);
-  if(!hasTol){
-    mark(dh.el,true); mark(c.el,true);
-    setStatus('ok','РАСЧИТАНО',
-      `<div class="mono">
-        Формула: <b>k = ΔH / 4,5</b><br>
-        Расчёт: k = ${fmt(dh.v,2)} / ${fmt(c.v,2)} = <b>${fmt(k,3)}</b>
-      </div>`);
+  if(!isFinite(H)){
+    hEl.classList.add('fail');
+    out.innerHTML = '<span class="status bad">ОШИБКА</span><br>Введите высоту H.';
+    dhEl.value='';
+    kEl.value='';
     return;
   }
 
-  const min = Math.min(kmin.v, kmax.v);
-  const max = Math.max(kmin.v, kmax.v);
-  const ok = (k>=min && k<=max);
+  const dH = Math.abs(H0 - H);
+  const k = dH / C;
 
-  mark(dh.el, ok);
-  mark(c.el, ok);
-  mark(kmin.el, true);
-  mark(kmax.el, true);
+  dhEl.value = dH.toFixed(2).replace('.',',');
+  kEl.value  = k.toFixed(3).replace('.',',');
 
-  setStatus(ok?'ok':'bad', ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ',
-    `<div class="mono">
-      Формула: <b>k = ΔH / 4,5</b><br><br>
-      Расчёт: k = ${fmt(dh.v,2)} / ${fmt(c.v,2)} = <b>${fmt(k,3)}</b><br>
-      Допуск: <b>${fmt(min,3)} … ${fmt(max,3)}</b> → ${ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
-    </div>`);
+  const passDH = (dH >= 9 && dH <= 27);
+  const passK  = (k  >= 2 && k  <= 6);
+  const ok = passDH && passK;
+
+  hEl.classList.add(ok ? 'pass' : 'fail');
+
+  out.innerHTML =
+    `<span class="status ${ok?'ok':'bad'}">
+      ${ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+     </span><br><br>
+     ΔH = |40 − ${H}| = <b>${dH.toFixed(2)}</b> м<br>
+     k = ΔH / 4,5 = <b>${k.toFixed(3)}</b>`;
 }
 
-function resetAll(){
-  ['dh','kmin','kmax'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.value='';
-    el.classList.remove('pass','fail');
-  });
-  document.getElementById('c').value='4,5';
-  document.getElementById('c').classList.remove('pass','fail');
-  setStatus('wait','ОЖИДАЕТ','Заполни ΔH.');
+function resetCalc(){
+  document.getElementById('h').value='';
+  document.getElementById('dh').value='';
+  document.getElementById('k').value='';
+  document.getElementById('h').classList.remove('pass','fail');
+  document.getElementById('out').innerHTML =
+    '<span class="status wait">ОЖИДАЕТ</span><br>Введи высоту H.';
 }
 </script>
+</section>
 
-</body>
-</html>
