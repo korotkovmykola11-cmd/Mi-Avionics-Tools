@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ВУАП-1 — Пункты 02–14</title>
+  <title>ВУАП-1 — Пункты 02–21</title>
 
   <style>
     :root{
@@ -107,159 +107,92 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>ВУАП-1 · Пункты 02–14</h1>
-    <p class="p" id="hintTop">
-      Нажми пункт слева — откроется справа внутри этой же страницы.
-    </p>
+    <h1>ВУАП-1 · Пункты 02–21</h1>
+    <p class="p" id="hintTop"></p>
 
     <div class="hub">
-      <div class="menu" id="menu">
-        <div class="warn">
-          Если это сообщение не исчезло — значит JS не выполнился или файл не сохранился. Проверь, что ты реально заменил содержимое файла.
-        </div>
-      </div>
+      <div class="menu" id="menu"></div>
 
       <div class="viewer">
         <div class="top">
           <div class="title" id="title">Выбери пункт</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <a class="btn" id="openNew" href="#" target="_blank" rel="noopener">Открыть отдельно</a>
+            <a class="btn" id="openNew" href="#" target="_blank">Открыть отдельно</a>
             <button class="btn" type="button" onclick="reloadFrame()">Обновить</button>
           </div>
         </div>
 
-        <iframe id="frame" src=""></iframe>
+        <iframe id="frame"></iframe>
 
-        <div class="warn" id="warn">
-          Подсказка: если 404 — значит файла реально нет по нужному пути или он назван иначе (регистр важен).
-        </div>
+        <div class="warn" id="warn"></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // ===== 1) Определяем базу автоматически =====
-  // Если page-vuap-1.html лежит в /vuap1/ -> BASE = './'
-  // Если лежит в корне -> BASE = './vuap1/'
-  (function(){
-    const path = (location.pathname || '').toLowerCase();
-    window.__VUAP_BASE__ = path.includes('/vuap1/') ? './' : './vuap1/';
-  })();
+(function(){
+  const path=(location.pathname||'').toLowerCase();
+  window.BASE=path.includes('/vuap1/')?'./':'./vuap1/';
+})();
 
-  const BASE = window.__VUAP_BASE__;
+const items=[
+  {id:'02',title:'Проверка передаточного числа по углу (направление)'},
+  {id:'03',title:'Проверка передаточного числа по углу (крен)'},
+  {id:'04',title:'Проверка крутизны сигнала (ОС)'},
+  {id:'05',title:'Проверка передаточного числа по углу (тангаж)'},
+  {id:'06',title:'Проверка передаточного числа по углу (высота)'},
+  {id:'07',title:'Проверка работоспособности'},
+  {id:'08',title:'Передаточное число по угловой скорости — направление'},
+  {id:'09',title:'Передаточное число по угловой скорости — крен'},
+  {id:'10',title:'Передаточное число по угловой скорости — тангаж'},
+  {id:'11',title:'Передаточное число по скорости изменения высоты'},
+  {id:'12',title:'Передаточное число по воздушной скорости'},
+  {id:'13',title:'Передаточное число (угол / ход штока)'},
+  {id:'14',title:'Передаточное число по КДК'},
+  {id:'15',title:'Центровка выходов усилителей БВ-24'},
+  {id:'16',title:'Проверка ограничений выходных сигналов'},
+  {id:'17',title:'Передаточные числа по составляющим путевой скорости'},
+  {id:'18',title:'Коэффициент соотношения по вертикальной скорости и высоте'},
+  {id:'19',title:'Передаточное число по сигналу курса в канал крена'},
+  {id:'20',title:'Передаточное число по геометрической высоте'},
+  {id:'21',title:'Коэффициент k = ΔH / 4,5'}
+];
 
-  // ===== 2) Названия пунктов =====
-  const items = [
-    {id:'02', title:'Проверка передаточного числа по углу (направление)'},
-    {id:'03', title:'Проверка передаточного числа по углу (крен)'},
-    {id:'04', title:'Проверка крутизны сигнала (ОС)'},
-    {id:'05', title:'Проверка передаточного числа по углу (тангаж)'},
-    {id:'06', title:'Проверка передаточного числа по углу (высота)'},
-    {id:'07', title:'Проверка работоспособности (по технологии)'},
-    {id:'08', title:'Передаточное число по угловой скорости — направление'},
-    {id:'09', title:'Передаточное число по угловой скорости — крен'},
-    {id:'10', title:'Передаточное число по угловой скорости — тангаж'},
-    {id:'11', title:'Передаточное число по скорости изменения высоты'},
-    {id:'12', title:'Передаточное число по воздушной скорости'},
-    {id:'13', title:'Передаточное число (угол/ход штока)'},
-    {id:'14', title:'Передаточное число по КДК'},
-  ];
+const menu=document.getElementById('menu');
+const frame=document.getElementById('frame');
+const titleEl=document.getElementById('title');
+const openNew=document.getElementById('openNew');
+const warn=document.getElementById('warn');
+const hintTop=document.getElementById('hintTop');
 
-  // В твоей структуре это именно p02.html...p14.html
-  function candidatePaths(id){
-    const p = `p${id}.html`;
-    return [
-      `${BASE}${p}`,  // ✅ главный путь (подстраивается)
-      `./vuap1/${p}`, // запасной
-      `./${p}`        // запасной
-    ];
-  }
+hintTop.innerHTML=`Открываются файлы <b>${BASE}p02.html … ${BASE}p21.html</b>`;
 
-  const menu   = document.getElementById('menu');
-  const frame  = document.getElementById('frame');
-  const titleEl= document.getElementById('title');
-  const openNew= document.getElementById('openNew');
-  const warn   = document.getElementById('warn');
-  const hintTop= document.getElementById('hintTop');
+function build(){
+  menu.innerHTML='';
+  items.forEach((it,i)=>{
+    const d=document.createElement('div');
+    d.className='item';
+    d.innerHTML=`<span class="num">${it.id}</span><div><div class="ttl">${it.title}</div><div class="sub">p${it.id}.html</div></div>`;
+    d.onclick=()=>open(i);
+    menu.appendChild(d);
+  });
+}
 
-  hintTop.innerHTML = `Нажми пункт слева — откроется справа. Твой путь сейчас: <b>${BASE}p02.html … ${BASE}p14.html</b>`;
+async function open(i){
+  const it=items[i];
+  titleEl.textContent=`Пункт ${it.id} · ${it.title}`;
+  const url=`${BASE}p${it.id}.html`;
+  frame.src=url;
+  openNew.href=url;
+  warn.textContent=`Открыт: ${url}`;
+}
 
-  function build(){
-    menu.innerHTML='';
-    items.forEach((it, idx)=>{
-      const d=document.createElement('div');
-      d.className='item';
-      d.dataset.idx=idx;
-      d.innerHTML =
-        `<span class="num">${it.id}</span>
-         <div>
-           <div class="ttl">${it.title}</div>
-           <div class="sub">Файл: ${candidatePaths(it.id)[0]}</div>
-         </div>`;
-      d.onclick=()=>open(idx);
-      menu.appendChild(d);
-    });
-  }
+function reloadFrame(){
+  if(frame.src) frame.src=frame.src.split('?')[0]+'?v='+Date.now();
+}
 
-  function setActive(idx){
-    [...menu.querySelectorAll('.item')].forEach(x=>x.classList.remove('active'));
-    const el = menu.querySelector(`.item[data-idx="${idx}"]`);
-    if(el) el.classList.add('active');
-  }
-
-  async function exists(url){
-    try{
-      const res = await fetch(url, { method:'GET' });
-      return res.ok;
-    }catch(e){
-      return false;
-    }
-  }
-
-  async function resolvePath(id){
-    const list = candidatePaths(id);
-    for(const p of list){
-      const test = p + '?v=' + Date.now();
-      if(await exists(test)) return test;
-    }
-    return null;
-  }
-
-  async function open(idx){
-    const it = items[idx];
-    if(!it) return;
-
-    setActive(idx);
-    titleEl.textContent = `Пункт ${it.id} · ${it.title}`;
-    warn.textContent = 'Проверяю файл...';
-
-    const url = await resolvePath(it.id);
-    if(!url){
-      frame.src = 'about:blank';
-      const tried = candidatePaths(it.id)
-        .map(x=>`<div style="font-family:ui-monospace,monospace">${x}</div>`).join('');
-      warn.innerHTML =
-        `❌ <b>ФАЙЛ НЕ НАЙДЕН (404)</b><br>
-         Я пробовал открыть:<br>${tried}<br>
-         ✅ Проверь, что файл реально называется <b>p${it.id}.html</b> и лежит именно там, где BASE: <b>${BASE}</b>`;
-      openNew.href = '#';
-      return;
-    }
-
-    frame.src = url;
-    openNew.href = url;
-    warn.innerHTML = `✅ Открываю: <span style="font-family:ui-monospace,monospace">${url.split('?')[0]}</span>`;
-  }
-
-  function reloadFrame(){
-    if(!frame.src || frame.src==='about:blank') return;
-    const base = frame.src.split('?')[0];
-    frame.src = base + '?v=' + Date.now();
-  }
-
-  // Запуск
-  build();
+build();
 </script>
 </body>
 </html>
