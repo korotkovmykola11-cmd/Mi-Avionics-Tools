@@ -169,13 +169,37 @@ button.primary{background:linear-gradient(180deg,#ffffff,#e6f0ff);color:#000}
 .ok{background:rgba(124,255,158,.18);color:var(--ok)}
 .bad{background:rgba(255,154,154,.18);color:var(--bad)}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
+/* Мобильный просмотр: таблица не ломает экран */
+.sheet{ overflow-x:auto; }
+.tbl{ min-width:900px; }          /* чтобы колонки не сжимались в кашу */
+  /* ===== Подсветка колонок таблицы ===== */
+
+/* Технические требования (ТТ) */
+.tbl tbody td:nth-child(2){
+  background:rgba(255,255,255,.12);
+}
+
+/* Работы при отклонениях от ТТ */
+.tbl tbody td:nth-child(3){
+  background:rgba(255,255,255,.08);
+}
+
+/* Чтобы границы читались на синем фоне */
+.tbl th,
+.tbl td{
+  border-color:rgba(255,255,255,.45);
+}
+
 
 @media(max-width:900px){
-  .sheet{padding:14px}
-  .col-op,.col-tt,.col-fix{width:auto}
+  .wrap{padding:14px 10px 26px}
+  .sheet{padding:14px; overflow-x:auto}
+  .tbl{min-width:900px}
   .field{grid-column:span 12}
   .actions{flex-direction:column}
+  iframe{height:70vh}
 }
+
   /* === Абзацы без изменения текста === */
 .tbl td{
   white-space: pre-wrap;   /* сохраняет переводы строк */
