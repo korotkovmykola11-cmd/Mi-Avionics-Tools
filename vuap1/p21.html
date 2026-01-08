@@ -11,17 +11,7 @@
   --card:rgba(255,255,255,.08);
   --stroke:rgba(255,255,255,.18);
   --text:#e9f2ff; --muted:#b7c7dd;
-
-  /* статусы */
-  --ok:#7CFF9E;
-  --bad:#FF9A9A;
-  --wait:#FFD27C;
-
-  --okBg:rgba(124,255,158,.18);
-  --badBg:rgba(255,154,154,.18);
-  --waitBg:rgba(255,210,124,.18);
-
-  --panel:rgba(0,0,0,.14);
+  --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
 }
 *{box-sizing:border-box}
 body{
@@ -70,7 +60,7 @@ a.btn:hover{background:rgba(255,255,255,.16)}
   box-shadow:0 18px 40px rgba(0,0,0,.25);
 }
 h2{margin:0 0 10px;font-size:16px}
-.p{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 10px}
+.p{color:var(--muted);font-size:14px;line-height:1.45;margin:0 0 10px}
 
 .grid3{
   display:grid;
@@ -80,7 +70,7 @@ h2{margin:0 0 10px;font-size:16px}
 }
 .col{
   border:1px solid var(--stroke);
-  background:var(--panel);
+  background:rgba(0,0,0,.14);
   border-radius:16px;
   padding:12px;
 }
@@ -90,7 +80,7 @@ h2{margin:0 0 10px;font-size:16px}
   font-weight:900;
 }
 
-/* ВАЖНО: текст НЕ меняем. Просто делаем переносы читабельными */
+/* абзацы/переносы без изменения текста */
 .fill{
   min-height:220px;
   border:1px dashed rgba(255,255,255,.22);
@@ -98,32 +88,12 @@ h2{margin:0 0 10px;font-size:16px}
   padding:10px 12px;
   color:var(--muted);
   font-size:13px;
-  line-height:1.65;
+  line-height:1.55;
   white-space:pre-wrap;
   word-break:break-word;
 }
-.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
 
-/* блок “красиво формула” */
-.math{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.18);
-}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-.math .mono{font-size:13px;line-height:1.55}
-.bigFormula{
-  display:flex;align-items:center;justify-content:center;
-  margin-top:8px;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.20);
-  font-weight:900;
-}
-.bigFormula span{font-size:16px}
+.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
 
 /* калькулятор */
 .form{
@@ -133,7 +103,6 @@ h2{margin:0 0 10px;font-size:16px}
   margin-top:10px;
 }
 .field{grid-column:span 6}
-.field.small{grid-column:span 4}
 label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
 input{
   width:100%;
@@ -172,34 +141,41 @@ button:hover{background:rgba(255,255,255,.16)}
   border-radius:999px;
   font-size:12px;
   margin-bottom:8px;
-  font-weight:900;
 }
-.ok{background:var(--okBg);color:var(--ok)}
-.bad{background:var(--badBg);color:var(--bad)}
-.wait{background:var(--waitBg);color:var(--wait)}
-
-.pass{background:var(--okBg)!important;border-color:rgba(124,255,158,.35)!important}
-.fail{background:var(--badBg)!important;border-color:rgba(255,154,154,.35)!important}
-
-.kpiRow{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:8px;
-  margin-top:10px;
-}
-.kpi{
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:12px;
-  background:rgba(0,0,0,.18);
+.ok{background:rgba(124,255,158,.18);color:var(--ok)}
+.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+.wait{background:rgba(255,210,124,.18);color:var(--wait)}
+.pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
+.fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.math{
+  margin-top:8px;
   padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.18);
+  color:var(--text);
 }
-.kpi b{color:var(--text)}
-.smallNote{font-size:12px;color:var(--muted);line-height:1.45}
+.math .mono{font-size:13px;line-height:1.55}
+
+/* видимый ΔH */
+.deltaBox{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.20);
+}
+.deltaBig{
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.2px;
+}
+.deltaSub{margin-top:6px;color:rgba(255,255,255,.75);font-size:12px;line-height:1.4}
 
 @media(max-width:980px){
   .grid3{grid-template-columns:1fr}
   .field{grid-column:span 12}
-  .field.small{grid-column:span 12}
 }
 </style>
 </head>
@@ -235,7 +211,7 @@ button:hover{background:rgba(255,255,255,.16)}
                   ΔH- отклонение от заданной (исходной) высоты,задаваемое от КПА РВ (м).
           Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
         </div>
-        <div class="hint">Текст без изменений. Переносы строк сохраняются.</div>
+        <div class="hint">Ты вставляешь сам. Переносы строк сохраняются.</div>
       </div>
 
       <!-- 2) ТТ -->
@@ -249,16 +225,15 @@ k = Δh / 4,5
 где:
 Δh — отклонение от заданной (“исходной”) высоты, задаваемой от КПА РВ, м.
 
-(сюда добавишь допуск k из технологии, если он указан)
+Отклонение от заданной высоты, м: 18 ± 9
+Коэффициент, сек: 4 ± 2
         </div>
 
         <div class="math">
-          <div class="mono">Формула (красиво):</div>
-          <div class="bigFormula">
-            <span>k = Δh / 4,5</span>
-          </div>
-          <div class="smallNote" style="margin-top:8px;">
-            Здесь <b>Δh</b> — именно отклонение от исходной высоты (например, 40 → 18 даёт Δh = 22 м).
+          <div class="mono">
+            Формула (красиво):
+            <br><br>
+            <b>k = Δh / 4,5</b>
           </div>
         </div>
       </div>
@@ -275,7 +250,7 @@ k = Δh / 4,5
           Отключить выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС.Через 4-5 минут,задавая от КПА РВ сигнал 18 метров на спуск.
           Вращая ось подстроечного резистора "IWy" в блоке БСВ-24,установить подвижную стрелку индикатора нулевого в среднее положение.
         </div>
-        <div class="hint">Текст без изменений. Тут один параметр — как ты и сказал.</div>
+        <div class="hint">Ты вставляешь сам. Тут один параметр — как ты и сказал.</div>
       </div>
     </div>
   </section>
@@ -284,24 +259,25 @@ k = Δh / 4,5
   <section class="card" id="calc">
     <h2>Калькулятор (по технологии): k = Δh / 4,5</h2>
     <p class="p">
-      Делаем так, чтобы <b>Δh</b> было видно всегда: можно ввести <b>Δh</b> напрямую, либо посчитать его как разность
-      между <b>H₀ (исходная)</b> и <b>H₁ (заданная/полученная)</b>.
+      Введи исходную высоту H<sub>0</sub> (по технологии 40 м) и текущую высоту H (м). Калькулятор посчитает
+      <b>Δh = |H − H<sub>0</sub>|</b>, затем посчитает <b>k</b> и проверит по допускам из ТТ:
+      <b>Δh = 18 ± 9</b> и <b>k = 4 ± 2</b>.
     </p>
 
     <div class="form">
       <div class="field">
-        <label>H₀ — исходная высота (как в технологии), м</label>
-        <input id="h0" inputmode="decimal" value="40">
+        <label>H<sub>0</sub> — исходная высота, м (по технологии)</label>
+        <input id="h0" inputmode="decimal" value="40,0">
       </div>
 
       <div class="field">
-        <label>H₁ — высота после задания, м</label>
-        <input id="h1" inputmode="decimal" placeholder="например 18">
+        <label>H — текущая высота, м</label>
+        <input id="h1" inputmode="decimal" placeholder="например 22,0">
       </div>
 
       <div class="field">
-        <label>Δh — отклонение от исходной высоты, м (можно оставить пустым)</label>
-        <input id="dh" inputmode="decimal" placeholder="если пусто — посчитаю как |H₁ − H₀|">
+        <label>Δh — отклонение от исходной высоты, м (если хочешь ввести вручную)</label>
+        <input id="dh" inputmode="decimal" placeholder="например 18,0">
       </div>
 
       <div class="field">
@@ -310,13 +286,23 @@ k = Δh / 4,5
       </div>
 
       <div class="field">
-        <label>k min (если есть в ТТ)</label>
-        <input id="kmin" inputmode="decimal" placeholder="необязательно">
+        <label>Допуск Δh min (18 − 9)</label>
+        <input id="dhmin" inputmode="decimal" value="9,0">
       </div>
 
       <div class="field">
-        <label>k max (если есть в ТТ)</label>
-        <input id="kmax" inputmode="decimal" placeholder="необязательно">
+        <label>Допуск Δh max (18 + 9)</label>
+        <input id="dhmax" inputmode="decimal" value="27,0">
+      </div>
+
+      <div class="field">
+        <label>k min (4 − 2)</label>
+        <input id="kmin" inputmode="decimal" value="2,0">
+      </div>
+
+      <div class="field">
+        <label>k max (4 + 2)</label>
+        <input id="kmax" inputmode="decimal" value="6,0">
       </div>
 
       <div class="actions">
@@ -325,16 +311,19 @@ k = Δh / 4,5
       </div>
     </div>
 
-    <div class="result" id="out">
-      <span class="status wait">ОЖИДАЕТ</span><br>
-      Заполни H₁ (или Δh), и нажми «Рассчитать».
+    <div class="deltaBox" id="deltaBox">
+      <div class="deltaBig">Δh = —</div>
+      <div class="deltaSub">Δh считается как |H − H0|. Если H0/H не заполнены — берётся поле Δh (вручную).</div>
     </div>
 
-    <div class="kpiRow">
-      <div class="kpi">
-        <div class="mono">
-          Формула: <b>k = Δh / 4,5</b>
-        </div>
+    <div class="result" id="out">
+      <span class="status wait">ОЖИДАЕТ</span><br>
+      Заполни H0 и H (или Δh вручную).
+    </div>
+
+    <div class="math">
+      <div class="mono">
+        <b>k = Δh / 4,5</b>
       </div>
     </div>
   </section>
@@ -354,115 +343,129 @@ function setStatus(cls, txt, html){
   const out=document.getElementById('out');
   out.innerHTML = `<span class="status ${cls}">${txt}</span><br>${html||''}`;
 }
+
 function mark(el, pass){
   el.classList.remove('pass','fail');
   el.classList.add(pass?'pass':'fail');
 }
+
 function clearMarks(){
-  ['h0','h1','dh','c','kmin','kmax'].forEach(id=>{
+  ['h0','h1','dh','c','dhmin','dhmax','kmin','kmax'].forEach(id=>{
     document.getElementById(id).classList.remove('pass','fail');
   });
+}
+
+function setDeltaView(dh){
+  const box=document.getElementById('deltaBox');
+  const big=box.querySelector('.deltaBig');
+  big.textContent = `Δh = ${Number.isFinite(dh) ? fmt(dh,2) + ' м' : '—'}`;
 }
 
 function calcK(){
   clearMarks();
 
-  const h0=pNum('h0');
-  const h1=pNum('h1');
-  const dh=pNum('dh');
-  const c =pNum('c');
-  const kmin=pNum('kmin');
-  const kmax=pNum('kmax');
+  const h0 = pNum('h0');
+  const h1 = pNum('h1');
+  const dh = pNum('dh');
+  const c  = pNum('c');
 
-  if(!c.ok || c.v===0){
-    mark(c.el,false);
-    setStatus('bad','ОШИБКА','Проверь 4,5 (деление на ноль нельзя).');
-    return;
+  const dhmin=pNum('dhmin');
+  const dhmax=pNum('dhmax');
+  const kmin =pNum('kmin');
+  const kmax =pNum('kmax');
+
+  if(!c.ok || c.v===0){ mark(c.el,false); setStatus('bad','ОШИБКА','Проверь 4,5 (деление на ноль нельзя).'); return; }
+
+  // Δh берём из |H − H0| если оба введены, иначе из поля Δh
+  let DH = NaN;
+  const hasH = h0.ok && h1.ok;
+  if(hasH){
+    DH = Math.abs(h1.v - h0.v);
+  }else if(dh.ok){
+    DH = dh.v;
   }
 
-  // Δh: либо введён, либо считаем как |H1 - H0|
-  let delta = null;
-  let deltaFrom = '';
+  setDeltaView(DH);
 
-  if(dh.ok){
-    delta = dh.v;
-    deltaFrom = 'Δh введено вручную';
-  }else{
+  if(!Number.isFinite(DH)){
     if(!h0.ok) mark(h0.el,false);
     if(!h1.ok) mark(h1.el,false);
-
-    if(!h0.ok || !h1.ok){
-      setStatus('bad','ОШИБКА ВВОДА','Заполни H₀ и H₁ (или введи Δh напрямую). Разделитель: точка или запятая.');
-      return;
-    }
-    delta = Math.abs(h1.v - h0.v);
-    deltaFrom = 'Δh рассчитано как |H₁ − H₀|';
-  }
-
-  if(delta === 0){
-    mark(dh.ok ? dh.el : h1.el, false);
-    setStatus('bad','ОШИБКА','Δh = 0 → k = 0 (проверь исходную и заданную высоты).');
+    if(!dh.ok) mark(dh.el,false);
+    setStatus('bad','ОШИБКА ВВОДА','Заполни H0 и H (или введи Δh вручную).');
     return;
   }
 
-  const k = delta / c.v;
+  // k = Δh / 4,5
+  const k = DH / c.v;
 
-  // подсветка ключевых полей
-  mark(c.el,true);
-  if(dh.ok){
-    mark(dh.el,true);
-  }else{
-    mark(h0.el,true);
-    mark(h1.el,true);
-  }
-
-  const hasTol = (kmin.ok && kmax.ok);
-
-  if(!hasTol){
-    setStatus('ok','РАСЧИТАНО',
-      `<div class="mono">
-        ${deltaFrom}<br>
-        Δh = <b>${fmt(delta,2)} м</b><br><br>
-        Формула: <b>k = Δh / 4,5</b><br>
-        Расчёт: k = ${fmt(delta,2)} / ${fmt(c.v,2)} = <b>${fmt(k,3)}</b>
-      </div>`);
+  // допуски обязаны быть (по ТТ)
+  const tolOk = dhmin.ok && dhmax.ok && kmin.ok && kmax.ok;
+  if(!tolOk){
+    [dhmin,dhmax,kmin,kmax].forEach(x=>{ if(!x.ok) mark(x.el,false); });
+    setStatus('bad','ОШИБКА','Проверь допуски Δh и k.');
     return;
   }
 
-  const min = Math.min(kmin.v, kmax.v);
-  const max = Math.max(kmin.v, kmax.v);
-  const ok = (k>=min && k<=max);
+  const DHmin = Math.min(dhmin.v, dhmax.v);
+  const DHmax = Math.max(dhmin.v, dhmax.v);
+  const Kmin  = Math.min(kmin.v, kmax.v);
+  const Kmax  = Math.max(kmin.v, kmax.v);
 
-  // подсветка по результату
-  if(dh.ok){
-    mark(dh.el, ok);
+  const passDH = (DH >= DHmin && DH <= DHmax);
+  const passK  = (k  >= Kmin  && k  <= Kmax);
+  const all    = passDH && passK;
+
+  // подсветка
+  if(hasH){
+    mark(h0.el, passDH);
+    mark(h1.el, passDH);
+    // поле dh ручное не ругаем, если считаем по H
+    document.getElementById('dh').classList.remove('pass','fail');
   }else{
-    mark(h0.el, ok);
-    mark(h1.el, ok);
+    mark(dh.el, passDH);
   }
-  mark(kmin.el,true);
-  mark(kmax.el,true);
+  mark(c.el, passK);
 
-  setStatus(ok?'ok':'bad', ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ',
+  // допуски всегда зелёные (это константы)
+  mark(dhmin.el,true); mark(dhmax.el,true);
+  mark(kmin.el,true);  mark(kmax.el,true);
+
+  const src = hasH
+    ? `Δh = |H − H0| = |${fmt(h1.v,2)} − ${fmt(h0.v,2)}| = <b>${fmt(DH,2)} м</b>`
+    : `Δh = <b>${fmt(DH,2)} м</b>`;
+
+  setStatus(all?'ok':'bad', all?'ПРОХОДИТ':'НЕ ПРОХОДИТ',
     `<div class="mono">
-      ${deltaFrom}<br>
-      Δh = <b>${fmt(delta,2)} м</b><br><br>
+      ${src}<br><br>
       Формула: <b>k = Δh / 4,5</b><br>
-      Расчёт: k = ${fmt(delta,2)} / ${fmt(c.v,2)} = <b>${fmt(k,3)}</b><br>
-      Допуск: <b>${fmt(min,3)} … ${fmt(max,3)}</b> → ${ok?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+      Расчёт: k = ${fmt(DH,2)} / ${fmt(c.v,2)} = <b>${fmt(k,3)} с</b><br><br>
+
+      Допуск Δh: <b>${fmt(DHmin,2)} … ${fmt(DHmax,2)} м</b> → ${passDH?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}<br>
+      Допуск k:  <b>${fmt(Kmin,2)} … ${fmt(Kmax,2)} с</b> → ${passK?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
     </div>`);
 }
 
 function resetAll(){
-  ['h1','dh','kmin','kmax'].forEach(id=>{
+  ['h1','dh'].forEach(id=>{
     const el=document.getElementById(id);
     el.value='';
     el.classList.remove('pass','fail');
   });
-  document.getElementById('h0').value='40';
+
+  document.getElementById('h0').value='40,0';
   document.getElementById('c').value='4,5';
-  ['h0','c'].forEach(id=>document.getElementById(id).classList.remove('pass','fail'));
-  setStatus('wait','ОЖИДАЕТ','Заполни H₁ (или Δh), и нажми «Рассчитать».');
+
+  document.getElementById('dhmin').value='9,0';
+  document.getElementById('dhmax').value='27,0';
+  document.getElementById('kmin').value='2,0';
+  document.getElementById('kmax').value='6,0';
+
+  ['h0','c','dhmin','dhmax','kmin','kmax'].forEach(id=>{
+    document.getElementById(id).classList.remove('pass','fail');
+  });
+
+  setDeltaView(NaN);
+  setStatus('wait','ОЖИДАЕТ','Заполни H0 и H (или Δh вручную).');
 }
 </script>
 
