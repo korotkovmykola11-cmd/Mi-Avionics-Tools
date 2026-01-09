@@ -22,6 +22,9 @@
       --btn2:#214a8f;
       --bad:#ff6b6b;
       --ok:#5ee28f;
+
+      /* коричневый для числового контекста */
+      --tol:#c89b5a;
     }
     html,body{height:100%}
     body{
@@ -84,6 +87,16 @@
       text-align:center;
       font-weight:700;
       background:#f7f7f7;
+    }
+
+    /* мат. допуски: верх/низ и коричневый */
+    .tol{ color:var(--tol); font-weight:900; }
+    sup.tol, sub.tol{ font-size:.92em; line-height:0; }
+
+    /* Числовой контекст в технологии (цифры+скобки+тире+буквы в номерах) */
+    .numctx{
+      color:var(--tol);
+      font-weight:900;
     }
 
     /* блок рисунка внутри "листа" */
@@ -199,6 +212,10 @@
       line-height:1.35;
     }
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
+
+    /* PASS/FAIL в калькуляторе */
+    .verdict.pass{ color: var(--ok); font-weight:900; }
+    .verdict.fail{ color: var(--bad); font-weight:900; }
   </style>
 </head>
 
@@ -239,24 +256,24 @@
              Плавным изменением вертикальной скорости при помощи КПУ-3 на спуск(подъём) в пределах не более 200 метров изменения высоты от установленного значения отклонить шток малого цилиндра рулевого агрегата
              до совмещения стрелки индикатора нулевого с промежуточной отметкой,заметив по вариометру величину вертикальной скорости и направления  отклонения стрелки индикатора нулевого.
              При отклонении стрелкм вариометра на спуск(подъём) стрелка индикатора нулевого должна отклоняться вверх(вниз).
-             Полученное значение вертикальной скорости и передаточное число должно соответствовать техническим требованиям. Задаваемая вертикальная скорость (6,5+4,5-3,5) м/с,Передаточное число (10 ±4) % хода шока / м/с.
+             Полученное значение вертикальной скорости и передаточное число должно соответствовать техническим требованиям. Задаваемая вертикальная скорость (<span class="tol">(</span><span class="tol">6,5</span><sup class="tol">+4,5</sup><sub class="tol">−3,5</sub><span class="tol">)</span> м/с,Передаточное число (<span class="tol">10</span> <span class="tol">±4</span>) % хода шока / м/с.
              По окончании проверки (и регулировки) выключатель В1 поставить в положение "ОТКЛ" и в случае,если при включённом канале высоты стрелка индикатора нулевого будет не в среднем положении,
              произвести подрегулировку потенциометром "ЦЕНТР".
              Отключить канал высоты кнопкой-табло "ОТКЛ" на пульте управления канала высоты.
-              
-            </td>
-            <td>
-            При отклонении стрелки вариометра на спуск (подъем) подвижный индекс нулевого индикатора должен отклоняться вверх (вниз).
-            Задаваемая вертикальная скорость 
-            (6,5+4,5-3,5) м/с
-            Передаточное число
-            (10 ±4) % хода шока / м/с
 
             </td>
             <td>
-             Отключите канал высоты кнопкой -табло "ОТКЛ." на пульте управления. Создайте разрежение, соответствующее высоте 300 м. Включите канал высоты кнопкой- табло "ВКЛ." на пульте управления. 
-             Поворотом потенциометра "ЦЕНТР" установите подвижный индекс нулевого индикатора в среднее положение. Создайте вертикальную скорость 6,5 м/с в сторону спуска в пределах не более 200 м изменения высоты от полученного значения и поворотом подстроечного резистора "СКОР." на пульте управления совместите подвижный индекс нулевого индикатора с верхней промежуточной отметкой. 
-             Плавно изменяя вертикальную скорость в сторону подъема,  совместите подвижный индекс нулевого индикатора с нижней промежуточной отметкой. Вертикальная скорость должна быть в пределах (6,5+2,0-1,0) м/с.
+            При отклонении стрелки вариометра на спуск (подъем) подвижный индекс нулевого индикатора должен отклоняться вверх (вниз).
+            Задаваемая вертикальная скорость
+            <span class="tol">(</span><span class="tol">6,5</span><sup class="tol">+4,5</sup><sub class="tol">−3,5</sub><span class="tol">)</span> м/с
+            Передаточное число
+            (<span class="tol">10</span> <span class="tol">±4</span>) % хода шока / м/с
+
+            </td>
+            <td>
+             Отключите канал высоты кнопкой -табло "ОТКЛ." на пульте управления. Создайте разрежение, соответствующее высоте 300 м. Включите канал высоты кнопкой- табло "ВКЛ." на пульте управления.
+             Поворотом потенциометра "ЦЕНТР" установите подвижный индекс нулевого индикатора в среднее положение. Создайте вертикальную скорость 6,5 м/с в сторону спуска в пределах не более 200 м изменения высоты от полученного значения и поворотом подстроечного резистора "СКОР." на пульте управления совместите подвижный индекс нулевого индикатора с верхней промежуточной отметкой.
+             Плавно изменяя вертикальную скорость в сторону подъема,  совместите подвижный индекс нулевого индикатора с нижней промежуточной отметкой. Вертикальная скорость должна быть в пределах <span class="tol">(</span><span class="tol">6,5</span><sup class="tol">+2,0</sup><sub class="tol">−1,0</sub><span class="tol">)</span> м/с.
             </td>
           </tr>
         </tbody>
@@ -275,275 +292,385 @@
     </div>
 
     <!-- КАЛЬКУЛЯТОР -->
-  <section class="calc card" id="calc-vy">
-  <div class="cardTitle">Калькулятор передаточного числа (скорость изменения высоты)</div>
+    <section class="calc card" id="calc-vy">
+      <div class="cardTitle">Калькулятор передаточного числа (скорость изменения высоты)</div>
 
-  <div class="calcSub">
-    Формула: <span class="mono">μ = 66,7 / V<sub>y</sub></span>,
-    где <span class="mono">V<sub>y</sub></span> — задаваемая вертикальная скорость.
-    Допуск (ТТ): <span class="mono">μ = 10 ± 4</span> ⇒ <span class="mono">6 … 14</span>.
-  </div>
-
-  <div class="calcGrid">
-    <div class="field">
-      <label for="vy">V<sub>y</sub> (задаваемая вертикальная скорость)</label>
-      <input id="vy" type="number" inputmode="decimal" step="0.1" placeholder="например 5.0">
-      <div class="hint">Введи значение скорости. Ноль и минус — нельзя.</div>
-    </div>
-
-    <div class="field">
-      <label for="vyUnit">Единицы V<sub>y</sub></label>
-      <select id="vyUnit">
-        <option value="ms" selected>м/с</option>
-        <option value="mmin">м/мин</option>
-      </select>
-      <div class="hint">Если выбрано м/мин — автоматически переведём в м/с.</div>
-    </div>
-
-    <div class="field">
-      <label>Результат</label>
-      <div class="resultBox">
-        <div id="muValue" class="muValue mono">—</div>
-        <div id="muUnit" class="muUnit">%(м/с)</div>
-        <div id="muBadge" class="badge neutral">Ожидание ввода</div>
+      <div class="calcSub">
+        Формула: <span class="mono">μ = 66,7 / V<sub>y</sub></span>,
+        где <span class="mono">V<sub>y</sub></span> — задаваемая вертикальная скорость.
+        Допуск (ТТ): <span class="mono"><span class="tol">μ = 10 ± 4</span></span> ⇒ <span class="mono"><span class="tol">6 … 14</span></span>.
+        Задаваемая вертикальная скорость: <span class="mono"><span class="tol">(</span><span class="tol">6,5</span><sup class="tol">+4,5</sup><sub class="tol">−3,5</sub><span class="tol">)</span></span> м/с.
       </div>
-      <div id="muRange" class="hint mono">Допуск: μ ∈ [6; 14]</div>
-    </div>
-  </div>
 
-  <div class="btnRow">
-    <button class="btn primary" type="button" onclick="calcMuVy()">Посчитать</button>
-    <button class="btn" type="button" onclick="clearMuVy()">Очистить</button>
-  </div>
+      <div class="calcGrid">
+        <div class="field">
+          <label for="vy">V<sub>y</sub> (задаваемая вертикальная скорость)</label>
+          <input id="vy" type="number" inputmode="decimal" step="0.1" placeholder="например 5.0">
+          <div class="hint">Введи значение скорости. Ноль и минус — нельзя.</div>
+        </div>
 
-  <div id="muMsg" class="msg neutral">
-    Введи V<sub>y</sub> и нажми «Посчитать».
-  </div>
-</section>
+        <div class="field">
+          <label for="vyUnit">Единицы V<sub>y</sub></label>
+          <select id="vyUnit">
+            <option value="ms" selected>м/с</option>
+            <option value="mmin">м/мин</option>
+          </select>
+          <div class="hint">Если выбрано м/мин — автоматически переведём в м/с.</div>
+        </div>
 
-<style>
-  /* Карточка в твоём синем стиле (подходит к текущему p11) */
-  .card{
-    margin: 18px auto 26px auto;
-    max-width: 980px;
-    background: rgba(10, 22, 40, .55);
-    border: 1px solid rgba(255,255,255,.10);
-    border-radius: 12px;
-    padding: 14px 14px 16px 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    color: #e9eef7;
-  }
-  .cardTitle{
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 8px;
-  }
-  .calcSub{
-    font-size: 13px;
-    opacity: .92;
-    line-height: 1.35;
-    margin-bottom: 12px;
-  }
-  .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+        <div class="field">
+          <label>Результат</label>
+          <div class="resultBox">
+            <div id="muValue" class="muValue mono">—</div>
+            <div id="muUnit" class="muUnit">%(м/с)</div>
+            <div id="muBadge" class="badge neutral">Ожидание ввода</div>
+          </div>
+          <div id="muRange" class="hint mono">Допуск: μ ∈ [6; 14]</div>
+        </div>
 
-  .calcGrid{
-    display: grid;
-    grid-template-columns: 1.2fr .8fr 1fr;
-    gap: 12px;
-  }
-  @media (max-width: 860px){
-    .calcGrid{ grid-template-columns: 1fr; }
-  }
-  .field label{
-    display:block;
-    font-size: 12px;
-    margin-bottom: 6px;
-    opacity: .95;
-  }
-  .field input, .field select{
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 10px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.22);
-    color: #e9eef7;
-    outline: none;
-  }
-  .field input:focus, .field select:focus{
-    border-color: rgba(120,180,255,.55);
-    box-shadow: 0 0 0 3px rgba(120,180,255,.12);
-  }
-  .hint{
-    font-size: 11px;
-    opacity: .70;
-    margin-top: 6px;
-    line-height: 1.25;
-  }
+        <!-- НОВОЕ: подъём/спуск -->
+        <div class="field">
+          <label for="vyDir">Направление (подъём/спуск)</label>
+          <select id="vyDir">
+            <option value="" selected>— выбрать —</option>
+            <option value="descent">Спуск</option>
+            <option value="climb">Подъём</option>
+          </select>
+          <div class="hint">По технологии: на спуск(подъём) — индекс вверх(вниз).</div>
+        </div>
 
-  .resultBox{
-    display:flex;
-    gap: 10px;
-    align-items: baseline;
-    padding: 10px;
-    border-radius: 10px;
-    background: rgba(0,0,0,.18);
-    border: 1px solid rgba(255,255,255,.10);
-    flex-wrap: wrap;
-  }
-  .muValue{
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: .2px;
-  }
-  .muUnit{
-    font-size: 12px;
-    opacity: .8;
-  }
-  .badge{
-    font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.06);
-    opacity: .95;
-  }
-  .badge.ok{
-    border-color: rgba(60,255,0,.35);
-    background: rgba(60,255,0,.12);
-    color: #bfffb0;
-  }
-  .badge.bad{
-    border-color: rgba(255,59,59,.45);
-    background: rgba(255,59,59,.12);
-    color: #ffc2c2;
-  }
-  .badge.neutral{
-    color: rgba(233,238,247,.85);
-  }
+        <!-- НОВОЕ: положение индекса -->
+        <div class="field">
+          <label for="idxPos">Положение индекса (вверх/вниз)</label>
+          <select id="idxPos">
+            <option value="" selected>— выбрать —</option>
+            <option value="up">Вверх</option>
+            <option value="down">Вниз</option>
+          </select>
+          <div class="hint">Выбери, куда реально отклонился индекс.</div>
+        </div>
+      </div>
 
-  .btnRow{
-    display:flex;
-    gap: 10px;
-    margin-top: 12px;
-  }
-  .btn{
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
-    color: #e9eef7;
-    padding: 9px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .btn:hover{ background: rgba(255,255,255,.10); }
-  .btn.primary{
-    border-color: rgba(120,180,255,.45);
-    background: rgba(120,180,255,.12);
-  }
+      <div class="btnRow">
+        <button class="btn primary" type="button" onclick="calcMuVy()">Посчитать</button>
+        <button class="btn" type="button" onclick="clearMuVy()">Очистить</button>
+      </div>
 
-  .msg{
-    margin-top: 10px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,.10);
-    background: rgba(0,0,0,.16);
-    font-size: 12px;
-    line-height: 1.35;
-  }
-  .msg.ok{
-    border-color: rgba(60,255,0,.30);
-    background: rgba(60,255,0,.08);
-    color: #caffbe;
-  }
-  .msg.bad{
-    border-color: rgba(255,59,59,.35);
-    background: rgba(255,59,59,.08);
-    color: #ffd0d0;
-  }
-  .msg.neutral{
-    color: rgba(233,238,247,.85);
-  }
-</style>
+      <div id="muMsg" class="msg neutral">
+        Введи V<sub>y</sub> и нажми «Посчитать».
+      </div>
+    </section>
 
-<script>
-  // Пункт 11: μ = 66.7 / Vy, допуск: 10 ± 4 => [6; 14]
-  function calcMuVy(){
-    const vyEl = document.getElementById('vy');
-    const unitEl = document.getElementById('vyUnit');
-
-    const muValueEl = document.getElementById('muValue');
-    const muUnitEl  = document.getElementById('muUnit');
-    const badgeEl   = document.getElementById('muBadge');
-    const msgEl     = document.getElementById('muMsg');
-
-    let Vy = parseFloat(String(vyEl.value).replace(',', '.'));
-    const unit = unitEl.value;
-
-    // Проверка ввода
-    if (!isFinite(Vy) || Vy <= 0){
-      muValueEl.textContent = '—';
-      muUnitEl.textContent = '%(м/с)';
-      badgeEl.className = 'badge bad';
-      badgeEl.textContent = 'Ошибка';
-      msgEl.className = 'msg bad';
-      msgEl.textContent = 'Ошибка ввода: Vу должно быть числом больше 0.';
-      return;
-    }
-
-    // Перевод м/мин -> м/с
-    let Vy_ms = Vy;
-    if (unit === 'mmin'){
-      Vy_ms = Vy / 60.0;
-      if (Vy_ms <= 0){
-        muValueEl.textContent = '—';
-        badgeEl.className = 'badge bad';
-        badgeEl.textContent = 'Ошибка';
-        msgEl.className = 'msg bad';
-        msgEl.textContent = 'Ошибка: после перевода в м/с получилось Vу ≤ 0.';
-        return;
+    <style>
+      /* Карточка в твоём синем стиле (подходит к текущему p11) */
+      .card{
+        margin: 18px auto 26px auto;
+        max-width: 980px;
+        background: rgba(10, 22, 40, .55);
+        border: 1px solid rgba(255,255,255,.10);
+        border-radius: 12px;
+        padding: 14px 14px 16px 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.25);
+        color: #e9eef7;
       }
-    }
+      .cardTitle{
+        font-weight: 700;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .calcSub{
+        font-size: 13px;
+        opacity: .92;
+        line-height: 1.35;
+        margin-bottom: 12px;
+      }
+      .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 
-    const mu = 66.7 / Vy_ms;
+      .calcGrid{
+        display: grid;
+        grid-template-columns: 1.2fr .8fr 1fr;
+        gap: 12px;
+      }
+      @media (max-width: 860px){
+        .calcGrid{ grid-template-columns: 1fr; }
+      }
+      .field label{
+        display:block;
+        font-size: 12px;
+        margin-bottom: 6px;
+        opacity: .95;
+      }
+      .field input, .field select{
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(0,0,0,.22);
+        color: #e9eef7;
+        outline: none;
+      }
+      .field input:focus, .field select:focus{
+        border-color: rgba(120,180,255,.55);
+        box-shadow: 0 0 0 3px rgba(120,180,255,.12);
+      }
+      .hint{
+        font-size: 11px;
+        opacity: .70;
+        margin-top: 6px;
+        line-height: 1.25;
+      }
 
-    // Допуск ТТ: 6…14
-    const muMin = 6.0;
-    const muMax = 14.0;
+      .resultBox{
+        display:flex;
+        gap: 10px;
+        align-items: baseline;
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(0,0,0,.18);
+        border: 1px solid rgba(255,255,255,.10);
+        flex-wrap: wrap;
+      }
+      .muValue{
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: .2px;
+      }
+      .muUnit{
+        font-size: 12px;
+        opacity: .8;
+      }
+      .badge{
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.06);
+        opacity: .95;
+      }
+      .badge.ok{
+        border-color: rgba(60,255,0,.35);
+        background: rgba(60,255,0,.12);
+        color: #bfffb0;
+      }
+      .badge.bad{
+        border-color: rgba(255,59,59,.45);
+        background: rgba(255,59,59,.12);
+        color: #ffc2c2;
+      }
+      .badge.neutral{
+        color: rgba(233,238,247,.85);
+      }
 
-    muValueEl.textContent = mu.toFixed(2).replace('.', ',');
-    muUnitEl.textContent = '%(м/с)';
+      .btnRow{
+        display:flex;
+        gap: 10px;
+        margin-top: 12px;
+        flex-wrap:wrap;
+      }
+      .btn{
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: #e9eef7;
+        padding: 9px 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .btn:hover{ background: rgba(255,255,255,.10); }
+      .btn.primary{
+        border-color: rgba(120,180,255,.45);
+        background: rgba(120,180,255,.12);
+      }
 
-    if (mu >= muMin && mu <= muMax){
-      badgeEl.className = 'badge ok';
-      badgeEl.textContent = 'В ДОПУСКЕ';
-      msgEl.className = 'msg ok';
-      msgEl.innerHTML =
-        'OK: μ = <span class="mono">' + mu.toFixed(2).replace('.', ',') +
-        '</span> %(м/с), допуск <span class="mono">[6; 14]</span>.';
-    } else {
-      badgeEl.className = 'badge bad';
-      badgeEl.textContent = 'ВНЕ ДОПУСКА';
-      msgEl.className = 'msg bad';
-      msgEl.innerHTML =
-        'FAIL: μ = <span class="mono">' + mu.toFixed(2).replace('.', ',') +
-        '</span> %(м/с), допуск <span class="mono">[6; 14]</span>.';
-    }
-  }
+      .msg{
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(0,0,0,.16);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      .msg.ok{
+        border-color: rgba(60,255,0,.30);
+        background: rgba(60,255,0,.08);
+        color: #caffbe;
+      }
+      .msg.bad{
+        border-color: rgba(255,59,59,.35);
+        background: rgba(255,59,59,.08);
+        color: #ffd0d0;
+      }
+      .msg.neutral{
+        color: rgba(233,238,247,.85);
+      }
+    </style>
 
-  function clearMuVy(){
-    document.getElementById('vy').value = '';
-    document.getElementById('vyUnit').value = 'ms';
+    <script>
+      // ===== 1) В технологии красим ЧИСЛОВОЙ КОНТЕКСТ: цифры + тире/скобки/буквы в номерах =====
+      (function colorizeNumericContextInTech(){
+        const root = document.querySelector('table.tech');
+        if(!root) return;
 
-    document.getElementById('muValue').textContent = '—';
-    document.getElementById('muUnit').textContent = '%(м/с)';
+        const walker = document.createTreeWalker(
+          root,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode(node){
+              const p = node.parentNode;
+              if(!p) return NodeFilter.FILTER_REJECT;
+              const tag = (p.nodeName || '').toLowerCase();
 
-    const badgeEl = document.getElementById('muBadge');
-    badgeEl.className = 'badge neutral';
-    badgeEl.textContent = 'Ожидание ввода';
+              // не трогаем уже размеченное (tol/sup/sub) и служебное
+              if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
+              if(tag === 'sup' || tag === 'sub') return NodeFilter.FILTER_REJECT;
+              if(p.classList && (p.classList.contains('tol') || p.classList.contains('numctx'))) return NodeFilter.FILTER_REJECT;
 
-    const msgEl = document.getElementById('muMsg');
-    msgEl.className = 'msg neutral';
-    msgEl.innerHTML = 'Введи V<sub>y</sub> и нажми «Посчитать».';
-  }
-</script>
+              const v = node.nodeValue || '';
+              if(!/\d/.test(v)) return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        const nodes = [];
+        while(walker.nextNode()) nodes.push(walker.currentNode);
+
+        // "числовой контекст": содержит цифру и может включать буквы/дефисы/скобки/слеш/точки/запятые/проценты/±
+        // Примеры: КПУ-3, 24-7100-70, 300м, 6,5, 6,5 м/с, (6,5+2,0-1,0)
+        const re = /(\(?[A-Za-zА-Яа-яЁё]*\d[\dA-Za-zА-Яа-яЁё.,±−\-\/%]*\)?)/g;
+
+        for(const tn of nodes){
+          const txt = tn.nodeValue;
+          const parts = txt.split(re);
+          if(parts.length === 1) continue;
+
+          const frag = document.createDocumentFragment();
+          for(let i=0;i<parts.length;i++){
+            const part = parts[i];
+            if(part === '') continue;
+
+            if(i % 2 === 1){ // match
+              const s = document.createElement('span');
+              s.className = 'numctx';
+              s.textContent = part;
+              frag.appendChild(s);
+            }else{
+              frag.appendChild(document.createTextNode(part));
+            }
+          }
+          tn.parentNode.replaceChild(frag, tn);
+        }
+      })();
+
+      // ===== 2) Пункт 11 калькулятор: μ = 66.7 / Vy, допуск: 10 ± 4 => [6; 14] + проверка подъём/спуск и индекса =====
+      function dirOk(){
+        const vyDir = document.getElementById('vyDir').value;
+        const idxPos = document.getElementById('idxPos').value;
+
+        if(!vyDir || !idxPos) return null; // не выбрано
+
+        // По тексту: "на спуск(подъём) ... индекс вверх(вниз)"
+        if(vyDir === 'descent' && idxPos === 'up') return true;
+        if(vyDir === 'climb'  && idxPos === 'down') return true;
+        return false;
+      }
+
+      function calcMuVy(){
+        const vyEl = document.getElementById('vy');
+        const unitEl = document.getElementById('vyUnit');
+
+        const muValueEl = document.getElementById('muValue');
+        const muUnitEl  = document.getElementById('muUnit');
+        const badgeEl   = document.getElementById('muBadge');
+        const msgEl     = document.getElementById('muMsg');
+
+        let Vy = parseFloat(String(vyEl.value).replace(',', '.'));
+        const unit = unitEl.value;
+
+        if (!isFinite(Vy) || Vy <= 0){
+          muValueEl.textContent = '—';
+          muUnitEl.textContent = '%(м/с)';
+          badgeEl.className = 'badge bad';
+          badgeEl.textContent = 'Ошибка';
+          msgEl.className = 'msg bad';
+          msgEl.textContent = 'Ошибка ввода: Vу должно быть числом больше 0.';
+          return;
+        }
+
+        // Перевод м/мин -> м/с
+        let Vy_ms = Vy;
+        if (unit === 'mmin'){
+          Vy_ms = Vy / 60.0;
+          if (Vy_ms <= 0){
+            muValueEl.textContent = '—';
+            badgeEl.className = 'badge bad';
+            badgeEl.textContent = 'Ошибка';
+            msgEl.className = 'msg bad';
+            msgEl.textContent = 'Ошибка: после перевода в м/с получилось Vу ≤ 0.';
+            return;
+          }
+        }
+
+        const mu = 66.7 / Vy_ms;
+
+        // Допуск ТТ: 6…14
+        const muMin = 6.0;
+        const muMax = 14.0;
+
+        muValueEl.textContent = mu.toFixed(2).replace('.', ',');
+        muUnitEl.textContent = '%(м/с)';
+
+        const okMu = (mu >= muMin && mu <= muMax);
+
+        const dOK = dirOk();
+        const dirText = (dOK === null)
+          ? 'Проверка подъём/спуск и индекса: не выбрано.'
+          : ('Проверка подъём/спуск и индекса: ' + (dOK ? 'соответствует' : 'НЕ соответствует'));
+
+        // Если направление не выбрано — не валим (как в p08), но показываем строкой
+        const pass = okMu && (dOK !== false);
+
+        if (pass){
+          badgeEl.className = 'badge ok';
+          badgeEl.textContent = 'В ДОПУСКЕ';
+          msgEl.className = 'msg ok';
+        } else {
+          badgeEl.className = 'badge bad';
+          badgeEl.textContent = 'ВНЕ ДОПУСКА';
+          msgEl.className = 'msg bad';
+        }
+
+        msgEl.innerHTML =
+          (pass
+            ? 'OK: '
+            : 'FAIL: ') +
+          'μ = <span class="mono">' + mu.toFixed(2).replace('.', ',') +
+          '</span> %(м/с), допуск <span class="mono">[6; 14]</span>.' +
+          '<br>' + dirText +
+          '<br>Итог: <span class="verdict ' + (pass ? 'pass' : 'fail') + '">' + (pass ? 'PASS по ТТ' : 'FAIL по ТТ') + '</span>.';
+      }
+
+      function clearMuVy(){
+        document.getElementById('vy').value = '';
+        document.getElementById('vyUnit').value = 'ms';
+        document.getElementById('vyDir').value = '';
+        document.getElementById('idxPos').value = '';
+
+        document.getElementById('muValue').textContent = '—';
+        document.getElementById('muUnit').textContent = '%(м/с)';
+
+        const badgeEl = document.getElementById('muBadge');
+        badgeEl.className = 'badge neutral';
+        badgeEl.textContent = 'Ожидание ввода';
+
+        const msgEl = document.getElementById('muMsg');
+        msgEl.className = 'msg neutral';
+        msgEl.innerHTML = 'Введи V<sub>y</sub> и нажми «Посчитать».';
+      }
+    </script>
+
+  </div>
+</body>
+</html>
