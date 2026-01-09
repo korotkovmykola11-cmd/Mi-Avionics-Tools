@@ -4,209 +4,259 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>P012 — Передаточное число по воздушной скорости</title>
+
   <style>
     :root{
       --bg1:#071a33; --bg2:#0b2a55;
-      --panel:#0f2340; --panel2:#0b1c34;
+
+      /* общие */
       --text:#e8eefc; --muted:#b9c6e6;
-      --white:#ffffff; --ink:#111;
-      --border:#c9c9c9;
-      --ok:#2ecc71; --bad:#ff5a5f; --warn:#ffd166;
+      --line:rgba(255,255,255,.16);
+
+      /* ТЕХНОЛОГИЯ (синий лист как p08/p10) */
+      --paperText:#eaf0ff;
+      --paperHead:rgba(255,255,255,.06);
+      --paperLine:rgba(255,255,255,.16);
+      --colOps:rgba(8, 26, 58, .55);
+      --colTT: rgba(14, 44, 92, .55);
+      --colDev:rgba(7, 36, 62, .55);
+
+      /* коричневый для числового контекста/допусков */
+      --tol:#c89b5a;
+
+      /* калькулятор */
+      --btn:#1a356d;
+      --btn2:#163064;
+      --ok:#34d399;
+      --bad:#ff5a5f;
+      --warn:#ffd166;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: "Times New Roman", Times, serif;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: radial-gradient(1200px 800px at 30% 20%, #0d2a52 0%, var(--bg1) 50%, #061224 100%);
       color:var(--text);
     }
+
     .topbar{
       padding:14px 18px;
       display:flex; align-items:center; justify-content:space-between;
       color:var(--muted);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size:13px;
       opacity:.9;
     }
     .wrap{max-width:1100px; margin:0 auto; padding:0 14px 40px;}
-    .paper{
-      background:var(--white);
-      color:var(--ink);
-      border-radius:10px;
-      padding:18px 18px 12px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
-      border: 1px solid rgba(255,255,255,.15);
-    }
 
-    /* Таблица технологии (как в карте) */
-    .h1{
-      font-size:18px; font-weight:700; margin:0 0 4px;
+    /* ===== СИНИЙ "ЛИСТ" (как p08) ===== */
+    .paper-wrap{display:flex; justify-content:center;}
+    .paper-scroll{
+      width:100%;
+      overflow-x:auto;
+      padding-bottom:8px;
+      -webkit-overflow-scrolling: touch;
     }
-    .h2{
-      font-size:12.5px; margin:0 0 10px;
+    .paper{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      color:var(--paperText);
+      border-radius:12px;
+      box-shadow:0 16px 40px rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.14);
+      padding:18px 18px 12px;
+      min-width:860px;
+      max-width:1060px;
+      margin:0 auto;
+      backdrop-filter: blur(6px);
     }
+    .h1{font-size:18px; font-weight:700; margin:0 0 4px;}
+    .h2{font-size:12.5px; margin:0 0 10px; opacity:.85; color:rgba(234,240,255,.85);}
+
     table.tech{
       width:100%;
       border-collapse:collapse;
       table-layout:fixed;
       font-size:12px;
       line-height:1.25;
+      background:rgba(0,0,0,.10);
+      border:1px solid var(--paperLine);
+      border-radius:10px;
+      overflow:hidden;
     }
     table.tech th, table.tech td{
-      border:1px solid var(--border);
+      border:1px solid var(--paperLine);
       vertical-align:top;
-      padding:8px 8px;
+      padding:10px 10px 12px;
+      word-break:break-word;
+      color:var(--paperText);
     }
     table.tech th{
       text-align:center;
-      font-weight:700;
+      font-weight:800;
+      background:var(--paperHead);
+      color:rgba(234,240,255,.92);
     }
     .col-ops{width:58%}
     .col-tt{width:20%}
     .col-work{width:22%}
 
+    /* фоны колонок */
+    table.tech tbody td:nth-child(1){ background:var(--colOps); }
+    table.tech tbody td:nth-child(2){ background:var(--colTT); }
+    table.tech tbody td:nth-child(3){ background:var(--colDev); }
+
+    /* сохраняем переносы (для текста технологии) */
+    .pre{
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    /* коричневые допуски и числовой контекст */
+    .tol{ color:var(--tol); font-weight:900; }
+    sup.tol, sub.tol{ font-size:.92em; line-height:0; }
+    .numctx{ color:var(--tol); font-weight:900; }
+
     .figbox{
-      margin-top:8px;
-      border:1px solid var(--border);
-      padding:8px;
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.14);
+      padding:10px;
+      border-radius:10px;
+      background:rgba(0,0,0,.12);
     }
     .figcap{
       font-size:12px;
-      margin:0 0 6px;
+      font-weight:800;
+      margin:0 0 8px;
+      color:rgba(234,240,255,.9);
     }
     .figbox img{
       width:100%;
       height:auto;
       display:block;
-      border:1px solid #ddd;
-      background:#fff;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.22);
+      border-radius:8px;
+      object-fit:contain;
+      max-height:520px;
     }
 
-    /* Панель калькулятора */
-    .calc{
-      margin-top:18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:12px;
-      padding:14px;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
+    /* ===== КАЛЬКУЛЯТОР ===== */
+    .calc-card{
+      width: min(980px, 94vw);
+      margin: 18px auto 40px;
+      background: rgba(10, 28, 58, 0.72);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      padding: 14px 16px 16px;
+      color: #e9eef7;
     }
-    .calc h3{
-      margin:0 0 6px;
-      font-size:14px;
-      font-weight:700;
-    }
-    .calc .sub{
+    .calc-title{font-weight:800; margin:0 0 6px; font-size:15px;}
+    .calc-sub{
       margin:0 0 10px;
       font-size:12px;
-      color:var(--muted);
+      color: rgba(233,238,247,.82);
+      line-height: 1.35;
+    }
+    .calc-grid{
+      display: grid;
+      grid-template-columns: 1.25fr 1.25fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    @media (max-width: 920px){
+      .calc-grid{ grid-template-columns: 1fr; }
+      .paper{min-width:860px}
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr 1.2fr 1fr;
-      gap:10px;
-    }
     .field{
-      background: rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:10px;
-      padding:10px;
+      background: rgba(0,0,0,.14);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 10px;
     }
-    .label{
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:6px;
+    .field label{
+      display:block;
+      font-size: 12px;
+      color: rgba(233,238,247,.85);
+      margin-bottom: 6px;
     }
-    input{
-      width:100%;
-      padding:10px 10px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(8,14,24,.55);
-      color:var(--text);
-      outline:none;
-      font-size:14px;
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
-    input::placeholder{color:#8fa2d7}
+    @media (max-width: 520px){
+      .row{ grid-template-columns: 1fr; }
+    }
+    .inp, .sel{
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(2, 8, 20, .55);
+      color: #e9eef7;
+      outline: none;
+      font-size: 14px;
+    }
+    .inp::placeholder{ color: rgba(233,238,247,.35); }
 
     .btns{
-      display:flex; flex-wrap:wrap; gap:8px;
-      margin-top:10px;
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
     }
-    button{
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:10px;
+    .btn{
       cursor:pointer;
-      font-weight:600;
-      font-size:13px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, var(--btn), var(--btn2));
+      color:#e9eef7;
+      font-weight: 700;
+      font-size: 13px;
     }
-    button:hover{background: rgba(255,255,255,.12)}
-    .out{
-      margin-top:10px;
-      background: rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:10px;
-      padding:10px;
-      font-size:13px;
-      min-height:44px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+    .btn.ghost{
+      background: rgba(255,255,255,.07);
+      font-weight: 600;
     }
+    .btn:hover{ filter:brightness(1.04); }
+    .btn:active{ transform: translateY(1px); }
+
+    .result{
+      margin-top: 10px;
+      background: rgba(0,0,0,.14);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
     .badge{
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:800;
-      font-size:12px;
-      border:1px solid rgba(255,255,255,.18);
-      white-space:nowrap;
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .3px;
+      border: 1px solid rgba(255,255,255,.18);
     }
-    .ok{background: rgba(46,204,113,.18); color: var(--ok); border-color: rgba(46,204,113,.35);}
-    .bad{background: rgba(255,90,95,.16); color: var(--bad); border-color: rgba(255,90,95,.35);}
-    .neutral{background: rgba(255,255,255,.06); color: var(--muted);}
+    .ok{ background: rgba(52,211,153,.18); color: var(--ok); border-color: rgba(52,211,153,.35); }
+    .bad{ background: rgba(255,90,95,.16); color: var(--bad); border-color: rgba(255,90,95,.35); }
+    .neutral{ background: rgba(255,255,255,.08); color: rgba(233,238,247,.90); }
 
-    /* “Красивый” вид формулы (без MathJax) */
-    .formula{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:6px;
-      color:var(--muted);
-      font-size:12.5px;
-    }
-    .frac{
-      display:inline-grid;
-      grid-template-rows:auto auto;
-      justify-items:center;
-      line-height:1.05;
-      font-family:"Times New Roman", Times, serif;
-      color:#fff;
-    }
-    .frac .top{
-      padding:0 6px 2px;
-      border-bottom:1px solid rgba(255,255,255,.55);
-    }
-    .frac .bot{
-      padding-top:2px;
-    }
+    .tt{font-size: 12px; color: rgba(233,238,247,.85); line-height: 1.35;}
+    .tt b{ color:#fff; }
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
-    .hint{
-      margin-top:8px;
-      font-size:12px;
-      color:var(--muted);
-    }
+    .err{ color: #ffb3bc; font-weight: 700; margin-top: 6px; }
 
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
+    /* маленькая подсказка */
+    .hint{ margin-top:8px; font-size:12px; color:var(--muted); }
+
   </style>
 </head>
 
@@ -217,373 +267,345 @@
   </div>
 
   <div class="wrap">
-    <div class="paper">
-      <div class="h1">Содержание операций</div>
-      <div class="h2">12. Проверьте передаточное число по воздушной скорости</div>
 
-      <!-- ТЕХНОЛОГИЯ: ТЕКСТ ТЫ ВСТАВИШЬ САМ (СЛОВО-В-СЛОВО) -->
-      <table class="tech">
-        <colgroup>
-          <col class="col-ops"><col class="col-tt"><col class="col-work">
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Содержание операций</th>
-            <th>Технические требования<br>(ТТ)</th>
-            <th>Работы, выполняемые при отклонениях<br>от ТТ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-             Подсоединить к КЗСП установку КПУ-3 с указателем скорости, смотри рисунок 9.
-             И создать в динамической системе КЗСП давление соответствующее скорости Vпр=200км/ч.
-             Нажать кнопку-табло "ВКЛ" на пульте управления канала тангажа и кнопку "СТАБИЛИЗАЦИЯ СКОРОСТИ" на центральном пульте лётчика.
-             Поворотом шкалы ручки центровки на пульте управления канала тангажа установить стрелку индикатора нулевого в среднее положение.
-             Заметить положение шкалы.Изменить при помощи установки КПУ-3 значение воздушной скорости на 30км/ч в сторону увеличения(уменьшения) и поворотом шкалы ручки центровки на пульте управления канала тангажа
-             против часовой стрелки (по часовой стрелки) установить стрелку индикатора нулевого в среднее положение.
-             Замерить величину угла поворота шкалы ручки центровки от ранее замеченного положения.
-             Полученное значение угла поворота шкалы и передаточное число должны соответствовать техническим требованиям.Отключить канал тангажа и стабилизацию скорости кнопкой-табло "ОТКЛ" на пульте управления канала тангажа.
-             Угол поворота шкалы ручки центровки 4,5° ±1.5°. Передаточное число 0,15 ±0,06 град / км/ч.
-            </td>
-            <td>
-             Угол поворота шкалы ручки центровки 4,5° ±1.5°. 
+    <!-- ===== СИНИЙ ЛИСТ ===== -->
+    <div class="paper-wrap">
+      <div class="paper-scroll">
+        <div class="paper">
+          <div class="h1">Содержание операций</div>
+          <div class="h2">12. Проверьте передаточное число по воздушной скорости</div>
+
+          <table class="tech">
+            <colgroup>
+              <col class="col-ops"><col class="col-tt"><col class="col-work">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Содержание операций</th>
+                <th>Технические требования<br>(ТТ)</th>
+                <th>Работы, выполняемые при отклонениях<br>от ТТ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="pre">
+Подсоединить к КЗСП установку КПУ-3 с указателем скорости, смотри рисунок 9.
+И создать в динамической системе КЗСП давление соответствующее скорости Vпр=200км/ч.
+Нажать кнопку-табло "ВКЛ" на пульте управления канала тангажа и кнопку "СТАБИЛИЗАЦИЯ СКОРОСТИ" на центральном пульте лётчика.
+Поворотом шкалы ручки центровки на пульте управления канала тангажа установить стрелку индикатора нулевого в среднее положение.
+Заметить положение шкалы.Изменить при помощи установки КПУ-3 значение воздушной скорости на 30км/ч в сторону увеличения(уменьшения) и поворотом шкалы ручки центровки на пульте управления канала тангажа
+против часовой стрелки (по часовой стрелки) установить стрелку индикатора нулевого в среднее положение.
+Замерить величину угла поворота шкалы ручки центровки от ранее замеченного положения.
+Полученное значение угла поворота шкалы и передаточное число должны соответствовать техническим требованиям.Отключить канал тангажа и стабилизацию скорости кнопкой-табло "ОТКЛ" на пульте управления канала тангажа.
+Угол поворота шкалы ручки центровки 4,5° ±1.5°. Передаточное число 0,15 ±0,06 град / км/ч.
+                </td>
+
+                <td class="pre">
+Угол поворота шкалы ручки центровки 4,5° ±1.5°.
 Передаточное число 0,15 ±0,06 град / км/ч
 Передаточное число в градусах угла танга-жа на км/ч подсчитывается по формуле:
-i = α /30 град / км/ч  где: 
-α  - величина угла поворота шкалы ручки центровки, град; 
+i = α /30 град / км/ч  где:
+α  - величина угла поворота шкалы ручки центровки, град;
 30 - изменение приборной скорости, км/ч
+                </td>
 
-            </td>
-            <td>
-              Нажмите кнопку-табло "ОТКЛ" на пульте управления канала тангажа. Нажмите кнопку-табло "ВКЛ." на пульте управления канала тангажа и кнопку "СТАБИЛ. СКОРОСТИ" на левом переднем пульте летчика. Поворотом шкалы ручки центровки на пульте управления установите подвижный индекс нулевого индикатора в среднее положение.
+                <td class="pre">
+Нажмите кнопку-табло "ОТКЛ" на пульте управления канала тангажа. Нажмите кнопку-табло "ВКЛ." на пульте управления канала тангажа и кнопку "СТАБИЛ. СКОРОСТИ" на левом переднем пульте летчика. Поворотом шкалы ручки центровки на пульте управления установите подвижный индекс нулевого индикатора в среднее положение.
 Заметьте положение шкалы ручки центровки. Измените значение приборной скорости в сторону увеличения на 30 км/ч от исходного значения 200 км/ч. Поверните шкалу ручки центровки на пульте управления против часовой стрелки на угол 4,5°. Поворотом подстроечного резистора "ДК" на пульте управления подвижный индекс нулевого индикатора установите в среднее положение. Плавно измените значение приборной скорости на 30 км/ч в сторону уменьшения от исходного значения 200 км/ч
 Поворотом шкалы ручки центровки по часовой стрелке установите подвижный индекс нулевого индикатора в среднее положение. Определите угол поворота шкалы ручки центровки от первоначально замеченного положения. Угол поворота шкалы должен быть в пределах 4,5° +-1,0°
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-      <div class="figbox">
-        <div class="figcap">Рис. (44.JPEG)</div>
-        <img src="./44.JPEG" alt="Рисунок к пункту 12"
-             onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend','<div style=&quot;margin-top:6px;color:#b00020;font-weight:700;font-family:system-ui,Segoe UI,Arial;&quot;>ОШИБКА: файл 44.JPEG не найден рядом с p012.html (проверь имя/регистр/папку).</div>');">
-      </div>
-    </div>
-
-    <!-- ===================== КАЛЬКУЛЯТОР (P12) START ===================== -->
-<style>
-  /* Калькулятор – стиль под твой "синий" фон */
-  .calc-card{
-    width: min(980px, 94vw);
-    margin: 18px auto 40px;
-    background: rgba(10, 28, 58, 0.72);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    padding: 14px 16px 16px;
-    color: #e9eef7;
-  }
-  .calc-title{
-    font-weight: 700;
-    margin: 0 0 6px;
-    font-size: 15px;
-  }
-  .calc-sub{
-    margin: 0 0 10px;
-    font-size: 12px;
-    color: rgba(233,238,247,.82);
-    line-height: 1.35;
-  }
-  .calc-grid{
-    display: grid;
-    grid-template-columns: 1.25fr 1.25fr 1fr;
-    gap: 10px;
-    align-items: start;
-  }
-  @media (max-width: 920px){
-    .calc-grid{ grid-template-columns: 1fr; }
-  }
-
-  .field{
-    background: rgba(0,0,0,.14);
-    border: 1px solid rgba(255,255,255,.10);
-    border-radius: 12px;
-    padding: 10px;
-  }
-  .field label{
-    display:block;
-    font-size: 12px;
-    color: rgba(233,238,247,.85);
-    margin-bottom: 6px;
-  }
-  .row{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  @media (max-width: 520px){
-    .row{ grid-template-columns: 1fr; }
-  }
-  .inp, .sel{
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 10px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(2, 8, 20, .55);
-    color: #e9eef7;
-    outline: none;
-    font-size: 14px;
-  }
-  .inp::placeholder{ color: rgba(233,238,247,.35); }
-
-  .btns{
-    display:flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-  .btn{
-    cursor:pointer;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.07);
-    color:#e9eef7;
-    font-weight: 600;
-    font-size: 13px;
-  }
-  .btn:hover{ background: rgba(255,255,255,.10); }
-  .btn:active{ transform: translateY(1px); }
-
-  .result{
-    margin-top: 10px;
-    background: rgba(0,0,0,.14);
-    border: 1px solid rgba(255,255,255,.10);
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 13px;
-    line-height: 1.35;
-  }
-
-  .badge{
-    display:inline-block;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-weight: 800;
-    font-size: 12px;
-    letter-spacing: .3px;
-    border: 1px solid rgba(255,255,255,.18);
-  }
-  .ok{
-    background: rgba(30, 160, 70, .22);
-    color: #9ff2b7;
-    border-color: rgba(30,160,70,.45);
-  }
-  .bad{
-    background: rgba(190, 45, 60, .22);
-    color: #ffb3bc;
-    border-color: rgba(190,45,60,.45);
-  }
-  .neutral{
-    background: rgba(255,255,255,.08);
-    color: rgba(233,238,247,.90);
-  }
-
-  .tt{
-    font-size: 12px;
-    color: rgba(233,238,247,.85);
-    line-height: 1.35;
-  }
-  .tt b{ color:#fff; }
-  .mono{
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-
-  .err{
-    color: #ffb3bc;
-    font-weight: 700;
-    margin-top: 6px;
-  }
-</style>
-
-<section class="calc-card" id="calcP12">
-  <h3 class="calc-title">Калькулятор передаточного числа (по воздушной скорости)</h3>
-  <p class="calc-sub">
-    Формула (как в карте): <span class="mono">μ = α / ΔV</span>, где
-    <span class="mono">α</span> — угол поворота шкалы ручки центровки (град),
-    <span class="mono">ΔV</span> — изменение воздушной скорости (км/ч).
-  </p>
-
-  <div class="calc-grid">
-    <!-- Ввод -->
-    <div class="field">
-      <label>Ввод данных</label>
-
-      <div class="row">
-        <div>
-          <label for="p12_alpha">α (угол поворота шкалы), град</label>
-          <input id="p12_alpha" class="inp" type="text" inputmode="decimal" placeholder="например 4.5">
-        </div>
-        <div>
-          <label for="p12_dv">ΔV (изменение воздушной скорости), км/ч</label>
-          <input id="p12_dv" class="inp" type="text" inputmode="decimal" placeholder="например 30">
+          <div class="figbox">
+            <div class="figcap">Рис. (44.JPEG)</div>
+            <img src="./44.JPEG" alt="Рисунок к пункту 12"
+                 onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend','<div style=&quot;margin-top:6px;color:#ffb3bc;font-weight:800;font-family:system-ui,Segoe UI,Arial;&quot;>ОШИБКА: файл 44.JPEG не найден рядом с p012.html (проверь имя/регистр/папку).</div>');">
+          </div>
         </div>
       </div>
-
-      <div class="btns">
-        <button class="btn" type="button" id="p12_calc">Посчитать μ = α / ΔV</button>
-        <button class="btn" type="button" id="p12_fill">Подставить типовые (α=4.5, ΔV=30)</button>
-        <button class="btn" type="button" id="p12_clear">Очистить</button>
-      </div>
-
-      <div id="p12_err" class="err" style="display:none;"></div>
     </div>
 
-    <!-- ТТ -->
-    <div class="field">
-      <label>Технические требования (ТТ) – показываем диапазоны</label>
-      <div class="tt">
-        Угол поворота шкалы ручки центровки:<br>
-        <b>α = 4,5 ± 1,0</b> град → <span class="mono" id="p12_tt_alpha">[3,5 … 5,5]</span><br><br>
+    <!-- ===== КАЛЬКУЛЯТОР (P12) ===== -->
+    <section class="calc-card" id="calcP12">
+      <h3 class="calc-title">Калькулятор передаточного числа (по воздушной скорости)</h3>
+      <p class="calc-sub">
+        Формула (как в карте): <span class="mono">μ = α / ΔV</span>, где
+        <span class="mono">α</span> — угол поворота шкалы ручки центровки (град),
+        <span class="mono">ΔV</span> — изменение воздушной скорости (км/ч).
+      </p>
 
-        Передаточное число:<br>
-        <b>μ = 0,15 ± 0,06</b> град/(км/ч) → <span class="mono" id="p12_tt_mu">[0,09 … 0,21]</span>
-      </div>
-    </div>
+      <div class="calc-grid">
+        <!-- Ввод -->
+        <div class="field">
+          <label>Ввод данных</label>
 
-    <!-- Результат -->
-    <div class="field">
-      <label>Результат</label>
-      <div class="result" id="p12_out">
-        Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».
+          <div class="row">
+            <div>
+              <label for="p12_alpha">α (угол поворота шкалы), град</label>
+              <input id="p12_alpha" class="inp" type="text" inputmode="decimal" placeholder="например 4,5">
+            </div>
+            <div>
+              <label for="p12_dv">ΔV (изменение воздушной скорости), км/ч</label>
+              <input id="p12_dv" class="inp" type="text" inputmode="decimal" placeholder="например 30">
+            </div>
+          </div>
+
+          <!-- НОВОЕ: проверка положения индекса -->
+          <div class="row" style="margin-top:8px;">
+            <div>
+              <label for="p12_dir">Изменение скорости</label>
+              <select id="p12_dir" class="sel">
+                <option value="" selected>— выбрать —</option>
+                <option value="up">Увеличение</option>
+                <option value="down">Уменьшение</option>
+              </select>
+              <div class="hint">В карте: увеличение → против часовой, уменьшение → по часовой.</div>
+            </div>
+            <div>
+              <label for="p12_idx">Положение индекса (реально)</label>
+              <select id="p12_idx" class="sel">
+                <option value="" selected>— выбрать —</option>
+                <option value="mid">В среднее положение</option>
+                <option value="notmid">Не в среднем</option>
+              </select>
+              <div class="hint">Если “не в среднем” — итог FAIL (по проверке индекса).</div>
+            </div>
+          </div>
+
+          <div class="btns">
+            <button class="btn" type="button" id="p12_calc">Посчитать μ = α / ΔV</button>
+            <button class="btn ghost" type="button" id="p12_fill">Подставить типовые (α=4,5; ΔV=30)</button>
+            <button class="btn ghost" type="button" id="p12_clear">Очистить</button>
+          </div>
+
+          <div id="p12_err" class="err" style="display:none;"></div>
+        </div>
+
+        <!-- ТТ -->
+        <div class="field">
+          <label>Технические требования (ТТ) – показываем диапазоны</label>
+          <div class="tt">
+            Угол поворота шкалы ручки центровки:<br>
+            <b>α = 4,5</b><sup class="tol">+1,0</sup><sub class="tol">−1,0</sub> град → <span class="mono" id="p12_tt_alpha">[3,5 … 5,5]</span><br><br>
+
+            Передаточное число:<br>
+            <b>μ = 0,15</b><sup class="tol">+0,06</sup><sub class="tol">−0,06</sub> град/(км/ч) → <span class="mono" id="p12_tt_mu">[0,09 … 0,21]</span>
+          </div>
+        </div>
+
+        <!-- Результат -->
+        <div class="field">
+          <label>Результат</label>
+          <div class="result" id="p12_out">
+            Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <script>
+      (function(){
+        // ===== 1) Коричневим весь числовой контекст в ТЕХНОЛОГИИ (цифры+скобки+тире+буквы в шифрах) =====
+        (function colorizeNumericContextInTech(){
+          const root = document.querySelector('table.tech');
+          if(!root) return;
+
+          const walker = document.createTreeWalker(
+            root,
+            NodeFilter.SHOW_TEXT,
+            {
+              acceptNode(node){
+                const p = node.parentNode;
+                if(!p) return NodeFilter.FILTER_REJECT;
+                const tag = (p.nodeName || '').toLowerCase();
+
+                if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
+                if(tag === 'sup' || tag === 'sub') return NodeFilter.FILTER_REJECT;
+                if(p.classList && (p.classList.contains('tol') || p.classList.contains('numctx'))) return NodeFilter.FILTER_REJECT;
+
+                const v = node.nodeValue || '';
+                if(!/\d/.test(v)) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+              }
+            }
+          );
+
+          const nodes = [];
+          while(walker.nextNode()) nodes.push(walker.currentNode);
+
+          // захватываем блоки, содержащие хотя бы одну цифру,
+          // включая буквы рядом (Vпр=200км/ч), знаки ±, -, /, %, градусы и скобки
+          const re = /(\(?[A-Za-zА-Яа-яЁё]*\d[\dA-Za-zА-Яа-яЁё.,°±−\-\+\/=%]*\)?)/g;
+
+          for(const tn of nodes){
+            const txt = tn.nodeValue;
+            const parts = txt.split(re);
+            if(parts.length === 1) continue;
+
+            const frag = document.createDocumentFragment();
+            for(let i=0;i<parts.length;i++){
+              const part = parts[i];
+              if(part === '') continue;
+
+              if(i % 2 === 1){
+                const s = document.createElement('span');
+                s.className = 'numctx';
+                s.textContent = part;
+                frag.appendChild(s);
+              }else{
+                frag.appendChild(document.createTextNode(part));
+              }
+            }
+            tn.parentNode.replaceChild(frag, tn);
+          }
+        })();
+
+        // ===== 2) КАЛЬКУЛЯТОР =====
+        const TT_ALPHA_NOM = 4.5;
+        const TT_ALPHA_PM  = 1.0;   // по правому столбцу у тебя 4,5° +-1,0°
+        const TT_MU_NOM    = 0.15;
+        const TT_MU_PM     = 0.06;
+
+        const alphaMin = TT_ALPHA_NOM - TT_ALPHA_PM;
+        const alphaMax = TT_ALPHA_NOM + TT_ALPHA_PM;
+        const muMin    = TT_MU_NOM   - TT_MU_PM;
+        const muMax    = TT_MU_NOM   + TT_MU_PM;
+
+        document.getElementById('p12_tt_alpha').textContent =
+          `[${alphaMin.toFixed(1).replace('.', ',')} … ${alphaMax.toFixed(1).replace('.', ',')}]`;
+        document.getElementById('p12_tt_mu').textContent =
+          `[${muMin.toFixed(2).replace('.', ',')} … ${muMax.toFixed(2).replace('.', ',')}]`;
+
+        const $alpha = document.getElementById('p12_alpha');
+        const $dv    = document.getElementById('p12_dv');
+        const $dir   = document.getElementById('p12_dir');
+        const $idx   = document.getElementById('p12_idx');
+        const $out   = document.getElementById('p12_out');
+        const $err   = document.getElementById('p12_err');
+
+        function parseNum(val){
+          if (typeof val !== 'string') return NaN;
+          const s = val.trim().replace(',', '.');
+          return Number(s);
+        }
+        function showErr(msg){
+          $err.style.display = 'block';
+          $err.textContent = msg;
+        }
+        function hideErr(){
+          $err.style.display = 'none';
+          $err.textContent = '';
+        }
+        function fmt(x, digits){
+          if (!isFinite(x)) return '—';
+          return x.toFixed(digits).replace('.', ',');
+        }
+        function inRange(x, a, b){ return x >= a && x <= b; }
+
+        function badge(ok, textOk='В допуске', textBad='ВНЕ допуска'){
+          return `<span class="badge ${ok ? 'ok' : 'bad'}">${ok ? textOk : textBad}</span>`;
+        }
+
+        function idxOk(){
+          // Требование простое: если выбрано "не в среднем" — FAIL по индексу.
+          const v = $idx.value;
+          if(!v) return null;
+          return (v === 'mid');
+        }
+
+        function calc(){
+          hideErr();
+
+          const alpha = parseNum($alpha.value);
+          const dv    = parseNum($dv.value);
+
+          if (!isFinite(alpha) || !isFinite(dv)){
+            showErr('Ошибка ввода: α и ΔV должны быть числами (можно с запятой).');
+            $out.innerHTML = `Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».`;
+            return;
+          }
+          if (dv === 0){
+            showErr('Ошибка ввода: ΔV не может быть 0 (деление на ноль).');
+            $out.innerHTML = `Введите корректное значение <span class="mono">ΔV</span> (не 0).`;
+            return;
+          }
+          if (dv < 0){
+            showErr('Ошибка ввода: ΔV должно быть положительным (изменение скорости берём по модулю).');
+            $out.innerHTML = `Введите корректное значение <span class="mono">ΔV</span> (> 0).`;
+            return;
+          }
+          if (alpha < 0){
+            showErr('Ошибка ввода: α должно быть положительным (угол поворота берём по модулю).');
+            $out.innerHTML = `Введите корректное значение <span class="mono">α</span> (≥ 0).`;
+            return;
+          }
+
+          const mu = alpha / dv;
+
+          const alphaOk = inRange(alpha, alphaMin, alphaMax);
+          const muOk    = inRange(mu, muMin, muMax);
+
+          const dOK = idxOk();
+          const dirLine = (!$dir.value)
+            ? 'Проверка направления: не выбрано.'
+            : ('Проверка направления: ' + ($dir.value === 'up' ? 'увеличение' : 'уменьшение'));
+
+          const idxLine = (dOK === null)
+            ? 'Проверка индекса: не выбрано.'
+            : ('Проверка индекса: ' + (dOK ? 'в среднем' : 'НЕ в среднем'));
+
+          const okAll = alphaOk && muOk && (dOK !== false);
+
+          $out.innerHTML = `
+            <div>Введено: <span class="mono">α = ${fmt(alpha, 2)} град</span>, <span class="mono">ΔV = ${fmt(dv, 2)} км/ч</span></div>
+            <div style="margin-top:6px;">
+              Расчёт: <span class="mono">μ = α/ΔV = ${fmt(alpha,2)} / ${fmt(dv,2)} = ${fmt(mu, 4)} град/(км/ч)</span>
+            </div>
+
+            <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:10px 0;">
+
+            <div>Проверка α: ${badge(alphaOk)} <span class="mono">допуск [${fmt(alphaMin,1)} … ${fmt(alphaMax,1)}]</span></div>
+            <div style="margin-top:6px;">Проверка μ: ${badge(muOk)} <span class="mono">допуск [${fmt(muMin,2)} … ${fmt(muMax,2)}]</span></div>
+
+            <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:10px 0;">
+
+            <div>${dirLine}</div>
+            <div style="margin-top:6px;">${idxLine}</div>
+
+            <div style="margin-top:10px;">
+              Итог: ${okAll ? '<span class="badge ok">PASS</span>' : '<span class="badge bad">FAIL</span>'}
+            </div>
+          `;
+        }
+
+        document.getElementById('p12_calc').addEventListener('click', calc);
+
+        document.getElementById('p12_fill').addEventListener('click', function(){
+          $alpha.value = '4,5';
+          $dv.value = '30';
+          calc();
+        });
+
+        document.getElementById('p12_clear').addEventListener('click', function(){
+          hideErr();
+          $alpha.value = '';
+          $dv.value = '';
+          $dir.value = '';
+          $idx.value = '';
+          $out.innerHTML = `Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».`;
+        });
+
+        [$alpha, $dv, $dir, $idx].forEach(el => el.addEventListener('input', function(){
+          if ($alpha.value.trim() !== '' && $dv.value.trim() !== '') calc();
+        }));
+        $dir.addEventListener('change', ()=>{ if($alpha.value.trim() && $dv.value.trim()) calc(); });
+        $idx.addEventListener('change', ()=>{ if($alpha.value.trim() && $dv.value.trim()) calc(); });
+
+      })();
+    </script>
+
   </div>
-</section>
-
-<script>
-  (function(){
-    // ======= ТТ (фиксированные значения по карте) =======
-    const TT_ALPHA_NOM = 4.5;
-    const TT_ALPHA_PM  = 1.0;
-
-    const TT_MU_NOM = 0.15;
-    const TT_MU_PM  = 0.06;
-
-    const alphaMin = TT_ALPHA_NOM - TT_ALPHA_PM; // 3.5
-    const alphaMax = TT_ALPHA_NOM + TT_ALPHA_PM; // 5.5
-    const muMin    = TT_MU_NOM - TT_MU_PM;       // 0.09
-    const muMax    = TT_MU_NOM + TT_MU_PM;       // 0.21
-
-    // Показ диапазонов (чтобы “видно допуск”)
-    document.getElementById('p12_tt_alpha').textContent =
-      `[${alphaMin.toFixed(1).replace('.', ',')} … ${alphaMax.toFixed(1).replace('.', ',')}]`;
-    document.getElementById('p12_tt_mu').textContent =
-      `[${muMin.toFixed(2).replace('.', ',')} … ${muMax.toFixed(2).replace('.', ',')}]`;
-
-    // ======= helpers =======
-    const $alpha = document.getElementById('p12_alpha');
-    const $dv    = document.getElementById('p12_dv');
-    const $out   = document.getElementById('p12_out');
-    const $err   = document.getElementById('p12_err');
-
-    function parseNum(val){
-      if (typeof val !== 'string') return NaN;
-      // разрешаем запятую
-      const s = val.trim().replace(',', '.');
-      return Number(s);
-    }
-
-    function showErr(msg){
-      $err.style.display = 'block';
-      $err.textContent = msg;
-    }
-    function hideErr(){
-      $err.style.display = 'none';
-      $err.textContent = '';
-    }
-
-    function badge(ok, textOk='В допуске', textBad='ВНЕ допуска'){
-      return `<span class="badge ${ok ? 'ok' : 'bad'}">${ok ? textOk : textBad}</span>`;
-    }
-
-    function fmt(x, digits){
-      if (!isFinite(x)) return '—';
-      return x.toFixed(digits).replace('.', ',');
-    }
-
-    function inRange(x, a, b){
-      return x >= a && x <= b;
-    }
-
-    // ======= calc =======
-    function calc(){
-      hideErr();
-
-      const alpha = parseNum($alpha.value);
-      const dv    = parseNum($dv.value);
-
-      if (!isFinite(alpha) || !isFinite(dv)){
-        showErr('Ошибка ввода: α и ΔV должны быть числами (можно с запятой).');
-        $out.innerHTML = `Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».`;
-        return;
-      }
-      if (dv === 0){
-        showErr('Ошибка ввода: ΔV не может быть 0 (деление на ноль).');
-        $out.innerHTML = `Введите корректное значение <span class="mono">ΔV</span> (не 0).`;
-        return;
-      }
-      if (dv < 0){
-        showErr('Ошибка ввода: ΔV должно быть положительным (изменение скорости берём по модулю).');
-        $out.innerHTML = `Введите корректное значение <span class="mono">ΔV</span> (> 0).`;
-        return;
-      }
-      if (alpha < 0){
-        showErr('Ошибка ввода: α должно быть положительным (угол поворота берём по модулю).');
-        $out.innerHTML = `Введите корректное значение <span class="mono">α</span> (≥ 0).`;
-        return;
-      }
-
-      const mu = alpha / dv;
-
-      const alphaOk = inRange(alpha, alphaMin, alphaMax);
-      const muOk    = inRange(mu, muMin, muMax);
-
-      $out.innerHTML = `
-        <div>Введено: <span class="mono">α = ${fmt(alpha, 2)} град</span>, <span class="mono">ΔV = ${fmt(dv, 2)} км/ч</span></div>
-        <div style="margin-top:6px;">
-          Расчёт: <span class="mono">μ = α/ΔV = ${fmt(alpha,2)} / ${fmt(dv,2)} = ${fmt(mu, 4)} град/(км/ч)</span>
-        </div>
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:10px 0;">
-        <div>Проверка α: ${badge(alphaOk)} <span class="mono">допуск [${fmt(alphaMin,1)} … ${fmt(alphaMax,1)}]</span></div>
-        <div style="margin-top:6px;">Проверка μ: ${badge(muOk)} <span class="mono">допуск [${fmt(muMin,2)} … ${fmt(muMax,2)}]</span></div>
-      `;
-    }
-
-    // ======= buttons =======
-    document.getElementById('p12_calc').addEventListener('click', calc);
-
-    document.getElementById('p12_fill').addEventListener('click', function(){
-      $alpha.value = '4,5';
-      $dv.value = '30';
-      calc();
-    });
-
-    document.getElementById('p12_clear').addEventListener('click', function(){
-      hideErr();
-      $alpha.value = '';
-      $dv.value = '';
-      $out.innerHTML = `Введите <span class="mono">α</span> и <span class="mono">ΔV</span>, затем нажмите «Посчитать».`;
-    });
-
-    // Авто-пересчёт при вводе (чтобы сразу подсветка появлялась)
-    [$alpha, $dv].forEach(el => el.addEventListener('input', function(){
-      // если оба поля не пустые — пересчитываем
-      if ($alpha.value.trim() !== '' && $dv.value.trim() !== '') calc();
-    }));
-  })();
-</script>
-<!-- ===================== КАЛЬКУЛЯТОР (P12) END ===================== -->
-
+</body>
+</html>
