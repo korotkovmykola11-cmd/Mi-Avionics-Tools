@@ -9,7 +9,7 @@
 :root{
   --bg1:#0b1a2a; --bg2:#153a5a;
   --card:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.18);
+  --stroke:rgba(255,255,255,.18);  
   --text:#e9f2ff; --muted:#b7c7dd;
   --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
 
@@ -64,7 +64,7 @@ a.btn:hover{background:rgba(255,255,255,.16)}
 h2{margin:0 0 10px;font-size:16px}
 .p{color:var(--muted);font-size:14px;line-height:1.45}
 
-/* ====== МОБИЛЬНОЕ ОТКРЫТИЕ (НЕ ЛОМАЕМ В 1 КОЛОНКУ, А СКРОЛЛИМ) ====== */
+/* ===== МОБИЛЬНОЕ: НЕ ОБРЕЗАЕМ, А ДАЁМ ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ ===== */
 .grid3-wrap{
   width:100%;
   overflow-x:auto;
@@ -76,8 +76,7 @@ h2{margin:0 0 10px;font-size:16px}
   grid-template-columns:1fr 1fr 1fr;
   gap:12px;
   margin-top:10px;
-
-  min-width:980px; /* чтобы на мобилке не обрезало/не сжимало */
+  min-width:980px; /* чтобы не сжималось и не “резало” на мобилке */
 }
 
 .col{
@@ -104,7 +103,7 @@ h2{margin:0 0 10px;font-size:16px}
   font-size:13px;
   line-height:1.45;
 
-  /* абзацы/переносы — НЕ меняя текст */
+  /* абзацы/переносы — без правки текста */
   white-space:pre-wrap;
 }
 .hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:6px}
@@ -162,18 +161,13 @@ button:hover{background:rgba(255,255,255,.16)}
 .fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
 
-/* ====== КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (в т.ч. верх/низ) ====== */
-.numctx{
-  color:var(--num);
-  font-weight:900;
-}
+/* ===== КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (в т.ч. формулы, sup/sub) ===== */
+.numctx{ color:var(--num); font-weight:900; }
 .numctx b{ color:inherit; }
 .numctx sup, .numctx sub{ color:inherit; font-weight:900; }
-
-/* sup/sub вообще (на случай когда цифры там без обёртки) */
 sup, sub{ color:inherit; }
 
-/* ВАЖНО: на мобилке не переводим grid3 в 1 колонку */
+/* калькуляторная “моно” — цифры тоже станут коричневыми через обёртку */
 @media(max-width:980px){
   .field{grid-column:span 12}
 }
@@ -196,7 +190,7 @@ sup, sub{ color:inherit; }
     <h2>Технология (как в регламенте): раздельно для продольного и поперечного</h2>
 
     <div class="grid3-wrap">
-      <div class="grid3" id="p17-grid3">
+      <div class="grid3">
         <!-- СОДЕРЖАНИЕ ОПЕРАЦИЙ -->
         <div class="col">
           <h3>Содержание операций</h3>
@@ -229,14 +223,14 @@ sup, sub{ color:inherit; }
           </div>
         </div>
 
-        <!-- ТТ -->
+        <!-- ТТ (ВОЗВРАЩЕНО 1:1 КАК У ТЕБЯ БЫЛО) -->
         <div class="col">
           <h3>Технические требования (ТТ)</h3>
           <div class="fill" id="tt">
           Угол поворота шкалы ручки центровки 1,5° ± 0,6°. 
           Передаточное число (1,5 ±0,6) град / м/с
           <!-- Если ТТ разные для продольного/поперечного — сделай тут 2 подпункта. -->
-          </div>
+        </div>
         </div>
 
         <!-- ОТКЛОНЕНИЯ -->
@@ -270,7 +264,7 @@ sup, sub{ color:inherit; }
     </div>
   </section>
 
- <!-- ===== КАЛЬКУЛЯТОР p17: НЕ ТРОГАЮ (оставляю твой код 1:1) ===== -->
+<!-- ===== КАЛЬКУЛЯТОР p17: ТВОЙ, НЕ ТРОГАЮ ===== -->
 <section class="card" id="calc-p17-angle">
   <h2>Калькулятор проверки (как в технологии): только по углу поворота шкалы</h2>
 
@@ -451,18 +445,16 @@ sup, sub{ color:inherit; }
 
 </div>
 
-<!-- ===== АВТО-КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (без изменения текста вручную) ===== -->
+<!-- ===== АВТО: КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (включая вывод калькулятора) ===== -->
 <script>
 (function(){
-  // Оборачиваем в .numctx всё, где есть цифры (в т.ч. коды/формулы/диапазоны/±/°/…)
-  // Важно: это не меняет твоё содержимое "вручную", только визуальная обёртка.
   const RE = /([A-Za-zА-Яа-яЁё]*\d[\dA-Za-zА-Яа-яЁё.,±°/…\-–—]*|\d+)/g;
-
   let busy = false;
 
   function wrapTextNode(tn){
     const txt = tn.nodeValue;
     if(!txt || !/\d/.test(txt)) return;
+    RE.lastIndex = 0;
     if(!RE.test(txt)) return;
     RE.lastIndex = 0;
 
@@ -482,7 +474,6 @@ sup, sub{ color:inherit; }
         if(!p) return NodeFilter.FILTER_REJECT;
         const tag = (p.nodeName||'').toLowerCase();
         if(tag==='script' || tag==='style') return NodeFilter.FILTER_REJECT;
-        // чтобы не трогать уже обёрнутые
         if(p.classList && p.classList.contains('numctx')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
@@ -495,15 +486,11 @@ sup, sub{ color:inherit; }
     busy = false;
   }
 
-  // Первичная покраска
   document.addEventListener('DOMContentLoaded', ()=>{
     colorize(document.body);
   });
 
-  // Чтобы коричневые цифры были и в динамическом выводе калькулятора
-  const mo = new MutationObserver(()=>{
-    colorize(document.body);
-  });
+  const mo = new MutationObserver(()=>colorize(document.body));
   mo.observe(document.body, {subtree:true, childList:true, characterData:true});
 })();
 </script>
