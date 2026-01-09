@@ -146,6 +146,12 @@
       line-height:0;
     }
 
+    /* Все цифры в технологии — коричневым (через JS-обёртку) */
+    .num{
+      color:var(--tol);
+      font-weight:900;
+    }
+
     .figblock{
       margin-top:10px;
       border:1px solid rgba(255,255,255,.14);
@@ -170,7 +176,7 @@
       border-radius:8px;
     }
 
-    /* Калькулятор — НЕ ТРОГАЮ ВЕРСТКУ/ЛОГИКУ, только подсветка PASS */
+    /* Калькулятор — НЕ ТРОГАЮ ТЕКСТ ТЕХНОЛОГИИ, добавляю только новые поля и проверку направления */
     .calc{
       margin-top:14px;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
@@ -354,6 +360,27 @@
           <input id="muOut" type="text" readonly placeholder="—">
           <div class="hint" id="muRangeHint">—</div>
         </div>
+
+        <!-- НОВОЕ: проверка направления отклонения индекса -->
+        <div class="field">
+          <label for="rotDir">Вращение платформы (разворот)</label>
+          <select id="rotDir">
+            <option value="" selected>— выбрать —</option>
+            <option value="right">Правый разворот</option>
+            <option value="left">Левый разворот</option>
+          </select>
+          <div class="hint">По технологии: правый → индекс влево; левый → индекс вправо.</div>
+        </div>
+
+        <div class="field">
+          <label for="idxDev">Отклонение индекса от среднего</label>
+          <select id="idxDev">
+            <option value="" selected>— выбрать —</option>
+            <option value="left">Влево</option>
+            <option value="right">Вправо</option>
+          </select>
+          <div class="hint">Выбираешь, куда реально ушёл индекс.</div>
+        </div>
       </div>
 
       <div class="btn-row">
@@ -369,6 +396,54 @@
 
     <script>
     (function(){
+      // ===== 1) Все цифры в ТЕХНОЛОГИИ делаем коричневыми (без переписывания текста) =====
+      function colorizeNumbersInTech(){
+        const root = document.querySelector('table.tech');
+        if(!root) return;
+
+        const walker = document.createTreeWalker(
+          root,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode(node){
+              const p = node.parentNode;
+              if(!p) return NodeFilter.FILTER_REJECT;
+              const tag = (p.nodeName || '').toLowerCase();
+              if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
+              if(!node.nodeValue || !/\d/.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        const nodes = [];
+        while(walker.nextNode()) nodes.push(walker.currentNode);
+
+        // Оборачиваем только ЧИСЛОВЫЕ последовательности, слова не трогаем
+        const re = /(\d+(?:[.,]\d+)?)/g;
+
+        for(const tn of nodes){
+          const txt = tn.nodeValue;
+          const parts = txt.split(re);
+          if(parts.length === 1) continue;
+
+          const frag = document.createDocumentFragment();
+          for(let i=0;i<parts.length;i++){
+            const part = parts[i];
+            if(part === '') continue;
+            if(i % 2 === 1){ // это совпадение (число)
+              const s = document.createElement('span');
+              s.className = 'num';
+              s.textContent = part;
+              frag.appendChild(s);
+            }else{
+              frag.appendChild(document.createTextNode(part));
+            }
+          }
+          tn.parentNode.replaceChild(frag, tn);
+        }
+      }
+
       // Константа из твоей логики калькулятора (не трогаем)
       const CONST_S = 66.7;
 
@@ -397,6 +472,10 @@
       const btnCalc = document.getElementById('btnCalcMu');
       const btnClr  = document.getElementById('btnClearMu');
 
+      // новое
+      const rotDir = document.getElementById('rotDir');
+      const idxDev = document.getElementById('idxDev');
+
       function toNum(s){
         if(s == null) return NaN;
         s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
@@ -423,6 +502,17 @@
           `Диапазон μ по ТТ: ${fmt(muMin,0)}…${fmt(muMax,0)} (мин/макс).`;
       }
 
+      function dirOk(){
+        // Правый разворот -> индекс влево
+        // Левый разворот  -> индекс вправо
+        const r = rotDir.value;
+        const d = idxDev.value;
+        if(!r || !d) return null; // не выбрано
+        if(r === 'right' && d === 'left') return true;
+        if(r === 'left'  && d === 'right') return true;
+        return false;
+      }
+
       function calc(){
         const m = MODES[modeSel.value];
         const omegaMin = m.omega0 - m.minus;
@@ -444,17 +534,25 @@
         const okW = (w >= omegaMin && w <= omegaMax);
         const okMu = (mu >= muMin && mu <= muMax);
 
-        const pass = (okW && okMu);
+        const dOK = dirOk();
+        const dirText = (dOK === null)
+          ? 'Проверка отклонения индекса: не выбрано.'
+          : ('Проверка отклонения индекса: ' + (dOK ? 'соответствует' : 'НЕ соответствует'));
+
+        const pass = (okW && okMu && (dOK !== false)); // если направление не выбрано — не валим, но покажем строкой
 
         resLine.innerHTML =
           `Введено ω = <b>${fmt(w,3)}</b> град/с → μ = <b>${fmt(mu,3)}</b> %/(град/с). ` +
-          `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)}. Итог: ` +
-          `<span class="verdict ${pass ? 'pass' : 'fail'}">${pass ? 'PASS по ТТ' : 'FAIL по ТТ'}</span>.`;
+          `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)}. ` +
+          `<br>${dirText} ` +
+          `<br>Итог: <span class="verdict ${pass ? 'pass' : 'fail'}">${pass ? 'PASS по ТТ' : 'FAIL по ТТ'}</span>.`;
       }
 
       function clearAll(){
         omegaIn.value = '';
         muOut.value = '';
+        rotDir.value = '';
+        idxDev.value = '';
         resLine.textContent = 'Введи ω и нажми «Рассчитать».';
       }
 
@@ -462,8 +560,11 @@
       btnCalc.addEventListener('click', calc);
       btnClr.addEventListener('click', clearAll);
       omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
+      rotDir.addEventListener('change', ()=>{ if(omegaIn.value.trim()) calc(); });
+      idxDev.addEventListener('change', ()=>{ if(omegaIn.value.trim()) calc(); });
 
       setTT();
+      colorizeNumbersInTech();
     })();
     </script>
 
