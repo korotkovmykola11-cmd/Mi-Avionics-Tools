@@ -19,11 +19,8 @@
   --bad:#FF9A9A;
   --wait:#FFD27C;
 
-  /* коричневый для числового контекста (цифры+±+тире+скобки+буквы рядом в шифрах) */
-  --tol:#c89b5a;
-
-  /* красный для твоей заметки (большими буквами) */
-  --noteRed:#ff5a6a;
+  --tol:#c89b5a;      /* коричневый */
+  --noteRed:#ff5a6a;  /* красный */
 }
 
 *{box-sizing:border-box}
@@ -51,29 +48,40 @@ h2{font-size:18px}
 
 .p{font-size:14px;line-height:1.45;color:var(--muted)}
 
-/* Таблица */
+/* ====== ВАЖНО: чтобы на мобилке НЕ резало ====== */
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:6px;
+}
 .table{
   display:grid;
   grid-template-columns:2fr 1fr 1fr;
   border:1px solid var(--stroke);
   border-radius:14px;
   overflow:hidden;
+
+  min-width:860px; /* как в твоих прошлых файлах: чтобы не сжимало “в кишку” */
 }
+
 .cell{
   padding:12px;
   border-right:1px solid var(--stroke);
   border-bottom:1px solid var(--stroke);
   font-size:13px;
   min-height:160px;
-  white-space:pre-wrap; /* важно: абзацы/переносы сохраняются */
+  white-space:pre-wrap; /* абзацы/переносы сохраняем */
   line-height:1.35;
 }
+
 .cell.head{
   background:rgba(255,255,255,.12);
   font-weight:800;
   min-height:auto;
   white-space:normal;
 }
+
 .table .cell:nth-child(3n){border-right:none}
 .table .cell:nth-last-child(-n+3){border-bottom:none}
 
@@ -86,13 +94,17 @@ h2{font-size:18px}
 }
 .figcap{margin-bottom:8px;font-size:13px;color:var(--muted)}
 
-/* Форма калькулятора */
+/* Калькулятор */
 .form{
   display:grid;
   grid-template-columns:repeat(12,1fr);
   gap:14px;
 }
 .field{grid-column:span 4}
+@media (max-width: 900px){
+  .field{grid-column:span 12}
+}
+
 label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
 
 input,button{
@@ -131,20 +143,19 @@ button.primary{
 .bad{background:rgba(255,154,154,.18);color:var(--bad)}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
 
-/* ===== коричневые допуски/числовой контекст ===== */
+/* коричневый “числовой контекст” */
 .numctx{ color:var(--tol); font-weight:900; }
-.tol{ color:var(--tol); font-weight:900; }
-sup.tol, sub.tol{ font-size:.92em; line-height:0; }
 
-/* плюс/минус сверху/снизу (если нужно в тексте) */
-.pm{display:inline-block; font-weight:900; color:var(--tol);}
-.pm sup, .pm sub{color:var(--tol); font-weight:900;}
-
-/* ===== красная заметка (от "ДЛЯ РЕГУЛИРОВКИ..." до конца) ===== */
-.note-red{
-  color:var(--noteRed);
+/* плюс/минус сверху/снизу */
+sup.tol, sub.tol{
+  color:var(--tol);
   font-weight:900;
+  font-size:.92em;
+  line-height:0;
 }
+
+/* красная заметка */
+.note-red{ color:var(--noteRed); font-weight:900; }
 </style>
 </head>
 
@@ -160,31 +171,33 @@ sup.tol, sub.tol{ font-size:.92em; line-height:0; }
   <div class="card">
     <h2>Содержание операции</h2>
 
-    <div class="table" id="techTable">
-      <div class="cell head">Содержание операций</div>
-      <div class="cell head">Технические требования (ТТ)</div>
-      <div class="cell head">Работы при отклонениях</div>
+    <div class="table-wrap">
+      <div class="table" id="techTable">
+        <div class="cell head">Содержание операций</div>
+        <div class="cell head">Технические требования (ТТ)</div>
+        <div class="cell head">Работы при отклонениях</div>
 
-      <div class="cell">
+        <div class="cell">
 Проверьте передаточное число от ручки управления вертолетом летчика к КДТ.Для чего:
 Нажмите кнопку-табло "ОТКЛ." на пульте управления канала тангажа, отклоните ручку управления вертолетом летчика на себя (от себя) до упора и заметьте положение шкалы ручки центровки на пульте управления;
 
 медленно отпуская ручку управления вертолетом летчика в обратную сторону до упора, определите угол поворота шкалы ручки центровки на пульте управления.
-      </div>
+        </div>
 
-      <div class="cell">
+        <div class="cell">
 Угол поворота шкалы (44 +5-4) град . Передаточное число
 (0,6 ±0,06) град/мм
 Передаточное число подсчитывается по формуле:
 i = α /l град/мм где:
 α - угол поворота шкалы ручки центровки в град.;
 l - полный ход штока рулевого агрегата ка-нала тангажа, равный 74 мм
-      </div>
+        </div>
 
-      <div class="cell" id="workCell">
+        <div class="cell">
 Отклоните ручку управления вертолетом летчика на себя до упора и заметьте положение шкалы ручки центровки на пульте управления. Изменением плеча рычага КДТ добейтесь, чтобы при медленном отклонении ручки управления вертолетом летчика от себя до упора угол поворота шкалы ручки центровки был равен 44°. Медленно отклоняя ручку управления вертолетом летчика на себя до упора, определите угол поворота шкалы ручки центровка. Угол поворота шкалы ручки центровки должен быть в пределах 44° ±4°.
 
-<span class="note-red">ДЛЯ РЕГУЛИРОВКИ ПЕРЕДАТОЧНОГО ЧИСЛА ПО КДТ.ТЯГА,КОГДА УТАПЛИВАЕТСЯ МЫ УВЕЛИЧИВАЕМ РАЗМАХ Т.Е ЗНАЧЕНИЕ ОТ СЕБЯ НА СЕБЯ УВЕЛИЧИВАЕТЬСЯ.ЧТОБЫ УМЕНШИТЬ ЗНАЧЕНИЕ (44  +5-4) ТЯГУ ТЯНЕМ ВВЕРХ,РАЗМАХ УМЕНЬШАЕТЬСЯ.ТАНДЕРОМ МЫ РЕГУЛИРУЕМ ЦЕНТР ПРИ ЗАШТЫРЕНОЙ РУЧКЕ В ПРОДОЛЬНОМ УПРАВЛЕНИИ.</span>
+<span class="note-red">ДЛЯ РЕГУЛИРОВКИ ПЕРЕДАТОЧНОГО ЧИСЛА ПО КДТ.ТЯГА,КОГДА УТАПЛИВАЕТСЯ МЫ УВЕЛИЧИВАЕМ РАЗМАХ Т.Е ЗНАЧЕНИЕ ОТ СЕБЯ НА СЕБЯ УВЕЛИЧИВАЕТЬСЯ.ЧТОБЫ УМЕНШИТЬ ЗНАЧЕНИЕ (44  +5-4) ТЯГУ ТЯНЕМ ВВЕРХ,РАЗМАХ УМЕНЬШАЕТЬСЯ.ТАНДЕРОМ МЫ РЕГУЛИРУЕМ ЦЕНТР ПРИ ЗАШТЫРЕНОЙРУЧКЕ В ПРОДОЛЬНОМ УПРАВЛЕНИИ.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -195,7 +208,7 @@ l - полный ход штока рулевого агрегата ка-нал
     <img src="70.jpg" alt="Рисунок 70">
   </div>
 
-  <!-- КАЛЬКУЛЯТОР (по технологии: i = α / l) -->
+  <!-- КАЛЬКУЛЯТОР -->
   <div class="card">
     <h2>Калькулятор передаточного числа</h2>
 
@@ -236,30 +249,20 @@ l - полный ход штока рулевого агрегата ка-нал
 </div>
 
 <script>
-/* ===== П13 (по технологии) =====
- i = α / l   [град/мм]
- α норма: 44 +5 -4  => 40..49 град
- l = 74 мм (фикс)
- i допуск: 0.6 ± 0.06 => 0.54..0.66 град/мм
-*/
+/* ===== П13 (по технологии) ===== */
 const L_MM   = 74;
-
-const ALPHA_NOM = 44;
 const ALPHA_MIN = 40;  // 44 - 4
 const ALPHA_MAX = 49;  // 44 + 5
-
-const I_NOM = 0.6;
-const I_TOL = 0.06;
-const I_MIN = I_NOM - I_TOL; // 0.54
-const I_MAX = I_NOM + I_TOL; // 0.66
+const I_MIN = 0.54;
+const I_MAX = 0.66;
 
 function f(n, d=3){
   return Number(n).toFixed(d).replace('.', ',');
 }
 
 function setWait(){
-  const out = document.getElementById('i_out');
-  out.innerHTML = `<span class="status wait">ОЖИДАЕТ</span><br>Введи α и нажми «Рассчитать».`;
+  document.getElementById('i_out').innerHTML =
+    `<span class="status wait">ОЖИДАЕТ</span><br>Введи α и нажми «Рассчитать».`;
 }
 
 function reset_i(){
@@ -272,10 +275,8 @@ function calc_i(fromInput){
   const out = document.getElementById('i_out');
 
   const raw = (aEl.value || '').replace(',', '.').trim();
-
   if(fromInput && raw === ''){
-    setWait();
-    return;
+    setWait(); return;
   }
 
   const alpha = parseFloat(raw);
@@ -289,24 +290,6 @@ function calc_i(fromInput){
   const alpha_ok = (alpha >= ALPHA_MIN && alpha <= ALPHA_MAX);
   const i_ok = (i >= I_MIN && i <= I_MAX);
 
-  let alphaMsg = '';
-  if(alpha_ok){
-    alphaMsg = `α в норме (40…49). Запас: до min ${f(alpha - ALPHA_MIN,1)}°, до max ${f(ALPHA_MAX - alpha,1)}°`;
-  }else if(alpha < ALPHA_MIN){
-    alphaMsg = `α ниже нормы на ${f(ALPHA_MIN - alpha,1)}° (норма 40…49)`;
-  }else{
-    alphaMsg = `α выше нормы на ${f(alpha - ALPHA_MAX,1)}° (норма 40…49)`;
-  }
-
-  let iMsg = '';
-  if(i_ok){
-    iMsg = `i в допуске (0.54…0.66). Запас: до min ${f(i - I_MIN)}, до max ${f(I_MAX - i)}`;
-  }else if(i < I_MIN){
-    iMsg = `i ниже допуска на ${f(I_MIN - i)} (допуск 0.54…0.66)`;
-  }else{
-    iMsg = `i выше допуска на ${f(i - I_MAX)} (допуск 0.54…0.66)`;
-  }
-
   const status = (alpha_ok && i_ok)
     ? `<span class="status ok">ПРОХОДИТ</span>`
     : `<span class="status bad">НЕ ПРОХОДИТ</span>`;
@@ -314,12 +297,50 @@ function calc_i(fromInput){
   out.innerHTML =
     `${status}<br>
      <b>i = α / l = ${f(alpha,2)} / <span class="numctx">74</span> = ${f(i)} град/мм</b><br>
-     Допуск i: <b><span class="numctx">${f(I_MIN,2)}…${f(I_MAX,2)}</span></b> (0.6 ± 0.06)<br>
-     ${alphaMsg}<br>
-     ${iMsg}`;
+     Допуск i: <b><span class="numctx">${f(I_MIN,2)}…${f(I_MAX,2)}</span></b> (0.6 ± 0.06)`;
 }
 
-/* ===== Коричневим весь числовой контекст в таблице: цифры + знаки + буквы рядом (шифры) ===== */
+/* ===== 1) Делаем (44 +5-4) -> 44<sup>+5</sup><sub>−4</sub> (в таблице) ===== */
+(function applySupSubTolerances(){
+  const root = document.getElementById('techTable');
+  if(!root) return;
+
+  // ловим: 44 +5-4  / 44+5-4 / 44 + 5 - 4 (с любыми пробелами)
+  const re = /(\d+(?:[.,]\d+)?)\s*\+\s*(\d+(?:[.,]\d+)?)\s*-\s*(\d+(?:[.,]\d+)?)/g;
+
+  // аккуратно работаем только с текстовыми узлами, не трогаем note-red
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      const p = node.parentNode;
+      if(!p) return NodeFilter.FILTER_REJECT;
+      if(p.closest && p.closest('.note-red')) return NodeFilter.FILTER_REJECT;
+      const v = node.nodeValue || '';
+      if(!re.test(v)) return NodeFilter.FILTER_REJECT;
+      re.lastIndex = 0;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes = [];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+
+  for(const tn of nodes){
+    const txt = tn.nodeValue;
+    const html = txt.replace(re, (m, base, plus, minus) => {
+      // минус делаем типографским "−"
+      return `${base}<sup class="tol">+${plus}</sup><sub class="tol">−${minus}</sub>`;
+    });
+
+    // если не поменялось — пропуск
+    if(html === txt) continue;
+
+    const span = document.createElement('span');
+    span.innerHTML = html;
+    tn.parentNode.replaceChild(span, tn);
+  }
+})();
+
+/* ===== 2) Коричневим “числовой контекст” (цифры + знаки + буквы рядом, шифры) ===== */
 (function colorizeNumericContext(){
   const root = document.getElementById('techTable');
   if(!root) return;
@@ -334,7 +355,7 @@ function calc_i(fromInput){
         const tag = (p.nodeName || '').toLowerCase();
         if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
 
-        // Не трогаем твою красную заметку
+        // не трогаем красную заметку
         if(p.closest && p.closest('.note-red')) return NodeFilter.FILTER_REJECT;
 
         const v = node.nodeValue || '';
@@ -347,7 +368,7 @@ function calc_i(fromInput){
   const nodes = [];
   while(walker.nextNode()) nodes.push(walker.currentNode);
 
-  // захват: буквы/цифры/.,°/±/+/−/-/=/()/слэш/проценты (чтобы Vпр=200км/ч, (44 +5-4), 0,6 ±0,06 и т.п.)
+  // числовой контекст: буквы/цифры + . , ° ± + − - / = % и т.п.
   const re = /(\(?[A-Za-zА-Яа-яЁё]*\d[\dA-Za-zА-Яа-яЁё.,°±−\-\+\/=%]*\)?)/g;
 
   for(const tn of nodes){
@@ -373,7 +394,6 @@ function calc_i(fromInput){
   }
 })();
 
-// стартовое состояние
 document.addEventListener('DOMContentLoaded', setWait);
 </script>
 
