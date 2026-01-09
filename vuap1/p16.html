@@ -12,6 +12,8 @@
   --stroke:rgba(255,255,255,.18);
   --text:#e9f2ff; --muted:#b7c7dd;
   --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
+
+  --tol:#c89b5a; /* коричневый */
 }
 *{box-sizing:border-box}
 body{
@@ -32,11 +34,21 @@ body{
 h1,h2,h3{margin:0 0 10px}
 .p{color:var(--muted);font-size:14px;line-height:1.45}
 
+/* ===== ЧИТАЕМОСТЬ НА МОБИЛЬНОМ: как в прошлых файлах ===== */
+.grid3-wrap{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:6px;
+}
 .grid3{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
   gap:12px;
+
+  min-width:980px; /* чтобы 3 колонки не “ломались” и не обрезались */
 }
+
 .col{
   border:1px solid var(--stroke);
   border-radius:16px;
@@ -49,8 +61,23 @@ h1,h2,h3{margin:0 0 10px}
   border-radius:12px;
   padding:10px;
   color:var(--muted);
+
+  /* абзацы/переносы — без изменения текста */
+  white-space:pre-wrap;
+  line-height:1.4;
+}
+.fill hr{
+  border:none;
+  border-top:1px solid rgba(255,255,255,.18);
+  margin:14px 0;
 }
 
+/* ===== Коричневые допуски/числовые блоки целиком ===== */
+.numctx{ color:var(--tol); font-weight:900; }
+.numctx b{ color:inherit; } /* если внутри было <b> */
+.numctx sup, .numctx sub{ color:inherit; font-weight:900; }
+
+/* калькулятор (оставляю твой стиль) */
 .form{
   display:grid;
   grid-template-columns:repeat(12,1fr);
@@ -96,7 +123,7 @@ button.primary{background:#fff;color:#000}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
 
 @media(max-width:900px){
-  .grid3{grid-template-columns:1fr}
+  /* IMPORTANT: не переводим в 1 колонку, а даём горизонтальный скролл — как раньше */
   .field{grid-column:span 12}
 }
 </style>
@@ -109,10 +136,11 @@ button.primary{background:#fff;color:#000}
 <p class="p">Проверка ограничений выходных сигналов </p>
 
 <section class="card">
-  <div class="grid3">
-    <div class="col">
-      <h3>Содержание операций</h3>
-      <div class="fill">
+  <div class="grid3-wrap">
+    <div class="grid3" id="grid3p16">
+      <div class="col">
+        <h3>Содержание операций</h3>
+        <div class="fill">
      <b>А. Проверка ограничения сигнала заданного угла тангажа (ϑ<sub>з</sub>)</b><br><br>
 Включить тумблер В7 изделия 24-7100-70.
 Задать от ПК ДИСС-15 задачу №1.
@@ -136,23 +164,23 @@ button.primary{background:#fff;color:#000}
          Отпустить кнопку "ВИСЕНИЕ".Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
          Через 30-60 секунд поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
          Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+        </div>
       </div>
-    </div>
 
-    <div class="col">
-      <h3>Технические требования (ТТ)</h3>
-      <div class="fill">
+      <div class="col">
+        <h3>Технические требования (ТТ)</h3>
+        <div class="fill">
         Угол поворота шкалы центровки: <b>5 ± 1 град</b><br><br>
         Ограничение выходного сигнала заданного угла тангажа
         <b>ϑ<sub>зад</sub></b>: <b>5 ± 1 град</b><br><br>
         Ограничение выходного сигнала заданного угла крена
         <b>γ<sub>зад</sub></b>: <b>5 ± 1 град</b>
+        </div>
       </div>
-    </div>
 
-    <div class="col">
-      <h3>Работы при отклонениях от ТТ</h3>
-      <div class="fill">
+      <div class="col">
+        <h3>Работы при отклонениях от ТТ</h3>
+        <div class="fill">
          <b>А. Проверка ограничения сигнала заданного угла тангажа (ϑ<sub>з</sub>)</b><br><br>
 Включить тумблер В7 изделия 24-7100-70.
 Задать от ПК ДИСС-15 задачу №1 (задачу №2).Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС (установлен в радиоотсеке) поставить в положение "ВКЛ".
@@ -170,6 +198,7 @@ button.primary{background:#fff;color:#000}
         ручки центровки установить стрелку индикатора нулевого пульта "К" в среднее положение (начальное положение шкалы).Отпустить кнопку "ВИСЕНИЕ".
         От начального положения плавным поворотом ручки центровки против (по) часовой стрелки задать угол 5 градусов по шкале центровки.Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
         Через 30-60 секунд , вращая ось регулировочного сопротивления γз в блоке БВ-24,установить стрелку индикатора в среднее положение.
+        </div>
       </div>
     </div>
   </div>
@@ -203,6 +232,7 @@ button.primary{background:#fff;color:#000}
 </div>
 
 <script>
+/* ====== Твой калькулятор — НЕ ТРОГАЮ ====== */
 function num(v){return Number((v||'').replace(',','.'))}
 
 function inTol(v){return v>=4 && v<=6}
@@ -232,6 +262,59 @@ function resetAll(){
   roll.value='';
   out.innerHTML='<span class="status wait">ОЖИДАЕТ</span>';
 }
+
+/* ====== Подсветка допусков коричневым “полным объёмом” (только оформление) ====== */
+(function colorizeTolerancesP16(){
+  const root = document.getElementById('grid3p16');
+  if(!root) return;
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      const p = node.parentNode;
+      if(!p) return NodeFilter.FILTER_REJECT;
+      const tag = (p.nodeName||'').toLowerCase();
+      if(tag==='script' || tag==='style') return NodeFilter.FILTER_REJECT;
+      const v = node.nodeValue || '';
+      // интересует только там, где есть цифры/допуски
+      if(!/\d/.test(v) && !/±|№|ϑ|γ/.test(v)) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes = [];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+
+  // куски, которые красим целиком:
+  // 1) "5 ± 1" / "0,5 ± 0,2" и т.п.
+  // 2) диапазоны "30-60"
+  // 3) "№1", "№2"
+  // 4) "24-7100-70", "ДИСС-15", "БВ-24", "ПВМ-24" (шифры с дефисами)
+  // 5) "ϑз", "γз", "ϑзад" и т.п.
+  const re = new RegExp(
+    [
+      '(\\d+(?:[.,]\\d+)?\\s*±\\s*\\d+(?:[.,]\\d+)?)',          // 5 ± 1
+      '(\\d+\\s*[-–]\\s*\\d+)',                                 // 30-60
+      '(№\\s*\\d+)',                                            // №1
+      '([A-Za-zА-Яа-яЁё]+-\\d+(?:-\\d+)+)',                     // 24-7100-70 / БВ-24 / ПВМ-24 / ДИСС-15
+      '([ϑγ]\\s*[_]?[A-Za-zА-Яа-яЁё]+|[ϑγ][A-Za-zА-Яа-яЁё]+)'   // ϑз / γз / ϑзад
+    ].join('|'),
+    'g'
+  );
+
+  for(const tn of nodes){
+    const txt = tn.nodeValue;
+    if(!re.test(txt)) continue;
+    re.lastIndex = 0;
+
+    const html = txt.replace(re, (m)=>{
+      return `<span class="numctx">${m}</span>`;
+    });
+
+    const span = document.createElement('span');
+    span.innerHTML = html;
+    tn.parentNode.replaceChild(span, tn);
+  }
+})();
 </script>
 
 </body>
