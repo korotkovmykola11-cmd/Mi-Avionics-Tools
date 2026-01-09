@@ -1,15 +1,37 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ВУАП-1 · p18 · Проверка и регулировка передаточных чисел по перемещению (iX / iZ)</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ВУАП-1 · p17 · Проверка и регулировка передаточных чисел по составляющим путевой скорости</title>
 
 <style>
+/* ===== разделение внутри 1-й колонки: iX / iZ ===== */
+.split{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+.subcard{
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.10);
+  border-radius:14px;
+  padding:10px;
+}
+.subttl{
+  font-size:13px;
+  font-weight:900;
+  margin:0 0 8px;
+}
+
+/* ===== базовая тема ===== */
 :root{
   --bg1:#0b1a2a; --bg2:#153a5a;
   --card:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.18);  
+  --stroke:rgba(255,255,255,.18);
   --text:#e9f2ff; --muted:#b7c7dd;
   --ok:#7CFF9E; --bad:#FF9A9A; --wait:#FFD27C;
 
@@ -18,53 +40,28 @@
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
-    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
-}
-.wrap{max-width:1200px;margin:0 auto;padding:18px}
-
-.top{
-  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-  margin-bottom:12px;
-}
-.brand{
-  background:var(--card);
-  border:1px solid var(--stroke);
+@@ -54,7 +38,6 @@
   border-radius:16px;
   padding:12px 16px;
   backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
 }
 .brand h1{margin:0;font-size:18px;letter-spacing:.2px}
 .brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
-
-a.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:9px 12px;border-radius:12px;text-decoration:none;
+@@ -65,7 +48,7 @@
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.10);
   color:var(--text);
+  font-size:13px;font-weight:800;
   font-size:13px;font-weight:900;
 }
 a.btn:hover{background:rgba(255,255,255,.16)}
 
-.card{
-  background:var(--card);
-  border:1px solid var(--stroke);
-  border-radius:18px;
-  padding:16px;
-  margin-bottom:14px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 18px 40px rgba(0,0,0,.25);
-}
+@@ -81,47 +64,51 @@
 h2{margin:0 0 10px;font-size:16px}
 .p{color:var(--muted);font-size:14px;line-height:1.45}
 
-/* ===== МОБИЛЬНОЕ: НЕ ОБРЕЗАЕМ, А ДАЁМ ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ ===== */
+/* ====== МОБИЛЬНОЕ ОТКРЫТИЕ (НЕ ЛОМАЕМ В 1 КОЛОНКУ, А СКРОЛЛИМ) ====== */
 .grid3-wrap{
   width:100%;
   overflow-x:auto;
@@ -76,7 +73,8 @@ h2{margin:0 0 10px;font-size:16px}
   grid-template-columns:1fr 1fr 1fr;
   gap:12px;
   margin-top:10px;
-  min-width:980px; /* чтобы не сжималось и не “резало” на мобилке */
+
+  min-width:980px; /* чтобы на мобилке не обрезало/не сжимало */
 }
 
 .col{
@@ -85,6 +83,10 @@ h2{margin:0 0 10px;font-size:16px}
   border-radius:16px;
   padding:12px;
 }
+.col h3{
+  margin:0 0 8px;
+  font-size:14px;
+  font-weight:900;
 .col h3{margin:0 0 8px;font-size:14px;font-weight:900}
 .block{
   border:1px solid rgba(255,255,255,.16);
@@ -95,102 +97,118 @@ h2{margin:0 0 10px;font-size:16px}
 }
 .block h4{margin:0 0 8px;font-size:13px;font-weight:900}
 .fill{
+  min-height:240px;
   min-height:150px;
   border:1px dashed rgba(255,255,255,.22);
+  border-radius:14px;
   border-radius:12px;
   padding:10px 12px;
   color:var(--muted);
   font-size:13px;
   line-height:1.45;
+}
+.hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:8px}
 
-  /* абзацы/переносы — без правки текста */
+.calcGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+  /* абзацы/переносы — НЕ меняя текст */
   white-space:pre-wrap;
 }
+.box{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px;
+  background:rgba(0,0,0,.14);
+}
+.box h3{margin:0 0 8px;font-size:14px;font-weight:900}
 .hint{color:rgba(255,255,255,.65);font-size:12px;margin-top:6px}
 
 .form{
   display:grid;
   grid-template-columns:repeat(12,1fr);
-  gap:12px;
-  margin-top:10px;
-}
-.field{grid-column:span 6}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-input{
-  width:100%;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  font-size:14px;
-  outline:none;
-}
-input:focus{border-color:rgba(255,255,255,.35)}
-.actions{grid-column:span 12;display:flex;gap:12px;flex-wrap:wrap}
-button{
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.10);
-  color:var(--text);
-  font-weight:900;
-  cursor:pointer;
-}
-button.primary{background:linear-gradient(180deg,#fff,#e6f0ff);color:#000}
+@@ -155,8 +142,8 @@
 button:hover{background:rgba(255,255,255,.16)}
 
 .result{
+  margin-top:12px;
+  padding:12px;
   margin-top:14px;
   padding:14px;
   border-radius:14px;
   border:1px solid var(--stroke);
   background:rgba(0,0,0,.25);
-}
-.status{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  margin-bottom:8px;
-}
-.ok{background:rgba(124,255,158,.18);color:var(--ok)}
-.bad{background:rgba(255,154,154,.18);color:var(--bad)}
+@@ -173,12 +160,21 @@
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
 .pass{background:rgba(124,255,158,.18)!important;border-color:rgba(124,255,158,.35)!important}
 .fail{background:rgba(255,154,154,.18)!important;border-color:rgba(255,154,154,.35)!important}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
 
-/* ===== КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (в т.ч. формулы, sup/sub) ===== */
-.numctx{ color:var(--num); font-weight:900; }
+.small{font-size:12px;color:var(--muted);line-height:1.35}
+/* ====== КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (в т.ч. верх/низ) ====== */
+.numctx{
+  color:var(--num);
+  font-weight:900;
+}
 .numctx b{ color:inherit; }
 .numctx sup, .numctx sub{ color:inherit; font-weight:900; }
+
+/* sup/sub вообще (на случай когда цифры там без обёртки) */
 sup, sub{ color:inherit; }
 
-/* калькуляторная “моно” — цифры тоже станут коричневыми через обёртку */
+/* ВАЖНО: на мобилке не переводим grid3 в 1 колонку */
 @media(max-width:980px){
+  .grid3{grid-template-columns:1fr}
+  .calcGrid{grid-template-columns:1fr}
   .field{grid-column:span 12}
 }
 </style>
-</head>
-
-<body>
-<div class="wrap">
+@@ -189,299 +185,327 @@
 
   <div class="top">
     <div class="brand">
+      <h1>ВУАП-1 · p18</h1>
+      <p>Проверка и регулировка передаточных чисел по перемещению в продольном (iX) и поперечном (iZ) направлениях</p>
       <h1>ВУАП-1 · p17</h1>
       <p>Проверка и регулировка передаточного числа — продольное / поперечное направление</p>
     </div>
+    <!-- если p18 лежит в папке /18/ — то вверх на уровень -->
     <a class="btn" href="../page-vuap-1.html">← ВУАП-1 (общее меню)</a>
   </div>
 
+  <!-- ===== ТЕХНОЛОГИЯ (3 графы) ===== -->
   <!-- ===== ТЕХНОЛОГИЯ: 3 колонки ===== -->
   <section class="card">
+    <h2> </h2>
+
+    <div class="grid3">
+
+      <!-- 1) Содержание операций (разделено iX / iZ) -->
+      <div class="col">
+        <h3>Содержание операций</h3>
+
+        <div class="split">
+          <div class="subcard">
+            <div class="subttl">A) Продольное направление — передаточное число iX</div>
+            <div class="fill" contenteditable="true" id="op-ix">
+Передаточное число ix.
+Включить тумблеры В7,В8 изделия 24-7100-70.
+Задать от ПК ДИСС-15 задачу №1.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+Нажать на пульте управления "Т" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+Поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+Поворотом шкалы ручки центровки в том же направлении задать по шкале угол,равный замеренному,от скомпенсированного положения. Одновременно с отпусканием кнопки-табло "ВИСЕНИЕ" включить секундомер.
+При прохождении стрелкой индикатора нулевого среднего положения отключить секундомер, замеряв время t.
+Передаточное число определить по формуле ix = iwx /t где: iwx - передаточное число по сигналу wx берётся с преведущего пункта проверка и регулировка передаточных чисел по состовляющим ; t - время, замеренное секундомером; ix - передаточное число по сигналу перемещения вертолёта в продольном направлении.
+Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+            </div>
     <h2>Технология (как в регламенте): раздельно для продольного и поперечного</h2>
 
     <div class="grid3-wrap">
-      <div class="grid3">
+      <div class="grid3" id="p17-grid3">
         <!-- СОДЕРЖАНИЕ ОПЕРАЦИЙ -->
         <div class="col">
           <h3>Содержание операций</h3>
@@ -209,6 +227,20 @@ sup, sub{ color:inherit; }
           </div>
           </div>
 
+          <div class="subcard">
+            <div class="subttl">B) Поперечное направление — передаточное число iZ</div>
+            <div class="fill" contenteditable="true" id="op-iz">
+Передаточное число iz.
+Включить тумблеры В7,В8 изделия 24-7100-70.
+Задать от ПК ДИСС-15 задачу №2.Выключатель "ОБНУЛЕНИЕ" на приборе СК ДИСС поставить в положение "ВКЛ".Нажать не отпуская на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ.
+Нажать на пульте управления "К" на кнопку-табло "ВКЛ" и поворотом шкалы ручки центровки установить стрелку индикатора нулевого в среднее положение (начальное положение шкалы).
+Отключить выключатель "ОБНУЛЕНИЕ" прибора СК ДИСС.
+Поворотом ручки центровки установить стрелку индикатора нулевого в среднее положение.Заметить угол поворота шкалы ручки центровки от начального положения.
+Поворотом шкалы ручки центровки в том же направлении задать по шкале угол,равный замеренному,от скомпенсированного положения. Одновременно с отпусканием кнопки-табло "ВИСЕНИЕ" включить секундомер.
+При прохождении стрелкой индикатора нулевого среднего положения отключить секундомер, замеряв время t.
+Передаточное число определить по формуле iz = iwz /t где: iwz - передаточное число по сигналу wz берётся с преведущего пункта проверка и регулировка передаточных чисел по состовляющим; t - время, замеренное секундомером; iz- передаточное число по сигналу перемещения вертолёта в поперечном направлении.
+Нажать на кнопку "ОТКЛ.АП" на ручке лётчика.
+            </div>
           <div class="block">
             <h4>Поперечное направление</h4>
             <div class="fill" id="op-lat">
@@ -223,16 +255,44 @@ sup, sub{ color:inherit; }
           </div>
         </div>
 
-        <!-- ТТ (ВОЗВРАЩЕНО 1:1 КАК У ТЕБЯ БЫЛО) -->
+        <div class="hint"> </div>
+      </div>
+
+      <!-- 2) Технические требования -->
+      <div class="col">
+        <h3>Технические требования (ТТ)</h3>
+        <div class="fill">
+          Формулы (как в технологии):<br>
+          <b>iX = iW<sub>x</sub> / t</b>, град/м<br>
+          <b>iZ = iW<sub>z</sub> / t</b>, град/м<br><br>
+
+          Допуск времени: <b>t = 7,5 +5,0 / −2,5</b> с → <b>5,0 … 12,5</b> с<br>
+          Допуск передаточного числа: <b>0,2 ± 0,08</b> град/м → <b>0,12 … 0,28</b> град/м
+        <!-- ТТ -->
         <div class="col">
           <h3>Технические требования (ТТ)</h3>
           <div class="fill" id="tt">
           Угол поворота шкалы ручки центровки 1,5° ± 0,6°. 
           Передаточное число (1,5 ±0,6) град / м/с
           <!-- Если ТТ разные для продольного/поперечного — сделай тут 2 подпункта. -->
+          </div>
         </div>
-        </div>
+        <div class="hint">“iWₓ / iWz брать из пункта … (1,5 ± 0,6)” </div>
+      </div>
 
+      <!-- 3) Работы при отклонениях (разделено iX / iZ) -->
+      <div class="col">
+        <h3>Работы, выполняемые при отклонениях от ТТ</h3>
+
+        <div class="split">
+          <div class="subcard">
+            <div class="subttl">A) Продольное направление — регулировка iX</div>
+            <div class="fill" contenteditable="true" id="dev-ix">
+Установите выключатели В7 и В8 на панели технологического жгута в положение "ВКЛ.". Задайте от пульта контроля ДИСС-15Д задачу № 1. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д в положение "ВКЛ.". Нажмите, не отпуская, на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ. Нажмите на кнопку-лампочку "ВКЛ." на пульте управления канала тангажа и по воротом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение.
+Запомните положение шкалы ручки центровки. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д в положение "ОТКЛ.". Поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение. Определите угол поворота шкалы ручки центровки от запомненного положения. Поворотом шкалы ручки центровки в том же направлении задайте по шкале ручки центровки угол, равный запомненному, от скомпенсированного положения. Отпустите кнопку-табло "ВИСЕНИЕ" на пульте ПВМ и одновременно включите секундомер.
+Вращением ручки подстроечного резистора "ix "добейтесь, чтобы величина передаточ-ного числа, замеренная в соответствии с указаниями графы "Содержание операций", составляла (0,2 ±0,08)град/м.
+ПРИМЕЧАНИЕ: При регулировке передаточного числа ix допускается подрегулировка вращением оси резистора "Mwx". Заменить,БВ-24, если не получаеться отрегулировать допуск.
+            </div>
         <!-- ОТКЛОНЕНИЯ -->
         <div class="col">
           <h3>Работы, выполняемые при отклонениях от ТТ</h3>
@@ -248,6 +308,14 @@ sup, sub{ color:inherit; }
           </div>
           </div>
 
+          <div class="subcard">
+            <div class="subttl">B) Поперечное направление — регулировка iZ</div>
+            <div class="fill" contenteditable="true" id="dev-iz">
+Установите выключатели В7 и В8 на панели технологического жгута в положение "ВКЛ.". Задайте от пульта контроля ДИСС-15Д задачу № 2. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д, в положение "ВКЛ.". Нажмите, не отпуская, на кнопку-табло "ВИСЕНИЕ" на пульте ПВМ. Нажмите на пульте управления канала крена на кнопку- лампочку "ВКЛ." поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение.
+Запомните положение шкалы ручки центровки. Установите выключатель "ОБНУЛЕНИЕ" на блоке СК-А аппаратуры ДИСС-15Д в положение "ОТКЛ.". Поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение. Определите угол поворота шкалы ручки цен-тровки от запомненного положения. Поворотом шкалы ручки центровки в том же направлении задайте по шкале ручки центровки угол, равный определенному, от скомпенсированного положения. Отпустите кнопку-табло "ВИСЕНИЕ" на пульте ПВМ и одно-ременно включите секундомер.
+Вращением ручки подстроечного резистора "iz" добейтесь, чтобы величина передаточного числа, замеренная в соответствии с указаниями графы "Содержание операций", составляла 0,2 ±0,08 град/м.
+ПРИМЕЧАНИЕ: При регулировке передаточного числа допускается подрегулировка вращением оси резистора "Mwx". Заменить,БВ-24, если не получаеться отрегулировать допуск.
+            </div>
           <div class="block">
             <h4>Поперечное направление</h4>
             <div class="fill" id="dev-lat">
@@ -260,79 +328,189 @@ sup, sub{ color:inherit; }
           </div>
           </div>
         </div>
+
+        <div class="hint"> </div>
       </div>
+
     </div>
   </section>
 
-<!-- ===== КАЛЬКУЛЯТОР p17: ТВОЙ, НЕ ТРОГАЮ ===== -->
+  <!-- ===== КАЛЬКУЛЯТОР (НЕ ТРОГАЮ ТВОЙ РАСЧЁТ) ===== -->
+  <section class="card" id="calc-move">
+    <h2>Калькулятор (как в технологии): iX / iZ</h2>
+    <div class="p">
+      Вводишь <b>iW</b> (град/(м/с)) и <b>t</b> (с). Калькулятор считает <b>i = iW / t</b> (град/м) и проверяет по допускам технологии.<br>
+      Допуски: <b>t = 5,0 … 12,5 с</b>; <b>i = 0,12 … 0,28 град/м</b>.
+    </div>
+
+    <div class="calcGrid">
+      <!-- ===== ПРОДОЛЬНОЕ ===== -->
+      <div class="box" id="boxX">
+        <h3>Продольное направление — iX</h3>
+ <!-- ===== КАЛЬКУЛЯТОР p17: НЕ ТРОГАЮ (оставляю твой код 1:1) ===== -->
 <section class="card" id="calc-p17-angle">
   <h2>Калькулятор проверки (как в технологии): только по углу поворота шкалы</h2>
 
+        <div class="form">
+          <div class="field">
+            <label>iW<sub>x</sub>, град/(м/с)</label>
+            <input id="iwx" inputmode="decimal" placeholder="например 1,50">
+          </div>
   <div class="p" style="margin-top:8px">
     Техническое требование (для каждого направления):<br>
     <b>α = 1,5 ± 0,6°</b> → допустимый диапазон <b>0,9 … 2,1°</b><br>
     Ввод: измеренный угол поворота шкалы (град).
   </div>
 
+          <div class="field">
+            <label>t, с</label>
+            <input id="tx" inputmode="decimal" placeholder="например 7,5">
+          </div>
   <div class="form" style="margin-top:14px">
     <!-- ПРОДОЛЬНОЕ -->
     <div class="card" style="grid-column:span 12; padding:14px; background:rgba(0,0,0,.14)">
       <h3 style="margin:0 0 10px">Продольное направление</h3>
 
+          <div class="field">
+            <label>t min, с</label>
+            <input id="tmin" inputmode="decimal" value="5,0">
+          </div>
+          <div class="field">
+            <label>t max, с</label>
+            <input id="tmax" inputmode="decimal" value="12,5">
+          </div>
+
+          <div class="field">
+            <label>i min, град/м</label>
+            <input id="imin" inputmode="decimal" value="0,12">
+          </div>
+          <div class="field">
+            <label>i max, град/м</label>
+            <input id="imax" inputmode="decimal" value="0,28">
+          </div>
       <div class="form">
         <div class="field">
           <label>α<sub>x</sub> — угол поворота шкалы, град</label>
           <input id="ax" type="text" inputmode="decimal" placeholder="например 1,5">
         </div>
 
+          <div class="actions">
+            <button class="primary" type="button" onclick="calcX()">Рассчитать</button>
+            <button type="button" onclick="resetX()">Сброс</button>
+          </div>
         <div class="field">
           <label>Номинал α<sub>ном</sub>, град (фикс по ТТ)</label>
           <input id="anom" type="text" inputmode="decimal" value="1,5">
         </div>
 
+        <div class="result" id="outX">
+          <span class="status wait">ОЖИДАЕТ</span><br>
+          Заполни iW<sub>x</sub> и t.
         <div class="field">
           <label>Допуск ±, град (фикс по ТТ)</label>
           <input id="atol" type="text" inputmode="decimal" value="0,6">
         </div>
 
+        <div class="small" style="margin-top:8px">
+          Проверка по технологии: <span class="mono">iX = iW<sub>x</sub> / t</span>
         <div class="actions" style="grid-column:span 12">
           <button class="primary" type="button" onclick="p17Calc('x')">Проверить (продольное)</button>
           <button type="button" onclick="p17Reset('x')">Сброс</button>
         </div>
       </div>
 
+      <!-- ===== ПОПЕРЕЧНОЕ ===== -->
+      <div class="box" id="boxZ">
+        <h3>Поперечное направление — iZ</h3>
       <div class="result" id="outx" style="margin-top:12px">
         <span class="status wait">ОЖИДАЕТ</span><br>
         Введи α<sub>x</sub> (град) и нажми «Проверить».
       </div>
     </div>
 
+        <div class="form">
+          <div class="field">
+            <label>iW<sub>z</sub>, град/(м/с)</label>
+            <input id="iwz" inputmode="decimal" placeholder="например 1,50">
+          </div>
     <!-- ПОПЕРЕЧНОЕ -->
     <div class="card" style="grid-column:span 12; padding:14px; background:rgba(0,0,0,.14)">
       <h3 style="margin:0 0 10px">Поперечное направление</h3>
 
+          <div class="field">
+            <label>t, с</label>
+            <input id="tz" inputmode="decimal" placeholder="например 7,5">
+          </div>
       <div class="form">
         <div class="field">
           <label>α<sub>z</sub> — угол поворота шкалы, град</label>
           <input id="az" type="text" inputmode="decimal" placeholder="например 1,5">
         </div>
 
+          <div class="actions">
+            <button class="primary" type="button" onclick="calcZ()">Рассчитать</button>
+            <button type="button" onclick="resetZ()">Сброс</button>
+          </div>
         <div class="field">
           <label>Номинал α<sub>ном</sub>, град (фикс по ТТ)</label>
           <input id="anom2" type="text" inputmode="decimal" value="1,5">
         </div>
 
+        <div class="result" id="outZ">
+          <span class="status wait">ОЖИДАЕТ</span><br>
+          Заполни iW<sub>z</sub> и t.
         <div class="field">
           <label>Допуск ±, град (фикс по ТТ)</label>
           <input id="atol2" type="text" inputmode="decimal" value="0,6">
         </div>
 
+        <div class="small" style="margin-top:8px">
+          Проверка по технологии: <span class="mono">iZ = iW<sub>z</sub> / t</span>
         <div class="actions" style="grid-column:span 12">
           <button class="primary" type="button" onclick="p17Calc('z')">Проверить (поперечное)</button>
           <button type="button" onclick="p17Reset('z')">Сброс</button>
         </div>
       </div>
+    </div>
+  </section>
 
+</div>
+
+<script>
+  // --- парсинг чисел с запятой ---
+  function pNum(id){
+    const el=document.getElementById(id);
+    const raw=(el.value||'').trim().replace(/\s+/g,'');
+    const v=Number(raw.replace(',','.'));
+    return {el,raw,v,ok:Number.isFinite(v) && raw!==''};
+  }
+  function fmt(x, d){
+    return x.toFixed(d).replace('.',',');
+  }
+  function setStatus(outEl, cls, txt, html){
+    outEl.innerHTML = `<span class="status ${cls}">${txt}</span><br>${html||''}`;
+  }
+
+  function clearMarks(ids){
+    ids.forEach(id=>{
+      const el=document.getElementById(id);
+      el.classList.remove('pass','fail');
+    });
+  }
+  function mark(el, pass){
+    el.classList.add(pass?'pass':'fail');
+  }
+
+  // общие допуски (из полей)
+  function getTol(){
+    const tmin=pNum('tmin'), tmax=pNum('tmax'), imin=pNum('imin'), imax=pNum('imax');
+    const bad=[tmin,tmax,imin,imax].filter(x=>!x.ok);
+    if(bad.length) return null;
+    return {tmin:tmin.v, tmax:tmax.v, imin:imin.v, imax:imax.v};
+  }
+
+  function calcCore(iwId, tId, outId, label){
+    const out=document.getElementById(outId);
       <div class="result" id="outz" style="margin-top:12px">
         <span class="status wait">ОЖИДАЕТ</span><br>
         Введи α<sub>z</sub> (град) и нажми «Проверить».
@@ -340,6 +518,10 @@ sup, sub{ color:inherit; }
     </div>
   </div>
 
+    const tol=getTol();
+    if(!tol){
+      setStatus(out,'bad','ОШИБКА ВВОДА','Проверь поля допусков (t min/max, i min/max).');
+      return;
   <style>
     /* локально — чтобы не ломать страницу */
     #calc-p17-angle input{
@@ -376,14 +558,22 @@ sup, sub{ color:inherit; }
       return { el, raw, v, ok: Number.isFinite(v) && raw !== "" };
     }
 
+    const iw=pNum(iwId);
+    const t=pNum(tId);
     function p17Fmt(x, d){
       return x.toFixed(d).replace('.', ',');
     }
 
+    clearMarks([iwId,tId]);
     function p17Set(outEl, cls, txt, html){
       outEl.innerHTML = '<span class="status ' + cls + '">' + txt + '</span><br>' + html;
     }
 
+    if(!iw.ok || !t.ok){
+      if(!iw.ok) mark(iw.el,false);
+      if(!t.ok)  mark(t.el,false);
+      setStatus(out,'bad','ОШИБКА ВВОДА','Заполни оба поля числами. Разделитель: точка или запятая.');
+      return;
     function p17Calc(axis){
       const isX = axis === 'x';
       const aInp = p17Parse(isX ? 'ax' : 'az');
@@ -424,6 +614,10 @@ sup, sub{ color:inherit; }
       p17Set(out, pass ? 'ok' : 'bad', pass ? 'ПРОХОДИТ' : 'НЕ ПРОХОДИТ', html);
     }
 
+    if(t.v === 0){
+      mark(t.el,false);
+      setStatus(out,'bad','ОШИБКА','t = 0 → деление на ноль.');
+      return;
     function p17Reset(axis){
       const isX = axis === 'x';
       const ids = isX ? ['ax','anom','atol'] : ['az','anom2','atol2'];
@@ -443,18 +637,24 @@ sup, sub{ color:inherit; }
 </section>
 <!-- ===== /КАЛЬКУЛЯТОР p17 ===== -->
 
+    const i = iw.v / t.v;
 </div>
 
-<!-- ===== АВТО: КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (включая вывод калькулятора) ===== -->
+    const passT = (t.v >= tol.tmin && t.v <= tol.tmax);
+    const passI = (i   >= tol.imin && i   <= tol.imax);
+    const all   = passT && passI;
+<!-- ===== АВТО-КОРИЧНЕВЫЕ ЦИФРЫ ВЕЗДЕ (без изменения текста вручную) ===== -->
 <script>
 (function(){
+  // Оборачиваем в .numctx всё, где есть цифры (в т.ч. коды/формулы/диапазоны/±/°/…)
+  // Важно: это не меняет твоё содержимое "вручную", только визуальная обёртка.
   const RE = /([A-Za-zА-Яа-яЁё]*\d[\dA-Za-zА-Яа-яЁё.,±°/…\-–—]*|\d+)/g;
+
   let busy = false;
 
   function wrapTextNode(tn){
     const txt = tn.nodeValue;
     if(!txt || !/\d/.test(txt)) return;
-    RE.lastIndex = 0;
     if(!RE.test(txt)) return;
     RE.lastIndex = 0;
 
@@ -464,6 +664,8 @@ sup, sub{ color:inherit; }
     tn.parentNode.replaceChild(span, tn);
   }
 
+    mark(t.el, passT);
+    mark(iw.el, passI);
   function colorize(root){
     if(busy) return;
     busy = true;
@@ -474,25 +676,57 @@ sup, sub{ color:inherit; }
         if(!p) return NodeFilter.FILTER_REJECT;
         const tag = (p.nodeName||'').toLowerCase();
         if(tag==='script' || tag==='style') return NodeFilter.FILTER_REJECT;
+        // чтобы не трогать уже обёрнутые
         if(p.classList && p.classList.contains('numctx')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
 
+    const html =
+      `<div class="mono">
+        Формула: ${label} = iW / t<br><br>
+        Время: t = <b>${fmt(t.v,2)} с</b> ; допуск <b>${fmt(tol.tmin,2)} … ${fmt(tol.tmax,2)} с</b> → ${passT?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}<br>
+        Расчёт: ${label} = ${fmt(iw.v,3)} / ${fmt(t.v,2)} = <b>${fmt(i,3)} град/м</b><br>
+        Допуск: <b>${fmt(tol.imin,2)} … ${fmt(tol.imax,2)} град/м</b> → ${passI?'ПРОХОДИТ':'НЕ ПРОХОДИТ'}
+      </div>`;
     const nodes = [];
     while(walker.nextNode()) nodes.push(walker.currentNode);
     nodes.forEach(wrapTextNode);
 
+    setStatus(out, all?'ok':'bad', all?'ПРОХОДИТ':'НЕ ПРОХОДИТ', html);
     busy = false;
   }
 
+  function calcX(){ calcCore('iwx','tx','outX','iX'); }
+  function calcZ(){ calcCore('iwz','tz','outZ','iZ'); }
+
+  function resetX(){
+    ['iwx','tx'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.value='';
+      el.classList.remove('pass','fail');
+    });
+    setStatus(document.getElementById('outX'),'wait','ОЖИДАЕТ','Заполни iW<sub>x</sub> и t.');
+  }
+  function resetZ(){
+    ['iwz','tz'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.value='';
+      el.classList.remove('pass','fail');
+    });
+    setStatus(document.getElementById('outZ'),'wait','ОЖИДАЕТ','Заполни iW<sub>z</sub> и t.');
+  }
+  // Первичная покраска
   document.addEventListener('DOMContentLoaded', ()=>{
     colorize(document.body);
   });
 
-  const mo = new MutationObserver(()=>colorize(document.body));
+  // Чтобы коричневые цифры были и в динамическом выводе калькулятора
+  const mo = new MutationObserver(()=>{
+    colorize(document.body);
+  });
   mo.observe(document.body, {subtree:true, childList:true, characterData:true});
 })();
 </script>
+
 </body>
-</html>
