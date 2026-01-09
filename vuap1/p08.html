@@ -146,7 +146,7 @@
       line-height:0;
     }
 
-    /* Все цифры в технологии — коричневым (через JS-обёртку) */
+    /* Все "тех-токены" с цифрами в технологии — коричневым */
     .num{
       color:var(--tol);
       font-weight:900;
@@ -396,8 +396,9 @@
 
     <script>
     (function(){
-      // ===== 1) Все цифры в ТЕХНОЛОГИИ делаем коричневыми (без переписывания текста) =====
-      function colorizeNumbersInTech(){
+      // ===== 1) В ТЕХНОЛОГИИ красим целиком ВСЁ, что является "тех-токеном" и содержит цифру =====
+      // Примеры: 6С4.132.020, 6С6.640.046-1, 246-9948-00, (6,5+6,5−2,0)град/с, 10±8)%хода
+      function colorizeTechTokens(){
         const root = document.querySelector('table.tech');
         if(!root) return;
 
@@ -408,8 +409,13 @@
             acceptNode(node){
               const p = node.parentNode;
               if(!p) return NodeFilter.FILTER_REJECT;
+
+              // не лезем внутрь уже окрашенных/допусков
+              if(p.closest && (p.closest('.num') || p.closest('.tol'))) return NodeFilter.FILTER_REJECT;
+
               const tag = (p.nodeName || '').toLowerCase();
               if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
+
               if(!node.nodeValue || !/\d/.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
               return NodeFilter.FILTER_ACCEPT;
             }
@@ -419,11 +425,17 @@
         const nodes = [];
         while(walker.nextNode()) nodes.push(walker.currentNode);
 
-        // Оборачиваем только ЧИСЛОВЫЕ последовательности, слова не трогаем
-        const re = /(\d+(?:[.,]\d+)?)/g;
+        // "Тех-токен" = непробельная последовательность из разрешённых символов,
+        // но обязательно содержит хотя бы одну цифру.
+        // Разрешаем: цифры, латиница, кириллица, точки/запятые, +, ±, -, длинные тире/минус,
+        // скобки, /, %, °, двоеточие.
+        const re = /((?=[^\s]*\d)[0-9A-Za-zА-Яа-яЁё.,:+±\-−–—/%()°]+)/g;
 
         for(const tn of nodes){
           const txt = tn.nodeValue;
+          if(!re.test(txt)) continue; // быстрый пропуск
+          re.lastIndex = 0;
+
           const parts = txt.split(re);
           if(parts.length === 1) continue;
 
@@ -431,7 +443,8 @@
           for(let i=0;i<parts.length;i++){
             const part = parts[i];
             if(part === '') continue;
-            if(i % 2 === 1){ // это совпадение (число)
+
+            if(i % 2 === 1){
               const s = document.createElement('span');
               s.className = 'num';
               s.textContent = part;
@@ -448,8 +461,6 @@
       const CONST_S = 66.7;
 
       // ТТ: канал направления
-      // Основной: ω = (3,5+2,1−1,1) => 2,4…5,6 ; μ = 20±8 => 12…28
-      // Режим курса: ω = (6,5+6,5−2,0) => 4,5…13,0 ; μ = 10±8 => 2…18
       const MODES = {
         main: {
           title: 'Передаточное число по угловой скорости (основной)',
@@ -564,7 +575,7 @@
       idxDev.addEventListener('change', ()=>{ if(omegaIn.value.trim()) calc(); });
 
       setTT();
-      colorizeNumbersInTech();
+      colorizeTechTokens();
     })();
     </script>
 
