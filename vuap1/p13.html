@@ -7,15 +7,23 @@
 
 <style>
 :root{
-  --bg1:#0b1a2a;
-  --bg2:#153a5a;
+  --bg1:#071a33;
+  --bg2:#0b2a55;
+
   --card:rgba(255,255,255,.08);
   --stroke:rgba(255,255,255,.18);
   --text:#e9f2ff;
   --muted:#b7c7dd;
+
   --ok:#7CFF9E;
   --bad:#FF9A9A;
   --wait:#FFD27C;
+
+  /* коричневый для числового контекста (цифры+±+тире+скобки+буквы рядом в шифрах) */
+  --tol:#c89b5a;
+
+  /* красный для твоей заметки (большими буквами) */
+  --noteRed:#ff5a6a;
 }
 
 *{box-sizing:border-box}
@@ -23,7 +31,7 @@ body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--text);
-  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  background:radial-gradient(1200px 800px at 30% 20%, #0d2a52 0%, var(--bg1) 55%, #061224 100%);
 }
 
 .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px}
@@ -43,6 +51,7 @@ h2{font-size:18px}
 
 .p{font-size:14px;line-height:1.45;color:var(--muted)}
 
+/* Таблица */
 .table{
   display:grid;
   grid-template-columns:2fr 1fr 1fr;
@@ -50,24 +59,25 @@ h2{font-size:18px}
   border-radius:14px;
   overflow:hidden;
 }
-
 .cell{
   padding:12px;
   border-right:1px solid var(--stroke);
   border-bottom:1px solid var(--stroke);
   font-size:13px;
   min-height:160px;
+  white-space:pre-wrap; /* важно: абзацы/переносы сохраняются */
+  line-height:1.35;
 }
-
 .cell.head{
   background:rgba(255,255,255,.12);
-  font-weight:700;
+  font-weight:800;
   min-height:auto;
+  white-space:normal;
 }
-
 .table .cell:nth-child(3n){border-right:none}
 .table .cell:nth-last-child(-n+3){border-bottom:none}
 
+/* Рисунок */
 .figure{text-align:center}
 .figure img{
   max-width:100%;
@@ -76,6 +86,7 @@ h2{font-size:18px}
 }
 .figcap{margin-bottom:8px;font-size:13px;color:var(--muted)}
 
+/* Форма калькулятора */
 .form{
   display:grid;
   grid-template-columns:repeat(12,1fr);
@@ -97,7 +108,7 @@ input,button{
 button.primary{
   background:linear-gradient(180deg,#ffffff,#e6f0ff);
   color:#000;
-  font-weight:700;
+  font-weight:800;
   cursor:pointer;
 }
 
@@ -114,10 +125,26 @@ button.primary{
   padding:6px 10px;
   border-radius:999px;
   font-size:12px;
+  font-weight:900;
 }
 .ok{background:rgba(124,255,158,.18);color:var(--ok)}
 .bad{background:rgba(255,154,154,.18);color:var(--bad)}
 .wait{background:rgba(255,210,124,.18);color:var(--wait)}
+
+/* ===== коричневые допуски/числовой контекст ===== */
+.numctx{ color:var(--tol); font-weight:900; }
+.tol{ color:var(--tol); font-weight:900; }
+sup.tol, sub.tol{ font-size:.92em; line-height:0; }
+
+/* плюс/минус сверху/снизу (если нужно в тексте) */
+.pm{display:inline-block; font-weight:900; color:var(--tol);}
+.pm sup, .pm sub{color:var(--tol); font-weight:900;}
+
+/* ===== красная заметка (от "ДЛЯ РЕГУЛИРОВКИ..." до конца) ===== */
+.note-red{
+  color:var(--noteRed);
+  font-weight:900;
+}
 </style>
 </head>
 
@@ -133,31 +160,31 @@ button.primary{
   <div class="card">
     <h2>Содержание операции</h2>
 
-    <div class="table">
+    <div class="table" id="techTable">
       <div class="cell head">Содержание операций</div>
       <div class="cell head">Технические требования (ТТ)</div>
       <div class="cell head">Работы при отклонениях</div>
 
       <div class="cell">
-       Проверьте передаточное число от ручки управления вертолетом летчика к КДТ.Для чего:
-       Нажмите кнопку-табло "ОТКЛ." на пульте управления канала тангажа, отклоните ручку управления вертолетом летчика на себя (от себя) до упора и заметьте положение шкалы ручки центровки на пульте управления;
-       медленно отпуская ручку управления вертолетом летчика в обратную сторону до упора, определите угол поворота шкалы ручки центровки на пульте управления.
+Проверьте передаточное число от ручки управления вертолетом летчика к КДТ.Для чего:
+Нажмите кнопку-табло "ОТКЛ." на пульте управления канала тангажа, отклоните ручку управления вертолетом летчика на себя (от себя) до упора и заметьте положение шкалы ручки центровки на пульте управления;
 
+медленно отпуская ручку управления вертолетом летчика в обратную сторону до упора, определите угол поворота шкалы ручки центровки на пульте управления.
       </div>
 
       <div class="cell">
-       Угол поворота шкалы (44 +5-4) град . Передаточное число
+Угол поворота шкалы (44 +5-4) град . Передаточное число
 (0,6 ±0,06) град/мм
 Передаточное число подсчитывается по формуле:
-i = α /l град/мм где: 
-α - угол поворота шкалы ручки центровки в град.; 
+i = α /l град/мм где:
+α - угол поворота шкалы ручки центровки в град.;
 l - полный ход штока рулевого агрегата ка-нала тангажа, равный 74 мм
-
       </div>
 
-      <div class="cell">
-      Отклоните ручку управления вертолетом летчика на себя до упора и заметьте положение шкалы ручки центровки на пульте управления. Изменением плеча рычага КДТ добейтесь, чтобы при медленном отклонении ручки управления вертолетом летчика от себя до упора угол поворота шкалы ручки центровки был равен 44°. Медленно отклоняя ручку управления вертолетом летчика на себя до упора, определите угол поворота шкалы ручки центровка. Угол поворота шкалы ручки центровки должен быть в пределах 44° ±4°.
-      ДЛЯ РЕГУЛИРОВКИ ПЕРЕДАТОЧНОГО ЧИСЛА ПО КДТ.ТЯГА,КОГДА УТАПЛИВАЕТСЯ МЫ УВЕЛИЧИВАЕМ РАЗМАХ Т.Е ЗНАЧЕНИЕ ОТ СЕБЯ НА СЕБЯ УВЕЛИЧИВАЕТЬСЯ.ЧТОБЫ УМЕНШИТЬ ЗНАЧЕНИЕ (44  +5-4) ТЯГУ ТЯНЕМ ВВЕРХ,РАЗМАХ УМЕНЬШАЕТЬСЯ.ТАНДЕРОМ МЫ РЕГУЛИРУЕМ ЦЕНТР ПРИ ЗАШТЫРЕНОЙРУЧКЕ В ПРОДОЛЬНОМ УПРАВЛЕНИИ.  
+      <div class="cell" id="workCell">
+Отклоните ручку управления вертолетом летчика на себя до упора и заметьте положение шкалы ручки центровки на пульте управления. Изменением плеча рычага КДТ добейтесь, чтобы при медленном отклонении ручки управления вертолетом летчика от себя до упора угол поворота шкалы ручки центровки был равен 44°. Медленно отклоняя ручку управления вертолетом летчика на себя до упора, определите угол поворота шкалы ручки центровка. Угол поворота шкалы ручки центровки должен быть в пределах 44° ±4°.
+
+<span class="note-red">ДЛЯ РЕГУЛИРОВКИ ПЕРЕДАТОЧНОГО ЧИСЛА ПО КДТ.ТЯГА,КОГДА УТАПЛИВАЕТСЯ МЫ УВЕЛИЧИВАЕМ РАЗМАХ Т.Е ЗНАЧЕНИЕ ОТ СЕБЯ НА СЕБЯ УВЕЛИЧИВАЕТЬСЯ.ЧТОБЫ УМЕНШИТЬ ЗНАЧЕНИЕ (44  +5-4) ТЯГУ ТЯНЕМ ВВЕРХ,РАЗМАХ УМЕНЬШАЕТЬСЯ.ТАНДЕРОМ МЫ РЕГУЛИРУЕМ ЦЕНТР ПРИ ЗАШТЫРЕНОЙРУЧКЕ В ПРОДОЛЬНОМ УПРАВЛЕНИИ.</span>
       </div>
     </div>
   </div>
@@ -168,43 +195,46 @@ l - полный ход штока рулевого агрегата ка-нал
     <img src="70.jpg" alt="Рисунок 70">
   </div>
 
- <!-- КАЛЬКУЛЯТОР (по технологии: i = α / l) -->
-<div class="card">
-  <h2>Калькулятор передаточного числа</h2>
+  <!-- КАЛЬКУЛЯТОР (по технологии: i = α / l) -->
+  <div class="card">
+    <h2>Калькулятор передаточного числа</h2>
 
-  <div class="p">
-    Формула: <b>i = α / l</b> (град/мм), где <b>l = 74 мм</b><br>
-    Норма по углу: <b>α = 44<sup>+5</sup><sub>−4</sub> град</b> ⇒ <b>40 … 49 град</b><br>
-    Допуск: <b>i = 0,6 ± 0,06</b> ⇒ <b>0,54 … 0,66 град/мм</b>
+    <div class="p">
+      Формула: <b>i = α / l</b> (град/мм), где <b>l = <span class="numctx">74</span> мм</b><br>
+      Норма по углу: <b>α = <span class="numctx">44</span><sup class="tol">+5</sup><sub class="tol">−4</sub> град</b> ⇒ <b><span class="numctx">40</span> … <span class="numctx">49</span> град</b><br>
+      Допуск: <b>i = <span class="numctx">0,6</span> ± <span class="numctx">0,06</span></b> ⇒ <b><span class="numctx">0,54</span> … <span class="numctx">0,66</span> град/мм</b>
+    </div>
+
+    <div class="form">
+      <div class="field">
+        <label>α — угол поворота шкалы, град</label>
+        <input id="alpha" type="number" step="any" placeholder="например 44" oninput="calc_i(true)">
+      </div>
+
+      <div class="field">
+        <label>l — полный ход штока, мм (фикс.)</label>
+        <input id="lmm" type="number" step="any" value="74" readonly>
+      </div>
+
+      <div class="field">
+        <label>Допуск i (авто)</label>
+        <input id="itol" type="text" value="0.54 … 0.66 (град/мм)" readonly>
+      </div>
+
+      <div class="field" style="grid-column:span 12">
+        <button class="primary" type="button" onclick="calc_i(false)">Рассчитать</button>
+        <button type="button" onclick="reset_i()" style="margin-top:10px;">Сброс</button>
+      </div>
+    </div>
+
+    <div class="result" id="i_out">
+      <span class="status wait">ОЖИДАЕТ</span><br>
+      Введи α и нажми «Рассчитать».
+    </div>
   </div>
 
-  <div class="form">
-    <div class="field">
-      <label>α — угол поворота шкалы, град</label>
-      <input id="alpha" type="number" step="any" placeholder="например 44" oninput="calc_i(true)">
-    </div>
-
-    <div class="field">
-      <label>l — полный ход штока, мм (фикс.)</label>
-      <input id="lmm" type="number" step="any" value="74" readonly>
-    </div>
-
-    <div class="field">
-      <label>Допуск i (авто)</label>
-      <input id="itol" type="text" value="0.54 … 0.66 (град/мм)" readonly>
-    </div>
-
-    <div class="field" style="grid-column:span 12">
-      <button class="primary" type="button" onclick="calc_i(false)">Рассчитать</button>
-      <button type="button" onclick="reset_i()" style="margin-top:10px;">Сброс</button>
-    </div>
-  </div>
-
-  <div class="result" id="i_out">
-    <span class="status wait">ОЖИДАЕТ</span><br>
-    Введи α и нажми «Рассчитать».
-  </div>
 </div>
+
 <script>
 /* ===== П13 (по технологии) =====
  i = α / l   [град/мм]
@@ -224,7 +254,7 @@ const I_MIN = I_NOM - I_TOL; // 0.54
 const I_MAX = I_NOM + I_TOL; // 0.66
 
 function f(n, d=3){
-  return Number(n).toFixed(d);
+  return Number(n).toFixed(d).replace('.', ',');
 }
 
 function setWait(){
@@ -243,7 +273,6 @@ function calc_i(fromInput){
 
   const raw = (aEl.value || '').replace(',', '.').trim();
 
-  // если автопересчёт при вводе и поле пустое — просто ожидание
   if(fromInput && raw === ''){
     setWait();
     return;
@@ -257,11 +286,9 @@ function calc_i(fromInput){
 
   const i = alpha / L_MM;
 
-  // Проверка по углу (α) и по передаточному числу (i)
   const alpha_ok = (alpha >= ALPHA_MIN && alpha <= ALPHA_MAX);
   const i_ok = (i >= I_MIN && i <= I_MAX);
 
-  // Сообщения по α
   let alphaMsg = '';
   if(alpha_ok){
     alphaMsg = `α в норме (40…49). Запас: до min ${f(alpha - ALPHA_MIN,1)}°, до max ${f(ALPHA_MAX - alpha,1)}°`;
@@ -271,7 +298,6 @@ function calc_i(fromInput){
     alphaMsg = `α выше нормы на ${f(alpha - ALPHA_MAX,1)}° (норма 40…49)`;
   }
 
-  // Сообщения по i
   let iMsg = '';
   if(i_ok){
     iMsg = `i в допуске (0.54…0.66). Запас: до min ${f(i - I_MIN)}, до max ${f(I_MAX - i)}`;
@@ -281,20 +307,75 @@ function calc_i(fromInput){
     iMsg = `i выше допуска на ${f(i - I_MAX)} (допуск 0.54…0.66)`;
   }
 
-  // Итог
   const status = (alpha_ok && i_ok)
     ? `<span class="status ok">ПРОХОДИТ</span>`
     : `<span class="status bad">НЕ ПРОХОДИТ</span>`;
 
   out.innerHTML =
     `${status}<br>
-     <b>i = α / l = ${alpha} / 74 = ${f(i)} град/мм</b><br>
-     Допуск i: <b>${I_MIN}…${I_MAX}</b> (0.6 ± 0.06)<br>
+     <b>i = α / l = ${f(alpha,2)} / <span class="numctx">74</span> = ${f(i)} град/мм</b><br>
+     Допуск i: <b><span class="numctx">${f(I_MIN,2)}…${f(I_MAX,2)}</span></b> (0.6 ± 0.06)<br>
      ${alphaMsg}<br>
      ${iMsg}`;
 }
+
+/* ===== Коричневим весь числовой контекст в таблице: цифры + знаки + буквы рядом (шифры) ===== */
+(function colorizeNumericContext(){
+  const root = document.getElementById('techTable');
+  if(!root) return;
+
+  const walker = document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node){
+        const p = node.parentNode;
+        if(!p) return NodeFilter.FILTER_REJECT;
+        const tag = (p.nodeName || '').toLowerCase();
+        if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
+
+        // Не трогаем твою красную заметку
+        if(p.closest && p.closest('.note-red')) return NodeFilter.FILTER_REJECT;
+
+        const v = node.nodeValue || '';
+        if(!/\d/.test(v)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  const nodes = [];
+  while(walker.nextNode()) nodes.push(walker.currentNode);
+
+  // захват: буквы/цифры/.,°/±/+/−/-/=/()/слэш/проценты (чтобы Vпр=200км/ч, (44 +5-4), 0,6 ±0,06 и т.п.)
+  const re = /(\(?[A-Za-zА-Яа-яЁё]*\d[\dA-Za-zА-Яа-яЁё.,°±−\-\+\/=%]*\)?)/g;
+
+  for(const tn of nodes){
+    const txt = tn.nodeValue;
+    const parts = txt.split(re);
+    if(parts.length === 1) continue;
+
+    const frag = document.createDocumentFragment();
+    for(let i=0;i<parts.length;i++){
+      const part = parts[i];
+      if(part === '') continue;
+
+      if(i % 2 === 1){
+        const s = document.createElement('span');
+        s.className = 'numctx';
+        s.textContent = part;
+        frag.appendChild(s);
+      }else{
+        frag.appendChild(document.createTextNode(part));
+      }
+    }
+    tn.parentNode.replaceChild(frag, tn);
+  }
+})();
 
 // стартовое состояние
 document.addEventListener('DOMContentLoaded', setWait);
 </script>
 
+</body>
+</html>
