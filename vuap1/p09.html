@@ -9,8 +9,8 @@
     :root{
       --bg1:#081a3a;
       --bg2:#071431;
-      --card:#0f254f;
-      --card2:#0c1f43;
+
+      /* общие цвета */
       --text:#eaf0ff;
       --muted:#b9c6ea;
       --line:#2b3a62;
@@ -19,7 +19,22 @@
       --danger:#ff5a6a;
       --ok:#34d399;
       --warn:#fbbf24;
+
+      /* ТЕХНОЛОГИЯ (лист/таблица) — синий */
+      --paper:#0b1f44;
+      --paperLine:rgba(255,255,255,.16);
+      --paperText:#eaf0ff;
+      --paperHead:rgba(255,255,255,.06);
+
+      /* 3 столбца — разные оттенки */
+      --colOps:rgba(8, 26, 58, .55);
+      --colTT: rgba(14, 44, 92, .55);
+      --colDev:rgba(7, 36, 62, .55);
+
+      /* коричневый для "цифрового контекста" */
+      --tol:#c89b5a;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -27,6 +42,7 @@
       color:var(--text);
       background: radial-gradient(1200px 600px at 50% 0%, var(--bg1), var(--bg2));
     }
+
     .topbar{
       height:44px;
       display:flex;
@@ -39,42 +55,47 @@
       opacity:.9;
       padding:0 10px;
     }
+
     .wrap{
       max-width:1100px;
       margin:0 auto;
       padding:12px 14px 40px;
     }
 
-    /* Белый "лист" */
+    /* Лист (технология) */
     .paper-wrap{
       display:flex;
       justify-content:center;
     }
     .paper-scroll{
       width:100%;
-      overflow-x:auto;         /* ключ: на телефоне скролл, а не сжатие */
+      overflow-x:auto; /* на телефоне скролл */
       padding-bottom:8px;
+      -webkit-overflow-scrolling: touch;
     }
     .paper{
-      background:#fff;
-      color:#000;
-      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      color:var(--paperText);
+      border-radius:12px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
-      border:1px solid rgba(0,0,0,.2);
+      border:1px solid rgba(255,255,255,.14);
       padding:18px 18px 14px;
-      min-width:860px;         /* ключ: чтобы не ужималось в “кишку” */
+      min-width:860px;   /* оставляем — будет горизонтальный скролл */
       max-width:1060px;
       margin:0 auto;
+      backdrop-filter: blur(6px);
     }
     .paper h2{
       font-size:18px;
       margin:0 0 6px 0;
       font-weight:700;
+      color:var(--paperText);
     }
     .paper .subtitle{
       font-size:12px;
       margin:0 0 10px 0;
       opacity:.85;
+      color:rgba(234,240,255,.85);
     }
 
     table.tech{
@@ -83,39 +104,69 @@
       table-layout:fixed;
       font-size:12px;
       line-height:1.25;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif; /* один шрифт */
+      background:rgba(0,0,0,.10);
+      border:1px solid var(--paperLine);
+      border-radius:10px;
+      overflow:hidden;
     }
     table.tech th, table.tech td{
-      border:1px solid #444;
+      border:1px solid var(--paperLine);
       vertical-align:top;
-      padding:8px 8px 10px;
+      padding:10px 10px 12px;
       word-wrap:break-word;
+      color:var(--paperText);
     }
     table.tech th{
-      font-weight:700;
+      font-weight:800;
       text-align:center;
+      background:var(--paperHead);
+      color:rgba(234,240,255,.90);
     }
     .col-ops{width:56%}
     .col-tt{width:22%}
     .col-dev{width:22%}
 
+    /* Разные фоны столбцов */
+    table.tech tbody td:nth-child(1){ background:var(--colOps); }
+    table.tech tbody td:nth-child(2){ background:var(--colTT); }
+    table.tech tbody td:nth-child(3){ background:var(--colDev); }
+
+    /* Абзацы/переносы: сохраняем переносы строк */
+    .pre{
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+
+    /* Все "тех-токены" с цифрами в технологии — коричневым */
+    .num{
+      color:var(--tol);
+      font-weight:900;
+    }
+
     .figblock{
       margin-top:10px;
-      border:1px solid #444;
-      padding:8px;
+      border:1px solid rgba(255,255,255,.14);
+      padding:10px;
+      border-radius:10px;
+      background:rgba(0,0,0,.12);
     }
     .figcap{
       font-size:12px;
-      font-weight:700;
-      margin-bottom:6px;
+      font-weight:800;
+      margin-bottom:8px;
+      color:rgba(234,240,255,.9);
     }
     .figimg{
       width:100%;
       height:auto;
       display:block;
-      border:1px solid #bbb;
-      background:#f4f4f4;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.22);
       max-height:520px;
       object-fit:contain;
+      border-radius:8px;
     }
 
     /* Калькулятор */
@@ -127,18 +178,8 @@
       padding:14px;
       box-shadow:0 10px 24px rgba(0,0,0,.25);
     }
-    .calc h3{
-      margin:0 0 6px;
-      font-size:14px;
-      font-weight:800;
-      color:var(--text);
-    }
-    .calc .formula{
-      font-size:12px;
-      color:var(--muted);
-      margin:0 0 12px;
-    }
-    .grid{
+
+    .calc-grid{
       display:grid;
       grid-template-columns: 1.3fr 1fr 1fr;
       gap:10px;
@@ -160,7 +201,7 @@
       font-size:14px;
     }
     input::placeholder{color:rgba(255,255,255,.35)}
-    .actions{
+    .btn-row{
       display:flex;
       gap:10px;
       margin-top:10px;
@@ -177,7 +218,15 @@
       font-size:13px;
     }
     button:active{transform:translateY(1px)}
-    .out{
+    button.ghost{
+      background: rgba(0,0,0,.18);
+    }
+    .hint{
+      font-size:12px;
+      color:rgba(255,255,255,.55);
+      margin-top:6px;
+    }
+    .status{
       margin-top:10px;
       padding:10px 12px;
       border-radius:10px;
@@ -187,22 +236,14 @@
       min-height:44px;
       white-space:pre-line;
     }
-    .tag{
-      display:inline-block;
-      padding:2px 8px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:800;
-      margin-left:8px;
-      vertical-align:middle;
-    }
-    .tag.ok{background:rgba(52,211,153,.18); color:var(--ok); border:1px solid rgba(52,211,153,.35)}
-    .tag.bad{background:rgba(255,90,106,.18); color:var(--danger); border:1px solid rgba(255,90,106,.35)}
-    .tag.warn{background:rgba(251,191,36,.18); color:var(--warn); border:1px solid rgba(251,191,36,.35)}
+    .tt{color:rgba(255,255,255,.75); font-size:12px; margin-bottom:6px;}
+    .res{color:rgba(255,255,255,.92)}
+    .verdict.pass{ color: var(--ok); font-weight:900; }
+    .verdict.fail{ color: var(--danger); font-weight:900; }
 
     @media (max-width:720px){
-      .grid{grid-template-columns:1fr}
-      .paper{min-width:860px} /* специально оставляем — будет скролл */
+      .calc-grid{grid-template-columns:1fr}
+      .paper{min-width:860px}
     }
   </style>
 </head>
@@ -215,7 +256,7 @@
 
   <div class="wrap">
 
-    <!-- БЕЛЫЙ ЛИСТ -->
+    <!-- ТЕХНОЛОГИЯ -->
     <div class="paper-wrap">
       <div class="paper-scroll">
         <div class="paper">
@@ -237,7 +278,7 @@
             </thead>
             <tbody>
               <tr>
-                <td>
+                <td class="pre">
                   <b>9. Проверьте передаточное число по угловой скорости:</b><br><br>
  Канала крена, для чего:
  Снять с вертолета датчик угловой скорости ДУСУ1-18АС, установите его на поворотную установку УПГ-56 с помощью удленительного жгута ( изд. 6С6.640.046-1 )  соедините датчик со схемой вертолета;
@@ -251,11 +292,9 @@
  Задаваемая угловая скорость  (17+16,5-6) град. /с, Передаточное число (4 ±2) % хода штока / град/с.
  После проверки и регулировки передаточного числа в канале направления выключатель В3 на технологическом жгуте поставить в положение "ОТКЛ" и проверить работоспособность изодрома в цепи ДУСа следующим образом:
  После проверки и регулировки, отключить канал крена кнопкой табло "ОТКЛ" на пульте управления и установить датчик угловой скорости на место.
-              
-            </td>
+                </td>
 
-            <!-- СРЕДНИЙ СТОЛБЕЦ: ТТ (ВСТАВЬ СЮДА СЛОВО-В-СЛОВО) -->
-            <td class="pre">Технические требования (ТТ)
+                <td class="pre">Технические требования (ТТ)
 Передаточное число по угловой скорости в канале крена
 Задаваемая угловая скорость 
 (8+6-2) град. /с
@@ -268,8 +307,7 @@
 (4 ±2) % хода штока / град/с
 </td>
 
-            <!-- ПРАВЫЙ СТОЛБЕЦ: РАБОТЫ ПРИ ОТКЛОНЕНИЯХ (ВСТАВЬ СЮДА СЛОВО-В-СЛОВО) -->
-            <td class="pre">Работы, выполняемые при отклонениях от ТТ
+                <td class="pre">Работы, выполняемые при отклонениях от ТТ
 Отключите и вновь включите канал крена кнопками- лампочками "ОТКЛ" и "ВКЛ." на пульте управления. Поворотом шкалы ручки центровки установите подвиж-ный индекс нулевого индикатора в среднее положение. Задайте вращение установке, со-ответ¬ствующее правому крену со скоро-стью 8,0 град/с Поворотом подстроечного резистора "СКОР." на пульте управления добей-тесь, чтобы подвижный индекс нулевого ин-дикатора совместился с левой промежуточной отметкой. Измените направление вращения установки (в сторону левого левого) и плавным изменением скорости вращения совместите подвижный' индекс нулевого индикатора с правой промежуточной точной отметкой. Скорость вращения должна быть (8+2,5-1,0) град/с</td>
               </tr>
             </tbody>
@@ -283,148 +321,261 @@
       </div>
     </div>
 
-  <!-- КАЛЬКУЛЯТОР (канал крена) — только ω -> μ, два режима: основной и режим управления (кнопка триммера) -->
-<div class="calc card" id="calc-mu">
-  <h2>Калькулятор передаточного числа &mu; (канал крена)</h2>
+    <!-- КАЛЬКУЛЯТОР (канал крена) — только ω -> μ, два режима: основной и режим управления (кнопка триммера) -->
+    <div class="calc card" id="calc-mu">
+      <h2>Калькулятор передаточного числа &mu; (канал крена)</h2>
 
-  <div class="formula">
-    Формула: <b>&mu; = 66,7 / &omega;</b>,
-    где <b>&omega;</b> — угловая скорость, град/с.
-  </div>
+      <div class="formula">
+        Формула: <b>&mu; = 66,7 / &omega;</b>,
+        где <b>&omega;</b> — угловая скорость, град/с.
+      </div>
 
-  <div class="calc-grid">
-    <div class="field">
-      <label for="modeSel">Режим проверки</label>
-      <select id="modeSel">
-        <option value="main">Передаточное число по угловой скорости (канал крена)</option>
-        <option value="trim">Передаточное число по угловой скорости (режим управления по крену, кнопка триммера)</option>
-      </select>
+      <div class="calc-grid">
+        <div class="field">
+          <label for="modeSel">Режим проверки</label>
+          <select id="modeSel">
+            <option value="main">Передаточное число по угловой скорости (канал крена)</option>
+            <option value="trim">Передаточное число по угловой скорости (режим управления по крену, кнопка триммера)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="omegaIn">Угловая скорость &omega;, град/с</label>
+          <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 8.0">
+          <div class="hint">Вводишь только &omega;. Константа 66,7 фиксированная.</div>
+        </div>
+
+        <div class="field">
+          <label for="muOut">Передаточное число &mu;, %/(град/с)</label>
+          <input id="muOut" type="text" readonly placeholder="—">
+          <div class="hint" id="muRangeHint">—</div>
+        </div>
+
+        <!-- НОВОЕ: проверка направления отклонения индекса -->
+        <div class="field">
+          <label for="rotDir">Вращение платформы (крен)</label>
+          <select id="rotDir">
+            <option value="" selected>— выбрать —</option>
+            <option value="right">Правый крен</option>
+            <option value="left">Левый крен</option>
+          </select>
+          <div class="hint">По технологии: правый → индекс влево; левый → индекс вправо.</div>
+        </div>
+
+        <div class="field">
+          <label for="idxDev">Отклонение индекса от среднего</label>
+          <select id="idxDev">
+            <option value="" selected>— выбрать —</option>
+            <option value="left">Влево</option>
+            <option value="right">Вправо</option>
+          </select>
+          <div class="hint">Выбираешь, куда реально ушёл индекс.</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" id="btnCalcMu">Рассчитать</button>
+        <button type="button" id="btnClearMu" class="ghost">Очистить</button>
+      </div>
+
+      <div class="status" id="statusBox">
+        <div class="tt" id="ttLine">—</div>
+        <div class="res" id="resLine">Введи &omega; и нажми «Рассчитать».</div>
+      </div>
     </div>
 
-    <div class="field">
-      <label for="omegaIn">Угловая скорость &omega;, град/с</label>
-      <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 8.0">
-      <div class="hint">Вводишь только &omega;. Константа 66,7 фиксированная.</div>
-    </div>
+    <script>
+    (function(){
+      // ===== 1) В ТЕХНОЛОГИИ красим целиком ВСЁ, что является "тех-токеном" и содержит цифру =====
+      function colorizeTechTokens(){
+        const root = document.querySelector('table.tech');
+        if(!root) return;
 
-    <div class="field">
-      <label for="muOut">Передаточное число &mu;, %/(град/с)</label>
-      <input id="muOut" type="text" readonly placeholder="—">
-      <div class="hint" id="muRangeHint">—</div>
-    </div>
+        const walker = document.createTreeWalker(
+          root,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode(node){
+              const p = node.parentNode;
+              if(!p) return NodeFilter.FILTER_REJECT;
+
+              // не лезем в script/style и уже окрашенные
+              if(p.closest && p.closest('.num')) return NodeFilter.FILTER_REJECT;
+
+              const tag = (p.nodeName || '').toLowerCase();
+              if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
+
+              if(!node.nodeValue || !/\d/.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        const nodes = [];
+        while(walker.nextNode()) nodes.push(walker.currentNode);
+
+        // "Тех-токен" = непробельная последовательность из разрешённых символов,
+        // но обязательно содержит хотя бы одну цифру.
+        // Разрешаем: цифры, латиница, кириллица, точки/запятые, +, ±, -, длинные тире/минус,
+        // скобки, /, %, °, двоеточие.
+        const re = /((?=[^\s]*\d)[0-9A-Za-zА-Яа-яЁё.,:+±\-−–—/%()°]+)/g;
+
+        for(const tn of nodes){
+          const txt = tn.nodeValue;
+          if(!re.test(txt)) continue;
+          re.lastIndex = 0;
+
+          const parts = txt.split(re);
+          if(parts.length === 1) continue;
+
+          const frag = document.createDocumentFragment();
+          for(let i=0;i<parts.length;i++){
+            const part = parts[i];
+            if(part === '') continue;
+
+            if(i % 2 === 1){
+              const s = document.createElement('span');
+              s.className = 'num';
+              s.textContent = part;
+              frag.appendChild(s);
+            }else{
+              frag.appendChild(document.createTextNode(part));
+            }
+          }
+          tn.parentNode.replaceChild(frag, tn);
+        }
+      }
+
+      // Константа
+      const CONST_S = 66.7;
+
+      // ТТ: канал крена
+      // 1) ω = (8+6-2) => 6…14 ; μ = (8 ±3,2) => 4,8…11,2
+      // 2) ω = (17+16,5-6) => 11…33,5 ; μ = (4 ±2) => 2…6
+      const MODES = {
+        main: {
+          title: 'Передаточное число по угловой скорости (канал крена)',
+          omega0: 8.0, plus: 6.0, minus: 2.0,
+          mu0: 8.0, tol: 3.2
+        },
+        trim: {
+          title: 'Передаточное число по угловой скорости (режим управления по крену, кнопка триммера)',
+          omega0: 17.0, plus: 16.5, minus: 6.0,
+          mu0: 4.0, tol: 2.0
+        }
+      };
+
+      const modeSel = document.getElementById('modeSel');
+      const omegaIn = document.getElementById('omegaIn');
+      const muOut   = document.getElementById('muOut');
+      const ttLine  = document.getElementById('ttLine');
+      const resLine = document.getElementById('resLine');
+      const muRangeHint = document.getElementById('muRangeHint');
+      const btnCalc = document.getElementById('btnCalcMu');
+      const btnClr  = document.getElementById('btnClearMu');
+
+      // проверка направления
+      const rotDir = document.getElementById('rotDir');
+      const idxDev = document.getElementById('idxDev');
+
+      function toNum(s){
+        if(s == null) return NaN;
+        s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
+        const n = Number(s);
+        return Number.isFinite(n) ? n : NaN;
+      }
+
+      function fmt(n, d=3){
+        return Number(n).toFixed(d).replace('.', ',');
+      }
+
+      // умный формат: если целое — без .0, если нет — 1 знак
+      function fmtSmart(n){
+        const isInt = Math.abs(n - Math.round(n)) < 1e-9;
+        return (isInt ? fmt(n,0) : fmt(n,1));
+      }
+
+      function setTT(){
+        const m = MODES[modeSel.value];
+        const omegaMin = m.omega0 - m.minus;
+        const omegaMax = m.omega0 + m.plus;
+        const muMin = m.mu0 - m.tol;
+        const muMax = m.mu0 + m.tol;
+
+        ttLine.textContent =
+          `${m.title}. Допуск ω: ${fmtSmart(omegaMin)}…${fmtSmart(omegaMax)} град/с. ` +
+          `Допуск μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)} %/(град/с). Формула: μ = 66,7 / ω.`;
+
+        muRangeHint.textContent =
+          `Диапазон μ по ТТ: ${fmtSmart(muMin)}…${fmtSmart(muMax)} (мин/макс).`;
+      }
+
+      function dirOk(){
+        // Правый крен -> индекс влево
+        // Левый крен  -> индекс вправо
+        const r = rotDir.value;
+        const d = idxDev.value;
+        if(!r || !d) return null;
+        if(r === 'right' && d === 'left') return true;
+        if(r === 'left'  && d === 'right') return true;
+        return false;
+      }
+
+      function calc(){
+        const m = MODES[modeSel.value];
+        const omegaMin = m.omega0 - m.minus;
+        const omegaMax = m.omega0 + m.plus;
+        const muMin = m.mu0 - m.tol;
+        const muMax = m.mu0 + m.tol;
+
+        const w = toNum(omegaIn.value);
+        muOut.value = '';
+
+        if(!Number.isFinite(w) || w <= 0){
+          resLine.textContent = 'Ошибка ввода: введи ω > 0.';
+          return;
+        }
+
+        const mu = CONST_S / w;
+        muOut.value = fmt(mu,3);
+
+        const okW = (w >= omegaMin && w <= omegaMax);
+        const okMu = (mu >= muMin && mu <= muMax);
+
+        const dOK = dirOk();
+        const dirText = (dOK === null)
+          ? 'Проверка отклонения индекса: не выбрано.'
+          : ('Проверка отклонения индекса: ' + (dOK ? 'соответствует' : 'НЕ соответствует'));
+
+        const pass = (okW && okMu && (dOK !== false));
+
+        resLine.innerHTML =
+          `Введено ω = <b>${fmt(w,3)}</b> град/с → μ = <b>${fmt(mu,3)}</b> %/(град/с). ` +
+          `Допуск μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)}. ` +
+          `<br>${dirText}` +
+          `<br>Итог: <span class="verdict ${pass ? 'pass' : 'fail'}">${pass ? 'PASS по ТТ' : 'FAIL по ТТ'}</span>.`;
+      }
+
+      function clearAll(){
+        omegaIn.value = '';
+        muOut.value = '';
+        rotDir.value = '';
+        idxDev.value = '';
+        resLine.textContent = 'Введи ω и нажми «Рассчитать».';
+      }
+
+      modeSel.addEventListener('change', ()=>{ setTT(); if(omegaIn.value.trim()) calc(); });
+      btnCalc.addEventListener('click', calc);
+      btnClr.addEventListener('click', clearAll);
+      omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
+      rotDir.addEventListener('change', ()=>{ if(omegaIn.value.trim()) calc(); });
+      idxDev.addEventListener('change', ()=>{ if(omegaIn.value.trim()) calc(); });
+
+      setTT();
+      colorizeTechTokens();
+    })();
+    </script>
+
   </div>
-
-  <div class="btn-row">
-    <button type="button" id="btnCalcMu">Рассчитать</button>
-    <button type="button" id="btnClearMu" class="ghost">Очистить</button>
-  </div>
-
-  <div class="status" id="statusBox">
-    <div class="tt" id="ttLine">—</div>
-    <div class="res" id="resLine">Введи &omega; и нажми «Рассчитать».</div>
-  </div>
-</div>
-
-<script>
-(function(){
-  // Константа (оставляем как у тебя в p08/p09)
-  const CONST_S = 66.7;
-
-  // ТТ: канал крена (из твоего текста в p09)
-  // 1) ω = (8+6-2) => 6…14 ; μ = (8 ±3,2) => 4,8…11,2
-  // 2) ω = (17+16,5-6) => 11…33,5 ; μ = (4 ±2) => 2…6
-  const MODES = {
-    main: {
-      title: 'Передаточное число по угловой скорости (канал крена)',
-      omega0: 8.0, plus: 6.0, minus: 2.0,
-      mu0: 8.0, tol: 3.2
-    },
-    trim: {
-      title: 'Передаточное число по угловой скорости (режим управления по крену, кнопка триммера)',
-      omega0: 17.0, plus: 16.5, minus: 6.0,
-      mu0: 4.0, tol: 2.0
-    }
-  };
-
-  const modeSel = document.getElementById('modeSel');
-  const omegaIn = document.getElementById('omegaIn');
-  const muOut   = document.getElementById('muOut');
-  const ttLine  = document.getElementById('ttLine');
-  const resLine = document.getElementById('resLine');
-  const muRangeHint = document.getElementById('muRangeHint');
-  const btnCalc = document.getElementById('btnCalcMu');
-  const btnClr  = document.getElementById('btnClearMu');
-
-  function toNum(s){
-    if(s == null) return NaN;
-    s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
-    const n = Number(s);
-    return Number.isFinite(n) ? n : NaN;
-  }
-
-  function fmt(n, d=3){
-    return Number(n).toFixed(d).replace('.', ',');
-  }
-
-  // умный формат: если число целое — без .0, если нет — 1 знак после запятой
-  function fmtSmart(n){
-    const isInt = Math.abs(n - Math.round(n)) < 1e-9;
-    return (isInt ? fmt(n,0) : fmt(n,1));
-  }
-
-  function setTT(){
-    const m = MODES[modeSel.value];
-    const omegaMin = m.omega0 - m.minus;
-    const omegaMax = m.omega0 + m.plus;
-    const muMin = m.mu0 - m.tol;
-    const muMax = m.mu0 + m.tol;
-
-    ttLine.textContent =
-      `${m.title}. Допуск ω: ${fmtSmart(omegaMin)}…${fmtSmart(omegaMax)} град/с. ` +
-      `Допуск μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)} %/(град/с). Формула: μ = 66,7 / ω.`;
-
-    muRangeHint.textContent =
-      `Диапазон μ по ТТ: ${fmtSmart(muMin)}…${fmtSmart(muMax)} (мин/макс).`;
-  }
-
-  function calc(){
-    const m = MODES[modeSel.value];
-    const omegaMin = m.omega0 - m.minus;
-    const omegaMax = m.omega0 + m.plus;
-    const muMin = m.mu0 - m.tol;
-    const muMax = m.mu0 + m.tol;
-
-    const w = toNum(omegaIn.value);
-    muOut.value = '';
-
-    if(!Number.isFinite(w) || w <= 0){
-      resLine.textContent = 'Ошибка ввода: введи ω > 0.';
-      return;
-    }
-
-    const mu = CONST_S / w;
-    muOut.value = fmt(mu,3);
-
-    const okW = (w >= omegaMin && w <= omegaMax);
-    const okMu = (mu >= muMin && mu <= muMax);
-    const verdict = (okW && okMu) ? 'PASS по ТТ' : 'FAIL по ТТ';
-
-    resLine.innerHTML =
-      `Введено ω = <b>${fmt(w,3)}</b> град/с → μ = <b>${fmt(mu,3)}</b> %/(град/с). ` +
-      `Допуск μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)}. Итог: <b>${verdict}</b>.`;
-  }
-
-  function clearAll(){
-    omegaIn.value = '';
-    muOut.value = '';
-    resLine.textContent = 'Введи ω и нажми «Рассчитать».';
-  }
-
-  modeSel.addEventListener('change', ()=>{ setTT(); if(omegaIn.value.trim()) calc(); });
-  btnCalc.addEventListener('click', calc);
-  btnClr.addEventListener('click', clearAll);
-  omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
-
-  setTT();
-})();
-</script>
+</body>
+</html>
