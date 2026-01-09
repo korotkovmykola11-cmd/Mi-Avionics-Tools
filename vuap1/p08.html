@@ -9,8 +9,8 @@
     :root{
       --bg1:#081a3a;
       --bg2:#071431;
-      --card:#0f254f;
-      --card2:#0c1f43;
+
+      /* общие цвета */
       --text:#eaf0ff;
       --muted:#b9c6ea;
       --line:#2b3a62;
@@ -19,7 +19,22 @@
       --danger:#ff5a6a;
       --ok:#34d399;
       --warn:#fbbf24;
+
+      /* ТЕХНОЛОГИЯ (лист/таблица) — синий */
+      --paper:#0b1f44;
+      --paperLine:rgba(255,255,255,.16);
+      --paperText:#eaf0ff;
+      --paperHead:rgba(255,255,255,.06);
+
+      /* 3 столбца — разные оттенки */
+      --colOps:rgba(8, 26, 58, .55);
+      --colTT: rgba(14, 44, 92, .55);
+      --colDev:rgba(7, 36, 62, .55);
+
+      /* допуски — коричневым */
+      --tol:#c89b5a;
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -27,6 +42,7 @@
       color:var(--text);
       background: radial-gradient(1200px 600px at 50% 0%, var(--bg1), var(--bg2));
     }
+
     .topbar{
       height:44px;
       display:flex;
@@ -39,42 +55,47 @@
       opacity:.9;
       padding:0 10px;
     }
+
     .wrap{
       max-width:1100px;
       margin:0 auto;
       padding:12px 14px 40px;
     }
 
-    /* Белый "лист" */
+    /* Лист (технология) */
     .paper-wrap{
       display:flex;
       justify-content:center;
     }
     .paper-scroll{
       width:100%;
-      overflow-x:auto;         /* ключ: на телефоне скролл, а не сжатие */
+      overflow-x:auto; /* на телефоне скролл */
       padding-bottom:8px;
+      -webkit-overflow-scrolling: touch;
     }
     .paper{
-      background:#fff;
-      color:#000;
-      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      color:var(--paperText);
+      border-radius:12px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
-      border:1px solid rgba(0,0,0,.2);
+      border:1px solid rgba(255,255,255,.14);
       padding:18px 18px 14px;
-      min-width:860px;         /* ключ: чтобы не ужималось в “кишку” */
+      min-width:860px;   /* оставляем, чтобы не ломалось — будет горизонтальный скролл */
       max-width:1060px;
       margin:0 auto;
+      backdrop-filter: blur(6px);
     }
     .paper h2{
       font-size:18px;
       margin:0 0 6px 0;
       font-weight:700;
+      color:var(--paperText);
     }
     .paper .subtitle{
       font-size:12px;
       margin:0 0 10px 0;
       opacity:.85;
+      color:rgba(234,240,255,.85);
     }
 
     table.tech{
@@ -83,42 +104,73 @@
       table-layout:fixed;
       font-size:12px;
       line-height:1.25;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif; /* один шрифт */
+      background:rgba(0,0,0,.10);
+      border:1px solid var(--paperLine);
+      border-radius:10px;
+      overflow:hidden;
     }
     table.tech th, table.tech td{
-      border:1px solid #444;
+      border:1px solid var(--paperLine);
       vertical-align:top;
-      padding:8px 8px 10px;
+      padding:10px 10px 12px;
       word-wrap:break-word;
+      color:var(--paperText);
     }
     table.tech th{
-      font-weight:700;
+      font-weight:800;
       text-align:center;
+      background:var(--paperHead);
+      color:rgba(234,240,255,.90);
     }
     .col-ops{width:56%}
     .col-tt{width:22%}
     .col-dev{width:22%}
 
+    /* Разные фоны столбцов */
+    table.tech tbody td:nth-child(1){ background:var(--colOps); }
+    table.tech tbody td:nth-child(2){ background:var(--colTT); }
+    table.tech tbody td:nth-child(3){ background:var(--colDev); }
+
+    /* Абзацы/переносы: сохраняем переносы строк из текста */
+    .pre{
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif; /* одинаковый шрифт */
+    }
+
+    /* Допуски: верх/низ + коричневый */
+    .tol{ color:var(--tol); font-weight:900; }
+    sup.tol, sub.tol{
+      font-size:.92em;
+      line-height:0;
+    }
+
     .figblock{
       margin-top:10px;
-      border:1px solid #444;
-      padding:8px;
+      border:1px solid rgba(255,255,255,.14);
+      padding:10px;
+      border-radius:10px;
+      background:rgba(0,0,0,.12);
     }
     .figcap{
       font-size:12px;
-      font-weight:700;
-      margin-bottom:6px;
+      font-weight:800;
+      margin-bottom:8px;
+      color:rgba(234,240,255,.9);
     }
     .figimg{
       width:100%;
       height:auto;
       display:block;
-      border:1px solid #bbb;
-      background:#f4f4f4;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.22);
       max-height:520px;
       object-fit:contain;
+      border-radius:8px;
     }
 
-    /* Калькулятор */
+    /* Калькулятор — НЕ ТРОГАЮ ВЕРСТКУ/ЛОГИКУ, только подсветка PASS */
     .calc{
       margin-top:14px;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
@@ -127,18 +179,9 @@
       padding:14px;
       box-shadow:0 10px 24px rgba(0,0,0,.25);
     }
-    .calc h3{
-      margin:0 0 6px;
-      font-size:14px;
-      font-weight:800;
-      color:var(--text);
-    }
-    .calc .formula{
-      font-size:12px;
-      color:var(--muted);
-      margin:0 0 12px;
-    }
-    .grid{
+
+    /* СТИЛИ калькулятора (как было) */
+    .calc-grid{
       display:grid;
       grid-template-columns: 1.3fr 1fr 1fr;
       gap:10px;
@@ -160,7 +203,7 @@
       font-size:14px;
     }
     input::placeholder{color:rgba(255,255,255,.35)}
-    .actions{
+    .btn-row{
       display:flex;
       gap:10px;
       margin-top:10px;
@@ -177,7 +220,15 @@
       font-size:13px;
     }
     button:active{transform:translateY(1px)}
-    .out{
+    button.ghost{
+      background: rgba(0,0,0,.18);
+    }
+    .hint{
+      font-size:12px;
+      color:rgba(255,255,255,.55);
+      margin-top:6px;
+    }
+    .status{
       margin-top:10px;
       padding:10px 12px;
       border-radius:10px;
@@ -187,21 +238,13 @@
       min-height:44px;
       white-space:pre-line;
     }
-    .tag{
-      display:inline-block;
-      padding:2px 8px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:800;
-      margin-left:8px;
-      vertical-align:middle;
-    }
-    .tag.ok{background:rgba(52,211,153,.18); color:var(--ok); border:1px solid rgba(52,211,153,.35)}
-    .tag.bad{background:rgba(255,90,106,.18); color:var(--danger); border:1px solid rgba(255,90,106,.35)}
-    .tag.warn{background:rgba(251,191,36,.18); color:var(--warn); border:1px solid rgba(251,191,36,.35)}
+    .tt{color:rgba(255,255,255,.75); font-size:12px; margin-bottom:6px;}
+    .res{color:rgba(255,255,255,.92)}
+    .verdict.pass{ color: var(--ok); font-weight:900; }
+    .verdict.fail{ color: var(--danger); font-weight:900; }
 
     @media (max-width:720px){
-      .grid{grid-template-columns:1fr}
+      .calc-grid{grid-template-columns:1fr}
       .paper{min-width:860px} /* специально оставляем — будет скролл */
     }
   </style>
@@ -215,7 +258,7 @@
 
   <div class="wrap">
 
-    <!-- БЕЛЫЙ ЛИСТ -->
+    <!-- ТЕХНОЛОГИЯ -->
     <div class="paper-wrap">
       <div class="paper-scroll">
         <div class="paper">
@@ -237,41 +280,39 @@
             </thead>
             <tbody>
               <tr>
-                <td>
-                  <b>8. Проверьте передаточное число по угловой скорости:</b><br><br>
+                <td class="pre">
+<b>8. Проверьте передаточное число по угловой скорости:</b>
+
  Канала направления, для чего:
  Снимите с вертолета датчик угловой скорости, установите его на. установку УПГ-56 с помощью кронштейна 6С4.132.020 и с помощью переходного жгута 6С6.640.046-1 соедините датчик со схемой вертолета;
  выключатель В3 технологического жгута 246-9948-00 установите в положение "Wy ";
  Нажмите кнопку- лампочку  "ВКЛ". на пульте управления и поворотом шкалы ручки центровки установите подвижный индекс нулевого индикатора в среднее положение;
  Задайте с помощью установки вращение датчика, соответствующее правому (левому) разво¬роту вертолета и, плавно меняя скорость вращения установки, отклоните шток малого цилиндра рулевого агрегата в положение, при котором подвижный индекс нулевого индикатора совместится с промежуточной отметкой.
- Заметьте направление отклонения подвижного индекса нулевого индикатора от среднего положения;	
+ Заметьте направление отклонения подвижного индекса нулевого индикатора от среднего положения;
  При вращении датчика в сторону правого (левого) разворота подвижный индекс нулевого индикатора должен отклоняться влево (вправо).
  Замерьте секундомером время поворота платформы установки на определенный угол и определите угловую скорость враще¬ния, как частное от деления величины угла на время поворота установки на этот угол,полученное значение задаваемой угловой скорости и передаточного числа по угловой скорости должно соответствовать техническим требованиям.
  Отключить канал направления кнопкой-табло "ОТКЛ" на пульте управления.
-      Поставьте ноги на педали и произведите аналогичную проверку (режим управления по курсу)   
-      Задаваемая угловая скорость  (6,5+6,5-2,0)град/с, Передаточное число (10  ±8)% хода штока/град/с.
+      Поставьте ноги на педали и произведите аналогичную проверку (режим управления по курсу)
+      Задаваемая угловая скорость  (<span class="mono">6,5</span><sup class="tol">+6,5</sup><sub class="tol">−2,0</sub>)град/с, Передаточное число (<span class="mono">10</span>  <span class="tol">±8</span>)% хода штока/град/с.
 После проверки и регулировки передаточного числа в канале направления выключатель В3 на технологическом жгуте поставить в положение "ОТКЛ" и проверить работоспособность изодрома в цепи ДУСа следующим образом:
         Задав вращение платформы установки, соответствующее правому (левому) развороту.
         Подвижный индекс нулевого индикатора должен отклониться влево (вправо), а затем возвратиться в среднее положение.
 После проверки и регулировки, отключить канал направления кнопкой табло "ОТКЛ" на пульте управления и установить датчик угловой скорости на место.
-              
-            </td>
+                </td>
 
-            <!-- СРЕДНИЙ СТОЛБЕЦ: ТТ (ВСТАВЬ СЮДА СЛОВО-В-СЛОВО) -->
-            <td class="pre">Технические требования (ТТ)
+                <td class="pre">Технические требования (ТТ)
 Задаваемая угловая скорость
-(3,5+2,1-1,1)град/с 
+(<span class="mono">3,5</span><sup class="tol">+2,1</sup><sub class="tol">−1,1</sub>)град/с
 Передаточное число
-(20 ±8) % хода штока/град/с 
+(<span class="mono">20</span> <span class="tol">±8</span>) % хода штока/град/с
 Задаваемая угловая скорость
-(6,5+6,5-2,0)град/с 
+(<span class="mono">6,5</span><sup class="tol">+6,5</sup><sub class="tol">−2,0</sub>)град/с
 Передаточное число
-(10  ±8)%хода штока/град/с
+(<span class="mono">10</span>  <span class="tol">±8</span>)%хода штока/град/с
 </td>
 
-            <!-- ПРАВЫЙ СТОЛБЕЦ: РАБОТЫ ПРИ ОТКЛОНЕНИЯХ (ВСТАВЬ СЮДА СЛОВО-В-СЛОВО) -->
-            <td class="pre">Работы, выполняемые при отклонениях от ТТ
-Отключите и вновь включите канал направления кнопками- лампочками "ОТКЛ" и "ВКЛ." на пульте управления. Поворотом шкалы ручки центровки установите подвиж-ный индекс нулевого индикатора в среднее положение. Задайте вращение установке, со-ответ¬ствующее правому развороту со скоро-стью 3,5 град/с Поворотом подстроечного ре-зистора "СКОР." на пульте управления добей-тесь, чтобы подвижный индекс нулевого ин-дикатора совместился с левой промежуточной отметкой. Измените направление вращения установки (в сторону левого разворота) и плавным изменением скорости вращения совместите подвижный' индекс нулевого ин-дикатора с правой промежуточной точной от-меткой. Скорость вращения должна быть (3,5 ±0,7)град/с</td>
+                <td class="pre">Работы, выполняемые при отклонениях от ТТ
+Отключите и вновь включите канал направления кнопками- лампочками "ОТКЛ" и "ВКЛ." на пульте управления. Поворотом шкалы ручки центровки установите подвиж-ный индекс нулевого индикатора в среднее положение. Задайте вращение установке, со-ответ¬ствующее правому развороту со скоро-стью <span class="mono">3,5</span> град/с Поворотом подстроечного ре-зистора "СКОР." на пульте управления добей-тесь, чтобы подвижный индекс нулевого ин-дикатора совместился с левой промежуточной отметкой. Измените направление вращения установки (в сторону левого разворота) и плавным изменением скорости вращения совместите подвижный' индекс нулевого ин-дикатора с правой промежуточной точной от-меткой. Скорость вращения должна быть (<span class="mono">3,5</span> <span class="tol">±0,7</span>)град/с</td>
               </tr>
             </tbody>
           </table>
@@ -284,144 +325,148 @@
       </div>
     </div>
 
-   <!-- КАЛЬКУЛЯТОР (канал направления) — только ω -> μ, два режима: основной и режим курса -->
-<div class="calc card" id="calc-mu">
-  <h2>Калькулятор передаточного числа &mu; (канал направления)</h2>
+    <!-- КАЛЬКУЛЯТОР (канал направления) — только ω -> μ, два режима: основной и режим курса -->
+    <div class="calc card" id="calc-mu">
+      <h2>Калькулятор передаточного числа &mu; (канал направления)</h2>
 
-  <div class="formula">
-    Формула: <b>&mu; = 66,7 / &omega;</b>,
-    где <b>&omega;</b> — угловая скорость, град/с.
-  </div>
+      <div class="formula">
+        Формула: <b>&mu; = 66,7 / &omega;</b>,
+        где <b>&omega;</b> — угловая скорость, град/с.
+      </div>
 
-  <div class="calc-grid">
-    <div class="field">
-      <label for="modeSel">Режим проверки</label>
-      <select id="modeSel">
-        <option value="main">Передаточное число по угловой скорости (основной)</option>
-        <option value="course">Передаточное число по угловой скорости в режиме курса</option>
-      </select>
+      <div class="calc-grid">
+        <div class="field">
+          <label for="modeSel">Режим проверки</label>
+          <select id="modeSel">
+            <option value="main">Передаточное число по угловой скорости (основной)</option>
+            <option value="course">Передаточное число по угловой скорости в режиме курса</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="omegaIn">Угловая скорость &omega;, град/с</label>
+          <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 3.5">
+          <div class="hint">Вводишь только &omega;. Константа 66,7 фиксированная.</div>
+        </div>
+
+        <div class="field">
+          <label for="muOut">Передаточное число &mu;, %/(град/с)</label>
+          <input id="muOut" type="text" readonly placeholder="—">
+          <div class="hint" id="muRangeHint">—</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" id="btnCalcMu">Рассчитать</button>
+        <button type="button" id="btnClearMu" class="ghost">Очистить</button>
+      </div>
+
+      <div class="status" id="statusBox">
+        <div class="tt" id="ttLine">—</div>
+        <div class="res" id="resLine">Введи &omega; и нажми «Рассчитать».</div>
+      </div>
     </div>
 
-    <div class="field">
-      <label for="omegaIn">Угловая скорость &omega;, град/с</label>
-      <input id="omegaIn" type="text" inputmode="decimal" placeholder="например 3.5">
-      <div class="hint">Вводишь только &omega;. Константа 66,7 фиксированная.</div>
-    </div>
+    <script>
+    (function(){
+      // Константа из твоей логики калькулятора (не трогаем)
+      const CONST_S = 66.7;
 
-    <div class="field">
-      <label for="muOut">Передаточное число &mu;, %/(град/с)</label>
-      <input id="muOut" type="text" readonly placeholder="—">
-      <div class="hint" id="muRangeHint">—</div>
-    </div>
+      // ТТ: канал направления
+      // Основной: ω = (3,5+2,1−1,1) => 2,4…5,6 ; μ = 20±8 => 12…28
+      // Режим курса: ω = (6,5+6,5−2,0) => 4,5…13,0 ; μ = 10±8 => 2…18
+      const MODES = {
+        main: {
+          title: 'Передаточное число по угловой скорости (основной)',
+          omega0: 3.5, plus: 2.1, minus: 1.1,
+          mu0: 20, tol: 8
+        },
+        course: {
+          title: 'Передаточное число по угловой скорости в режиме курса',
+          omega0: 6.5, plus: 6.5, minus: 2.0,
+          mu0: 10, tol: 8
+        }
+      };
+
+      const modeSel = document.getElementById('modeSel');
+      const omegaIn = document.getElementById('omegaIn');
+      const muOut   = document.getElementById('muOut');
+      const ttLine  = document.getElementById('ttLine');
+      const resLine = document.getElementById('resLine');
+      const muRangeHint = document.getElementById('muRangeHint');
+      const btnCalc = document.getElementById('btnCalcMu');
+      const btnClr  = document.getElementById('btnClearMu');
+
+      function toNum(s){
+        if(s == null) return NaN;
+        s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
+        const n = Number(s);
+        return Number.isFinite(n) ? n : NaN;
+      }
+
+      function fmt(n, d=3){
+        return Number(n).toFixed(d).replace('.', ',');
+      }
+
+      function setTT(){
+        const m = MODES[modeSel.value];
+        const omegaMin = m.omega0 - m.minus;
+        const omegaMax = m.omega0 + m.plus;
+        const muMin = m.mu0 - m.tol;
+        const muMax = m.mu0 + m.tol;
+
+        ttLine.textContent =
+          `${m.title}. Допуск ω: ${fmt(omegaMin,1)}…${fmt(omegaMax,1)} град/с. ` +
+          `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)} %/(град/с). Формула: μ = 66,7 / ω.`;
+
+        muRangeHint.textContent =
+          `Диапазон μ по ТТ: ${fmt(muMin,0)}…${fmt(muMax,0)} (мин/макс).`;
+      }
+
+      function calc(){
+        const m = MODES[modeSel.value];
+        const omegaMin = m.omega0 - m.minus;
+        const omegaMax = m.omega0 + m.plus;
+        const muMin = m.mu0 - m.tol;
+        const muMax = m.mu0 + m.tol;
+
+        const w = toNum(omegaIn.value);
+        muOut.value = '';
+
+        if(!Number.isFinite(w) || w <= 0){
+          resLine.textContent = 'Ошибка ввода: введи ω > 0.';
+          return;
+        }
+
+        const mu = CONST_S / w;
+        muOut.value = fmt(mu,3);
+
+        const okW = (w >= omegaMin && w <= omegaMax);
+        const okMu = (mu >= muMin && mu <= muMax);
+
+        const pass = (okW && okMu);
+
+        resLine.innerHTML =
+          `Введено ω = <b>${fmt(w,3)}</b> град/с → μ = <b>${fmt(mu,3)}</b> %/(град/с). ` +
+          `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)}. Итог: ` +
+          `<span class="verdict ${pass ? 'pass' : 'fail'}">${pass ? 'PASS по ТТ' : 'FAIL по ТТ'}</span>.`;
+      }
+
+      function clearAll(){
+        omegaIn.value = '';
+        muOut.value = '';
+        resLine.textContent = 'Введи ω и нажми «Рассчитать».';
+      }
+
+      modeSel.addEventListener('change', ()=>{ setTT(); if(omegaIn.value.trim()) calc(); });
+      btnCalc.addEventListener('click', calc);
+      btnClr.addEventListener('click', clearAll);
+      omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
+
+      setTT();
+    })();
+    </script>
+
   </div>
-
-  <div class="btn-row">
-    <button type="button" id="btnCalcMu">Рассчитать</button>
-    <button type="button" id="btnClearMu" class="ghost">Очистить</button>
-  </div>
-
-  <div class="status" id="statusBox">
-    <div class="tt" id="ttLine">—</div>
-    <div class="res" id="resLine">Введи &omega; и нажми «Рассчитать».</div>
-  </div>
-</div>
-
-<script>
-(function(){
-  // Константа из твоей логики калькулятора (не трогаем)
-  const CONST_S = 66.7;
-
-  // ТТ: канал направления
-  // Основной: ω = (3,5+2,1−1,1) => 2,4…5,6 ; μ = 20±8 => 12…28
-  // Режим курса: ω = (6,5+6,5−2,0) => 4,5…13,0 ; μ = 10±8 => 2…18
-  const MODES = {
-    main: {
-      title: 'Передаточное число по угловой скорости (основной)',
-      omega0: 3.5, plus: 2.1, minus: 1.1,
-      mu0: 20, tol: 8
-    },
-    course: {
-      title: 'Передаточное число по угловой скорости в режиме курса',
-      omega0: 6.5, plus: 6.5, minus: 2.0,
-      mu0: 10, tol: 8
-    }
-  };
-
-  const modeSel = document.getElementById('modeSel');
-  const omegaIn = document.getElementById('omegaIn');
-  const muOut   = document.getElementById('muOut');
-  const ttLine  = document.getElementById('ttLine');
-  const resLine = document.getElementById('resLine');
-  const muRangeHint = document.getElementById('muRangeHint');
-  const btnCalc = document.getElementById('btnCalcMu');
-  const btnClr  = document.getElementById('btnClearMu');
-
-  function toNum(s){
-    if(s == null) return NaN;
-    s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
-    const n = Number(s);
-    return Number.isFinite(n) ? n : NaN;
-  }
-
-  function fmt(n, d=3){
-    return Number(n).toFixed(d).replace('.', ',');
-  }
-
-  function setTT(){
-    const m = MODES[modeSel.value];
-    const omegaMin = m.omega0 - m.minus;
-    const omegaMax = m.omega0 + m.plus;
-    const muMin = m.mu0 - m.tol;
-    const muMax = m.mu0 + m.tol;
-
-    ttLine.textContent =
-      `${m.title}. Допуск ω: ${fmt(omegaMin,1)}…${fmt(omegaMax,1)} град/с. ` +
-      `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)} %/(град/с). Формула: μ = 66,7 / ω.`;
-
-    muRangeHint.textContent =
-      `Диапазон μ по ТТ: ${fmt(muMin,0)}…${fmt(muMax,0)} (мин/макс).`;
-  }
-
-  function calc(){
-    const m = MODES[modeSel.value];
-    const omegaMin = m.omega0 - m.minus;
-    const omegaMax = m.omega0 + m.plus;
-    const muMin = m.mu0 - m.tol;
-    const muMax = m.mu0 + m.tol;
-
-    const w = toNum(omegaIn.value);
-    muOut.value = '';
-
-    if(!Number.isFinite(w) || w <= 0){
-      resLine.textContent = 'Ошибка ввода: введи ω > 0.';
-      return;
-    }
-
-    const mu = CONST_S / w;
-    muOut.value = fmt(mu,3);
-
-    const okW = (w >= omegaMin && w <= omegaMax);
-    const okMu = (mu >= muMin && mu <= muMax);
-
-    const verdict = (okW && okMu) ? 'PASS по ТТ' : 'FAIL по ТТ';
-
-    resLine.innerHTML =
-      `Введено ω = <b>${fmt(w,3)}</b> град/с → μ = <b>${fmt(mu,3)}</b> %/(град/с). ` +
-      `Допуск μ: ${fmt(muMin,0)}…${fmt(muMax,0)}. Итог: <b>${verdict}</b>.`;
-  }
-
-  function clearAll(){
-    omegaIn.value = '';
-    muOut.value = '';
-    resLine.textContent = 'Введи ω и нажми «Рассчитать».';
-  }
-
-  modeSel.addEventListener('change', ()=>{ setTT(); if(omegaIn.value.trim()) calc(); });
-  btnCalc.addEventListener('click', calc);
-  btnClr.addEventListener('click', clearAll);
-  omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
-
-  setTT();
-})();
-</script>
-
+</body>
+</html>
