@@ -19,6 +19,19 @@
       --danger:#ff5a6a;
       --ok:#34d399;
       --warn:#fbbf24;
+
+      /* коричневый для числового контекста/допусков */
+      --tol:#c89b5a;
+
+      /* "лист" (как в p08) */
+      --paperText:#eaf0ff;
+      --paperHead:rgba(255,255,255,.06);
+      --paperLine:rgba(255,255,255,.16);
+
+      /* 3 столбца — разные оттенки (как в p08) */
+      --colOps:rgba(8, 26, 58, .55);
+      --colTT: rgba(14, 44, 92, .55);
+      --colDev:rgba(7, 36, 62, .55);
     }
     *{box-sizing:border-box}
     body{
@@ -45,36 +58,37 @@
       padding:12px 14px 40px;
     }
 
-    /* Белый "лист" */
-    .paper-wrap{
-      display:flex;
-      justify-content:center;
-    }
+    /* Синий "лист" (как в p08) */
+    .paper-wrap{display:flex; justify-content:center;}
     .paper-scroll{
       width:100%;
       overflow-x:auto;
       padding-bottom:8px;
+      -webkit-overflow-scrolling: touch;
     }
     .paper{
-      background:#fff;
-      color:#000;
-      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      color:var(--paperText);
+      border-radius:12px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
-      border:1px solid rgba(0,0,0,.2);
+      border:1px solid rgba(255,255,255,.14);
       padding:18px 18px 14px;
       min-width:860px;
       max-width:1060px;
       margin:0 auto;
+      backdrop-filter: blur(6px);
     }
     .paper h2{
       font-size:18px;
       margin:0 0 6px 0;
       font-weight:700;
+      color:var(--paperText);
     }
     .paper .subtitle{
       font-size:12px;
       margin:0 0 10px 0;
       opacity:.85;
+      color:rgba(234,240,255,.85);
     }
 
     table.tech{
@@ -83,39 +97,69 @@
       table-layout:fixed;
       font-size:12px;
       line-height:1.25;
+      background:rgba(0,0,0,.10);
+      border:1px solid var(--paperLine);
+      border-radius:10px;
+      overflow:hidden;
     }
     table.tech th, table.tech td{
-      border:1px solid #444;
+      border:1px solid var(--paperLine);
       vertical-align:top;
-      padding:8px 8px 10px;
+      padding:10px 10px 12px;
       word-wrap:break-word;
+      color:var(--paperText);
     }
     table.tech th{
-      font-weight:700;
+      font-weight:800;
       text-align:center;
+      background:var(--paperHead);
+      color:rgba(234,240,255,.90);
     }
     .col-ops{width:56%}
     .col-tt{width:22%}
     .col-dev{width:22%}
 
+    /* фоны столбцов */
+    table.tech tbody td:nth-child(1){ background:var(--colOps); }
+    table.tech tbody td:nth-child(2){ background:var(--colTT); }
+    table.tech tbody td:nth-child(3){ background:var(--colDev); }
+
+    /* сохраняем переносы */
+    .pre{
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+
+    /* мат. допуски: верх/низ и коричневый */
+    .tol{ color:var(--tol); font-weight:900; }
+    sup.tol, sub.tol{ font-size:.92em; line-height:0; }
+
+    /* числовой контекст (цифры+скобки+тире+буквы в номерах) */
+    .numctx{ color:var(--tol); font-weight:900; }
+
     .figblock{
       margin-top:10px;
-      border:1px solid #444;
-      padding:8px;
+      border:1px solid rgba(255,255,255,.14);
+      padding:10px;
+      border-radius:10px;
+      background:rgba(0,0,0,.12);
     }
     .figcap{
       font-size:12px;
-      font-weight:700;
-      margin-bottom:6px;
+      font-weight:800;
+      margin-bottom:8px;
+      color:rgba(234,240,255,.9);
     }
     .figimg{
       width:100%;
       height:auto;
       display:block;
-      border:1px solid #bbb;
-      background:#f4f4f4;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.22);
       max-height:520px;
       object-fit:contain;
+      border-radius:8px;
     }
 
     /* Калькулятор */
@@ -215,7 +259,7 @@
 
   <div class="wrap">
 
-    <!-- БЕЛЫЙ ЛИСТ -->
+    <!-- СИНИЙ ЛИСТ -->
     <div class="paper-wrap">
       <div class="paper-scroll">
         <div class="paper">
@@ -237,8 +281,9 @@
             </thead>
             <tbody>
               <tr>
-                <td>
-                  <b>9. Проверьте передаточное число по угловой скорости:</b><br><br>
+                <td class="pre">
+<b>9. Проверьте передаточное число по угловой скорости:</b>
+
  Канала тангажа, для чего:
  Снимите с вертолета левую гировертикаль, установите ее на поворотную установку УПГ-56 с помощью кронштейна КП-9 и с помощью переходного жгута 6С4.863.467-1 соедините со схемой вертолета;При этом положение поворотного стола должно быть на нулевой отметке,а гировертикаль горизонтально.
  Установите выключатель В2 на панели технологического жгута в положение "Wz".
@@ -248,19 +293,19 @@
  ПРИМИЧАНИЕ: ПРИ ВРАЩЕНИИ ГИРОВЕРТИКАЛИ УГОЛ ЕЁ ОТКЛОНЕНИЯ ОТ НУЛЕВОГО ПОЛОЖЕНИЯ НЕ ДОЛЖЕН ПРЕВЫШАТЬ ПЛЮС МИНУС 30 ГРАДУСОВ,Т.К ПРИ БОЛЬШИХ УГЛАХ КРУТИЗНА СИГНАЛА БУДЕТ УМЕНЬШАТЬСЯ.
  Заметьте направление отклонения подвижного индекса нулевого индикатора от среднего положения;
  При вращении датчика в сторону пикирование  (кабрирование)  подвижный индекс нулевого индикатора должен отклоняться вверх (вниз).
- Задаваемая угловая скорость (3,5+2,1-1,1) град/с, Передаточное число (20 ±8) % хода штока / град/с.
+ Задаваемая угловая скорость (<span class="tol">3,5</span><sup class="tol">+2,1</sup><sub class="tol">−1,1</sub>) град/с, Передаточное число (<span class="tol">20</span> <span class="tol">±8</span>) % хода штока / град/с.
  После проверки и регулировки, отключить канал тангажа кнопкой табло "ОТКЛ" на пульте управления и установить гировертикаль на место.
-            </td>
+                </td>
 
-            <td class="pre">Технические требования (ТТ)
+                <td class="pre">Технические требования (ТТ)
 Поворотная установка должна быть повернута на 90° вокруг горизонтальной оси, гировертикаль в кронштейне КП-9 должна устанавливаться так, чтобы стрелка направления полета, размещенная на корпусе, была сверху, а горизонтальные оси находились в горизонтальном положении
 При вращении гировертикали на пикирование  (кабрирование) подвижный индекс нулевого индикатора должен отклоняться вверх (вниз). Задаваемая угловая скорость
-(3,5+2,1-1,1) град/с
+(<span class="tol">3,5</span><sup class="tol">+2,1</sup><sub class="tol">−1,1</sub>) град/с
 Передаточное число
-(20 ±8) % хода штока / град/с
+(<span class="tol">20</span> <span class="tol">±8</span>) % хода штока / град/с
 </td>
 
-            <td class="pre">Работы, выполняемые при отклонениях от ТТ
+                <td class="pre">Работы, выполняемые при отклонениях от ТТ
 Отключите и вновь включите канал тангажа кнопкой- табло "ОТКЛ." и "'ВКЛ." на пульте управления Потенциометром "ЦЕНТР" установите подвижный индекс нулевого индикатора в среднее положение. Задайте вращение установке, соответствующее пикированию со скоростью 3,5 град /с Поворотом потенциометра "СКОР." на пульте управления совместите подвижный индекс с верхней промежуточной. Измените направление вращения установки в сторону кабрирования и плавным изменением скорости вращения совместите подвижный индекс нулевого индикатора с нижней промежуточной отметкой. Скорость вращения установки должна быть в пределах
 (3,5 ±0,7) град/с.
 </td>
@@ -277,7 +322,7 @@
       </div>
     </div>
 
-    <!-- КАЛЬКУЛЯТОР (канал тангажа) — только ω -> μ -->
+    <!-- КАЛЬКУЛЯТОР (канал тангажа) — только ω -> μ + положение индекса -->
     <div class="calc" id="calc-mu">
       <h3>Калькулятор передаточного числа &mu; (канал тангажа)</h3>
       <div class="formula">
@@ -302,6 +347,26 @@
           <label for="muOut">Передаточное число &mu;, %/(град/с)</label>
           <input id="muOut" type="text" readonly placeholder="—">
         </div>
+
+        <!-- НОВОЕ: направление вращения (пикирование/кабрирование) -->
+        <div class="field">
+          <label for="rotDir">Вращение гировертикали (режим)</label>
+          <select id="rotDir">
+            <option value="" selected>— выбрать —</option>
+            <option value="dive">Пикирование</option>
+            <option value="climb">Кабрирование</option>
+          </select>
+        </div>
+
+        <!-- НОВОЕ: положение индекса (вверх/вниз) -->
+        <div class="field">
+          <label for="idxPos">Положение индекса (вверх/вниз)</label>
+          <select id="idxPos">
+            <option value="" selected>— выбрать —</option>
+            <option value="up">Вверх</option>
+            <option value="down">Вниз</option>
+          </select>
+        </div>
       </div>
 
       <div class="actions">
@@ -316,6 +381,59 @@
 
   <script>
     (function(){
+      // ===== 1) Красим числовой контекст в ТЕХНОЛОГИИ (цифры + скобки/тире + буквы в шифрах) =====
+      (function colorizeNumericContextInTech(){
+        const root = document.querySelector('table.tech');
+        if(!root) return;
+
+        const walker = document.createTreeWalker(
+          root,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode(node){
+              const p = node.parentNode;
+              if(!p) return NodeFilter.FILTER_REJECT;
+              const tag = (p.nodeName || '').toLowerCase();
+
+              if(tag === 'script' || tag === 'style') return NodeFilter.FILTER_REJECT;
+              if(tag === 'sup' || tag === 'sub') return NodeFilter.FILTER_REJECT;
+              if(p.classList && (p.classList.contains('tol') || p.classList.contains('numctx'))) return NodeFilter.FILTER_REJECT;
+
+              const v = node.nodeValue || '';
+              if(!/\d/.test(v)) return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        const nodes = [];
+        while(walker.nextNode()) nodes.push(walker.currentNode);
+
+        const re = /(\(?[A-Za-zА-Яа-яЁё]*\d[\dA-Za-zА-Яа-яЁё.,±−\-\/%]*\)?)/g;
+
+        for(const tn of nodes){
+          const txt = tn.nodeValue;
+          const parts = txt.split(re);
+          if(parts.length === 1) continue;
+
+          const frag = document.createDocumentFragment();
+          for(let i=0;i<parts.length;i++){
+            const part = parts[i];
+            if(part === '') continue;
+
+            if(i % 2 === 1){
+              const s = document.createElement('span');
+              s.className = 'numctx';
+              s.textContent = part;
+              frag.appendChild(s);
+            }else{
+              frag.appendChild(document.createTextNode(part));
+            }
+          }
+          tn.parentNode.replaceChild(frag, tn);
+        }
+      })();
+
       const CONST_S = 66.7;
 
       // ТТ: канал тангажа (из твоего текста)
@@ -332,6 +450,10 @@
       const btnCalc = document.getElementById('btnCalc');
       const btnClear= document.getElementById('btnClear');
 
+      // новое: индекс/направление
+      const rotDir  = document.getElementById('rotDir');
+      const idxPos  = document.getElementById('idxPos');
+
       function toNum(s){
         if (s == null) return NaN;
         s = String(s).trim().replace(',', '.').replace(/\s+/g,'');
@@ -346,6 +468,18 @@
       function fmtSmart(n){
         const isInt = Math.abs(n - Math.round(n)) < 1e-9;
         return isInt ? fmt(n,0) : fmt(n,1);
+      }
+
+      function dirOk(){
+        // по тексту:
+        // пикирование -> индекс вверх
+        // кабрирование -> индекс вниз
+        const r = rotDir.value;
+        const p = idxPos.value;
+        if(!r || !p) return null;
+        if(r === 'dive'  && p === 'up')   return true;
+        if(r === 'climb' && p === 'down') return true;
+        return false;
       }
 
       function calc(){
@@ -367,7 +501,13 @@
 
         const okW  = (w  >= omegaMin && w  <= omegaMax);
         const okMu = (mu >= muMin    && mu <= muMax);
-        const okAll = okW && okMu;
+
+        const dOK = dirOk();
+        const dirText = (dOK === null)
+          ? 'Проверка положения индекса: не выбрано.'
+          : ('Проверка положения индекса: ' + (dOK ? 'соответствует' : 'НЕ соответствует'));
+
+        const okAll = okW && okMu && (dOK !== false);
 
         const tag = okAll ? '<span class="tag ok">PASS</span>' : '<span class="tag bad">FAIL</span>';
 
@@ -380,18 +520,24 @@
 ТТ ω: ${fmtSmart(omegaMin)}…${fmtSmart(omegaMax)}  → ${okW ? 'PASS' : 'FAIL'}
 ТТ μ: ${fmtSmart(muMin)}…${fmtSmart(muMax)}        → ${okMu ? 'PASS' : 'FAIL'}
 
+${dirText}
+
 ИТОГ: ${tag}`;
       }
 
       function clearAll(){
         omegaIn.value = '';
         muOut.value = '';
+        rotDir.value = '';
+        idxPos.value = '';
         out.textContent = 'Введи ω и нажми «Рассчитать».';
       }
 
       btnCalc.addEventListener('click', calc);
       btnClear.addEventListener('click', clearAll);
       omegaIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); calc(); }});
+      rotDir.addEventListener('change', ()=>{ if(omegaIn.value.trim()) calc(); });
+      idxPos.addEventListener('change', ()=>{ if(omegaIn.value.trim()) calc(); });
     })();
   </script>
 
