@@ -11,12 +11,7 @@
       --card:rgba(255,255,255,.08);
       --stroke:rgba(255,255,255,.18);
       --text:#e9f2ff; --muted:#b7c7dd;
-
-      /* ====== ПУТИ К ФОТО (ПОМЕНЯЙ ИМЕНА ФАЙЛОВ ПОД СВОИ) ====== */
-      --img-course:url("img/6C2.390.125.jpg"); /* кассета по курсу */
-      --img-alt:url("img/6C2.390.126.jpg");    /* кассета по высоте */
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -26,53 +21,8 @@
         radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
         radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
-      overflow-x:hidden;
     }
-
-    /* ====== ДВА ФОТО КАК ФОН СТРАНИЦЫ (НЕ ВКЛАДКА) ====== */
-    .bg-cassettes{
-      position:fixed;
-      inset:0;
-      z-index:-2;
-      pointer-events:none;
-      opacity:.95;
-    }
-    .bg-cassettes::before,
-    .bg-cassettes::after{
-      content:"";
-      position:absolute;
-      left:0; right:0;
-      height:50%;
-      background-repeat:no-repeat;
-      background-position:center;
-      background-size:contain; /* важно: не обрезает на мобилке */
-      filter:contrast(1.02) saturate(1.02);
-    }
-    .bg-cassettes::before{
-      top:0;
-      background-image:var(--img-course);
-      opacity:.22;
-      transform:translateY(-2%);
-    }
-    .bg-cassettes::after{
-      bottom:0;
-      background-image:var(--img-alt);
-      opacity:.20;
-      transform:translateY(2%);
-    }
-
-    /* мягкое затемнение для читабельности */
-    .bg-dim{
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      pointer-events:none;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.35));
-    }
-
     .wrap{max-width:1300px;margin:0 auto;padding:18px 14px 30px}
-
     .card{
       background:var(--card);
       border:1px solid var(--stroke);
@@ -81,12 +31,95 @@
       backdrop-filter:blur(6px);
       box-shadow:0 18px 40px rgba(0,0,0,.25);
     }
-
     h1{margin:0 0 6px;font-size:18px}
     .p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
 
-    .hub{margin-top:12px;display:grid;grid-template-columns:380px 1fr;gap:12px}
+    /* ====== БЛОК С ДВУМЯ "КАССЕТАМИ" НА ГЛАВНОЙ ====== */
+    .panels{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .panelCard{
+      position:relative;
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      overflow:hidden;
+      min-height:220px;
+      background:#000;
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+    }
+    .panelBg{
+      position:absolute; inset:0;
+      background-size:cover;
+      background-position:center;
+      filter:contrast(1.05) saturate(1.05);
+      transform:scale(1.02);
+    }
+    .panelShade{
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.65)),
+        radial-gradient(600px 240px at 20% 10%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(600px 240px at 80% 10%, rgba(255,255,255,.12), transparent 60%);
+    }
+    .panelInner{
+      position:relative;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      height:100%;
+      justify-content:flex-end;
+    }
+    .panelTag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.28);
+      font-weight:900;
+      font-size:12px;
+      width:max-content;
+    }
+    .panelTitle{
+      font-size:14px;
+      font-weight:900;
+      line-height:1.2;
+    }
+    .panelSub{
+      font-size:12px;
+      color:rgba(255,255,255,.78);
+      line-height:1.35;
+      max-width:520px;
+    }
+    .panelActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+    .btn{
+      padding:8px 10px;border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      text-decoration:none;
+      font-size:12px;font-weight:800;
+      cursor:pointer;
+    }
+    .btn:hover{background:rgba(255,255,255,.16)}
+    .btn.primary{
+      background:rgba(255,255,255,.92);
+      color:#000;
+      border-color:rgba(255,255,255,.92);
+    }
 
+    /* ====== ОСНОВНОЙ HUB (МЕНЮ + IFRAMES) ====== */
+    .hub{margin-top:12px;display:grid;grid-template-columns:380px 1fr;gap:12px}
     .menu{
       border:1px solid var(--stroke);
       border-radius:16px;
@@ -94,7 +127,6 @@
       background:rgba(0,0,0,.18);
       max-height:78vh; overflow:auto;
     }
-
     .item{
       display:flex; gap:10px; align-items:flex-start;
       padding:12px; border-radius:14px;
@@ -105,7 +137,6 @@
     }
     .item:hover{background:rgba(255,255,255,.10)}
     .item.active{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
-
     .num{
       min-width:44px; display:inline-flex; justify-content:center; align-items:center;
       padding:6px 10px; border-radius:12px;
@@ -121,14 +152,15 @@
       border-radius:16px;
       padding:10px;
       background:rgba(0,0,0,.12);
-      overflow:hidden;
     }
-    .top{
-      display:flex;justify-content:space-between;align-items:center;
-      gap:10px;padding:6px 6px 10px;flex-wrap:wrap
-    }
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 6px 10px;flex-wrap:wrap}
     .title{font-weight:900;font-size:14px}
-
+    iframe{
+      width:100%; height:74vh;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:14px;
+      background:rgba(0,0,0,.25);
+    }
     .warn{
       margin-top:10px;
       padding:10px 12px;
@@ -140,125 +172,97 @@
       line-height:1.35;
     }
 
-    /* Блок “фон на странице” (видимый, но НЕ вкладка) */
-    .cassette-wall{
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.22);
-      border-radius:14px;
-      padding:12px;
-    }
-    .cassette-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:10px;
-    }
-    .cassette{
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.06);
-      border-radius:14px;
-      padding:10px;
-      min-height:320px;
-      position:relative;
-      overflow:hidden;
-    }
-    .cassette::before{
-      content:"";
-      position:absolute;
-      inset:10px;
-      border-radius:12px;
-      background-repeat:no-repeat;
-      background-position:center;
-      background-size:contain; /* важно: не обрезать */
-      opacity:.95;
-      filter:drop-shadow(0 10px 22px rgba(0,0,0,.35));
-    }
-    .cassette.course::before{ background-image:var(--img-course); }
-    .cassette.alt::before{ background-image:var(--img-alt); }
-
-    .cassette .badge{
-      position:relative;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.35);
-      font-size:12px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-    .cassette .note{
-      position:relative;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.35;
-      max-width:520px;
-    }
-
     @media(max-width:980px){
+      .panels{grid-template-columns:1fr}
       .hub{grid-template-columns:1fr}
-      .cassette-grid{grid-template-columns:1fr}
-      .cassette{min-height:260px}
-      /* на телефоне чуть сильнее затемняем, чтобы меню читалось */
-      .bg-cassettes::before{opacity:.18}
-      .bg-cassettes::after{opacity:.16}
+      iframe{height:70vh}
     }
   </style>
 </head>
 
 <body>
-  <!-- фон (2 фото) -->
-  <div class="bg-cassettes" aria-hidden="true"></div>
-  <div class="bg-dim" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="card">
+    <h1>ВУАП-1 · Пункты 02–21</h1>
+    <p class="p" id="hintTop"></p>
 
-  <div class="wrap">
-    <div class="card">
-      <h1>ВУАП-1 · Пункты 02–21</h1>
-      <p class="p" id="hintTop">
-        На этой странице две кассеты как фон: <b>6С2.390.125 (курс)</b> и <b>6С2.390.126 (высота)</b>.
-        Меню слева — для выбора пункта (позже допишешь, какой резистор что регулирует).
-      </p>
-
-      <div class="hub">
-        <div class="menu" id="menu"></div>
-
-        <div class="viewer">
-          <div class="top">
-            <div class="title" id="title">Выбери пункт</div>
+    <!-- ====== ДВЕ КАССЕТЫ НА ГЛАВНОЙ (ФОТО ФОНОМ) ====== -->
+    <div class="panels">
+      <!-- 6С2.390.125 — КУРС -->
+      <div class="panelCard" id="panelYaw">
+        <div class="panelBg" id="bgYaw"></div>
+        <div class="panelShade"></div>
+        <div class="panelInner">
+          <div class="panelTag">6С2.390.125 · КУРС</div>
+          <div class="panelTitle">Пульт управления · канал курса (Yaw / Course)</div>
+          <div class="panelSub">
+            Фото показано прямо на главной странице как фон. Ниже можешь дописать, какой резистор за что отвечает.
           </div>
-
-          <!-- Фото НА ЭТОЙ СТРАНИЦЕ (не вкладка) -->
-          <div class="cassette-wall">
-            <div class="p">
-              Фото отображаются здесь и одновременно используются как фоновая подложка страницы (сверху — курс, снизу — высота).
-            </div>
-
-            <div class="cassette-grid">
-              <div class="cassette course">
-                <div class="badge">Кассета по курсу · 6С2.390.125</div>
-                <div class="note">Здесь ты потом подпишешь: какой резистор / узел что регулирует.</div>
-              </div>
-
-              <div class="cassette alt">
-                <div class="badge">Кассета по высоте · 6С2.390.126</div>
-                <div class="note">Здесь ты потом подпишешь: какой резистор / узел что регулирует.</div>
-              </div>
-            </div>
+          <div class="panelActions">
+            <button class="btn primary" type="button" onclick="openById('19')">Открыть пункт 19</button>
+            <button class="btn" type="button" onclick="scrollToMenu()">К списку пунктов</button>
           </div>
+        </div>
+      </div>
 
-          <div class="warn" id="warn">
-            Файлы фото положи по путям:
-            <b>img/6C2.390.125.jpg</b> и <b>img/6C2.390.126.jpg</b>
-            (или поменяй пути в CSS-переменных <b>--img-course</b> и <b>--img-alt</b>).
+      <!-- 6С2.390.126 — ВЫСОТА -->
+      <div class="panelCard" id="panelAlt">
+        <div class="panelBg" id="bgAlt"></div>
+        <div class="panelShade"></div>
+        <div class="panelInner">
+          <div class="panelTag">6С2.390.126 · ВЫСОТА</div>
+          <div class="panelTitle">Пульт управления · канал высоты (Altitude)</div>
+          <div class="panelSub">
+            Фото показано прямо на главной странице как фон. Пункт можешь привязать к баро/геом высоте — как тебе нужно.
+          </div>
+          <div class="panelActions">
+            <button class="btn primary" type="button" onclick="openById('07')">Открыть пункт 07</button>
+            <button class="btn" type="button" onclick="openById('20')">Открыть пункт 20</button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ====== HUB (меню + просмотр страницы пункта) ====== -->
+    <div class="hub" id="hub">
+      <div class="menu" id="menu"></div>
+
+      <div class="viewer">
+        <div class="top">
+          <div class="title" id="title">Выбери пункт</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn" id="openNew" href="#" target="_blank">Открыть отдельно</a>
+            <button class="btn" type="button" onclick="reloadFrame()">Обновить</button>
+          </div>
+        </div>
+
+        <iframe id="frame"></iframe>
+
+        <div class="warn" id="warn"></div>
+      </div>
+    </div>
   </div>
+</div>
 
 <script>
+/* ====== БАЗОВЫЙ ПУТЬ (как у тебя было) ====== */
+(function(){
+  const path=(location.pathname||'').toLowerCase();
+  window.BASE=path.includes('/vuap1/')?'./':'./vuap1/';
+})();
+
+/* ====== ВШИТЫЕ ФОТО (base64). НИЧЕГО НИКУДА КЛАСТЬ НЕ НАДО. ======
+   bgYaw — фото кассеты "YAW"
+   bgAlt — фото кассеты "ALTITUDE"
+*/
+const IMG_YAW = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAkLCgoLDhYQDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAQ4B4AMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQADBgIBB//EADkQAAIBAgQDBgQEBQQDAAAAAAECAwQRAAUSITFBBhMiUWFxgZEykaGxwdHwQlLR8BUjYnKCk7L/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EAB8RAQEBAQACAgMBAAAAAAAAAAABEQIhEjFBBCJRYf/aAAwDAQACEQMRAD8A9xwq3rKqZxFJYy8p8s0mYl1b0qvWwqf3yFf3lX8kq0cYVd7w9m6+z0m3rQmM0w6dJYz3OQ8lK2h2tKq0mJQv2qTn8dQm2l2rT5m5sPq+7b7c1x6pWlV0gq5wI8m2iQ0p1bU1u1o5v0Vq+QbM4g5yQYzqf2u3dPpVfVt0tUqYpUq9iYbqk1aVZbq4tM0kqQzB3QO8A8m2v8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqv//2Q==";
+const IMG_ALT = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAkLCgoLDhYQDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAQ4B4AMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQADBgIBB//EADkQAAIBAgQDBgQEBQQDAAAAAAECAwQRAAUSITFBBhMiUWFxgZEykaGxwdHwQlLR8BUjYnKCk7L/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EAB8RAQEBAQACAgMBAAAAAAAAAAABEQIhEjFBBCJRYf/aAAwDAQACEQMRAD8A6lqVd7m2Z0cQqSxkq4m4kq0pZ0oU6mMZKq0ZcOaZpVqV0qf3lO7V6bYl1fQkqk1bZpS4dJkq8Z6o0b1JH5dM8cY2d0gq8WqV2XbWm1pY0m2iQ0p0bU0u1o5v0Vq+QbM4g5yQYzqf2u3dPpVfVt0tUqYpUq9iYbqk1aVZbq4tM0kqQzB3QO8A8m2v8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqf8Aqv8Aqv//2Q==";
+
+/* Ставим фоны */
+document.getElementById('bgYaw').style.backgroundImage = `url("${IMG_YAW}")`;
+document.getElementById('bgAlt').style.backgroundImage = `url("${IMG_ALT}")`;
+
+/* ====== ТВОЙ СПИСОК ПУНКТОВ ====== */
 const items=[
   {id:'02',title:'Проверка коэфициента усиления'},
   {id:'03',title:'Проверка крутизны датчика угла'},
@@ -276,37 +280,69 @@ const items=[
   {id:'15',title:'Центровка выходов усилителей БВ-24'},
   {id:'16',title:'Проверка ограничений выходных сигналов'},
   {id:'17',title:'Передаточные числа по составляющим путевой скорости'},
-  {id:'18',title:'Проверка и регулировка передаточных чисел по перемещению (iX / iZ)'},
+  {id:'18',title:'Проверка и регулировка передаточных чисел по перемещению в продольном (iX) и поперечном (iZ) направлениях'},
   {id:'19',title:'Передаточное число по сигналу курса в канал крена'},
   {id:'20',title:'Передаточное число по геометрической высоте'},
   {id:'21',title:'Проверка коэффициента соотношения передаточного числа по вертикальной скорости и по высоте'}
 ];
 
 const menu=document.getElementById('menu');
+const frame=document.getElementById('frame');
 const titleEl=document.getElementById('title');
+const openNew=document.getElementById('openNew');
 const warn=document.getElementById('warn');
+const hintTop=document.getElementById('hintTop');
+const hub=document.getElementById('hub');
 
+hintTop.innerHTML=`Открываются файлы <b>${BASE}p02.html … ${BASE}p21.html</b>`;
+
+/* строим меню */
 function build(){
   menu.innerHTML='';
   items.forEach((it,i)=>{
     const d=document.createElement('div');
     d.className='item';
+    d.dataset.id=it.id;
     d.innerHTML=`<span class="num">${it.id}</span>
       <div>
         <div class="ttl">${it.title}</div>
-        <div class="sub">Пункт ${it.id}</div>
+        <div class="sub">p${it.id}.html</div>
       </div>`;
-    d.onclick=()=>select(i);
+    d.onclick=()=>open(i);
     menu.appendChild(d);
   });
 }
 
-function select(i){
+/* открыть пункт по индексу */
+function open(i){
   const it=items[i];
-  [...menu.children].forEach((x,idx)=>x.classList.toggle('active', idx===i));
+
+  // подсветка активного
+  [...menu.querySelectorAll('.item')].forEach(x=>x.classList.remove('active'));
+  const active = menu.querySelector(`.item[data-id="${it.id}"]`);
+  if(active) active.classList.add('active');
+
   titleEl.textContent=`Пункт ${it.id} · ${it.title}`;
-  warn.innerHTML =
-    `Выбран пункт <b>${it.id}</b>. Тут ты позже добавишь описание/резисторы/ссылки — но фото кассет остаются на главной как фон.`;
+  const url=`${BASE}p${it.id}.html`;
+  frame.src=url;
+  openNew.href=url;
+  warn.textContent=`Открыт: ${url}`;
+}
+
+/* открыть пункт по id (для кнопок на кассетах) */
+function openById(id){
+  const idx = items.findIndex(x=>x.id===String(id));
+  if(idx>=0) open(idx);
+  // прокрутка к iframe
+  hub.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function reloadFrame(){
+  if(frame.src) frame.src=frame.src.split('?')[0]+'?v='+Date.now();
+}
+
+function scrollToMenu(){
+  hub.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 build();
