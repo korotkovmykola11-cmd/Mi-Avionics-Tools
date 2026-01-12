@@ -1,0 +1,415 @@
+<div class="sky">
+  <div class="paper">
+    <header class="cap">
+      <div class="title">Положение потенциометров ВУАП-1</div>
+
+      <div class="subtitle">
+        Положение потенциометров кассет автопилота ВУАП-1 при регулировке на стенде.
+        <span class="muted">(на вертолёте при отработке значения могут отличаться)</span>
+      </div>
+
+      <div class="pch">
+        <span class="pch-label">П.Ч.:</span>
+        <span class="pch-text">
+          «Н» – 5<sup>+3</sup><sub>-1.5</sub> (3.5–8);
+          «К» – 8<sup>+6</sup><sub>-2.6</sub> (6–14);
+          «Т» – 3.5<sup>+2</sup><sub>-1.2</sub> (2.5–5.5);
+          «КДТ» 40–49°
+        </span>
+      </div>
+    </header>
+
+    <main id="grid" class="grid"></main>
+
+    <footer class="foot">
+      <div class="foot-title">Токи (ПМ-10 «КРАНЫ САУ»)</div>
+      <div class="foot-text">
+        Общий ток в цепи предохранителя ПМ-10 «КРАНЫ САУ» составляет порядка <b>5.6–5.7 А</b>
+        при включенной «СТАБ. СКОРОСТИ». По каналам соответственно:
+      </div>
+      <ul class="foot-list">
+        <li>«Н» — <b>1.56–1.57 А</b>. <span class="warn">При неисправности ПМ-10 режим стабилизации скорости не включается.</span></li>
+        <li>«К» — <b>1.56–1.57 А</b>.</li>
+        <li>«Т» — <b>1.16–1.20 А</b>.</li>
+        <li>«В» — <b>1.70–1.77 А</b>.</li>
+      </ul>
+    </footer>
+  </div>
+</div>
+:root{
+  --cyan:#00e5ff;
+  --cyan2:#2cf7ff;
+  --green:#00ff9c;
+  --amber:#ffd54f;
+
+  --text:#e9f6ff;
+  --muted:#b7c7d6;
+
+  --panel:#0f1922cc;
+  --panel2:#0b141dcc;
+
+  /* размеры */
+  --knob: 118px;   /* одинаковый размер кружков везде */
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+}
+
+/* ===== SKY ===== */
+.sky{
+  min-height:100vh;
+  padding:18px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(1000px 600px at 20% 18%, rgba(90,180,255,.40) 0%, transparent 62%),
+    radial-gradient(900px 520px at 82% 26%, rgba(40,120,255,.30) 0%, transparent 62%),
+    radial-gradient(1200px 800px at 60% 92%, rgba(0,229,255,.12) 0%, transparent 60%),
+    linear-gradient(180deg, #061a2e 0%, #0b2943 52%, #061523 100%);
+}
+.sky::before,
+.sky::after{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  pointer-events:none;
+  filter: blur(20px);
+  opacity:.9;
+  background:
+    radial-gradient(280px 150px at 18% 22%, rgba(255,255,255,.18) 0 55%, transparent 60%),
+    radial-gradient(360px 190px at 40% 18%, rgba(255,255,255,.14) 0 55%, transparent 60%),
+    radial-gradient(420px 230px at 62% 26%, rgba(255,255,255,.12) 0 55%, transparent 60%),
+    radial-gradient(350px 190px at 82% 34%, rgba(255,255,255,.10) 0 55%, transparent 60%),
+    radial-gradient(380px 210px at 26% 66%, rgba(255,255,255,.10) 0 55%, transparent 60%),
+    radial-gradient(460px 250px at 62% 70%, rgba(255,255,255,.08) 0 55%, transparent 60%);
+  transform: rotate(-8deg);
+}
+.sky::after{
+  opacity:.55;
+  filter: blur(26px);
+  transform: rotate(6deg) scale(1.05);
+}
+
+/* ===== PAPER ===== */
+.paper{
+  max-width:1100px; /* чтобы на ПК не растягивалось “в пустоту” */
+  margin:0 auto;
+  padding:16px;
+  border-radius:18px;
+  background: linear-gradient(180deg, var(--panel), var(--panel2));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.62),
+    0 0 0 1px rgba(31,230,255,.10) inset;
+  backdrop-filter: blur(8px);
+}
+
+.cap{padding:6px 8px 12px}
+.title{
+  text-align:center;
+  font-weight:950;
+  letter-spacing:.4px;
+  color:var(--cyan2);
+  font-size:24px;
+  text-shadow:0 0 22px rgba(44,247,255,.25);
+}
+.subtitle{
+  margin-top:6px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+.muted{opacity:.85}
+
+.pch{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background: rgba(7,16,25,.55);
+  border:1px solid rgba(31,230,255,.12);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
+  font-size:13px;
+  line-height:1.35;
+}
+.pch-label{color:var(--amber); font-weight:950}
+.pch-text{color:#d8f7ff}
+
+/* ===== GRID of blocks ===== */
+/* ВАРИАНТ 1: НА ПК ВСЕГДА 2 КОЛОНКИ */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  gap:16px;
+  padding:6px 8px 10px;
+}
+
+/* На телефоне — 1 колонка */
+@media (max-width:760px){
+  .grid{grid-template-columns: 1fr;}
+}
+
+/* ===== BLOCK ===== */
+.block{
+  border-radius:16px;
+  padding:12px;
+  background:
+    radial-gradient(900px 320px at 30% 10%, rgba(0,229,255,.14), transparent 58%),
+    radial-gradient(700px 260px at 75% 90%, rgba(0,255,156,.08), transparent 60%),
+    rgba(9,16,26,.60);
+  border:1px solid rgba(31,230,255,.14);
+  box-shadow:
+    0 20px 46px rgba(0,0,0,.42),
+    0 0 0 1px rgba(255,255,255,.06) inset;
+  position:relative;
+  overflow:hidden;
+}
+.block-title{
+  text-align:center;
+  font-weight:950;
+  color:var(--amber);
+  margin:2px 0 10px;
+  letter-spacing:.2px;
+}
+
+/* внутри кассеты: 2×3 */
+.cells{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:12px;
+}
+
+/* ===== CELL: ОДИНАКОВО ВЕЗДЕ — badge сверху, knob снизу ===== */
+.cell{
+  display:grid;
+  grid-template-rows: auto auto; /* badge, knob */
+  gap:8px;
+  align-items:start;
+}
+
+/* Плашка */
+.badge{
+  padding:10px 12px;
+  border-radius:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.14));
+  border:1px solid rgba(44,247,255,.16);
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.30),
+    0 0 0 1px rgba(0,0,0,.25) inset;
+  color:#cfe6ff;
+  font-size:11px;
+  line-height:1.18;
+  text-align:left;
+  min-height:70px;
+  display:flex;
+  align-items:center;
+}
+.badge:empty{
+  background: transparent;
+  border-color: transparent;
+  box-shadow:none;
+  min-height:0;
+  padding:0;
+}
+.badge.warn{
+  border-color: rgba(255,140,140,.24);
+  color:#ffd7d7;
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.30),
+    0 0 0 1px rgba(0,0,0,.25) inset,
+    0 0 22px rgba(255,120,120,.10);
+}
+.badge.ok{
+  border-color: rgba(44,247,255,.20);
+  color:#cfe6ff;
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.30),
+    0 0 0 1px rgba(0,0,0,.25) inset,
+    0 0 24px rgba(0,229,255,.10);
+}
+
+/* Кружок — ВСЕГДА круг */
+.knob{
+  width: var(--knob);
+  height: var(--knob);
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.24), transparent 48%),
+    radial-gradient(circle at 50% 55%, rgba(0,229,255,.14), transparent 62%),
+    radial-gradient(circle at 50% 50%, #0a1118 0%, #04070a 78%, #020407 100%);
+
+  border:1px solid rgba(44,247,255,.70);
+  box-shadow:
+    0 22px 28px rgba(0,0,0,.58),
+    0 0 36px rgba(0,229,255,.18),
+    0 0 0 2px rgba(0,0,0,.35) inset,
+    0 -14px 22px rgba(255,255,255,.08) inset;
+
+  margin:0 auto;
+  position:relative;
+}
+.knob::after{
+  content:"";
+  position:absolute;
+  width:86%;
+  height:46%;
+  top:10%;
+  left:7%;
+  border-radius:999px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 70%);
+  filter: blur(1px);
+  pointer-events:none;
+}
+
+.k-label{
+  font-size:11px;
+  letter-spacing:.45px;
+  color:#d7f2ff;
+  opacity:.95;
+}
+.k-value{
+  font-size:30px;
+  font-weight:1000;
+  color:var(--green);
+  text-shadow:0 0 18px rgba(0,255,156,.24);
+}
+
+/* FOOT */
+.foot{
+  margin-top:8px;
+  padding:12px 14px;
+  border-radius:14px;
+  background: rgba(7,14,22,.55);
+  border:1px solid rgba(31,230,255,.10);
+}
+.foot-title{ color:var(--amber); font-weight:950; margin-bottom:6px; }
+.foot-text{ color:#d8f7ff; font-size:13px; line-height:1.35; }
+.foot-list{ margin:8px 0 0 18px; padding:0; color:#d8f7ff; font-size:13px; }
+.warn{ color:#ffb4b4; font-weight:750; }
+const SK_NOTE = "Колебания устраняются увеличением передаточного числа по угловой скорости";
+
+const CENTER_NOTE =
+  "ЦЕНТР: центрирование каналов. Выставляется индивидуально под каждый комбинированный агрегат управления, поэтому может отличаться в зависимости от вертолёта.";
+
+const ANGLE_NOTE =
+  "Регулировка передаточного числа по углу";
+
+const HEIGHT_NOTE =
+  "Регулировка передаточного числа по высоте";
+
+const IN_NOTE =
+  "Регулировка крутизны сигналов с датчика обратной связи";
+
+const KR_NOTE =
+  "Регулировка крутизны сигнала с датчика угла";
+
+const blocks = [
+  {
+    title: "1. Канал крена",
+    cells: [
+      { label:"УГОЛ", value:"3.0", badge: ANGLE_NOTE, badgeClass:"ok" },
+      { label:"ЦЕНТР", value:"5.5", badge: CENTER_NOTE, badgeClass:"ok" },
+
+      { label:"СКОР. (СК)", value:"1.5", badge: SK_NOTE, badgeClass:"ok" },
+      { label:"ИН", value:"8", badge: IN_NOTE, badgeClass:"ok" },
+
+      { label:"ДК", value:"3.5", badge:"ДК: запрещено ставить на 0", badgeClass:"warn" },
+      { label:"КРУТИЗНА", value:"2", badge: KR_NOTE, badgeClass:"ok" }
+    ]
+  },
+
+  {
+    title: "2. Направление",
+    cells: [
+      { label:"УГОЛ", value:"3.5", badge: ANGLE_NOTE, badgeClass:"ok" },
+      { label:"ЦЕНТР", value:"5.0", badge: CENTER_NOTE, badgeClass:"ok" },
+
+      { label:"СКОР. (СК)", value:"3.0" },
+      { label:"ИН", value:"8", badge: IN_NOTE, badgeClass:"ok" },
+
+      { label:"ДК", value:"9.0", badge:"ДК: не задействован", badgeClass:"warn" },
+      { label:"КРУТИЗНА", value:"2", badge: KR_NOTE, badgeClass:"ok" }
+    ]
+  },
+
+  {
+    title: "3. Тангаж",
+    cells: [
+      { label:"УГОЛ", value:"5.5", badge: ANGLE_NOTE, badgeClass:"ok" },
+      { label:"ЦЕНТР", value:"8.5", badge: CENTER_NOTE, badgeClass:"ok" },
+
+      { label:"СКОР. (СК)", value:"7.0", badge: SK_NOTE, badgeClass:"ok" },
+      { label:"ИН", value:"8", badge: IN_NOTE, badgeClass:"ok" },
+
+      { label:"ДК", value:"4.0", badge:"ДК: регулировка передаточного числа по воздушной скорости", badgeClass:"ok" },
+      { label:"КРУТИЗНА", value:"2", badge: KR_NOTE, badgeClass:"ok" }
+    ]
+  },
+
+  {
+    title: "4. Высота",
+    cells: [
+      { label:"ВЫСОТА", value:"4.5", badge: HEIGHT_NOTE, badgeClass:"ok" },
+      { label:"ЦЕНТР", value:"5.0", badge: CENTER_NOTE, badgeClass:"ok" },
+
+      { label:"СКОР. (СК)", value:"2.0" },
+      { label:"ИН", value:"8", badge: IN_NOTE, badgeClass:"ok" }
+    ]
+  }
+];
+
+const grid = document.getElementById("grid");
+grid.innerHTML = "";
+
+blocks.forEach(b => {
+  const block = document.createElement("section");
+  block.className = "block";
+
+  const h = document.createElement("div");
+  h.className = "block-title";
+  h.textContent = b.title;
+  block.appendChild(h);
+
+  const cellsWrap = document.createElement("div");
+  cellsWrap.className = "cells";
+
+  b.cells.forEach(c => {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+
+    const badge = document.createElement("div");
+    badge.className = "badge" + (c.badgeClass ? " " + c.badgeClass : "");
+    badge.textContent = c.badge || "";
+    cell.appendChild(badge);
+
+    const knob = document.createElement("div");
+    knob.className = "knob";
+
+    const lab = document.createElement("div");
+    lab.className = "k-label";
+    lab.textContent = c.label;
+
+    const val = document.createElement("div");
+    val.className = "k-value";
+    val.textContent = c.value;
+
+    knob.appendChild(lab);
+    knob.appendChild(val);
+
+    cell.appendChild(knob);
+    cellsWrap.appendChild(cell);
+  });
+
+  block.appendChild(cellsWrap);
+  grid.appendChild(block);
+});
