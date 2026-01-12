@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Технологическая карта — САУ</title>
+
+  <style>
+    :root{
+      --bg1:#061a2e;
+      --bg2:#0b2943;
+      --bg3:#03110a;
+
+      --ink:#eaf6ff;
+      --muted:#b9cadd;
+      --line:rgba(255,255,255,.10);
+
+      --glass: rgba(10,18,28,.72);
+      --glass2: rgba(8,14,22,.60);
+
+      --accent:#21f0ff;
+      --accent2:#00ffa6;
+      --warn:#ffb4b4;
+
+      --radius:16px;
+      --pad:14px;
+
+      --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font);color:var(--ink);}
+
+    /* ФОН */
+    .scene{
+      min-height:100vh;
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(900px 520px at 25% 18%, rgba(120,190,255,.40), transparent 62%),
+        radial-gradient(900px 520px at 78% 22%, rgba(50,140,255,.30), transparent 62%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 54%, #061523 78%, var(--bg3) 100%);
+    }
+    .scene::before{
+      content:"";
+      position:absolute;
+      inset:-30%;
+      pointer-events:none;
+      filter: blur(22px);
+      opacity:.9;
+      background:
+        radial-gradient(300px 160px at 20% 24%, rgba(255,255,255,.18) 0 55%, transparent 60%),
+        radial-gradient(420px 220px at 42% 16%, rgba(255,255,255,.14) 0 55%, transparent 60%),
+        radial-gradient(520px 260px at 70% 28%, rgba(255,255,255,.12) 0 55%, transparent 60%),
+        radial-gradient(460px 240px at 30% 66%, rgba(255,255,255,.10) 0 55%, transparent 60%);
+      transform: rotate(-7deg);
+    }
+
+    /* ДОКУМЕНТ */
+    .doc{
+      max-width: 1320px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      border: 1px solid var(--line);
+      box-shadow: 0 30px 90px rgba(0,0,0,.62), 0 0 0 1px rgba(33,240,255,.10) inset;
+      backdrop-filter: blur(8px);
+      overflow:hidden;
+      position:relative;
+      z-index:1;
+    }
+
+    /* TOPBAR */
+    .topbar{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      flex-wrap:wrap;
+    }
+    .docTitle{
+      font-weight:950;
+      letter-spacing:.6px;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(33,240,255,.18);
+      font-size:16px;
+    }
+    .docMeta{margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;}
+    .pill{
+      font-size:12px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(33,240,255,.18);
+      background: rgba(255,255,255,.05);
+      color:#d9f6ff;
+      white-space:nowrap;
+    }
+
+    .topbar__right{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+
+    .btn{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--ink);
+      padding:8px 10px;
+      border-radius:12px;
+      font-weight:800;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{border-color: rgba(33,240,255,.28);}
+    .btn.primary{
+      border-color: rgba(0,255,166,.28);
+      box-shadow: 0 0 22px rgba(0,255,166,.10);
+    }
+    .btn.danger{
+      border-color: rgba(255,180,180,.28);
+      box-shadow: 0 0 22px rgba(255,160,160,.10);
+    }
+    .fileBtn{display:inline-flex; align-items:center; gap:8px}
+
+    /* ОБЛАСТЬ ОПЕРАЦИЙ */
+    .wrap{
+      padding:12px;
+      max-height: calc(100vh - 190px);
+      overflow:auto;
+    }
+
+    .gridHeader{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:12px;
+      padding: 0 2px 10px 2px;
+    }
+    .hcell{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      padding:12px;
+      background: rgba(0,0,0,.10);
+    }
+    .hTitle{font-weight:950; color:#dff7ff;}
+    .hHint{margin-top:4px; font-size:12px; color: var(--muted); line-height:1.35;}
+
+    /* ОДНА ОПЕРАЦИЯ (карточка) */
+    .opCard{
+      margin-top:12px;
+      border:1px solid rgba(33,240,255,.14);
+      border-radius:14px;
+      background:
+        radial-gradient(900px 320px at 30% 10%, rgba(0,229,255,.14), transparent 58%),
+        radial-gradient(700px 260px at 75% 90%, rgba(0,255,156,.08), transparent 60%),
+        rgba(9,16,26,.55);
+      box-shadow: 0 20px 46px rgba(0,0,0,.42), 0 0 0 1px rgba(255,255,255,.06) inset;
+      overflow:hidden;
+    }
+
+    .opHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.14);
+    }
+    .opNo{
+      font-weight:950;
+      color: var(--accent2);
+      letter-spacing:.2px;
+    }
+    .opBtns{display:flex; gap:6px; flex-wrap:wrap;}
+    .miniBtn{
+      padding:6px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color:#dff7ff;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .miniBtn:hover{border-color: rgba(33,240,255,.25)}
+    .miniBtn.del{border-color: rgba(255,180,180,.20)}
+    .miniBtn.del:hover{border-color: rgba(255,180,180,.35)}
+
+    .opCols{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:12px;
+      padding:12px;
+      align-items:stretch;
+    }
+
+    .colBox{
+      border:1px solid rgba(33,240,255,.12);
+      border-radius:12px;
+      background: rgba(7,14,22,.40);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      min-height: 180px;
+    }
+    .colLabel{
+      padding:10px 10px 8px 10px;
+      font-weight:950;
+      color:#dff7ff;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.10);
+      font-size:13px;
+    }
+    textarea{
+      border:0;
+      outline:none;
+      resize:none;
+      width:100%;
+      height:100%;
+      min-height: 140px;
+      padding:12px 12px 14px 12px;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--font);
+      font-size:14px;
+      line-height:1.35;
+      white-space:pre-wrap;
+    }
+    textarea::placeholder{color: rgba(185,202,221,.55);}
+
+    /* статус */
+    .statusbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-top:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      color:#d8f7ff;
+      flex-wrap:wrap;
+    }
+    .mini{color:var(--muted); font-size:12px}
+
+    /* МОБИЛКА: одна операция — колонки в столбик, но в рамках одной операции */
+    @media (max-width: 900px){
+      .gridHeader{grid-template-columns:1fr;}
+      .opCols{grid-template-columns:1fr;}
+    }
+
+    /* ПЕЧАТЬ */
+    @media print{
+      body{background:#fff}
+      .scene{padding:0; background:#fff}
+      .scene::before{display:none}
+      .doc{box-shadow:none; border:none; background:#fff; color:#000}
+      .topbar,.statusbar{display:none}
+      .wrap{max-height:none; overflow:visible; padding:0}
+      .opCard{break-inside:avoid; box-shadow:none; background:#fff; border:1px solid #ccc}
+      .opHead{background:#fff}
+      .colBox{background:#fff; border:1px solid #ccc}
+      textarea{color:#000}
+    }
+  </style>
+</head>
+
+<body>
+<div class="scene">
+  <div class="doc">
+    <header class="topbar">
+      <div class="topbar__left">
+        <div class="docTitle">ТЕХНОЛОГИЧЕСКАЯ КАРТА (САУ)</div>
+        <div class="docMeta">
+          <span class="pill">Синхронные 3 колонки</span>
+          <span class="pill">Автосохранение</span>
+          <span class="pill">Офлайн работает</span>
+        </div>
+      </div>
+
+      <div class="topbar__right">
+        <button id="addRowBtn" class="btn primary">+ Добавить операцию</button>
+        <button id="saveBtn" class="btn">Сохранить</button>
+        <button id="exportBtn" class="btn">Экспорт JSON</button>
+        <label class="btn fileBtn">
+          Импорт JSON
+          <input id="importInput" type="file" accept="application/json" hidden>
+        </label>
+        <button id="printBtn" class="btn danger">Печать</button>
+      </div>
+    </header>
+
+    <section class="wrap">
+      <div class="gridHeader">
+        <div class="hcell">
+          <div class="hTitle">Содержание операции</div>
+          <div class="hHint">Набираешь слово-в-слово. Можно вставлять списки. Вставка чистится от “Word-мусора”.</div>
+        </div>
+        <div class="hcell">
+          <div class="hTitle">Технические требования (ТТ)</div>
+          <div class="hHint">Если ТТ нет — оставляй пусто.</div>
+        </div>
+        <div class="hcell">
+          <div class="hTitle">Работы при отклонениях от ТТ</div>
+          <div class="hHint">Если не требуется — пусто.</div>
+        </div>
+      </div>
+
+      <div id="list"></div>
+    </section>
+
+    <footer class="statusbar">
+      <div id="statusText">Готово.</div>
+      <div class="mini">Подсказка: Shift+Enter — перенос, обычный Enter — тоже перенос (как в тексте).</div>
+    </footer>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   ТЕХКАРТА v3 (офлайн + GitHub)
+   - синхронные 3 колонки на операцию
+   - автосохранение localStorage
+   - импорт/экспорт JSON
+   - вставка: чистый текст (без Word-разметки)
+   ========================================================= */
+
+const LS_KEY = "techcard_v3_sync";
+
+const statusText = document.getElementById("statusText");
+const list = document.getElementById("list");
+
+const addRowBtn = document.getElementById("addRowBtn");
+const saveBtn = document.getElementById("saveBtn");
+const exportBtn = document.getElementById("exportBtn");
+const importInput = document.getElementById("importInput");
+const printBtn = document.getElementById("printBtn");
+
+let data = { rows: [ {op:"", tt:"", dev:""} ] };
+
+function setStatus(msg){ statusText.textContent = msg; }
+
+/* ===== чистим вставку ===== */
+function sanitizeText(str){
+  if (!str) return "";
+  str = str.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  str = str.replace(/\u00A0/g, " ");          // NBSP
+  str = str.replace(/\t/g, "    ");           // tab -> spaces
+  // убрать пробелы в конце строк
+  str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g, "")).join("\n");
+  // слишком много пустых строк -> максимум 2 подряд
+  str = str.replace(/\n{4,}/g, "\n\n\n");
+  return str;
+}
+
+function autosave(){
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
+function load(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return;
+  try{
+    const parsed = JSON.parse(raw);
+    if(parsed && Array.isArray(parsed.rows)) data = parsed;
+  }catch(e){}
+}
+
+/* ===== синхронизация высот внутри ОПЕРАЦИИ =====
+   Мы делаем так: три textarea в одной операции -> одинаковая высота по max(scrollHeight).
+*/
+let eqTimer = null;
+function scheduleEqualize(){
+  if(eqTimer) cancelAnimationFrame(eqTimer);
+  eqTimer = requestAnimationFrame(equalizeAll);
+}
+
+function equalizeAll(){
+  const cards = list.querySelectorAll(".opCard");
+  cards.forEach(card => {
+    const ta = card.querySelectorAll("textarea");
+    if(ta.length !== 3) return;
+
+    // сброс
+    ta.forEach(t => t.style.height = "auto");
+
+    let maxH = 0;
+    ta.forEach(t => { maxH = Math.max(maxH, t.scrollHeight); });
+
+    // +2 чтобы не резало последнюю строку
+    ta.forEach(t => t.style.height = (maxH + 2) + "px");
+  });
+}
+
+/* ===== рендер ===== */
+function render(){
+  list.innerHTML = "";
+
+  data.rows.forEach((row, idx) => {
+    const card = document.createElement("section");
+    card.className = "opCard";
+
+    const head = document.createElement("div");
+    head.className = "opHead";
+
+    const no = document.createElement("div");
+    no.className = "opNo";
+    no.textContent = `Операция ${idx + 1}`;
+
+    const btns = document.createElement("div");
+    btns.className = "opBtns";
+
+    const up = document.createElement("button");
+    up.className = "miniBtn";
+    up.textContent = "↑";
+    up.title = "Поднять";
+    up.onclick = () => moveRow(idx, -1);
+
+    const down = document.createElement("button");
+    down.className = "miniBtn";
+    down.textContent = "↓";
+    down.title = "Опустить";
+    down.onclick = () => moveRow(idx, +1);
+
+    const del = document.createElement("button");
+    del.className = "miniBtn del";
+    del.textContent = "✕";
+    del.title = "Удалить";
+    del.onclick = () => deleteRow(idx);
+
+    btns.appendChild(up);
+    btns.appendChild(down);
+    btns.appendChild(del);
+
+    head.appendChild(no);
+    head.appendChild(btns);
+
+    const cols = document.createElement("div");
+    cols.className = "opCols";
+
+    cols.appendChild(makeCol("Содержание операции", "op", idx, row.op, "Содержание операции… (слово-в-слово)"));
+    cols.appendChild(makeCol("Технические требования (ТТ)", "tt", idx, row.tt, "ТТ (если есть)…"));
+    cols.appendChild(makeCol("Работы при отклонениях", "dev", idx, row.dev, "Работы при отклонениях (если есть)…"));
+
+    card.appendChild(head);
+    card.appendChild(cols);
+    list.appendChild(card);
+  });
+
+  scheduleEqualize();
+  setStatus(`Операций: ${data.rows.length}. Автосохранение включено.`);
+}
+
+function makeCol(title, key, idx, value, placeholder){
+  const box = document.createElement("div");
+  box.className = "colBox";
+
+  const lab = document.createElement("div");
+  lab.className = "colLabel";
+  lab.textContent = title;
+
+  const ta = document.createElement("textarea");
+  ta.placeholder = placeholder;
+  ta.value = value || "";
+
+  // вставка: только чистый текст
+  ta.addEventListener("paste", (e) => {
+    e.preventDefault();
+    const cd = e.clipboardData || window.clipboardData;
+    const plain = cd ? cd.getData("text/plain") : "";
+    const clean = sanitizeText(plain);
+
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const before = ta.value.slice(0, start);
+    const after = ta.value.slice(end);
+    ta.value = before + clean + after;
+
+    // курсор после вставки
+    const pos = (before + clean).length;
+    ta.selectionStart = ta.selectionEnd = pos;
+
+    data.rows[idx][key] = ta.value;
+    autosave();
+    setStatus(`Вставлено (только текст). Операция ${idx + 1}.`);
+    scheduleEqualize();
+  });
+
+  ta.addEventListener("input", () => {
+    data.rows[idx][key] = ta.value;
+    autosave();
+    setStatus(`Сохранено (авто). Операция ${idx + 1}.`);
+    scheduleEqualize();
+  });
+
+  box.appendChild(lab);
+  box.appendChild(ta);
+  return box;
+}
+
+/* ===== управление строками ===== */
+function addRow(){
+  data.rows.push({ op:"", tt:"", dev:"" });
+  render();
+  autosave();
+  setStatus("Добавлена новая операция.");
+}
+function deleteRow(idx){
+  data.rows.splice(idx, 1);
+  if(data.rows.length === 0) data.rows.push({ op:"", tt:"", dev:"" });
+  render();
+  autosave();
+  setStatus("Операция удалена.");
+}
+function moveRow(idx, dir){
+  const j = idx + dir;
+  if(j < 0 || j >= data.rows.length) return;
+  const tmp = data.rows[idx];
+  data.rows[idx] = data.rows[j];
+  data.rows[j] = tmp;
+  render();
+  autosave();
+  setStatus("Операция перемещена.");
+}
+
+/* ===== экспорт/импорт/печать ===== */
+function saveManual(){
+  autosave();
+  setStatus("Сохранено вручную.");
+}
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "techcard.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  setStatus("Экспорт JSON готов.");
+}
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const parsed = JSON.parse(reader.result);
+      if(!parsed || !Array.isArray(parsed.rows)) throw new Error("bad");
+      // гарантируем структуру
+      parsed.rows = parsed.rows.map(r => ({
+        op: (r.op ?? "").toString(),
+        tt: (r.tt ?? "").toString(),
+        dev: (r.dev ?? "").toString(),
+      }));
+      data = parsed;
+      render();
+      autosave();
+      setStatus("Импорт выполнен.");
+    }catch(e){
+      setStatus("Ошибка импорта: неверный JSON.");
+    }
+  };
+  reader.readAsText(file, "utf-8");
+}
+
+/* ===== кнопки ===== */
+addRowBtn.addEventListener("click", addRow);
+saveBtn.addEventListener("click", saveManual);
+exportBtn.addEventListener("click", exportJSON);
+importInput.addEventListener("change", (e) => {
+  const f = e.target.files?.[0];
+  if(f) importJSON(f);
+  e.target.value = "";
+});
+printBtn.addEventListener("click", () => window.print());
+
+/* старт */
+load();
+render();
+
+// на ресайз тоже выравниваем
+window.addEventListener("resize", scheduleEqualize);
+</script>
+</body>
+</html>
