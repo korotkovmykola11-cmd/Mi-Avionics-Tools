@@ -1,343 +1,322 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ВУАП-1 — p0 Предварительная подготовка</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>ВУАП-1 · p0 — Технологическая карта</title>
+<style>
+  :root{
+    --bg1:#0b1a2a; --bg2:#153a5a;
+    --card:rgba(255,255,255,.08);
+    --stroke:rgba(255,255,255,.16);
+    --text:#e9f2ff; --muted:#b7c7dd;
+    --cyan:#2cf7ff; --green:#00ff9c; --amber:#ffd54f;
+    --danger:#ffb4b4;
 
-  <style>
-    :root{
-      --ink:#eaf6ff;
-      --muted:#b9cadd;
-      --accent:#21f0ff;
-      --accent2:#00ffa6;
-      --warn:#ffb4b4;
+    --radius:16px;
+    --pad:12px;
+    --rowHeadH:44px;
+    --cellMinH:120px;
+    --font:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  }
 
-      --glass: rgba(10,18,28,.72);
-      --glass2: rgba(8,14,22,.60);
-      --line: rgba(255,255,255,.10);
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:var(--font);
+    color:var(--text);
+    background:
+      radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+      radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+      linear-gradient(180deg,var(--bg1),var(--bg2));
+  }
 
-      --radius: 16px;
-      --cellPad: 12px;
-      --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  .wrap{max-width:1300px;margin:0 auto;padding:14px}
+  .card{
+    background:var(--card);
+    border:1px solid var(--stroke);
+    border-radius:18px;
+    padding:12px;
+    backdrop-filter:blur(6px);
+    box-shadow:0 18px 40px rgba(0,0,0,.25);
+  }
 
-      --rowHeadH: 44px;
-    }
+  .head{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    justify-content:space-between;
+    padding:6px 6px 10px;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    margin-bottom:10px;
+  }
+  .hLeft{min-width:0}
+  .title{
+    font-weight:950;
+    letter-spacing:.3px;
+    font-size:18px;
+    color:var(--cyan);
+    text-shadow:0 0 18px rgba(44,247,255,.18);
+  }
+  .subtitle{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:12.5px;
+    line-height:1.25;
+  }
 
-    *{box-sizing:border-box}
-    body{margin:0; font-family:var(--font); color:var(--ink);}
+  .toolbar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+  .btn{
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    padding:8px 10px;
+    border-radius:12px;
+    font-weight:800;
+    cursor:pointer;
+    user-select:none;
+  }
+  .btn:hover{border-color: rgba(44,247,255,.28)}
+  .btn.primary{
+    border-color: rgba(0,255,156,.28);
+    box-shadow: 0 0 18px rgba(0,255,156,.10);
+  }
+  .btn.ghost{
+    border-color: rgba(255,255,255,.10);
+    opacity:.9;
+  }
 
-    /* ===== фон ===== */
-    .scene{
-      min-height:100vh;
-      padding:14px;
-      position:relative;
-      overflow:hidden;
-      background:
-        radial-gradient(900px 520px at 25% 18%, rgba(120,190,255,.40), transparent 62%),
-        radial-gradient(900px 520px at 78% 22%, rgba(50,140,255,.30), transparent 62%),
-        linear-gradient(180deg, #061a2e 0%, #0b2943 54%, #061523 78%, #03110a 100%);
-    }
-    .scene::before{
-      content:"";
-      position:absolute;
-      inset:-30%;
-      pointer-events:none;
-      filter: blur(22px);
-      opacity:.9;
-      background:
-        radial-gradient(300px 160px at 20% 24%, rgba(255,255,255,.18) 0 55%, transparent 60%),
-        radial-gradient(420px 220px at 42% 16%, rgba(255,255,255,.14) 0 55%, transparent 60%),
-        radial-gradient(520px 260px at 70% 28%, rgba(255,255,255,.12) 0 55%, transparent 60%);
-      transform: rotate(-7deg);
-    }
-    .scene::after{
-      content:"";
-      position:absolute;
-      left:-10%;
-      right:-10%;
-      bottom:-12%;
-      height:38%;
-      pointer-events:none;
-      background:
-        radial-gradient(900px 300px at 25% 20%, rgba(0,255,166,.20), transparent 62%),
-        radial-gradient(900px 300px at 70% 30%, rgba(0,220,120,.18), transparent 62%),
-        linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.22) 30%, rgba(2,22,10,.92) 100%);
-    }
+  /* ===== таблица ===== */
+  .tableWrap{
+    overflow:auto;
+    max-height: calc(100vh - 170px);
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.10);
+  }
 
-    /* ===== контейнер ===== */
-    .doc{
-      max-width: 1320px;
-      margin: 0 auto;
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, var(--glass), var(--glass2));
-      border: 1px solid var(--line);
-      box-shadow: 0 30px 90px rgba(0,0,0,.62), 0 0 0 1px rgba(33,240,255,.10) inset;
-      backdrop-filter: blur(8px);
-      overflow:hidden;
-      position:relative;
-      z-index:1;
-    }
+  table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    table-layout:fixed;
+  }
 
-    /* ===== верх ===== */
-    .topbar{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px;
-      border-bottom:1px solid var(--line);
-      background: rgba(0,0,0,.14);
-      flex-wrap:wrap;
-    }
-    .docTitle{
-      font-weight:950;
-      letter-spacing:.6px;
-      color: var(--accent);
-      text-shadow: 0 0 18px rgba(33,240,255,.18);
-      font-size:16px;
-      line-height:1.15;
-    }
-    .docSub{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.25;
-    }
-    .topbar__right{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+  thead th{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background: rgba(6,14,22,.92);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    padding:12px;
+    text-align:left;
+  }
+  .thTitle{font-weight:950; color:#dff7ff;}
+  .thHint{margin-top:4px; font-size:12px; color: var(--muted);}
 
-    .btn{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--ink);
-      padding:8px 10px;
-      border-radius:12px;
-      font-weight:800;
-      cursor:pointer;
-      user-select:none;
-    }
-    .btn:hover{border-color: rgba(33,240,255,.28);}
-    .btn.primary{
-      border-color: rgba(0,255,166,.28);
-      box-shadow: 0 0 22px rgba(0,255,166,.10);
-    }
-    .btn.danger{
-      border-color: rgba(255,180,180,.28);
-      box-shadow: 0 0 22px rgba(255,160,160,.10);
-    }
+  /* 3 колонки на ПК */
+  .col-op{width:44%}
+  .col-tt{width:28%}
+  .col-dev{width:28%}
 
-    /* ===== таблица ===== */
-    .tableWrap{
-      padding:12px;
-      overflow:auto;
-      max-height: calc(100vh - 150px);
-    }
+  tbody tr{
+    display:grid;
+    grid-template-columns: 44% 28% 28%;
+    align-items:stretch;
+  }
+  tbody td{
+    display:block;
+    padding:0;
+    vertical-align:top;
+    border-right:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.08);
+  }
+  tbody td:last-child{border-right:none;}
 
-    .techTable{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      table-layout:fixed;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      overflow:hidden;
-      background: rgba(0,0,0,.10);
-    }
+  .rowHead{
+    height:var(--rowHeadH);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin: 10px 10px 8px 10px;
+    padding: 8px 10px;
+    border-radius:12px;
+    background: rgba(255,255,255,.04);
+    border:1px solid rgba(44,247,255,.12);
+  }
+  .rowNo{
+    font-weight:950;
+    color:var(--green);
+  }
+  .rowTools{display:flex; gap:6px}
+  .miniBtn{
+    padding:6px 8px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    color:#dff7ff;
+    cursor:pointer;
+    line-height:1;
+  }
+  .miniBtn:hover{border-color: rgba(44,247,255,.25)}
 
-    .techTable thead th{
-      position:sticky;
-      top:0;
-      z-index:5;
-      background: rgba(6,14,22,.92);
-      border-bottom:1px solid rgba(255,255,255,.12);
-      padding:12px;
-      text-align:left;
-      font-size:13px;
-    }
-    .thTitle{font-weight:950; color:#dff7ff;}
-    .thHint{margin-top:4px; font-size:12px; color: var(--muted);}
+  .rowSpacer{
+    height:var(--rowHeadH);
+    margin: 10px 10px 8px 10px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,.02);
+  }
 
-    /* ширины колонок (ПК) */
-    .col.op{width:45%}
-    .col.tt{width:27.5%}
-    .col.dev{width:27.5%}
+  .box{
+    margin: 0 10px 10px 10px;
+    padding: var(--pad);
+    min-height: var(--cellMinH);
+    border-radius:12px;
+    border:1px solid rgba(44,247,255,.12);
+    background: rgba(7,14,22,.45);
+    color:#eaf6ff;
+    font-size:14px;
+    line-height:1.35;
+    white-space:pre-wrap;
+    outline:none;
+    overflow:hidden;
+  }
+  .box:focus{
+    border-color: rgba(44,247,255,.35);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 18px rgba(44,247,255,.10);
+  }
+  .box:empty::before{
+    content: attr(data-ph);
+    color: rgba(185,202,221,.55);
+  }
 
-    /* строки как grid для синхронной высоты */
-    .techTable tbody tr{
-      display:grid;
-      grid-template-columns: 45% 27.5% 27.5%;
-      align-items:stretch;
-    }
-    .techTable tbody tr td{
-      display:block;
-      padding:0;
-      border-right:1px solid rgba(255,255,255,.08);
-      border-bottom:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.08);
-      min-width:0;
-    }
-    .techTable tbody tr td:last-child{border-right:none;}
+  .status{
+    margin-top:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    color:#d8f7ff;
+    padding:10px 12px;
+    border-top:1px solid rgba(255,255,255,.10);
+    opacity:.95;
+  }
+  .mini{color:var(--muted); font-size:12px}
 
-    /* шапка операции */
-    .rowNo{
-      height: var(--rowHeadH);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin: 10px 10px 8px 10px;
-      padding: 8px 10px;
-      border-radius:12px;
-      background: rgba(255,255,255,.04);
-      border:1px solid rgba(33,240,255,.12);
-    }
-    .noText{
-      font-weight:950;
-      color: var(--accent2);
-      font-size:13px;
-    }
-    .rowBtns{display:flex; gap:6px}
-    .miniBtn{
-      padding:6px 8px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color:#dff7ff;
-      cursor:pointer;
-    }
-    .miniBtn:hover{border-color: rgba(33,240,255,.25)}
+  /* ===== МОБИЛА: 1 колонка, но строки остаются синхронными ===== */
+  .mobileTabs{
+    display:none;
+    gap:8px;
+    padding:10px 6px 0;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:10px 10px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    font-weight:900;
+    cursor:pointer;
+    user-select:none;
+  }
+  .tab.active{
+    border-color: rgba(44,247,255,.30);
+    box-shadow:0 0 18px rgba(44,247,255,.10);
+  }
 
-    .rowNoSpacer{
-      height: var(--rowHeadH);
-      margin: 10px 10px 8px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.06);
-      background: rgba(255,255,255,.02);
+  @media (max-width: 900px){
+    /* показываем переключатель */
+    .mobileTabs{display:flex;}
+    /* делаем таблицу “в один столбец”, но физически оставляем 3 td, просто скрываем 2 */
+    tbody tr{
+      grid-template-columns: 1fr;
     }
+    tbody td{
+      border-right:none;
+    }
+    /* заголовки таблицы на мобиле скрываем, чтобы не занимали место */
+    thead{display:none;}
+    .col-op,.col-tt,.col-dev{width:auto;}
+    td.hideMobile{display:none;}
+  }
 
-    .cellBox{
-      margin: 0 10px 10px 10px;
-      padding: var(--cellPad);
-      min-height: 140px;
-      border-radius:12px;
-      border:1px solid rgba(33,240,255,.12);
-      background: rgba(7,14,22,.45);
-      color:#eaf6ff;
-      font-size:14px;
-      line-height:1.35;
-
-      /* ВАЖНО: чтобы не сжималось в “узкие буквы” */
-      white-space: pre-wrap;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-
-      outline:none;
-      overflow:hidden;
-    }
-    .cellBox:focus{
-      border-color: rgba(33,240,255,.35);
-      box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 24px rgba(33,240,255,.10);
-    }
-    .cellBox:empty::before{
-      content: attr(data-placeholder);
-      color: rgba(185,202,221,.55);
-    }
-
-    .statusbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-top:1px solid var(--line);
-      background: rgba(0,0,0,.14);
-      color:#d8f7ff;
-      font-size:12px;
-    }
-    .mini{color:var(--muted);}
-
-    /* ===== мобилка: в столбик ===== */
-    @media (max-width: 980px){
-      .techTable thead{display:none;} /* чтобы не съедало место */
-      .techTable tbody tr{
-        grid-template-columns: 1fr;
-      }
-      .techTable tbody tr td{
-        border-right:none;
-      }
-      .rowNo, .rowNoSpacer{
-        margin-top:10px;
-      }
-      .cellBox{min-height: 150px;}
-    }
-
-    /* печать */
-    @media print{
-      body{background:#fff}
-      .scene{padding:0; background:#fff}
-      .scene::before,.scene::after{display:none}
-      .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      .topbar,.statusbar{display:none}
-      .tableWrap{max-height:none; overflow:visible; padding:0}
-      .cellBox{color:#000; background:#fff; border:1px solid #ccc}
-      .rowNo,.rowNoSpacer{border:1px solid #ddd; background:#fff}
-    }
-  </style>
+  @media print{
+    body{background:#fff;color:#000}
+    .wrap{padding:0}
+    .card{box-shadow:none;background:#fff;border:none}
+    .toolbar,.mobileTabs,.status{display:none}
+    .tableWrap{max-height:none; overflow:visible; border:none}
+    thead th{position:static;background:#fff;color:#000}
+    .box{color:#000;background:#fff;border:1px solid #ccc}
+    .rowHead,.rowSpacer{border:1px solid #ddd;background:#fff}
+  }
+</style>
 </head>
 
 <body>
-  <div class="scene">
-    <div class="doc">
-
-      <header class="topbar">
-        <div class="topbar__left">
-          <div class="docTitle">ТЕХНОЛОГИЧЕСКАЯ КАРТА (САУ)</div>
-          <div class="docSub">p0 — Предварительная подготовка / проверка под током</div>
-        </div>
-
-        <div class="topbar__right">
-          <button id="addRowBtn" class="btn primary">+ Добавить операцию</button>
-          <button id="printBtn" class="btn danger">Печать</button>
-        </div>
-      </header>
-
-      <section class="tableWrap">
-        <table class="techTable">
-          <thead>
-            <tr>
-              <th class="col op">
-                <div class="thTitle">Содержание операции</div>
-                <div class="thHint">Текст слово-в-слово. Вставка из Word — чистым текстом.</div>
-              </th>
-              <th class="col tt">
-                <div class="thTitle">Технические требования (ТТ)</div>
-                <div class="thHint">Если ТТ нет — оставляй пусто.</div>
-              </th>
-              <th class="col dev">
-                <div class="thTitle">Работы при отклонениях от ТТ</div>
-                <div class="thHint">Если не требуется — пусто.</div>
-              </th>
-            </tr>
-          </thead>
-
-          <tbody id="tbody"></tbody>
-        </table>
-      </section>
-
-      <footer class="statusbar">
-        <div id="statusText">Готово.</div>
-        <div class="mini">Подсказка: Shift+Enter — перенос строки.</div>
-      </footer>
-
+<div class="wrap">
+  <div class="card">
+    <div class="head">
+      <div class="hLeft">
+        <div class="title">Технологическая карта (САУ) — p0</div>
+        <div class="subtitle">Синхронные строки “Операция / ТТ / Отклонения”. Открыл файл — всё на месте. Работает офлайн.</div>
+      </div>
+      <div class="toolbar">
+        <button class="btn primary" id="btnSaveFile">Сохранить копию</button>
+        <button class="btn ghost" id="btnPrint">Печать</button>
+      </div>
     </div>
-  </div>
 
-  <script>
-    // ====== ДАННЫЕ ВШИТЫ В ФАЙЛ (IMPORT НЕ НУЖЕН) ======
-    let data = {
-      rows: [
-        {
-          op: `Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
+    <div class="mobileTabs" id="mobileTabs">
+      <div class="tab active" data-mode="op">Операция</div>
+      <div class="tab" data-mode="tt">ТТ</div>
+      <div class="tab" data-mode="dev">Отклонения</div>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-op">
+              <div class="thTitle">Содержание операции</div>
+              <div class="thHint">Текст слово-в-слово.</div>
+            </th>
+            <th class="col-tt">
+              <div class="thTitle">Технические требования (ТТ)</div>
+              <div class="thHint">Напротив соответствующего пункта.</div>
+            </th>
+            <th class="col-dev">
+              <div class="thTitle">Работы при отклонениях</div>
+              <div class="thHint">Напротив соответствующего пункта.</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="status">
+      <div id="statusText">Готово.</div>
+      <div class="mini">Подсказка: на телефоне переключай вкладки “Операция / ТТ / Отклонения”.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* =========================
+   1) ТВОИ ДАННЫЕ — ВНУТРИ КОДА
+   ========================= */
+const RAW_OP = `Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
 
 - установите автомат защиты "САУ СИГ-НАЛ" на левом пульте АЗС в положение "ВКЛЮЧЕНО";
 
@@ -356,7 +335,7 @@
 
 - аналогично выполните проверку, отключая и включая источник питать переменным током;
 
-- нажмите, не отпуская, контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута
+- нажмите, не отпуская, контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута 
 24-7100-70, предварительно подключив его к контрольному разъему САУ (или на панели контрольных разъемов САУ, размещенной слева сзади си-дения оператора);
 
 - задайте от пульта контроля ДИСС-15 задачу № 3;
@@ -436,195 +415,616 @@
 
 - нажмите кнопку-табло "ВИСЕНИЕ" на пульте ПВМ;
 
-- нажмите кнопку-табло "МАРШРУТ" на пульте ПВМ;`,
-          tt: `Напряжение источников по бортовым вольтметрам должно быть в пределах:
-- постоянного тока (27 -+2, 7) В;
-- переменного тона (36 -+2), 400 -+8 Гц.
+- нажмите кнопку-табло "МАРШРУТ" на пульте ПВМ;
+
+- задайте от пульта контроля ДДИСС-15 за-дачу № 3;
+
+- нажмите на кнопку-табло "ВЫСОТА" на пульте ПВП;
+
+- нажмите на кнопку-табло "МАРШРУТ" на пульте ПВМ;
+
+- нажмите кнопку-табло "ВЫСОТА" на пульте ПВП;
+
+ нажмите на  кнопку-табло "ВИСЕНИЕ";
+
+- нажмите на кнопку-табло "ОТКЛ," на пульте ПВМ;
+
+- повторите проверку,  производя отключение кнопкой "ОТКЛ. АП" на ручке управле-ния вертолетом летчика;
+
+- отпустите контрольный выключатель "ГОТОВНОСТЬ ДИСС"
+
+Проверьте работу механизмов согласования:
+А. Канала направления:
+- установите на пульте управления курсовой системы переключатель режимов работы в положение "ЗК", на счетчике магнитного склонения коррекционного механизма показание, равное нулю, и нажмите кнопку согласования на пульте управления;
+- установите на счетчике магнитных склонений коррекционного механизма со знаком "+" ("-")  значение 50°-60°,  нажмите кнопку согласования и удерживайте ее в нажатом состоянии;
+
+- отпустите кнопку согласования
+
+Б. Канал крена:
+- отклоните в пределах амортизаторов левую гировертикаль в сторону правого (левого) крена
+
+В. Канал тангажа:
+- отклоните в пределах амортизаторов левую гировертикаль на пикирование (кабрирование).
+
+Проверьте прохождение сигнала угла и высоты
+А. Канал направления:
+- установите педали нейтрально;
+- снимите ноги с педалей, нажмите кнопка-лампочка "ВКЛ." на пульте управления канала направления;
+
+- поверните шкалу ручки центровки на пульте управления канала направления по ча-совой стрелке (против часовой стрелки) на три деления (что соответствует рассогласова-нию в 3°);
+
+- поставьте ноги на педали;
+
+- снимите ноги с педалей
+- поверните шкалу ручки центровки на пульте удавления канала направления по (про-тив) часовой стрелке на 3°;
+
+- выключатель демпфера педалей установите в положение "ОТКЛ.";
+
+- включите демпфер педалей;
+
+- поверните ручку центровки на пульте управления канала направления по часовой стрелке  (против часовой стрелки) на 3°;
+
+- подсоедините управление оператора;
+
+- наймите кнопку -лампочка "ОТКЛ." на пульте управления;
+
+Б. Канал высоты:
+- нажмите на пульте управления канала высоты кнопку- лампочку "ВКЛ."
+
+- нажмите на пульте управления канала высоты переключатель "КОНТРОЛЬ" вверх (вниз);
+
+- нажмите кнопку- лампочку "ОТКЛ." на пульте управления;
+
+В. Канал крена
+- нажмите на пульте управления канала крена кнопку -лампочку "ВКЛ.";
+
+- поверните шкалу ручки центровки на пульте управления канала крена по часовой стрелке (против часовой стрелки) на пять делений (что соответствует рассогласованию в 5°);
+
+- нажмите кнопку триммера на ручке управ-ления вертолетом летчика;
+
+- нажмите кнопку-лампочку "ОТКЛ" на пульте управления канала крена
+
+Г, Канал тангажа
+- нажмите на пульте управления канала тангажа кнопку-табло "ВКЛ.";
+
+- поверните шкалу ручки центровки на пульте управления канала тангажа по часовой стрелке  (против часовой стрелки) на три де-ления (что соответствует рассогласованию в 3 градуса).
+
+- нажмите кнопку триммера на ручке управления вертолетом летчика;
+
+- нажмите кнопку- лампочку "ОТКЛ," на пульте управления;
+
+Проверьте работоспособность КДК, для че-го:
+- нажмите кнопку -лампочку "ВКЛ." на пульте управления канала крена;
+
+- резко отклоните ручку управления вертолетом летчика вправо (влево);
+
+- нажмите кнопку-лампочку "ОТКЛ." да пульте управления канала крена.
+
+Проверьте работоспособность КДТ, для чего:
+
+- нажмите кнопку- лампочку "ВКЛ." на пульте управления канала тангажа.
+
+- отклоните ручку управления вертолетом летчика на себя (от себя), не нажимая кнопку триммера;
+
+- нажмите кнопку-лампочку "ОТКЛ" на пульте управления канала тангажа;
+
+Проверьте прохождение сигналов скорости и перемещения в продольном и поперечном направлениях, для чего:
+
+- нажмите на кнопку-лампочку "ВКЛ." на пультах управления "К" и "Т";
+
+- задайте от пульта контроля ДИСС-15 за-дачу № 2;
+
+- нажмите, не отпуская, контрольный вы-ключатель "ГОТОВНОСТЬ ДИСС" и "КОН-ТРОЛЬ ДИСС" на панели технологического жгута;
+
+- нажмите, не отпуская, на кнопку-табло "ВИСЕНИЕ" пульта ПВМ;
+
+- отпустите кнопку -табло "ВИСЕНИЕ";
+
+- нажмите на кнопку-табло "ОТКЛ." на пульте ПВМ;
+
+- отпустите контрольные выключатели "ГОТОВНОСТЬ ДИСС" и "КОНТРОЛЬ ДИСС"
+
+Проверьте прохождение сигнала вертикальной скорости и сигнала по геометрической высоте, для чего:
+- задайте от пульта контроля ДИСС-15 задачу № 2;
+- нажмите, не отпуская,  контрольные выключатели "ГОТОВНОСТЬ ДИСС" и "КОНТРОЛЬ ДИСС" на панели технологического жгута;
+- надавите на кнопку-табло "ВЫСОТА" на пульте ПВП;
+
+- задайте от пульта контроля ДИСС-15 за-дачу № 3;
+
+- нажмите на кнопку-табло "ОТКЛ." пульта ПВП;
+
+- нажмите, не отпуская,  на кнопку "КОНТРОЛЬ" 
+указателя радиовысотомера;
+
+- через 2-3 мин натайте на кнопку-табло "ВЫСОТА" пульта ПВП;
+
+- отпустите кнопку "КОНТРОЛЬ" указа¬теля радиовысотомера и нажмите на кнопку-табло "ОТКЛ." пульта ПВП;
+
+- отпустите контрольные выключатели "ГОТОВНОСТЬ ДИСС" и"КОНТРОЛЬ ДИСС" на панели технологического жгута
+Проверьте прохождение сигнала ЗПУ. для чего:
+- установите режим работы курсовой системы "ЗК";
+- установите на Коррекционном меха¬низме курсовой системы магнитное склонение, равное "0";
+- нажмите кнопку согласования на пуль¬те управления курсовой системы;
+- установите на шкале ЗПУ угол, рав¬ный "0";
+- задайте от пульта контроля ДИСС-15 задачу № 3;
+- нажмите,  не отпуская, контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута;
+- нажмите на кнопки-лампочки "ВКЛ" на пультах управления "К" и "Н";
+
+- задайте на пультах управления "Н" и "К" угол рассогласования 4° влево (вправо);
+
+- нажмите на кнопку-табло "МАРШРУТ" на пульте ПВМ;
+
+- нажмите на кнопку-лампочку "ОТКЛ." пульта управления "К" и кнопку-табло "ОТКЛ" пульта ПВМ:
+
+- на индикаторе путевой скорости и угла сноса аппаратуры ДИСС-15 (на при¬борной доске летчика) установите переключатель "Р-К" в положение "К";
+
+- нажмите на кнопку -лампочку "ВКЛ." пульта управления "К" и кнопку-табло "МАРШРУТ" пульта ПВМ.
+
+- нажмите на кнопку-лампочку "ОТКЛ.'' пульта управления "К" и кнопку-табло пульта управления ПВМ.
+
+- поставьте переключатель
+ "Р-К" в положение "Р";
+- вращением ручки ЗПУ по (против) часовой стрелке задайте угол 10° от "0";
+
+- нажмите на кнопку-лампочку   "ВКЛ." На пульте управления "К" и "МАРШРУТ" на пульте управления ПВМ;
+
+- нажмите кнопку "ОТКЛ. АП" на ручке управления вертолетом летчика;
+
+- отпустите контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута.
+`;
+
+const RAW_TT = `
+Напряжение источников по бортовым вольтметрам должно быть в пределах: - посто-янного тока (27 -+2, 7) В; - переменного тона (36 -+2), 400 -+8 Гц.
 
 При включенном питании, включенных и нормально функционирующих системах кнопки-табло на пультах САУ не должны го-реть. Давление в гидросистеме должно быть в пределах (75-85) кгс/см2.
 
-Должны гореть кнопки-табло "ОТКЛ. " на пультах ПВМ, ПВП и кнопки-лампочки "ОТКЛ" на пультах   "Н", "К", "Т", "В".`,
-          dev: `Обеспечьте нормальную работу источни-ков питания.
+Должны гореть кнопки-табло "ОТКЛ. " на пультах ПВМ, ПВП и кнопки-лампочки "ОТКЛ" на пультах   "Н", "К", "Т", "В".
 
-Определите причину и устраните дефект в соответствии с рекомендациями инструкции по эксплуатации САУ-В24-1.`
-        }
-      ]
-    };
+Должны погаснуть кнопки-табло "ОТКЛ. " на пультах ПВМ, ПВП и  кнопки-лампочки "ОТКЛ. "на пульте "Н", "К", "Т", "В".
 
-    const statusText = document.getElementById("statusText");
-    const tbody = document.getElementById("tbody");
-    const addRowBtn = document.getElementById("addRowBtn");
-    const printBtn = document.getElementById("printBtn");
+При отключенном источнике питания пе-ременным током должны гореть кнопки-табло "ОТКЛ. " на пультах САУ и наоборот.
 
-    function setStatus(msg){ statusText.textContent = msg; }
+Должно гореть табло "МАРШРУТ".
 
-    // ===== анти-Word: чистим вставку =====
-    function sanitizeText(str){
-      if (!str) return "";
-      str = str.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-      str = str.replace(/\u00A0/g, " ");
-      str = str.replace(/\t/g, "    ");
-      str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g, "")).join("\n");
-      str = str.replace(/\n{5,}/g, "\n\n\n");
-      return str;
+Табло "МАРШРУТ" должно погаснуть. При нажатой кнопке согласования на пульте канала направления горит кнопка-лампочка "ОТКЛ. "
+
+Должна гореть кнопка-табло "ОТКЛ. " на пульте ПВМ.
+
+Должна погаснуть кнопка-табло "ОТКЛ. " на пульте ПВМ.
+
+Должна гореть кнопка-табло "МАРШРУТ".
+
+Должна погаснуть кнопка-табло "МАРШ-РУТ" пульта ПВМ приблизительно через (11 ±4) c
+
+Должны гореть кнопки-табло "ОТКЛ. " на пультах ПВМ, ПВП.
+
+Должна  гореть кнопка-табло "ВИСЕНИЕ" на пульте ПВМ.
+
+Должна погаснуть кнопка-табло "ВИСЕНИЕ" на пульте ПВМ.
+
+На пульте ПВП должна гореть кнопка-табло "ВЫСОТА", на пульте управления "В" - кнопка- лампочка "ВКЛ.". Стрелка индикатора нулевого пульта управления "В" отклонится вниз.
+
+Кнопка-табло "ВЫСОТА" пульта ПВП должна погаснуть, а стрелка нулевого инди-катора вернется в среднее положение.
+
+Кнопка-лампочка  "ВКЛ. " на пульте управ-ления канала высота должна погаснуть. В мо-мент нажатия на кнопку  фрикциона загорается  кнопка- лампочка "ОТКЛ. "
+
+Должно загораться  кнопка-лампочка "ВКЛ" пульта управления канала  высоты.
+
+Кнопка-лампочка "ВКЛ" на пульте управле-нии канала высоты должна погаснуть.
+
+Должна загореться кнопке -лампочка "ВКЛ. " пульта управления канала тангажа.
+
+Должна загореться лампа "СКОРОСТЬ CTAБИЛИЗИРОВАНА".
+
+Лампа "СКОРОСТЬ СТАБИЛИЗИРОВАНА" должна погаснуть.
+
+загореться лампа "СКОРОСТЬ СТАБИЛИ-ЗИРОВАНА".
+
+Кнопка -лампочка "ВКЛ. " на пульте управ-ления канала  тангажа и лампочка "СКОРОСТЬ СТАБИЛИЗИРОВАНА" должны погаснуть.
+
+ПРИМЕЧАНИЕ: допускается погасание кнопки -лампочки "ВКЛ. " пульта управления   "В*.
+На пульте ПВП должно гореть табло "ОТКЛ. "
+
+Кнопка-лампочка "ВКЛ. " должны 
+загореться на всех пультах управления в после-довательности, соответствующей нажатию.
+
+Соответствующая кнопка –лампочка "ВКЛ." должна погаснуть.
+
+Кнопка -лампочка "ВКЛ. " на всех пуль-тах  управления должны гореть.
+
+Кнопка-лампочка "ВКЛ." На всех пультах управления должны погаснуть.
+
+Должна загореться кнопка- лампочка "ВКЛ." пульта управления канала высоты.
+
+Должно гореть табло "ВИСЕНИЕ".
+
+Табло "ВИСЕНИЕ" должно погаснуть.
+
+Табло "ВИСЕНИЕ" должно погаснуть.
+
+Должны загореться кнопка-табло "ВЫСОТА" пульта ПВП и кнопка-лампочка "ВКЛ. " пульта управления "В".
+
+Кнопка-табло "ВЫСОТА" на пульте ПВП и   кнопка-лампочка "ВКЛ. " на пульте управле-ния "В" должны погаснуть.
+
+Кнопка-табло "ВЫСОТА" на пульте ПВП и   кнопка-лампочка "ВКЛ." на пульте управле-ния "В" должны погаснуть.
+
+Должно загореться табло "ВИСЕНИЕ".
+
+Продолжает гореть табло "ВИСЕНИЕ", а табло "МАРШРУТ" не должно загораться (при нажатии кнопки-табло "МАРШРУТ" горит кнопка-табло "ОТКЛ.. ").
+
+При скорости wx>50 км/ч должно погас-нуть табло "ВИСЕНИЕ".
+
+Должны загореться кнопка-табло "ВЫСОТА" пульта ПВП и кнопка-лампочка "ВКЛ. " пульта управления: "В".
+
+Должна загореться кнопка-табло "МАРШРУТ" и погаснуть кнопка-табло "ВЫСОТА".
+
+Кнопка-табло "ВЫСОТА" не должна заго-раться (при нажатой кнопке-табло "ВЫСОТА" горит кнопка-табло "ОТКЛ." пульта ПВП).
+
+Кнопка-табло "ВИСЕНИЕ" не должна 
+загораться. Кнопка-табло "МАРШРУТ" горит (при нажатой кнопке-табло "ВИСЕНИЕ" 
+горит кнопка-табло "ОТКЛ." пульта ПВМ).
+
+Кнопка-табло "МАРШРУТ" должна погас-нуть.
+
+Сигнализация при отключении должна 
+соответствовать требованиям предыдущей проверки.
+
+Шкала индикатора РМИ-2 на приборной доске летчика должна отклониться в сторону увеличения (уменьшения) курса На пульте управления канала направления шкалы ручки центровки должна вращаться по часовой стрелке (против часовой стрелки).
+
+На пульте управления канала крена шкала ручки центровки должна вращаться по часо-вой стрелке ( против часовой стрелки ).
+
+На пульте управления канала тангажа шкала ручки центровки должна вращаться по часовой стрелке (против часовой стрелки).
+
+Должна загореться кнопка-лампочка "ВКЛ." на пульте управления. Подвижный индекс нулевого индикатора на пульте управления должен находиться в среднем положении.
+`;
+
+const RAW_DEV = `
+Обеспечьте нормальную работу источни-ков питания.
+
+Определите причину в устраните дефект в соответствии с рекоменда¬циями инструкции по эксплуатации САУ-В24-1.
+
+1. Проверьте наличие цепи питания посто-янным и переменным током
+2. Замените неисправные пульты
+
+Замените пульт ПВП на исправный.
+
+Замените пульт ПВП.
+
+I. Проверьте исправность кнопки 
+фрикциона 
+2. Замените пульт управления  канала высоты.
+
+Проверьте исправность  элементов (кнопка, реле) схемы стыковки прибора КЗСП с БСГ и пульта управления канала тангажа.
+
+Проверьте исправность реле включения   гидроклапана канала тангажа.
+
+1. Проверьте исправность лампы и в слу-чае выхода из строя замените ее
+2. Замените пульт управления соответ-ствующего накала.
+
+Замените пульт управления соответству-ющего канала.
+
+1. Проверьте исправность кнопки "ОТКЛ. АП"
+2. Замените пульт управления соответ-ствующего канала.
+
+Замените пульт ПВП.
+
+Замените пульт управления "В" на исправ-ный Замените пульт ПВП.
+
+Проверьте исправность курсовой системы
+1. Проверьте вертолетный жгут пульта управления канала направления (штырьки 20, 21, 22)
+2. Замените пульт управления.
+`;
+
+/* =========================
+   2) РАЗБИВКА НА “ПУНКТЫ” И СИНХРОНИЗАЦИЯ
+   ========================= */
+const LS_KEY = "vuap_p0_sync_v1";
+
+const tbody = document.getElementById("tbody");
+const statusText = document.getElementById("statusText");
+
+function setStatus(msg){ statusText.textContent = msg; }
+
+function normalizeText(s){
+  if(!s) return "";
+  return s
+    .replace(/\r\n/g,"\n").replace(/\r/g,"\n")
+    .replace(/\u00A0/g," ")
+    .replace(/[ \t]+\n/g,"\n")
+    .trim();
+}
+
+/* делаем шаги:
+   - новая строка начинается с "-", "–", "•" => новый пункт
+   - или заголовки типа "Проверьте..." тоже отдельным пунктом, если перед ними пусто
+   - если текста мало, режем по двойным переносам
+*/
+function splitSteps(text){
+  const t = normalizeText(text);
+  if(!t) return [];
+
+  const lines = t.split("\n");
+  const steps = [];
+  let buf = [];
+  let prevEmpty = true;
+
+  function push(){
+    const out = buf.join("\n").trim();
+    if(out) steps.push(out);
+    buf = [];
+  }
+
+  for(const ln of lines){
+    const isEmpty = ln.trim()==="";
+    const isBullet = /^(\s*[-–•]\s+)/.test(ln);
+    const isHeader = prevEmpty && !isBullet && ln.trim().length>0 && /^(Проверьте|Проверить|Проверка|ПРИМЕЧАНИЕ|А\.|Б\.|В\.|Г,|Г\.)/i.test(ln.trim());
+
+    if(isBullet || isHeader){
+      push();
+      buf.push(ln);
+    }else{
+      buf.push(ln);
     }
-    function insertPlainTextAtCursor(text){
-      const sel = window.getSelection();
-      if (!sel || sel.rangeCount === 0) return;
-      const range = sel.getRangeAt(0);
-      range.deleteContents();
-      const node = document.createTextNode(text);
-      range.insertNode(node);
-      range.setStartAfter(node);
-      range.setEndAfter(node);
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }
+    prevEmpty = isEmpty;
+  }
+  push();
 
-    // ===== синхронная высота 3 колонок =====
-    let eqTimer = null;
-    function scheduleEqualize(){
-      if(eqTimer) cancelAnimationFrame(eqTimer);
-      eqTimer = requestAnimationFrame(equalizeAllRows);
-    }
-    function equalizeAllRows(){
-      const rows = tbody.querySelectorAll("tr");
-      rows.forEach(tr => {
-        const boxes = tr.querySelectorAll(".cellBox");
-        if (boxes.length !== 3) return;
+  // если получилось слишком мало — режем по двойным переносам
+  if(steps.length < 3){
+    return t.split(/\n{2,}/).map(x=>x.trim()).filter(Boolean);
+  }
+  return steps;
+}
 
-        boxes.forEach(b => b.style.height = "auto");
-        let maxH = 0;
-        boxes.forEach(b => { maxH = Math.max(maxH, b.scrollHeight); });
-        boxes.forEach(b => b.style.height = (maxH + 2) + "px");
-      });
-    }
+function autosave(state){
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+}
+function autoload(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return null;
+  try{
+    const st = JSON.parse(raw);
+    if(st && Array.isArray(st.rows)) return st;
+  }catch(e){}
+  return null;
+}
 
-    // ===== рендер =====
-    function render(){
-      tbody.innerHTML = "";
+/* =========================
+   3) СОСТОЯНИЕ (встроенный текст -> строки)
+   ========================= */
+function buildInitialState(){
+  const opSteps  = splitSteps(RAW_OP);
+  const ttSteps  = splitSteps(RAW_TT);
+  const devSteps = splitSteps(RAW_DEV);
 
-      data.rows.forEach((row, idx) => {
-        const tr = document.createElement("tr");
+  const n = Math.max(opSteps.length, ttSteps.length, devSteps.length, 1);
 
-        const tdOp  = document.createElement("td");
-        const tdTT  = document.createElement("td");
-        const tdDev = document.createElement("td");
+  // чтобы ничего не терялось: если шагов меньше — остаток сливаем в последний
+  function getStep(arr, i){
+    if(i < arr.length) return arr[i];
+    return "";
+  }
 
-        tdOp.appendChild(makeCell("op", idx, row.op, "Содержание операции…"));
-        tdTT.appendChild(makeCell("tt", idx, row.tt, "Технические требования (если есть)…"));
-        tdDev.appendChild(makeCell("dev", idx, row.dev, "Работы при отклонениях от ТТ (если есть)…"));
+  const rows = [];
+  for(let i=0;i<n;i++){
+    rows.push({
+      op: getStep(opSteps,i),
+      tt: getStep(ttSteps,i),
+      dev:getStep(devSteps,i),
+    });
+  }
 
-        tr.appendChild(tdOp);
-        tr.appendChild(tdTT);
-        tr.appendChild(tdDev);
+  // если у кого-то шагов больше n — всё равно не случится, потому что n=max
+  return { rows };
+}
 
-        tbody.appendChild(tr);
-      });
+let state = autoload() || buildInitialState();
 
-      scheduleEqualize();
-      setStatus(`Операций: ${data.rows.length}.`);
-    }
+/* =========================
+   4) РЕНДЕР + РОВНЫЕ ВЫСОТЫ
+   ========================= */
+let eqTimer = null;
+function scheduleEqualize(){
+  if(eqTimer) cancelAnimationFrame(eqTimer);
+  eqTimer = requestAnimationFrame(equalizeAllRows);
+}
+function equalizeAllRows(){
+  const trs = tbody.querySelectorAll("tr");
+  trs.forEach(tr=>{
+    const boxes = tr.querySelectorAll(".box");
+    if(boxes.length!==3) return;
+    boxes.forEach(b=>b.style.height="auto");
+    let maxH = 0;
+    boxes.forEach(b=>{ maxH = Math.max(maxH, b.scrollHeight); });
+    boxes.forEach(b=>{ b.style.height = (maxH+2)+"px"; });
+  });
+}
 
-    function makeCell(key, idx, value, placeholder){
-      const wrap = document.createElement("div");
+function sanitizeText(str){
+  if (!str) return "";
+  str = str.replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  str = str.replace(/\u00A0/g," ");
+  str = str.replace(/\t/g,"    ");
+  str = str.split("\n").map(l=>l.replace(/[ \u00A0]+$/g,"")).join("\n");
+  str = str.replace(/\n{6,}/g,"\n\n\n");
+  return str;
+}
 
-      if(key === "op"){
-        const rowNo = document.createElement("div");
-        rowNo.className = "rowNo";
+function render(){
+  tbody.innerHTML = "";
 
-        const noText = document.createElement("div");
-        noText.className = "noText";
-        noText.textContent = `Операция ${idx + 1}`;
+  state.rows.forEach((row, idx)=>{
+    const tr = document.createElement("tr");
 
-        const btns = document.createElement("div");
-        btns.className = "rowBtns";
+    const tdOp  = document.createElement("td");
+    const tdTT  = document.createElement("td");
+    const tdDev = document.createElement("td");
 
-        const up = document.createElement("button");
-        up.className = "miniBtn";
-        up.textContent = "↑";
-        up.title = "Поднять строку";
-        up.onclick = () => moveRow(idx, -1);
+    tdOp.appendChild(makeCell("op", idx, row.op, "Содержание пункта..."));
+    tdTT.appendChild(makeCell("tt", idx, row.tt, "Технические требования для этого пункта..."));
+    tdDev.appendChild(makeCell("dev", idx, row.dev, "Отклонения/действия для этого пункта..."));
 
-        const down = document.createElement("button");
-        down.className = "miniBtn";
-        down.textContent = "↓";
-        down.title = "Опустить строку";
-        down.onclick = () => moveRow(idx, +1);
+    tr.appendChild(tdOp);
+    tr.appendChild(tdTT);
+    tr.appendChild(tdDev);
 
-        const del = document.createElement("button");
-        del.className = "miniBtn";
-        del.textContent = "✕";
-        del.title = "Удалить строку";
-        del.onclick = () => deleteRow(idx);
+    tbody.appendChild(tr);
+  });
 
-        btns.appendChild(up);
-        btns.appendChild(down);
-        btns.appendChild(del);
+  scheduleEqualize();
+  setStatus(`Строк: ${state.rows.length}. Всё сохранено в файле и дополнительно — в автосохранении браузера.`);
+}
 
-        rowNo.appendChild(noText);
-        rowNo.appendChild(btns);
-        wrap.appendChild(rowNo);
-      }else{
-        const sp = document.createElement("div");
-        sp.className = "rowNoSpacer";
-        wrap.appendChild(sp);
-      }
+function makeCell(key, idx, value, ph){
+  const wrap = document.createElement("div");
 
-      const box = document.createElement("div");
-      box.className = "cellBox";
-      box.contentEditable = "true";
-      box.dataset.placeholder = placeholder;
-      box.innerText = value || "";
+  if(key === "op"){
+    const head = document.createElement("div");
+    head.className = "rowHead";
 
-      box.addEventListener("paste", (e) => {
-        e.preventDefault();
-        const cd = e.clipboardData || window.clipboardData;
-        const plain = cd ? cd.getData("text/plain") : "";
-        const clean = sanitizeText(plain);
-        insertPlainTextAtCursor(clean);
+    const n = document.createElement("div");
+    n.className = "rowNo";
+    n.textContent = `Операция ${idx+1}`;
 
-        data.rows[idx][key] = box.innerText;
-        setStatus(`Вставлено. Операция ${idx + 1}.`);
-        scheduleEqualize();
-      });
+    const tools = document.createElement("div");
+    tools.className = "rowTools";
 
-      box.addEventListener("input", () => {
-        data.rows[idx][key] = box.innerText;
-        setStatus(`Изменено. Операция ${idx + 1}.`);
-        scheduleEqualize();
-      });
+    const up = document.createElement("button");
+    up.className = "miniBtn";
+    up.textContent = "↑";
+    up.title = "Поднять";
+    up.onclick = ()=>moveRow(idx,-1);
 
-      wrap.appendChild(box);
-      return wrap;
-    }
+    const down = document.createElement("button");
+    down.className = "miniBtn";
+    down.textContent = "↓";
+    down.title = "Опустить";
+    down.onclick = ()=>moveRow(idx,+1);
 
-    function addRow(){
-      data.rows.push({ op:"", tt:"", dev:"" });
-      render();
-      setStatus("Добавлена новая операция.");
-    }
-    function deleteRow(idx){
-      data.rows.splice(idx, 1);
-      if(data.rows.length === 0) data.rows.push({ op:"", tt:"", dev:"" });
-      render();
-      setStatus("Операция удалена.");
-    }
-    function moveRow(idx, dir){
-      const j = idx + dir;
-      if(j < 0 || j >= data.rows.length) return;
-      const tmp = data.rows[idx];
-      data.rows[idx] = data.rows[j];
-      data.rows[j] = tmp;
-      render();
-      setStatus("Операция перемещена.");
-    }
+    const del = document.createElement("button");
+    del.className = "miniBtn";
+    del.textContent = "✕";
+    del.title = "Удалить";
+    del.onclick = ()=>deleteRow(idx);
 
-    addRowBtn.addEventListener("click", addRow);
-    printBtn.addEventListener("click", () => window.print());
-    window.addEventListener("resize", scheduleEqualize);
+    tools.appendChild(up); tools.appendChild(down); tools.appendChild(del);
+    head.appendChild(n); head.appendChild(tools);
+    wrap.appendChild(head);
+  }else{
+    const sp = document.createElement("div");
+    sp.className = "rowSpacer";
+    wrap.appendChild(sp);
+  }
 
-    render();
-  </script>
+  const box = document.createElement("div");
+  box.className = "box";
+  box.contentEditable = "true";
+  box.dataset.ph = ph;
+  box.innerText = value || "";
+
+  box.addEventListener("paste",(e)=>{
+    e.preventDefault();
+    const cd = e.clipboardData || window.clipboardData;
+    const plain = cd ? cd.getData("text/plain") : "";
+    const clean = sanitizeText(plain);
+    document.execCommand("insertText", false, clean);
+    state.rows[idx][key] = box.innerText;
+    autosave(state);
+    setStatus(`Вставлено и сохранено. Операция ${idx+1}.`);
+    scheduleEqualize();
+  });
+
+  box.addEventListener("input",()=>{
+    state.rows[idx][key] = box.innerText;
+    autosave(state);
+    setStatus(`Сохранено. Операция ${idx+1}.`);
+    scheduleEqualize();
+  });
+
+  wrap.appendChild(box);
+  return wrap;
+}
+
+/* управление строками */
+function deleteRow(i){
+  state.rows.splice(i,1);
+  if(state.rows.length===0) state.rows.push({op:"",tt:"",dev:""});
+  autosave(state);
+  render();
+}
+function moveRow(i, dir){
+  const j = i+dir;
+  if(j<0 || j>=state.rows.length) return;
+  const tmp = state.rows[i];
+  state.rows[i]=state.rows[j];
+  state.rows[j]=tmp;
+  autosave(state);
+  render();
+}
+
+/* =========================
+   5) МОБИЛЬНЫЙ РЕЖИМ: показываем одну колонку, но строки те же
+   ========================= */
+let mobileMode = "op";
+const tabs = document.getElementById("mobileTabs");
+tabs.addEventListener("click",(e)=>{
+  const t = e.target.closest(".tab");
+  if(!t) return;
+  mobileMode = t.dataset.mode;
+  tabs.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active", x.dataset.mode===mobileMode));
+  applyMobileMode();
+});
+
+function applyMobileMode(){
+  const isMobile = window.matchMedia("(max-width: 900px)").matches;
+  if(!isMobile) {
+    // показать всё
+    tbody.querySelectorAll("td").forEach(td=>td.classList.remove("hideMobile"));
+    return;
+  }
+  // скрываем 2 колонки из 3
+  const rows = tbody.querySelectorAll("tr");
+  rows.forEach(tr=>{
+    const tds = tr.querySelectorAll("td");
+    if(tds.length!==3) return;
+    const map = {op:0, tt:1, dev:2};
+    const keep = map[mobileMode] ?? 0;
+    tds.forEach((td, i)=>{
+      td.classList.toggle("hideMobile", i!==keep);
+    });
+  });
+  scheduleEqualize();
+}
+
+window.addEventListener("resize", applyMobileMode);
+
+/* =========================
+   6) КНОПКИ: сохранить копию / печать
+   ========================= */
+document.getElementById("btnPrint").addEventListener("click", ()=>window.print());
+
+document.getElementById("btnSaveFile").addEventListener("click", ()=>{
+  // сохраняем текущие правки в localStorage
+  autosave(state);
+
+  // делаем “копию данных” в JSON внутри файла — скачиваем бэкап
+  const backup = {
+    savedAt: new Date().toISOString(),
+    rows: state.rows
+  };
+  const blob = new Blob([JSON.stringify(backup,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "p0_backup.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  setStatus("Скачан бэкап p0_backup.json (на всякий случай).");
+});
+
+/* старт */
+render();
+applyMobileMode();
+</script>
 </body>
 </html>
