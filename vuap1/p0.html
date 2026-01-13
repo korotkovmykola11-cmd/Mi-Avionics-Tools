@@ -4,94 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Технологическая карта — p0</title>
-  /* ===== BANK PANEL ===== */
-.bank{
-  position: fixed;
-  right: 12px;
-  top: 12px;
-  bottom: 12px;
-  width: 380px;
-  max-width: calc(100vw - 24px);
-  background: rgba(6,14,22,.92);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius: 16px;
-  box-shadow: 0 30px 90px rgba(0,0,0,.62);
-  backdrop-filter: blur(8px);
-  z-index: 50;
-  display: none;
-  overflow: hidden;
-}
-.bankHead{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px;
-  border-bottom:1px solid rgba(255,255,255,.10);
-}
-.bankTitle{font-weight:950; color: var(--accent)}
-.bankTabs{display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08)}
-.bankBody{padding:10px 12px; display:flex; flex-direction:column; gap:10px; height: calc(100% - 96px)}
-.bankRow{display:flex; gap:8px; flex-wrap:wrap}
-.bankHint{color: var(--muted); font-size:12px; line-height:1.35}
-.bankList{
-  flex:1;
-  overflow:auto;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius: 12px;
-  padding:8px;
-  background: rgba(0,0,0,.18);
-}
-.bankItem{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:12px;
-  padding:10px;
-  margin-bottom:8px;
-  background: rgba(255,255,255,.04);
-  cursor:pointer;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
-.bankItem:hover{border-color: rgba(33,240,255,.28)}
-.bankItem.used{opacity:.35}
-
-.rowTop.selected{
-  outline: 2px solid rgba(0,255,166,.45);
-  box-shadow: 0 0 0 2px rgba(0,0,0,.25) inset;
-}
-
-.modal{
-  position: fixed; inset:0;
-  background: rgba(0,0,0,.55);
-  display:none;
-  z-index: 60;
-  align-items:center; justify-content:center;
-  padding: 14px;
-}
-.modalBox{
-  width: min(820px, 100%);
-  background: rgba(6,14,22,.95);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius: 16px;
-  overflow:hidden;
-  box-shadow: 0 30px 90px rgba(0,0,0,.72);
-}
-.modalHead{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px;
-  border-bottom:1px solid rgba(255,255,255,.10);
-}
-.modalTitle{font-weight:950; color: var(--accent)}
-.modalTa{
-  width:100%; height: 50vh;
-  background: rgba(0,0,0,.20);
-  color: var(--ink);
-  border: none;
-  outline:none;
-  padding: 12px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.35;
-  white-space: pre;
-}
-.modalBtns{display:flex; justify-content:flex-end; gap:8px; padding:10px 12px; border-top:1px solid rgba(255,255,255,.10)}
 
   <style>
     :root{
@@ -113,8 +25,10 @@
       --colTT: 420px;
       --colDev: 420px;
     }
+
     *{box-sizing:border-box}
     body{margin:0;font-family:var(--font);color:var(--ink)}
+
     .scene{
       min-height:100vh;
       padding:14px;
@@ -123,8 +37,9 @@
         radial-gradient(900px 520px at 78% 22%, rgba(50,140,255,.30), transparent 62%),
         linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #061523 78%, var(--bg3) 100%);
     }
+
     .doc{
-      max-width: 1420px;
+      max-width: 1460px;
       margin:0 auto;
       border-radius: var(--r);
       background: linear-gradient(180deg, var(--glass), var(--glass2));
@@ -133,6 +48,7 @@
       backdrop-filter: blur(8px);
       overflow:hidden;
     }
+
     header{
       display:flex;
       align-items:flex-start;
@@ -142,19 +58,22 @@
       border-bottom:1px solid var(--line);
       background: rgba(0,0,0,.12);
     }
+
     .title{
       font-weight:950;
       letter-spacing:.6px;
       color: var(--accent);
       font-size: 18px;
     }
+
     .subtitle{
       margin-top:6px;
       color: var(--muted);
       font-size: 13px;
-      max-width: 760px;
-      line-height:1.3;
+      max-width: 900px;
+      line-height:1.35;
     }
+
     .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
     .btn{
       border:1px solid rgba(255,255,255,.14);
@@ -171,10 +90,11 @@
       border-color: rgba(0,255,166,.28);
       box-shadow: 0 0 18px rgba(0,255,166,.10);
     }
+
     .wrap{
       padding:12px;
       overflow:auto;
-      max-height: calc(100vh - 130px);
+      max-height: calc(100vh - 140px);
       -webkit-overflow-scrolling: touch;
     }
 
@@ -186,6 +106,7 @@
       overflow:hidden;
       background: rgba(0,0,0,.08);
     }
+
     .head{
       display:grid;
       grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
@@ -195,6 +116,7 @@
       background: rgba(6,14,22,.92);
       border-bottom:1px solid rgba(255,255,255,.12);
     }
+
     .hcell{
       padding:12px;
       border-right:1px solid rgba(255,255,255,.08);
@@ -210,6 +132,7 @@
       border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.06);
     }
+
     .rowTop{
       display:flex;
       align-items:center;
@@ -219,6 +142,11 @@
       border-bottom:1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.10);
     }
+    .rowTop.selected{
+      outline: 2px solid rgba(0,255,166,.45);
+      box-shadow: 0 0 0 2px rgba(0,0,0,.25) inset;
+    }
+
     .tag{
       font-weight:950;
       color: var(--accent2);
@@ -227,6 +155,7 @@
       border:1px solid rgba(0,255,166,.22);
       background: rgba(0,0,0,.12);
     }
+
     .mini{
       padding:6px 10px;
       border-radius:10px;
@@ -241,6 +170,7 @@
       display:grid;
       grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
     }
+
     .cell{
       padding:10px;
       border-right:1px solid rgba(255,255,255,.08);
@@ -256,6 +186,7 @@
       padding: 10px 12px;
       outline:none;
 
+      /* ВАЖНО: не “ломаем по буквам” */
       white-space: pre-wrap;
       word-break: normal;
       overflow-wrap: break-word;
@@ -281,15 +212,100 @@
       padding:10px 14px;
       border-top:1px solid var(--line);
       background: rgba(0,0,0,.12);
+      line-height:1.35;
     }
 
     /* скрытый блок со стартовыми текстами */
     .seed{display:none}
 
+    /* ===== BANK PANEL ===== */
+    .bank{
+      position: fixed;
+      right: 12px;
+      top: 12px;
+      bottom: 12px;
+      width: 380px;
+      max-width: calc(100vw - 24px);
+      background: rgba(6,14,22,.92);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.62);
+      backdrop-filter: blur(8px);
+      z-index: 50;
+      display: none;
+      overflow: hidden;
+    }
+    .bankHead{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .bankTitle{font-weight:950; color: var(--accent)}
+    .bankTabs{display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08)}
+    .bankBody{padding:10px 12px; display:flex; flex-direction:column; gap:10px; height: calc(100% - 96px)}
+    .bankRow{display:flex; gap:8px; flex-wrap:wrap}
+    .bankHint{color: var(--muted); font-size:12px; line-height:1.35}
+    .bankList{
+      flex:1;
+      overflow:auto;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding:8px;
+      background: rgba(0,0,0,.18);
+    }
+    .bankItem{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      padding:10px;
+      margin-bottom:8px;
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+    .bankItem:hover{border-color: rgba(33,240,255,.28)}
+    .bankItem.used{opacity:.35}
+
+    .modal{
+      position: fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      z-index: 60;
+      align-items:center; justify-content:center;
+      padding: 14px;
+    }
+    .modalBox{
+      width: min(820px, 100%);
+      background: rgba(6,14,22,.95);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      overflow:hidden;
+      box-shadow: 0 30px 90px rgba(0,0,0,.72);
+    }
+    .modalHead{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .modalTitle{font-weight:950; color: var(--accent)}
+    .modalTa{
+      width:100%; height: 50vh;
+      background: rgba(0,0,0,.20);
+      color: var(--ink);
+      border: none;
+      outline:none;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: pre;
+    }
+    .modalBtns{display:flex; justify-content:flex-end; gap:8px; padding:10px 12px; border-top:1px solid rgba(255,255,255,.10)}
+
     @media print{
       .scene{padding:0; background:#fff}
       .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.modeNote{display:none}
+      header,.modeNote,.bank,.modal{display:none !important}
       .wrap{max-height:none; overflow:visible; padding:0}
       .grid{border:1px solid #ccc; background:#fff}
       .head{position:static; background:#fff}
@@ -308,12 +324,16 @@
       <div>
         <div class="title">Технологическая карта — p0</div>
         <div class="subtitle">
-          Таблица всегда из 3 колонок (строго напротив). На телефоне просто листай вбок (горизонтальная прокрутка) — так сохраняется “линейность”.
+          Таблица всегда из 3 колонок (строго напротив). На телефоне — просто листай таблицу вбок (горизонтальная прокрутка).<br>
+          <b>Важно:</b> “Синхронизировать (разбить)” — это только разбиение текстов на пункты, а не магическое угадывание соответствий.
+          Если TT/DEV идут “вразброс” — пользуйся <b>Банком TT/Отклонений</b> и назначай вручную (зато без потерь и строго напротив).
         </div>
       </div>
       <div class="btns">
+        <button class="btn" id="openBankBtn">Банк TT/Отклонений</button>
         <button class="btn primary" id="addRow">+ Добавить пункт</button>
-        <button class="btn" id="syncSplit">Синхронизировать (разбить на пункты)</button>
+        <button class="btn" id="splitOp">Разбить OP на пункты</button>
+        <button class="btn" id="splitAll">Разбить OP/TT/DEV по пустым строкам</button>
         <button class="btn" id="saveHtml">Сохранить копию (HTML)</button>
         <button class="btn" id="print">Печать</button>
       </div>
@@ -334,10 +354,13 @@
 
     <!-- ======================================================
          СТАРТОВЫЕ ДАННЫЕ (ВСТАВЛЯЕШЬ ТЕКСТ СЮДА)
+         1) Вставь OP в textarea #seed_op
+         2) Вставь TT в textarea #seed_tt
+         3) Вставь DEV в textarea #seed_dev
+         НИКАКИХ JSON / import — всё хранится в этом HTML.
          ====================================================== -->
     <div class="seed">
-      <textarea id="seed_op">
-Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
+      <textarea id="seed_op"><<< Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
 
 - установите автомат защиты "САУ СИГ-НАЛ" на левом пульте АЗС в положение "ВКЛЮЧЕНО";
 
@@ -2394,11 +2417,8 @@
 
 
 
-
-      </textarea>
-
-      <textarea id="seed_tt">
-
+ >>></textarea>
+      <textarea id="seed_tt"><<< ВСТАВЬ СЮДА ТЕКСТ "
 
 
 
@@ -3408,11 +3428,8 @@
 
 
 
-
-      </textarea>
-
-      <textarea id="seed_dev">
-
+" (TT) >>></textarea>
+      <textarea id="seed_dev"><<< ВСТАВЬ СЮДА ТЕКСТ "
 
 
 
@@ -5279,23 +5296,84 @@ I. Проверьте исправность кнопки
 
 
 
+" (DEV) >>></textarea>
+    </div>
+  </div>
+</div>
 
-      </textarea>
+<!-- ====== BANK PANEL (TT/DEV) — ВАЖНО: ЭТО HTML, НЕ ВНУТРИ <script> ====== -->
+<div class="bank" id="bank">
+  <div class="bankHead">
+    <div class="bankTitle">Банк TT / Отклонений</div>
+    <button class="mini" id="bankClose">✕</button>
+  </div>
+
+  <div class="bankTabs">
+    <button class="btn tabBtn active" data-bank="tt">ТТ</button>
+    <button class="btn tabBtn" data-bank="dev">Отклонения</button>
+  </div>
+
+  <div class="bankBody">
+    <div class="bankRow">
+      <button class="btn primary" id="bankPaste">Вставить текст</button>
+      <button class="btn" id="bankSplit">Разбить на элементы</button>
+      <button class="btn" id="bankClear">Очистить</button>
+    </div>
+
+    <div class="bankRow">
+      <div class="bankHint">
+        1) Кликни по “Пункт N” в таблице → он подсветится.<br>
+        2) В банке кликни элемент → он вставится в выбранный пункт в колонку TT/DEV.<br>
+        3) “Назначить и следующий →” быстро раскладывает подряд (если у тебя список уже в нужном порядке).
+      </div>
+    </div>
+
+    <div class="bankList" id="bankList"></div>
+
+    <div class="bankRow">
+      <button class="btn" id="bankPrev">← Назад</button>
+      <button class="btn primary" id="bankAssignNext">Назначить и следующий →</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal paste -->
+<div class="modal" id="modal">
+  <div class="modalBox">
+    <div class="modalHead">
+      <div class="modalTitle" id="modalTitle">Вставь текст</div>
+      <button class="mini" id="modalClose">✕</button>
+    </div>
+    <textarea class="modalTa" id="modalTa" placeholder="Вставь сюда весь текст одним куском..."></textarea>
+    <div class="modalBtns">
+      <button class="btn" id="modalCancel">Отмена</button>
+      <button class="btn primary" id="modalOk">Готово</button>
     </div>
   </div>
 </div>
 
 <script>
+(() => {
   const rowsEl = document.getElementById("rows");
   const noteEl = document.getElementById("modeNote");
 
+  /* ---------- helpers ---------- */
   function sanitizeText(str){
     if(!str) return "";
-    str = str.replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
-    str = str.replace(/\t/g,"    ");
+    str = String(str)
+      .replace(/\r\n/g,"\n").replace(/\r/g,"\n")
+      .replace(/\u00A0/g," ")
+      .replace(/\t/g,"    ");
     str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
     str = str.replace(/\n{6,}/g,"\n\n\n");
     return str;
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
   }
 
   function insertPlainTextAtCursor(text){
@@ -5337,16 +5415,40 @@ I. Проверьте исправность кнопки
     return box;
   }
 
+  /* ---------- data ---------- */
   let items = [];
+  let selectedRowIndex = 0;
 
   function seedOnce(){
     const op = sanitizeText(document.getElementById("seed_op").value);
     const tt = sanitizeText(document.getElementById("seed_tt").value);
     const dev = sanitizeText(document.getElementById("seed_dev").value);
 
-    // ОДНА операция (один пункт) = три колонки напротив.
-    // Если хочешь "много пунктов" — потом разобьём по маркерам, но сейчас спасаем то, что ты набрал.
+    // старт: один “пункт” с тремя большими простынями (чтобы ничего не потерять)
     items = [{ op, tt, dev }];
+  }
+
+  /* ---------- rendering ---------- */
+  function markSelectedRow(){
+    document.querySelectorAll(".rowTop").forEach((el,i)=>{
+      el.classList.toggle("selected", i===selectedRowIndex);
+    });
+  }
+
+  function setSelectedRow(i){
+    selectedRowIndex = Math.max(0, Math.min(items.length-1, i));
+    markSelectedRow();
+  }
+
+  function hookRowSelection(){
+    document.querySelectorAll(".rowTop").forEach((top, idx)=>{
+      top.style.cursor = "pointer";
+      top.onclick = ()=> {
+        setSelectedRow(idx);
+        openBank();
+        renderBank();
+      };
+    });
   }
 
   function render(){
@@ -5369,15 +5471,15 @@ I. Проверьте исправность кнопки
 
       const up = document.createElement("button");
       up.className="mini"; up.textContent="↑";
-      up.onclick=()=>move(idx,-1);
+      up.onclick=(e)=>{ e.stopPropagation(); move(idx,-1); };
 
       const down = document.createElement("button");
       down.className="mini"; down.textContent="↓";
-      down.onclick=()=>move(idx,+1);
+      down.onclick=(e)=>{ e.stopPropagation(); move(idx,+1); };
 
       const del = document.createElement("button");
       del.className="mini"; del.textContent="✕";
-      del.onclick=()=>remove(idx);
+      del.onclick=(e)=>{ e.stopPropagation(); remove(idx); };
 
       ctrls.append(up,down,del);
       top.append(tag,ctrls);
@@ -5402,89 +5504,97 @@ I. Проверьте исправность кнопки
       requestAnimationFrame(()=>syncRowHeight(row));
     });
 
-    noteEl.innerHTML = `Пунктов: <b>${items.length}</b>. На телефоне листай таблицу вбок — так сохраняется “напротив”.`;
+    noteEl.innerHTML =
+      `Пунктов: <b>${items.length}</b>. ` +
+      `Выбран: <b>${Math.min(items.length, selectedRowIndex+1)}</b>. ` +
+      `На телефоне листай таблицу вбок — так сохраняется “строго напротив”.`;
+
+    hookRowSelection();
+    markSelectedRow();
   }
 
+  /* ---------- list operations ---------- */
   function add(){
     items.push({op:"",tt:"",dev:""});
     render();
+    setSelectedRow(items.length-1);
   }
+
   function remove(i){
     items.splice(i,1);
     if(items.length===0) items=[{op:"",tt:"",dev:""}];
     render();
+    setSelectedRow(Math.min(selectedRowIndex, items.length-1));
   }
+
   function move(i,dir){
     const j=i+dir;
     if(j<0||j>=items.length) return;
     const t=items[i]; items[i]=items[j]; items[j]=t;
     render();
+    setSelectedRow(j);
   }
-function splitIntoBlocks(text){
-  text = (text ?? "").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
-  const lines = text.split("\n");
 
-  const blocks = [];
-  let cur = [];
-  const isBullet = (s) => /^(\s*)([-•—]|\d+[\)\.])\s+/.test(s);
+  /* ---------- splitting ---------- */
+  function splitToItemsByBlankLines(raw){
+    raw = sanitizeText(raw || "");
+    // “элемент” = кусок между пустыми строками (или блоками)
+    const parts = raw
+      .replace(/\n{3,}/g,"\n\n")
+      .split(/\n\s*\n/g)
+      .map(s=>sanitizeText(s).trim())
+      .filter(Boolean);
+    return parts;
+  }
 
-  for(const raw of lines){
-    const s = raw.replace(/\u00A0/g," ");
-    if(s.trim()===""){
-      if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
-      continue;
+  function splitOpOnly(){
+    // берём ТЕКУЩЕЕ состояние (обычно items[0].op как простыня)
+    const opRaw = items.map(x=>x.op).join("\n");
+    const blocks = splitToItemsByBlankLines(opRaw);
+    const newItems = blocks.length ? blocks.map(b => ({op:b, tt:"", dev:""})) : [{op:"",tt:"",dev:""}];
+    items = newItems;
+    selectedRowIndex = 0;
+    render();
+    alert(`OP разбит. Пунктов: ${items.length}`);
+  }
+
+  function splitAllThree(){
+    const opRaw  = items.map(x=>x.op).join("\n");
+    const ttRaw  = items.map(x=>x.tt).join("\n");
+    const devRaw = items.map(x=>x.dev).join("\n");
+
+    const opBlocks  = splitToItemsByBlankLines(opRaw);
+    const ttBlocks  = splitToItemsByBlankLines(ttRaw);
+    const devBlocks = splitToItemsByBlankLines(devRaw);
+
+    const n = Math.max(opBlocks.length, ttBlocks.length, devBlocks.length, 1);
+    const newItems = [];
+    for(let i=0;i<n;i++){
+      newItems.push({
+        op:  opBlocks[i]  ?? "",
+        tt:  ttBlocks[i]  ?? "",
+        dev: devBlocks[i] ?? ""
+      });
     }
-    if(isBullet(s)){
-      if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
-      cur.push(s.trim());
-    }else{
-      cur.push(s.trim());
-    }
-  }
-  if(cur.length) blocks.push(cur.join("\n").trim());
-  return blocks.filter(b => b.trim().length);
-}
-
-function syncSplitCurrentRow(){
-  if(!items || items.length < 1) return;
-
-  const base = items[0]; // берём 1-й пункт (там у тебя “простыня”)
-
-  const opBlocks  = splitIntoBlocks(base.op);
-  const ttBlocks  = splitIntoBlocks(base.tt);
-  const devBlocks = splitIntoBlocks(base.dev);
-
-  const n = Math.max(opBlocks.length, ttBlocks.length, devBlocks.length, 1);
-
-  const newItems = [];
-  for(let i=0;i<n;i++){
-    newItems.push({
-      op:  opBlocks[i]  ?? "",
-      tt:  ttBlocks[i]  ?? "",
-      dev: devBlocks[i] ?? ""
-    });
+    items = newItems;
+    selectedRowIndex = 0;
+    render();
+    alert(`Разбито по пустым строкам.\nПунктов: ${n}\nOP:${opBlocks.length} TT:${ttBlocks.length} DEV:${devBlocks.length}`);
   }
 
-  items = newItems;
-  render();
-  applyTabMode();
-
-  alert(`Готово. Пунктов: ${n}\nOP:${opBlocks.length} TT:${ttBlocks.length} DEV:${devBlocks.length}`);
-}
-
+  /* ---------- save copy (embed content back into textareas) ---------- */
   function saveHtmlCopy(){
-    // Сохраняем КОПИЮ HTML, где тексты уже лежат в textarea
     const html = document.documentElement.outerHTML;
 
-    // Подставляем актуальные значения в seed textarea
-    const op = items.map(x=>x.op).join("\n");
-    const tt = items.map(x=>x.tt).join("\n");
-    const dev = items.map(x=>x.dev).join("\n");
+    // сохраняем “как есть” (каждый пункт подряд в textarea)
+    const op  = items.map(x=>x.op).join("\n\n");
+    const tt  = items.map(x=>x.tt).join("\n\n");
+    const dev = items.map(x=>x.dev).join("\n\n");
 
     const replaced = html
-      .replace(/<textarea id="seed_op">[\s\S]*?<\/textarea>/m, `<textarea id="seed_op">\n${escapeHtml(op)}\n      </textarea>`)
-      .replace(/<textarea id="seed_tt">[\s\S]*?<\/textarea>/m, `<textarea id="seed_tt">\n${escapeHtml(tt)}\n      </textarea>`)
-      .replace(/<textarea id="seed_dev">[\s\S]*?<\/textarea>/m, `<textarea id="seed_dev">\n${escapeHtml(dev)}\n      </textarea>`);
+      .replace(/<textarea id="seed_op">[\s\S]*?<\/textarea>/m, `<textarea id="seed_op">${escapeHtml(op)}</textarea>`)
+      .replace(/<textarea id="seed_tt">[\s\S]*?<\/textarea>/m, `<textarea id="seed_tt">${escapeHtml(tt)}</textarea>`)
+      .replace(/<textarea id="seed_dev">[\s\S]*?<\/textarea>/m, `<textarea id="seed_dev">${escapeHtml(dev)}</textarea>`);
 
     const blob = new Blob([replaced], {type:"text/html;charset=utf-8"});
     const url = URL.createObjectURL(blob);
@@ -5495,234 +5605,131 @@ function syncSplitCurrentRow(){
     URL.revokeObjectURL(url);
   }
 
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
+  /* ==========================================================
+     BANK TT/DEV (manual mapping)
+     ========================================================== */
+  const bank = document.getElementById("bank");
+  const bankList = document.getElementById("bankList");
+  let bankMode = "tt"; // "tt" | "dev"
+  let bankData = { tt: {raw:"", items:[]}, dev:{raw:"", items:[]} };
+
+  function openBank(){ bank.style.display="block"; }
+  function closeBank(){ bank.style.display="none"; }
+
+  function renderBank(){
+    bankList.innerHTML = "";
+    const arr = bankData[bankMode].items;
+    arr.forEach((t, i)=>{
+      const d = document.createElement("div");
+      d.className = "bankItem" + (t.used ? " used" : "");
+      d.textContent = t.text;
+      d.title = "Клик = вставить в выбранный пункт";
+      d.onclick = ()=>assignBankItem(i);
+      bankList.appendChild(d);
+    });
   }
 
+  function splitBankRawToItems(raw){
+    const parts = splitToItemsByBlankLines(raw);
+    return parts.map(p=>({text:p, used:false}));
+  }
+
+  function assignBankItem(i){
+    const arr = bankData[bankMode].items;
+    if(!arr[i] || arr[i].used) return;
+
+    if(bankMode==="tt") items[selectedRowIndex].tt = arr[i].text;
+    else items[selectedRowIndex].dev = arr[i].text;
+
+    arr[i].used = true;
+
+    render();
+    openBank();
+    renderBank();
+  }
+
+  function assignAndNext(){
+    const arr = bankData[bankMode].items;
+    const idx = arr.findIndex(x=>!x.used);
+    if(idx===-1) return;
+    assignBankItem(idx);
+    setSelectedRow(selectedRowIndex+1);
+  }
+
+  function clearBank(){
+    bankData[bankMode].items = [];
+    bankData[bankMode].raw = "";
+    renderBank();
+  }
+
+  function showPasteModal(title, onOk){
+    const modal = document.getElementById("modal");
+    const ta = document.getElementById("modalTa");
+    document.getElementById("modalTitle").textContent = title;
+
+    ta.value = "";
+    modal.style.display = "flex";
+
+    const close = ()=>{
+      modal.style.display="none";
+      document.getElementById("modalOk").onclick = null;
+    };
+
+    document.getElementById("modalClose").onclick = close;
+    document.getElementById("modalCancel").onclick = close;
+
+    document.getElementById("modalOk").onclick = ()=>{
+      const v = ta.value;
+      close();
+      onOk(v);
+    };
+  }
+
+  /* ---------- UI handlers ---------- */
   document.getElementById("addRow").addEventListener("click", add);
-  document.getElementById("syncSplit").addEventListener("click", syncSplitCurrentRow);
+  document.getElementById("splitOp").addEventListener("click", splitOpOnly);
+  document.getElementById("splitAll").addEventListener("click", splitAllThree);
   document.getElementById("saveHtml").addEventListener("click", saveHtmlCopy);
   document.getElementById("print").addEventListener("click", () => window.print());
 
-  // старт
-  seedOnce();
-  render();
-  <!-- ====== BANK PANEL (TT/DEV) ====== -->
-<div class="bank" id="bank">
-  <div class="bankHead">
-    <div class="bankTitle">Банк ТТ / Отклонений</div>
-    <button class="mini" id="bankClose">✕</button>
-  </div>
-
-  <div class="bankTabs">
-    <button class="btn tabBtn active" data-bank="tt">ТТ</button>
-    <button class="btn tabBtn" data-bank="dev">Отклонения</button>
-  </div>
-
-  <div class="bankBody">
-    <div class="bankRow">
-      <button class="btn primary" id="bankPaste">Вставить текст</button>
-      <button class="btn" id="bankSplit">Разбить на пункты</button>
-      <button class="btn" id="bankClear">Очистить список</button>
-    </div>
-
-    <div class="bankRow">
-      <div class="bankHint">
-        1) Выбери пункт слева (клик по “Пункт 10”) → он подсветится. <br/>
-        2) В банке кликни нужный элемент → он вставится в выбранную ячейку TT/DEV.
-      </div>
-    </div>
-
-    <div class="bankList" id="bankList"></div>
-
-    <div class="bankRow">
-      <button class="btn" id="bankPrev">← Назад</button>
-      <button class="btn primary" id="bankAssignNext">Назначить и следующий →</button>
-    </div>
-  </div>
-</div>
-
-<!-- modal paste -->
-<div class="modal" id="modal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <div class="modalTitle" id="modalTitle">Вставь текст</div>
-      <button class="mini" id="modalClose">✕</button>
-    </div>
-    <textarea class="modalTa" id="modalTa" placeholder="Вставь сюда весь текст одним куском..."></textarea>
-    <div class="modalBtns">
-      <button class="btn" id="modalCancel">Отмена</button>
-      <button class="btn primary" id="modalOk">Готово</button>
-    </div>
-  </div>
-</div>
-/* ===========================
-   BANK TT/DEV (manual mapping)
-   =========================== */
-const bank = document.getElementById("bank");
-const bankList = document.getElementById("bankList");
-let bankMode = "tt"; // "tt" | "dev"
-let bankData = { tt: {raw:"", items:[]}, dev:{raw:"", items:[]} };
-
-let selectedRowIndex = 0; // какой пункт выбран
-
-function openBank(){ bank.style.display="block"; }
-function closeBank(){ bank.style.display="none"; }
-
-function markSelectedRow(){
-  document.querySelectorAll(".rowTop").forEach((el,i)=>{
-    el.classList.toggle("selected", i===selectedRowIndex);
+  document.getElementById("openBankBtn").addEventListener("click", ()=>{
+    openBank(); renderBank(); markSelectedRow();
   });
-}
-function setSelectedRow(i){
-  selectedRowIndex = Math.max(0, Math.min(items.length-1, i));
-  markSelectedRow();
-}
 
-function renderBank(){
-  bankList.innerHTML = "";
-  const arr = bankData[bankMode].items;
-  arr.forEach((t, i)=>{
-    const d = document.createElement("div");
-    d.className = "bankItem" + (t.used ? " used" : "");
-    d.textContent = t.text;
-    d.title = "Клик = вставить в выбранный пункт";
-    d.onclick = ()=>assignBankItem(i);
-    bankList.appendChild(d);
-  });
-}
+  document.getElementById("bankClose").onclick = closeBank;
 
-function splitToItems(raw){
-  raw = sanitizeText(raw || "");
-  // Разбиваем на “логические куски”: двойные пустые строки -> новый пункт
-  const parts = raw
-    .replace(/\n{3,}/g,"\n\n")
-    .split(/\n\s*\n/g)
-    .map(s=>sanitizeText(s).trim())
-    .filter(Boolean);
-
-  return parts.map(p=>({text:p, used:false}));
-}
-
-function assignBankItem(i){
-  const arr = bankData[bankMode].items;
-  if(!arr[i] || arr[i].used) return;
-
-  if(bankMode==="tt") items[selectedRowIndex].tt = arr[i].text;
-  else items[selectedRowIndex].dev = arr[i].text;
-
-  arr[i].used = true;
-
-  render();           // перерисовать таблицу
-  markSelectedRow();  // восстановить подсветку
-  openBank();
-  renderBank();
-}
-
-function assignAndNext(){
-  // если пользователь хочет “назначить и следующий”, он выбирает элемент -> мы после назначения двигаемся дальше
-  // тут логика: ищем первый НЕ used и назначаем его, потом +1 по строке
-  const arr = bankData[bankMode].items;
-  const idx = arr.findIndex(x=>!x.used);
-  if(idx===-1) return;
-  assignBankItem(idx);
-  setSelectedRow(selectedRowIndex+1);
-}
-
-function clearBank(){
-  bankData[bankMode].items = [];
-  bankData[bankMode].raw = "";
-  renderBank();
-}
-
-function showPasteModal(title, onOk){
-  const modal = document.getElementById("modal");
-  const ta = document.getElementById("modalTa");
-  document.getElementById("modalTitle").textContent = title;
-
-  ta.value = "";
-  modal.style.display = "flex";
-
-  const close = ()=>{
-    modal.style.display="none";
-    document.getElementById("modalOk").onclick = null;
-  };
-
-  document.getElementById("modalClose").onclick = close;
-  document.getElementById("modalCancel").onclick = close;
-
-  document.getElementById("modalOk").onclick = ()=>{
-    const v = ta.value;
-    close();
-    onOk(v);
-  };
-}
-
-function hookRowSelection(){
-  // клик по шапке пункта выбирает строку
-  document.querySelectorAll(".rowTop").forEach((top, idx)=>{
-    top.style.cursor = "pointer";
-    top.onclick = ()=>{
-      setSelectedRow(idx);
-      openBank();
+  document.querySelectorAll(".bankTabs [data-bank]").forEach(btn=>{
+    btn.onclick = ()=>{
+      bankMode = btn.dataset.bank;
+      document.querySelectorAll(".bankTabs .tabBtn").forEach(x=>x.classList.toggle("active", x.dataset.bank===bankMode));
       renderBank();
     };
   });
-}
 
-/* Кнопка открытия банка — добавим в header (не ломая твой код) */
-(function addBankButton(){
-  const btns = document.querySelector(".btns");
-  if(!btns) return;
-  const b = document.createElement("button");
-  b.className = "btn";
-  b.textContent = "Банк ТТ/Отклонений";
-  b.onclick = ()=>{ openBank(); renderBank(); markSelectedRow(); };
-  btns.insertBefore(b, btns.firstChild);
-})();
-
-/* handlers */
-document.getElementById("bankClose").onclick = closeBank;
-
-document.querySelectorAll(".bankTabs [data-bank]").forEach(btn=>{
-  btn.onclick = ()=>{
-    bankMode = btn.dataset.bank;
-    document.querySelectorAll(".bankTabs .tabBtn").forEach(x=>x.classList.toggle("active", x.dataset.bank===bankMode));
-    renderBank();
+  document.getElementById("bankPaste").onclick = ()=>{
+    showPasteModal(bankMode==="tt" ? "Вставь полный текст ТТ" : "Вставь полный текст Отклонений", (v)=>{
+      bankData[bankMode].raw = v;
+      alert("Текст принят. Теперь нажми: Разбить на элементы.");
+    });
   };
-});
 
-document.getElementById("bankPaste").onclick = ()=>{
-  showPasteModal(bankMode==="tt" ? "Вставь полный текст ТТ" : "Вставь полный текст Отклонений", (v)=>{
-    bankData[bankMode].raw = v;
-  });
-};
+  document.getElementById("bankSplit").onclick = ()=>{
+    bankData[bankMode].items = splitBankRawToItems(bankData[bankMode].raw);
+    renderBank();
+    alert(`Готово. Элементов: ${bankData[bankMode].items.length}`);
+  };
 
-document.getElementById("bankSplit").onclick = ()=>{
-  bankData[bankMode].items = splitToItems(bankData[bankMode].raw);
-  renderBank();
-};
+  document.getElementById("bankClear").onclick = clearBank;
+  document.getElementById("bankAssignNext").onclick = assignAndNext;
+  document.getElementById("bankPrev").onclick = ()=>setSelectedRow(selectedRowIndex-1);
 
-document.getElementById("bankClear").onclick = clearBank;
-document.getElementById("bankAssignNext").onclick = assignAndNext;
-document.getElementById("bankPrev").onclick = ()=>setSelectedRow(selectedRowIndex-1);
+  /* ---------- init ---------- */
+  seedOnce();
+  render();
 
-/* ВАЖНО: после каждого render() нужно снова повесить выбор строки */
-const _renderOld = render;
-render = function(){
-  _renderOld();
-  hookRowSelection();
-  markSelectedRow();
-};
-
-/* стартовые состояния */
-openBank();
-renderBank();
-markSelectedRow();
-
+  // Банк по умолчанию закрыт (чтобы не мешал). Откроешь кнопкой.
+  closeBank();
+})();
 </script>
 </body>
 </html>
