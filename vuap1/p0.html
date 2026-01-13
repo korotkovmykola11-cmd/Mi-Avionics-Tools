@@ -4,6 +4,95 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Технологическая карта — p0</title>
+  /* ===== BANK PANEL ===== */
+.bank{
+  position: fixed;
+  right: 12px;
+  top: 12px;
+  bottom: 12px;
+  width: 380px;
+  max-width: calc(100vw - 24px);
+  background: rgba(6,14,22,.92);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.62);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+  display: none;
+  overflow: hidden;
+}
+.bankHead{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.bankTitle{font-weight:950; color: var(--accent)}
+.bankTabs{display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08)}
+.bankBody{padding:10px 12px; display:flex; flex-direction:column; gap:10px; height: calc(100% - 96px)}
+.bankRow{display:flex; gap:8px; flex-wrap:wrap}
+.bankHint{color: var(--muted); font-size:12px; line-height:1.35}
+.bankList{
+  flex:1;
+  overflow:auto;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  padding:8px;
+  background: rgba(0,0,0,.18);
+}
+.bankItem{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:12px;
+  padding:10px;
+  margin-bottom:8px;
+  background: rgba(255,255,255,.04);
+  cursor:pointer;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.bankItem:hover{border-color: rgba(33,240,255,.28)}
+.bankItem.used{opacity:.35}
+
+.rowTop.selected{
+  outline: 2px solid rgba(0,255,166,.45);
+  box-shadow: 0 0 0 2px rgba(0,0,0,.25) inset;
+}
+
+.modal{
+  position: fixed; inset:0;
+  background: rgba(0,0,0,.55);
+  display:none;
+  z-index: 60;
+  align-items:center; justify-content:center;
+  padding: 14px;
+}
+.modalBox{
+  width: min(820px, 100%);
+  background: rgba(6,14,22,.95);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  overflow:hidden;
+  box-shadow: 0 30px 90px rgba(0,0,0,.72);
+}
+.modalHead{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.modalTitle{font-weight:950; color: var(--accent)}
+.modalTa{
+  width:100%; height: 50vh;
+  background: rgba(0,0,0,.20);
+  color: var(--ink);
+  border: none;
+  outline:none;
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: pre;
+}
+.modalBtns{display:flex; justify-content:flex-end; gap:8px; padding:10px 12px; border-top:1px solid rgba(255,255,255,.10)}
+
   <style>
     :root{
       --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
@@ -5421,6 +5510,219 @@ function syncSplitCurrentRow(){
   // старт
   seedOnce();
   render();
+  <!-- ====== BANK PANEL (TT/DEV) ====== -->
+<div class="bank" id="bank">
+  <div class="bankHead">
+    <div class="bankTitle">Банк ТТ / Отклонений</div>
+    <button class="mini" id="bankClose">✕</button>
+  </div>
+
+  <div class="bankTabs">
+    <button class="btn tabBtn active" data-bank="tt">ТТ</button>
+    <button class="btn tabBtn" data-bank="dev">Отклонения</button>
+  </div>
+
+  <div class="bankBody">
+    <div class="bankRow">
+      <button class="btn primary" id="bankPaste">Вставить текст</button>
+      <button class="btn" id="bankSplit">Разбить на пункты</button>
+      <button class="btn" id="bankClear">Очистить список</button>
+    </div>
+
+    <div class="bankRow">
+      <div class="bankHint">
+        1) Выбери пункт слева (клик по “Пункт 10”) → он подсветится. <br/>
+        2) В банке кликни нужный элемент → он вставится в выбранную ячейку TT/DEV.
+      </div>
+    </div>
+
+    <div class="bankList" id="bankList"></div>
+
+    <div class="bankRow">
+      <button class="btn" id="bankPrev">← Назад</button>
+      <button class="btn primary" id="bankAssignNext">Назначить и следующий →</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal paste -->
+<div class="modal" id="modal">
+  <div class="modalBox">
+    <div class="modalHead">
+      <div class="modalTitle" id="modalTitle">Вставь текст</div>
+      <button class="mini" id="modalClose">✕</button>
+    </div>
+    <textarea class="modalTa" id="modalTa" placeholder="Вставь сюда весь текст одним куском..."></textarea>
+    <div class="modalBtns">
+      <button class="btn" id="modalCancel">Отмена</button>
+      <button class="btn primary" id="modalOk">Готово</button>
+    </div>
+  </div>
+</div>
+/* ===========================
+   BANK TT/DEV (manual mapping)
+   =========================== */
+const bank = document.getElementById("bank");
+const bankList = document.getElementById("bankList");
+let bankMode = "tt"; // "tt" | "dev"
+let bankData = { tt: {raw:"", items:[]}, dev:{raw:"", items:[]} };
+
+let selectedRowIndex = 0; // какой пункт выбран
+
+function openBank(){ bank.style.display="block"; }
+function closeBank(){ bank.style.display="none"; }
+
+function markSelectedRow(){
+  document.querySelectorAll(".rowTop").forEach((el,i)=>{
+    el.classList.toggle("selected", i===selectedRowIndex);
+  });
+}
+function setSelectedRow(i){
+  selectedRowIndex = Math.max(0, Math.min(items.length-1, i));
+  markSelectedRow();
+}
+
+function renderBank(){
+  bankList.innerHTML = "";
+  const arr = bankData[bankMode].items;
+  arr.forEach((t, i)=>{
+    const d = document.createElement("div");
+    d.className = "bankItem" + (t.used ? " used" : "");
+    d.textContent = t.text;
+    d.title = "Клик = вставить в выбранный пункт";
+    d.onclick = ()=>assignBankItem(i);
+    bankList.appendChild(d);
+  });
+}
+
+function splitToItems(raw){
+  raw = sanitizeText(raw || "");
+  // Разбиваем на “логические куски”: двойные пустые строки -> новый пункт
+  const parts = raw
+    .replace(/\n{3,}/g,"\n\n")
+    .split(/\n\s*\n/g)
+    .map(s=>sanitizeText(s).trim())
+    .filter(Boolean);
+
+  return parts.map(p=>({text:p, used:false}));
+}
+
+function assignBankItem(i){
+  const arr = bankData[bankMode].items;
+  if(!arr[i] || arr[i].used) return;
+
+  if(bankMode==="tt") items[selectedRowIndex].tt = arr[i].text;
+  else items[selectedRowIndex].dev = arr[i].text;
+
+  arr[i].used = true;
+
+  render();           // перерисовать таблицу
+  markSelectedRow();  // восстановить подсветку
+  openBank();
+  renderBank();
+}
+
+function assignAndNext(){
+  // если пользователь хочет “назначить и следующий”, он выбирает элемент -> мы после назначения двигаемся дальше
+  // тут логика: ищем первый НЕ used и назначаем его, потом +1 по строке
+  const arr = bankData[bankMode].items;
+  const idx = arr.findIndex(x=>!x.used);
+  if(idx===-1) return;
+  assignBankItem(idx);
+  setSelectedRow(selectedRowIndex+1);
+}
+
+function clearBank(){
+  bankData[bankMode].items = [];
+  bankData[bankMode].raw = "";
+  renderBank();
+}
+
+function showPasteModal(title, onOk){
+  const modal = document.getElementById("modal");
+  const ta = document.getElementById("modalTa");
+  document.getElementById("modalTitle").textContent = title;
+
+  ta.value = "";
+  modal.style.display = "flex";
+
+  const close = ()=>{
+    modal.style.display="none";
+    document.getElementById("modalOk").onclick = null;
+  };
+
+  document.getElementById("modalClose").onclick = close;
+  document.getElementById("modalCancel").onclick = close;
+
+  document.getElementById("modalOk").onclick = ()=>{
+    const v = ta.value;
+    close();
+    onOk(v);
+  };
+}
+
+function hookRowSelection(){
+  // клик по шапке пункта выбирает строку
+  document.querySelectorAll(".rowTop").forEach((top, idx)=>{
+    top.style.cursor = "pointer";
+    top.onclick = ()=>{
+      setSelectedRow(idx);
+      openBank();
+      renderBank();
+    };
+  });
+}
+
+/* Кнопка открытия банка — добавим в header (не ломая твой код) */
+(function addBankButton(){
+  const btns = document.querySelector(".btns");
+  if(!btns) return;
+  const b = document.createElement("button");
+  b.className = "btn";
+  b.textContent = "Банк ТТ/Отклонений";
+  b.onclick = ()=>{ openBank(); renderBank(); markSelectedRow(); };
+  btns.insertBefore(b, btns.firstChild);
+})();
+
+/* handlers */
+document.getElementById("bankClose").onclick = closeBank;
+
+document.querySelectorAll(".bankTabs [data-bank]").forEach(btn=>{
+  btn.onclick = ()=>{
+    bankMode = btn.dataset.bank;
+    document.querySelectorAll(".bankTabs .tabBtn").forEach(x=>x.classList.toggle("active", x.dataset.bank===bankMode));
+    renderBank();
+  };
+});
+
+document.getElementById("bankPaste").onclick = ()=>{
+  showPasteModal(bankMode==="tt" ? "Вставь полный текст ТТ" : "Вставь полный текст Отклонений", (v)=>{
+    bankData[bankMode].raw = v;
+  });
+};
+
+document.getElementById("bankSplit").onclick = ()=>{
+  bankData[bankMode].items = splitToItems(bankData[bankMode].raw);
+  renderBank();
+};
+
+document.getElementById("bankClear").onclick = clearBank;
+document.getElementById("bankAssignNext").onclick = assignAndNext;
+document.getElementById("bankPrev").onclick = ()=>setSelectedRow(selectedRowIndex-1);
+
+/* ВАЖНО: после каждого render() нужно снова повесить выбор строки */
+const _renderOld = render;
+render = function(){
+  _renderOld();
+  hookRowSelection();
+  markSelectedRow();
+};
+
+/* стартовые состояния */
+openBank();
+renderBank();
+markSelectedRow();
+
 </script>
 </body>
 </html>
