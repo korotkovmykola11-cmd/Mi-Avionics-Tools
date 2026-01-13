@@ -233,7 +233,8 @@
     box-shadow:0 0 18px rgba(44,247,255,.10);
   }
 
-  @media (max-width: 900px){
+  @media (max-width: 600px){
+
     /* показываем переключатель */
     .mobileTabs{display:flex;}
     /* делаем таблицу “в один столбец”, но физически оставляем 3 td, просто скрываем 2 */
@@ -976,7 +977,8 @@ tabs.addEventListener("click",(e)=>{
 });
 
 function applyMobileMode(){
-  const isMobile = window.matchMedia("(max-width: 900px)").matches;
+ const isMobile = window.matchMedia("(max-width: 600px)").matches;
+
   if(!isMobile) {
     // показать всё
     tbody.querySelectorAll("td").forEach(td=>td.classList.remove("hideMobile"));
