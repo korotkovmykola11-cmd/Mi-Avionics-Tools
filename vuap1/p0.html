@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Технологическая карта — p0</title>
+  <title>Технологическая карта — p0 (вариант 2)</title>
 
   <style>
     :root{
@@ -20,7 +20,6 @@
       --r:16px;
       --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 
-      /* фикс ширины колонок (строго напротив) */
       --colOp: 560px;
       --colTT: 420px;
       --colDev: 420px;
@@ -65,8 +64,8 @@
       margin-top:6px;
       color: var(--muted);
       font-size: 13px;
-      max-width: 760px;
-      line-height:1.3;
+      max-width: 820px;
+      line-height:1.35;
     }
     .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
     .btn{
@@ -92,7 +91,6 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Табличный режим: всегда 3 колонки, на телефоне — горизонтальная прокрутка */
     .grid{
       min-width: calc(var(--colOp) + var(--colTT) + var(--colDev) + 40px);
       border:1px solid rgba(255,255,255,.10);
@@ -132,6 +130,8 @@
       padding:8px 10px;
       border-bottom:1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.10);
+      cursor:pointer;
+      user-select:none;
     }
     .rowTop.selected{
       outline: 2px solid rgba(0,255,166,.45);
@@ -168,7 +168,7 @@
     .cell:last-child{border-right:none}
 
     .box{
-      min-height: 120px;
+      min-height: 110px;
       border-radius: 10px;
       border:1px solid rgba(33,240,255,.12);
       background: rgba(7,14,22,.35);
@@ -176,7 +176,6 @@
       outline:none;
 
       white-space: pre-wrap;
-      word-break: normal;
       overflow-wrap: break-word;
       hyphens: auto;
 
@@ -200,100 +199,110 @@
       padding:10px 14px;
       border-top:1px solid var(--line);
       background: rgba(0,0,0,.12);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    /* скрытый блок со стартовыми текстами */
-    .seed{display:none}
-
-    /* ===== BANK PANEL ===== */
-    .bank{
+    /* ===== Editor Panel ===== */
+    .editor{
       position: fixed;
       right: 12px;
       top: 12px;
       bottom: 12px;
-      width: 380px;
+      width: 460px;
       max-width: calc(100vw - 24px);
-      background: rgba(6,14,22,.92);
+      background: rgba(6,14,22,.94);
       border:1px solid rgba(255,255,255,.12);
       border-radius: 16px;
       box-shadow: 0 30px 90px rgba(0,0,0,.62);
       backdrop-filter: blur(8px);
-      z-index: 50;
-      display: none;
-      overflow: hidden;
-    }
-    .bankHead{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 12px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .bankTitle{font-weight:950; color: var(--accent)}
-    .bankTabs{display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08)}
-    .tabBtn.active{border-color: rgba(0,255,166,.35)}
-    .bankBody{padding:10px 12px; display:flex; flex-direction:column; gap:10px; height: calc(100% - 96px)}
-    .bankRow{display:flex; gap:8px; flex-wrap:wrap}
-    .bankHint{color: var(--muted); font-size:12px; line-height:1.35}
-    .bankList{
-      flex:1;
-      overflow:auto;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 12px;
-      padding:8px;
-      background: rgba(0,0,0,.18);
-    }
-    .bankItem{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:12px;
-      padding:10px;
-      margin-bottom:8px;
-      background: rgba(255,255,255,.04);
-      cursor:pointer;
-      white-space: pre-wrap;
-      overflow-wrap: break-word;
-    }
-    .bankItem:hover{border-color: rgba(33,240,255,.28)}
-    .bankItem.used{opacity:.35}
-
-    .modal{
-      position: fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      display:none;
       z-index: 60;
-      align-items:center; justify-content:center;
-      padding: 14px;
-    }
-    .modalBox{
-      width: min(820px, 100%);
-      background: rgba(6,14,22,.95);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
+      display: none;
       overflow:hidden;
-      box-shadow: 0 30px 90px rgba(0,0,0,.72);
     }
-    .modalHead{
+    .editorHead{
       display:flex; align-items:center; justify-content:space-between;
       padding:10px 12px;
       border-bottom:1px solid rgba(255,255,255,.10);
     }
-    .modalTitle{font-weight:950; color: var(--accent)}
-    .modalTa{
-      width:100%; height: 50vh;
-      background: rgba(0,0,0,.20);
+    .editorTitle{font-weight:950; color: var(--accent)}
+    .editorBody{
+      height: calc(100% - 50px);
+      display:grid;
+      grid-template-columns: 160px 1fr;
+    }
+    .editorLeft{
+      border-right:1px solid rgba(255,255,255,.10);
+      padding:10px;
+      overflow:auto;
+      background: rgba(0,0,0,.12);
+    }
+    .pItem{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      border-radius: 12px;
+      padding:8px 10px;
+      margin-bottom:8px;
+      cursor:pointer;
+      font-weight:900;
+      user-select:none;
+    }
+    .pItem:hover{border-color: rgba(33,240,255,.28)}
+    .pItem.active{
+      border-color: rgba(0,255,166,.42);
+      box-shadow: 0 0 0 2px rgba(0,0,0,.25) inset;
+    }
+
+    .editorRight{
+      padding:10px;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .eLabel{color: var(--muted); font-size:12px; font-weight:900}
+    .eTa{
+      width:100%;
+      min-height: 160px;
+      resize: vertical;
+      border-radius: 12px;
+      border:1px solid rgba(33,240,255,.14);
+      background: rgba(0,0,0,.18);
       color: var(--ink);
-      border: none;
       outline:none;
-      padding: 12px;
+      padding:10px 12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 13px;
       line-height: 1.35;
-      white-space: pre;
+      white-space: pre-wrap;
     }
-    .modalBtns{display:flex; justify-content:flex-end; gap:8px; padding:10px 12px; border-top:1px solid rgba(255,255,255,.10)}
+    .eTa:focus{border-color: rgba(33,240,255,.35)}
+    .editorBtns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      padding-top:4px;
+    }
+    .hint{
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.35;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      border-radius: 12px;
+      padding:8px 10px;
+    }
+
+    .seed{display:none}
 
     @media print{
       .scene{padding:0; background:#fff}
       .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.modeNote,.bank,.modal{display:none !important}
+      header,.modeNote,.editor{display:none !important}
       .wrap{max-height:none; overflow:visible; padding:0}
       .grid{border:1px solid #ccc; background:#fff}
       .head{position:static; background:#fff}
@@ -312,13 +321,13 @@
       <div>
         <div class="title">Технологическая карта — p0</div>
         <div class="subtitle">
-          Таблица всегда из 3 колонок (строго напротив). На телефоне просто листай таблицу вбок (горизонтальная прокрутка).
-          <br/><b>ВАЖНО:</b> мы заполняем ТТ/Отклонения вручную через “Банк”. Авто-синхронизация ТТ/DEV отключена.
+          Вариант 2: OP вставляешь сам → «Разбить OP на пункты» → ТТ/Отклонения заполняешь в редакторе «ТТ/DEV (по пунктам)».
+          Никаких “банков”, никаких “вставилось не туда”.
         </div>
       </div>
       <div class="btns">
-        <button class="btn" id="openBankBtn">Банк ТТ/Отклонений</button>
-        <button class="btn primary" id="addRow">+ Добавить пункт</button>
+        <button class="btn primary" id="openEditorBtn">ТТ/DEV (по пунктам)</button>
+        <button class="btn" id="addRow">+ Добавить пункт</button>
         <button class="btn" id="splitOP">Разбить OP на пункты</button>
         <button class="btn" id="clearTTDEV">Очистить ТТ/Откл</button>
         <button class="btn" id="saveHtml">Сохранить копию (HTML)</button>
@@ -337,15 +346,19 @@
       </div>
     </div>
 
-    <div class="modeNote" id="modeNote"></div>
+    <div class="modeNote">
+      <div id="noteLeft"></div>
+      <div id="noteRight"></div>
+    </div>
 
     <!-- ======================================================
-         СТАРТОВЫЕ ДАННЫЕ (ВСТАВЛЯЕШЬ ТЕКСТ СЮДА)
-         ВАЖНО: TT/DEV оставь пустыми. Заполняешь через Банк.
+         ✅ === ВСТАВЬ OP СЮДА ===
+         Вставь "Содержание операции" одним куском.
+         Потом в браузере нажми "Разбить OP на пункты".
          ====================================================== -->
     <div class="seed">
       <textarea id="seed_op">
-<!-- Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
+<Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
 
 - установите автомат защиты "САУ СИГ-НАЛ" на левом пульте АЗС в положение "ВКЛЮЧЕНО";
 
@@ -2402,97 +2415,69 @@
 
 
 
- -->
+>
+
       </textarea>
-
-      <textarea id="seed_tt"></textarea>
-      <textarea id="seed_dev"></textarea>
     </div>
+
   </div>
 </div>
 
-<!-- ====== BANK PANEL (TT/DEV manual mapping) ====== -->
-<div class="bank" id="bank">
-  <div class="bankHead">
-    <div class="bankTitle">Банк ТТ / Отклонений</div>
-    <button class="mini" id="bankClose">✕</button>
+<!-- ===== Editor Panel ===== -->
+<div class="editor" id="editor">
+  <div class="editorHead">
+    <div class="editorTitle">Редактор ТТ / Отклонений (по пунктам)</div>
+    <button class="mini" id="editorClose">✕</button>
   </div>
 
-  <div class="bankTabs">
-    <button class="btn tabBtn active" data-bank="tt">ТТ</button>
-    <button class="btn tabBtn" data-bank="dev">Отклонения</button>
-  </div>
+  <div class="editorBody">
+    <div class="editorLeft" id="pList"></div>
 
-  <div class="bankBody">
-    <div class="bankRow">
-      <button class="btn primary" id="bankPaste">Вставить текст</button>
-      <button class="btn" id="bankSplit">Разбить на элементы</button>
-      <button class="btn" id="bankClear">Очистить</button>
-    </div>
-
-    <div class="bankRow">
-      <div class="bankHint">
-        1) Кликни по “Пункт N” в таблице — он подсветится.<br/>
-        2) В банке кликни по элементу — он вставится в выбранный пункт в колонку TT/DEV.<br/>
-        3) “Назначить и следующий” — вставляет следующий НЕиспользованный элемент и переходит на следующий пункт.
+    <div class="editorRight">
+      <div class="hint">
+        1) Выбери пункт слева.<br>
+        2) Вставь ТТ и/или Отклонения справа.<br>
+        3) Нажми «Сохранить» (или просто перейди на другой пункт — автосохранение включено).
       </div>
-    </div>
 
-    <div class="bankList" id="bankList"></div>
+      <div class="editorBtns">
+        <button class="btn" id="prevP">← Предыдущий</button>
+        <button class="btn primary" id="saveP">Сохранить</button>
+        <button class="btn" id="nextP">Следующий →</button>
+      </div>
 
-    <div class="bankRow" style="justify-content:space-between;">
-      <button class="btn" id="bankPrev">← Назад</button>
-      <button class="btn primary" id="bankAssignNext">Назначить и следующий →</button>
-    </div>
-  </div>
-</div>
+      <div>
+        <div class="eLabel">ТТ (для выбранного пункта)</div>
+        <textarea class="eTa" id="ttTa" placeholder="Вставь ТТ именно для этого пункта..."></textarea>
+      </div>
 
-<!-- modal paste -->
-<div class="modal" id="modal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <div class="modalTitle" id="modalTitle">Вставь текст</div>
-      <button class="mini" id="modalClose">✕</button>
-    </div>
-    <textarea class="modalTa" id="modalTa" placeholder="Вставь сюда весь текст одним куском..."></textarea>
-    <div class="modalBtns">
-      <button class="btn" id="modalCancel">Отмена</button>
-      <button class="btn primary" id="modalOk">Готово</button>
+      <div>
+        <div class="eLabel">Отклонения (для выбранного пункта)</div>
+        <textarea class="eTa" id="devTa" placeholder="Вставь отклонения именно для этого пункта..."></textarea>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
   const rowsEl = document.getElementById("rows");
-  const noteEl = document.getElementById("modeNote");
+  const noteLeft = document.getElementById("noteLeft");
+  const noteRight = document.getElementById("noteRight");
 
   function sanitizeText(str){
     if(!str) return "";
-    str = str.replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
+    str = String(str).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
     str = str.replace(/\t/g,"    ");
     str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
     str = str.replace(/\n{6,}/g,"\n\n\n");
     return str;
   }
 
-  function insertPlainTextAtCursor(text){
-    const sel = window.getSelection();
-    if(!sel || sel.rangeCount===0) return;
-    const range = sel.getRangeAt(0);
-    range.deleteContents();
-    const node = document.createTextNode(text);
-    range.insertNode(node);
-    range.setStartAfter(node);
-    range.setEndAfter(node);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
   function syncRowHeight(rowEl){
     const boxes = [...rowEl.querySelectorAll(".box")];
-    boxes.forEach(b => b.style.minHeight = "120px");
+    boxes.forEach(b => b.style.minHeight = "110px");
     const h = Math.max(...boxes.map(b => b.scrollHeight));
-    boxes.forEach(b => b.style.minHeight = Math.max(120, h) + "px");
+    boxes.forEach(b => b.style.minHeight = Math.max(110, h) + "px");
   }
 
   function makeBox(value, ph, onInput){
@@ -2506,7 +2491,7 @@
       e.preventDefault();
       const cd = e.clipboardData || window.clipboardData;
       const plain = cd ? cd.getData("text/plain") : "";
-      insertPlainTextAtCursor(sanitizeText(plain));
+      document.execCommand("insertText", false, sanitizeText(plain));
       onInput(box.innerText);
     });
 
@@ -2515,105 +2500,15 @@
   }
 
   let items = [];
+  let selectedRowIndex = 0;
 
-  // ====== START: seed ======
-  function seedOnce(){
-   const op = sanitizeText(document.getElementById("seed_op").textContent);
-
-    // ЖЕСТКО: TT/DEV всегда пустые. Ты заполняешь их вручную через Банк.
-    items = [{ op, tt:"", dev:"" }];
-  }
-
-  // ====== render ======
-  function render(){
-    rowsEl.innerHTML = "";
-
-    items.forEach((it, idx) => {
-      const wrap = document.createElement("div");
-      wrap.className = "wrapRow";
-
-      const top = document.createElement("div");
-      top.className = "rowTop";
-
-      const tag = document.createElement("div");
-      tag.className = "tag";
-      tag.textContent = `Пункт ${idx+1}`;
-
-      const ctrls = document.createElement("div");
-      ctrls.style.display="flex";
-      ctrls.style.gap="6px";
-
-      const up = document.createElement("button");
-      up.className="mini"; up.textContent="↑";
-      up.onclick=()=>move(idx,-1);
-
-      const down = document.createElement("button");
-      down.className="mini"; down.textContent="↓";
-      down.onclick=()=>move(idx,+1);
-
-      const del = document.createElement("button");
-      del.className="mini"; del.textContent="✕";
-      del.onclick=()=>remove(idx);
-
-      ctrls.append(up,down,del);
-      top.append(tag,ctrls);
-
-      const row = document.createElement("div");
-      row.className="row";
-
-      const c1 = document.createElement("div"); c1.className="cell";
-      const c2 = document.createElement("div"); c2.className="cell";
-      const c3 = document.createElement("div"); c3.className="cell";
-
-      const b1 = makeBox(it.op, "Содержание операции…", (v)=>{ items[idx].op=v; syncRowHeight(row); });
-      const b2 = makeBox(it.tt, "ТТ (заполняй через Банк)…", (v)=>{ items[idx].tt=v; syncRowHeight(row); });
-      const b3 = makeBox(it.dev,"Отклонения (заполняй через Банк)…",(v)=>{ items[idx].dev=v; syncRowHeight(row); });
-
-      c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
-      row.append(c1,c2,c3);
-
-      wrap.append(top,row);
-      rowsEl.appendChild(wrap);
-
-      requestAnimationFrame(()=>syncRowHeight(row));
-    });
-
-    noteEl.innerHTML = `Пунктов: <b>${items.length}</b>. (ТТ/Отклонения заполняются вручную через “Банк”)`;
-  }
-
-  function add(){
-    items.push({op:"",tt:"",dev:""});
-    render();
-    hookRowSelection();
-    markSelectedRow();
-  }
-  function remove(i){
-    items.splice(i,1);
-    if(items.length===0) items=[{op:"",tt:"",dev:""}];
-    selectedRowIndex = Math.min(selectedRowIndex, items.length-1);
-    render();
-    hookRowSelection();
-    markSelectedRow();
-  }
-  function move(i,dir){
-    const j=i+dir;
-    if(j<0||j>=items.length) return;
-    const t=items[i]; items[i]=items[j]; items[j]=t;
-    selectedRowIndex = j;
-    render();
-    hookRowSelection();
-    markSelectedRow();
-  }
-
-  // ====== split OP into blocks ONLY ======
+  // ===== split OP into blocks =====
   function splitIntoBlocks(text){
-    text = (text ?? "").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+    text = sanitizeText(text || "");
     const lines = text.split("\n");
-
     const blocks = [];
     let cur = [];
 
-    // новый пункт: маркер (-, •, —, 1), 1., 1))
     const isBullet = (s) => /^(\s*)([-•—]|\d+[\)\.])\s+/.test(s);
 
     for(const raw of lines){
@@ -2633,6 +2528,99 @@
     return blocks.filter(b => b.trim().length);
   }
 
+  function seedOnce(){
+    const op = sanitizeText(document.getElementById("seed_op").value);
+    items = [{ op, tt:"", dev:"" }];
+  }
+
+  function render(){
+    rowsEl.innerHTML = "";
+    items.forEach((it, idx) => {
+      const wrap = document.createElement("div");
+      wrap.className = "wrapRow";
+
+      const top = document.createElement("div");
+      top.className = "rowTop";
+      top.onclick = ()=>setSelectedRow(idx);
+
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.textContent = `Пункт ${idx+1}`;
+
+      const ctrls = document.createElement("div");
+      ctrls.style.display="flex";
+      ctrls.style.gap="6px";
+
+      const up = document.createElement("button");
+      up.className="mini"; up.textContent="↑";
+      up.onclick=(e)=>{ e.stopPropagation(); move(idx,-1); };
+
+      const down = document.createElement("button");
+      down.className="mini"; down.textContent="↓";
+      down.onclick=(e)=>{ e.stopPropagation(); move(idx,+1); };
+
+      const del = document.createElement("button");
+      del.className="mini"; del.textContent="✕";
+      del.onclick=(e)=>{ e.stopPropagation(); remove(idx); };
+
+      ctrls.append(up,down,del);
+      top.append(tag,ctrls);
+
+      const row = document.createElement("div");
+      row.className="row";
+
+      const c1 = document.createElement("div"); c1.className="cell";
+      const c2 = document.createElement("div"); c2.className="cell";
+      const c3 = document.createElement("div"); c3.className="cell";
+
+      const b1 = makeBox(it.op, "Содержание операции…", (v)=>{ items[idx].op=v; syncRowHeight(row); });
+      const b2 = makeBox(it.tt, "ТТ заполняй в редакторе…", (v)=>{ items[idx].tt=v; syncRowHeight(row); });
+      const b3 = makeBox(it.dev,"Отклонения заполняй в редакторе…",(v)=>{ items[idx].dev=v; syncRowHeight(row); });
+
+      c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
+      row.append(c1,c2,c3);
+
+      wrap.append(top,row);
+      rowsEl.appendChild(wrap);
+      requestAnimationFrame(()=>syncRowHeight(row));
+    });
+
+    markSelectedRow();
+    noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>. Выбран: <b>${selectedRowIndex+1}</b>.`;
+    noteRight.innerHTML = `Редактор: <b>по пунктам</b> (без банка).`;
+  }
+
+  function markSelectedRow(){
+    document.querySelectorAll(".rowTop").forEach((el,i)=>{
+      el.classList.toggle("selected", i===selectedRowIndex);
+    });
+  }
+  function setSelectedRow(i){
+    selectedRowIndex = Math.max(0, Math.min(items.length-1, i));
+    markSelectedRow();
+    renderEditorList();
+    fillEditorFields();
+  }
+
+  function add(){
+    items.push({op:"",tt:"",dev:""});
+    selectedRowIndex = items.length-1;
+    render();
+  }
+  function remove(i){
+    items.splice(i,1);
+    if(items.length===0) items=[{op:"",tt:"",dev:""}];
+    selectedRowIndex = Math.max(0, Math.min(items.length-1, selectedRowIndex));
+    render();
+  }
+  function move(i,dir){
+    const j=i+dir;
+    if(j<0||j>=items.length) return;
+    const t=items[i]; items[i]=items[j]; items[j]=t;
+    selectedRowIndex = j;
+    render();
+  }
+
   function splitOPCurrent(){
     if(!items || items.length < 1) return;
     const base = items[0];
@@ -2641,40 +2629,32 @@
 
     const newItems = [];
     for(let i=0;i<n;i++){
-      newItems.push({
-        op: opBlocks[i] ?? "",
-        tt: "",
-        dev: ""
-      });
+      newItems.push({ op: opBlocks[i] ?? "", tt: "", dev: "" });
     }
     items = newItems;
     selectedRowIndex = 0;
     render();
-    hookRowSelection();
-    markSelectedRow();
-    alert(`Готово. Пунктов: ${n}\n(ТТ/Отклонения очищены и заполняются вручную)`);
+    alert(`Готово. Пунктов: ${n}\nТТ/Отклонения очищены (заполняй в редакторе).`);
   }
 
   function clearAllTTDEV(){
     items.forEach(x => { x.tt=""; x.dev=""; });
     render();
-    hookRowSelection();
-    markSelectedRow();
   }
 
-  // ====== save HTML copy (сохраняет OP + текущие TT/DEV) ======
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
   function saveHtmlCopy(){
     const html = document.documentElement.outerHTML;
-
-    // сохраняем ровно то, что сейчас в таблице (по строкам)
     const op = items.map(x=>x.op).join("\n\n");
-    const tt = items.map(x=>x.tt).join("\n\n");
-    const dev = items.map(x=>x.dev).join("\n\n");
-
-    const replaced = html
-      .replace(/<textarea id="seed_op">[\s\S]*?<\/textarea>/m, `<textarea id="seed_op">\n${escapeHtml(op)}\n      </textarea>`)
-      .replace(/<textarea id="seed_tt">[\s\S]*?<\/textarea>/m, `<textarea id="seed_tt">\n${escapeHtml(tt)}\n      </textarea>`)
-      .replace(/<textarea id="seed_dev">[\s\S]*?<\/textarea>/m, `<textarea id="seed_dev">\n${escapeHtml(dev)}\n      </textarea>`);
+    const replaced = html.replace(
+      /<textarea id="seed_op">[\s\S]*?<\/textarea>/m,
+      `<textarea id="seed_op">\n${escapeHtml(op)}\n      </textarea>`
+    );
 
     const blob = new Blob([replaced], {type:"text/html;charset=utf-8"});
     const url = URL.createObjectURL(blob);
@@ -2685,135 +2665,58 @@
     URL.revokeObjectURL(url);
   }
 
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
+  // ===== Editor panel =====
+  const editor = document.getElementById("editor");
+  const pList = document.getElementById("pList");
+  const ttTa = document.getElementById("ttTa");
+  const devTa = document.getElementById("devTa");
+
+  let editorDirtyTimer = null;
+
+  function openEditor(){
+    editor.style.display = "block";
+    renderEditorList();
+    fillEditorFields();
+  }
+  function closeEditor(){
+    editor.style.display = "none";
   }
 
-  // ====== BANK LOGIC ======
-  const bank = document.getElementById("bank");
-  const bankList = document.getElementById("bankList");
-  let bankMode = "tt"; // "tt" | "dev"
-  let bankData = { tt: {raw:"", items:[]}, dev:{raw:"", items:[]} };
-
-  let selectedRowIndex = 0;
-
-  function openBank(){ bank.style.display="block"; }
-  function closeBank(){ bank.style.display="none"; }
-
-  function markSelectedRow(){
-    document.querySelectorAll(".rowTop").forEach((el,i)=>{
-      el.classList.toggle("selected", i===selectedRowIndex);
-    });
-  }
-  function setSelectedRow(i){
-    selectedRowIndex = Math.max(0, Math.min(items.length-1, i));
-    markSelectedRow();
-  }
-
-  function renderBank(){
-    bankList.innerHTML = "";
-    const arr = bankData[bankMode].items;
-    if(!arr.length){
-      const empty = document.createElement("div");
-      empty.className = "bankHint";
-      empty.innerHTML = "Список пуст. Нажми <b>«Вставить текст»</b> → вставь весь текст → потом <b>«Разбить на элементы»</b>.";
-      bankList.appendChild(empty);
-      return;
-    }
-
-    arr.forEach((t, i)=>{
-      const d = document.createElement("div");
-      d.className = "bankItem" + (t.used ? " used" : "");
-      d.textContent = t.text;
-      d.title = "Клик = вставить в выбранный пункт";
-      d.onclick = ()=>assignBankItem(i);
-      bankList.appendChild(d);
+  function renderEditorList(){
+    pList.innerHTML = "";
+    items.forEach((_, idx)=>{
+      const b = document.createElement("div");
+      b.className = "pItem" + (idx===selectedRowIndex ? " active" : "");
+      b.textContent = `Пункт ${idx+1}`;
+      b.onclick = ()=>{ commitEditorFields(); setSelectedRow(idx); };
+      pList.appendChild(b);
     });
   }
 
-  function splitToItems(raw){
-    raw = sanitizeText(raw || "");
-    // Разбивка: пустая строка = новый элемент (достаточно для твоих ТТ/DEV)
-    const parts = raw
-      .replace(/\n{3,}/g,"\n\n")
-      .split(/\n\s*\n/g)
-      .map(s=>sanitizeText(s).trim())
-      .filter(Boolean);
-
-    return parts.map(p=>({text:p, used:false}));
+  function fillEditorFields(){
+    const it = items[selectedRowIndex] || {tt:"",dev:""};
+    ttTa.value = it.tt || "";
+    devTa.value = it.dev || "";
   }
 
-  function assignBankItem(i){
-    const arr = bankData[bankMode].items;
-    if(!arr[i] || arr[i].used) return;
-
-    if(bankMode==="tt") items[selectedRowIndex].tt = arr[i].text;
-    else items[selectedRowIndex].dev = arr[i].text;
-
-    arr[i].used = true;
-
+  function commitEditorFields(){
+    const it = items[selectedRowIndex];
+    if(!it) return;
+    it.tt = sanitizeText(ttTa.value);
+    it.dev = sanitizeText(devTa.value);
     render();
-    hookRowSelection();
-    markSelectedRow();
-    openBank();
-    renderBank();
   }
 
-  function assignAndNext(){
-    const arr = bankData[bankMode].items;
-    const idx = arr.findIndex(x=>!x.used);
-    if(idx===-1) return;
-    assignBankItem(idx);
-    setSelectedRow(selectedRowIndex+1);
-    openBank();
-    renderBank();
+  function scheduleAutoCommit(){
+    if(editorDirtyTimer) clearTimeout(editorDirtyTimer);
+    editorDirtyTimer = setTimeout(()=>commitEditorFields(), 250);
   }
+  ttTa.addEventListener("input", scheduleAutoCommit);
+  devTa.addEventListener("input", scheduleAutoCommit);
 
-  function clearBank(){
-    bankData[bankMode].items = [];
-    bankData[bankMode].raw = "";
-    renderBank();
-  }
-
-  function showPasteModal(title, onOk){
-    const modal = document.getElementById("modal");
-    const ta = document.getElementById("modalTa");
-    document.getElementById("modalTitle").textContent = title;
-
-    ta.value = "";
-    modal.style.display = "flex";
-
-    const close = ()=>{
-      modal.style.display="none";
-      document.getElementById("modalOk").onclick = null;
-    };
-
-    document.getElementById("modalClose").onclick = close;
-    document.getElementById("modalCancel").onclick = close;
-
-    document.getElementById("modalOk").onclick = ()=>{
-      const v = ta.value;
-      close();
-      onOk(v);
-    };
-  }
-
-  function hookRowSelection(){
-    document.querySelectorAll(".rowTop").forEach((top, idx)=>{
-      top.style.cursor = "pointer";
-      top.onclick = ()=>{
-        setSelectedRow(idx);
-        openBank();
-        renderBank();
-      };
-    });
-  }
-
-  // ====== buttons wiring ======
-  document.getElementById("openBankBtn").addEventListener("click", ()=>{ openBank(); renderBank(); markSelectedRow(); });
+  // ===== buttons =====
+  document.getElementById("openEditorBtn").addEventListener("click", openEditor);
+  document.getElementById("editorClose").addEventListener("click", closeEditor);
 
   document.getElementById("addRow").addEventListener("click", add);
   document.getElementById("splitOP").addEventListener("click", splitOPCurrent);
@@ -2821,37 +2724,19 @@
   document.getElementById("saveHtml").addEventListener("click", saveHtmlCopy);
   document.getElementById("print").addEventListener("click", () => window.print());
 
-  document.getElementById("bankClose").onclick = closeBank;
-
-  document.querySelectorAll(".bankTabs [data-bank]").forEach(btn=>{
-    btn.onclick = ()=>{
-      bankMode = btn.dataset.bank;
-      document.querySelectorAll(".bankTabs .tabBtn").forEach(x=>x.classList.toggle("active", x.dataset.bank===bankMode));
-      renderBank();
-    };
+  document.getElementById("saveP").addEventListener("click", commitEditorFields);
+  document.getElementById("prevP").addEventListener("click", ()=>{
+    commitEditorFields();
+    setSelectedRow(selectedRowIndex-1);
+  });
+  document.getElementById("nextP").addEventListener("click", ()=>{
+    commitEditorFields();
+    setSelectedRow(selectedRowIndex+1);
   });
 
-  document.getElementById("bankPaste").onclick = ()=>{
-    showPasteModal(bankMode==="tt" ? "Вставь полный текст ТТ" : "Вставь полный текст Отклонений", (v)=>{
-      bankData[bankMode].raw = v;
-    });
-  };
-
-  document.getElementById("bankSplit").onclick = ()=>{
-    bankData[bankMode].items = splitToItems(bankData[bankMode].raw);
-    renderBank();
-  };
-
-  document.getElementById("bankClear").onclick = clearBank;
-  document.getElementById("bankAssignNext").onclick = assignAndNext;
-  document.getElementById("bankPrev").onclick = ()=>{ setSelectedRow(selectedRowIndex-1); openBank(); renderBank(); };
-
-  // ====== start ======
+  // ===== start =====
   seedOnce();
   render();
-  hookRowSelection();
-  markSelectedRow();
-  // банк НЕ открываем автоматически, чтобы не мешал
 </script>
 </body>
 </html>
