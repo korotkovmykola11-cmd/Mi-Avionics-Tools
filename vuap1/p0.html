@@ -224,6 +224,7 @@
       </div>
       <div class="btns">
         <button class="btn primary" id="addRow">+ Добавить пункт</button>
+        <button class="btn" id="syncSplit">Синхронизировать (разбить на пункты)</button>
         <button class="btn" id="saveHtml">Сохранить копию (HTML)</button>
         <button class="btn" id="print">Печать</button>
       </div>
@@ -5330,6 +5331,57 @@ I. Проверьте исправность кнопки
     const t=items[i]; items[i]=items[j]; items[j]=t;
     render();
   }
+function splitIntoBlocks(text){
+  text = (text ?? "").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  const lines = text.split("\n");
+
+  const blocks = [];
+  let cur = [];
+  const isBullet = (s) => /^(\s*)([-•—]|\d+[\)\.])\s+/.test(s);
+
+  for(const raw of lines){
+    const s = raw.replace(/\u00A0/g," ");
+    if(s.trim()===""){
+      if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
+      continue;
+    }
+    if(isBullet(s)){
+      if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
+      cur.push(s.trim());
+    }else{
+      cur.push(s.trim());
+    }
+  }
+  if(cur.length) blocks.push(cur.join("\n").trim());
+  return blocks.filter(b => b.trim().length);
+}
+
+function syncSplitCurrentRow(){
+  if(!items || items.length < 1) return;
+
+  const base = items[0]; // берём 1-й пункт (там у тебя “простыня”)
+
+  const opBlocks  = splitIntoBlocks(base.op);
+  const ttBlocks  = splitIntoBlocks(base.tt);
+  const devBlocks = splitIntoBlocks(base.dev);
+
+  const n = Math.max(opBlocks.length, ttBlocks.length, devBlocks.length, 1);
+
+  const newItems = [];
+  for(let i=0;i<n;i++){
+    newItems.push({
+      op:  opBlocks[i]  ?? "",
+      tt:  ttBlocks[i]  ?? "",
+      dev: devBlocks[i] ?? ""
+    });
+  }
+
+  items = newItems;
+  render();
+  applyTabMode();
+
+  alert(`Готово. Пунктов: ${n}\nOP:${opBlocks.length} TT:${ttBlocks.length} DEV:${devBlocks.length}`);
+}
 
   function saveHtmlCopy(){
     // Сохраняем КОПИЮ HTML, где тексты уже лежат в textarea
@@ -5362,6 +5414,7 @@ I. Проверьте исправность кнопки
   }
 
   document.getElementById("addRow").addEventListener("click", add);
+  document.getElementById("syncSplit").addEventListener("click", syncSplitCurrentRow);
   document.getElementById("saveHtml").addEventListener("click", saveHtmlCopy);
   document.getElementById("print").addEventListener("click", () => window.print());
 
