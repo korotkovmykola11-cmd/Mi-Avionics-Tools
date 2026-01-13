@@ -2518,7 +2518,8 @@
 
   // ====== START: seed ======
   function seedOnce(){
-    const op = sanitizeText(document.getElementById("seed_op").value);
+   const op = sanitizeText(document.getElementById("seed_op").textContent);
+
     // ЖЕСТКО: TT/DEV всегда пустые. Ты заполняешь их вручную через Банк.
     items = [{ op, tt:"", dev:"" }];
   }
