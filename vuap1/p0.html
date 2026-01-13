@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ВУАП-1 — p0</title>
+  <title>Технологическая карта — p0</title>
   <style>
     :root{
       --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
@@ -19,8 +19,8 @@
       --r:16px;
       --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 
-      /* фикс ширины колонок, чтобы “напротив” было всегда */
-      --colOp: 540px;
+      /* фикс ширины колонок (строго напротив) */
+      --colOp: 560px;
       --colTT: 420px;
       --colDev: 420px;
     }
@@ -35,7 +35,7 @@
         linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #061523 78%, var(--bg3) 100%);
     }
     .doc{
-      max-width: 1380px;
+      max-width: 1420px;
       margin:0 auto;
       border-radius: var(--r);
       background: linear-gradient(180deg, var(--glass), var(--glass2));
@@ -46,7 +46,7 @@
     }
     header{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:10px;
       padding:12px 14px;
@@ -60,9 +60,11 @@
       font-size: 18px;
     }
     .subtitle{
-      margin-top:4px;
+      margin-top:6px;
       color: var(--muted);
       font-size: 13px;
+      max-width: 760px;
+      line-height:1.3;
     }
     .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
     .btn{
@@ -83,7 +85,7 @@
     .wrap{
       padding:12px;
       overflow:auto;
-      max-height: calc(100vh - 120px);
+      max-height: calc(100vh - 130px);
       -webkit-overflow-scrolling: touch;
     }
 
@@ -112,50 +114,13 @@
     .hcell:last-child{border-right:none}
 
     .rows{display:flex; flex-direction:column; gap:10px; padding:10px}
-    .row{
-      display:grid;
-      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 12px;
+
+    .wrapRow{
+      border-radius:12px;
       overflow:hidden;
-      background: rgba(0,0,0,.08);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.06);
     }
-    .cell{
-      padding:10px;
-      border-right:1px solid rgba(255,255,255,.08);
-      background: rgba(7,14,22,.30);
-      position:relative;
-    }
-    .cell:last-child{border-right:none}
-
-    .box{
-      min-height: 110px;
-      border-radius: 10px;
-      border:1px solid rgba(33,240,255,.12);
-      background: rgba(7,14,22,.35);
-      padding: 10px 12px;
-      outline:none;
-
-      /* ключевые настройки от “ломает по буквам” */
-      white-space: pre-wrap;
-      word-break: normal;
-      overflow-wrap: break-word;
-      hyphens: auto;
-
-      font-size: 14px;
-      line-height: 1.35;
-      color: #eaf6ff;
-      overflow:auto;
-    }
-    .box:focus{
-      border-color: rgba(33,240,255,.35);
-      box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 24px rgba(33,240,255,.10);
-    }
-    .box:empty::before{
-      content: attr(data-ph);
-      color: rgba(185,202,221,.55);
-    }
-
     .rowTop{
       display:flex;
       align-items:center;
@@ -183,18 +148,59 @@
       font-weight:900;
     }
 
-    /* Вкладки (для телефона): показываем по одному столбцу */
-    .tabsBar{display:none; gap:8px; padding:10px; border:1px solid rgba(255,255,255,.10); border-radius:14px; margin-bottom:10px; background: rgba(0,0,0,.08);}
-    .tabBtn{flex:1; text-align:center}
-    .tabBtn.active{border-color: rgba(33,240,255,.35)}
-    .tabHint{color:var(--muted); font-size:12px; padding:0 2px; margin-top:6px}
+    .row{
+      display:grid;
+      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
+    }
+    .cell{
+      padding:10px;
+      border-right:1px solid rgba(255,255,255,.08);
+      background: rgba(7,14,22,.30);
+    }
+    .cell:last-child{border-right:none}
 
-    .modeNote{color:var(--muted); font-size:12px; padding:10px 14px; border-top:1px solid var(--line); background: rgba(0,0,0,.12);}
+    .box{
+      min-height: 120px;
+      border-radius: 10px;
+      border:1px solid rgba(33,240,255,.12);
+      background: rgba(7,14,22,.35);
+      padding: 10px 12px;
+      outline:none;
+
+      white-space: pre-wrap;
+      word-break: normal;
+      overflow-wrap: break-word;
+      hyphens: auto;
+
+      font-size: 14px;
+      line-height: 1.35;
+      color: #eaf6ff;
+      overflow:auto;
+    }
+    .box:focus{
+      border-color: rgba(33,240,255,.35);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 24px rgba(33,240,255,.10);
+    }
+    .box:empty::before{
+      content: attr(data-ph);
+      color: rgba(185,202,221,.55);
+    }
+
+    .modeNote{
+      color:var(--muted);
+      font-size:12px;
+      padding:10px 14px;
+      border-top:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+    }
+
+    /* скрытый блок со стартовыми текстами */
+    .seed{display:none}
 
     @media print{
       .scene{padding:0; background:#fff}
       .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.tabsBar,.modeNote{display:none}
+      header,.modeNote{display:none}
       .wrap{max-height:none; overflow:visible; padding:0}
       .grid{border:1px solid #ccc; background:#fff}
       .head{position:static; background:#fff}
@@ -211,8 +217,10 @@
   <div class="doc">
     <header>
       <div>
-        <div class="title">Технологическая карта (САУ) — p0</div>
-        <div class="subtitle">3 колонки строго напротив. На телефоне можно переключить “вкладки”, но табличный режим тоже доступен (с прокруткой).</div>
+        <div class="title">Технологическая карта — p0</div>
+        <div class="subtitle">
+          Таблица всегда из 3 колонок (строго напротив). На телефоне просто листай вбок (горизонтальная прокрутка) — так сохраняется “линейность”.
+        </div>
       </div>
       <div class="btns">
         <button class="btn primary" id="addRow">+ Добавить пункт</button>
@@ -222,48 +230,24 @@
     </header>
 
     <div class="wrap">
-      <div class="tabsBar" id="tabsBar">
-        <button class="btn tabBtn active" data-tab="op">Операция</button>
-        <button class="btn tabBtn" data-tab="tt">ТТ</button>
-        <button class="btn tabBtn" data-tab="dev">Отклонения</button>
-        <div class="tabHint">На телефоне так удобнее вводить. Если хочешь “как раньше” — листай горизонтально в табличном режиме.</div>
-      </div>
-
-      <div class="grid" id="grid">
+      <div class="grid">
         <div class="head">
           <div class="hcell">Содержание операции</div>
           <div class="hcell">Технические требования (ТТ)</div>
           <div class="hcell">Работы при отклонениях от ТТ</div>
         </div>
-
         <div class="rows" id="rows"></div>
       </div>
     </div>
 
     <div class="modeNote" id="modeNote"></div>
-  </div>
-</div>
 
-<script>
-/* ============================================================
-   1) ВСТАВЬ СЮДА СВОЙ JSON ОДИН РАЗ (и всё будет “навсегда” в файле)
-   ============================================================
-
-   ТЫ УЖЕ ДАЛ ЕГО В ЧАТЕ:
-   {
-     "rows":[
-       {"op":"...","tt":"...","dev":"..."},
-       ...
-     ]
-   }
-
-   Вставь его полностью между BEGIN/END ниже.
-*/
-const SEED = (function(){
-  const BEGIN = {
-    "rows": [
-      {
-        "op": "<<<Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
+    <!-- ======================================================
+         СТАРТОВЫЕ ДАННЫЕ (ВСТАВЛЯЕШЬ ТЕКСТ СЮДА)
+         ====================================================== -->
+    <div class="seed">
+      <textarea id="seed_op">
+Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
 
 - установите автомат защиты "САУ СИГ-НАЛ" на левом пульте АЗС в положение "ВКЛЮЧЕНО";
 
@@ -2320,8 +2304,11 @@ const SEED = (function(){
 
 
 
->>>",
-        "tt": "<<<
+
+      </textarea>
+
+      <textarea id="seed_tt">
+
 
 
 
@@ -3331,8 +3318,11 @@ const SEED = (function(){
 
 
 
->>>",
-        "dev":"<<<
+
+      </textarea>
+
+      <textarea id="seed_dev">
+
 
 
 
@@ -5199,243 +5189,185 @@ I. Проверьте исправность кнопки
 
 
 
->>>"
-      }
-    ]
-  };
-  return BEGIN;
-})();
 
-/* ============================================================
-   2) ЛОГИКА РЕДАКТОРА (без Import JSON, всё внутри файла)
-   ============================================================ */
+      </textarea>
+    </div>
+  </div>
+</div>
 
-const rowsEl = document.getElementById("rows");
-const modeNote = document.getElementById("modeNote");
+<script>
+  const rowsEl = document.getElementById("rows");
+  const noteEl = document.getElementById("modeNote");
 
-let items = Array.isArray(SEED?.rows) ? SEED.rows.map(r => ({
-  op: String(r.op ?? ""),
-  tt: String(r.tt ?? ""),
-  dev:String(r.dev ?? "")
-})) : [{op:"",tt:"",dev:""}];
-
-function sanitizeText(str){
-  if(!str) return "";
-  str = str.replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
-  str = str.replace(/\t/g,"    ");
-  str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
-  str = str.replace(/\n{6,}/g,"\n\n\n");
-  return str;
-}
-
-function insertPlainTextAtCursor(text){
-  const sel = window.getSelection();
-  if(!sel || sel.rangeCount===0) return;
-  const range = sel.getRangeAt(0);
-  range.deleteContents();
-  const node = document.createTextNode(text);
-  range.insertNode(node);
-  range.setStartAfter(node);
-  range.setEndAfter(node);
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
-function syncRowHeight(rowEl){
-  const boxes = [...rowEl.querySelectorAll(".box")];
-  boxes.forEach(b => b.style.minHeight = "110px");
-  const h = Math.max(...boxes.map(b => b.scrollHeight));
-  boxes.forEach(b => b.style.minHeight = Math.max(110, h) + "px");
-}
-
-function makeBox(value, ph, onInput){
-  const box = document.createElement("div");
-  box.className = "box";
-  box.contentEditable = "true";
-  box.dataset.ph = ph;
-  box.innerText = value || "";
-
-  box.addEventListener("paste", (e) => {
-    e.preventDefault();
-    const cd = e.clipboardData || window.clipboardData;
-    const plain = cd ? cd.getData("text/plain") : "";
-    insertPlainTextAtCursor(sanitizeText(plain));
-    onInput(box.innerText);
-  });
-
-  box.addEventListener("input", () => onInput(box.innerText));
-  return box;
-}
-
-function render(){
-  rowsEl.innerHTML = "";
-
-  items.forEach((it, idx) => {
-    const wrap = document.createElement("div");
-    wrap.style.borderRadius = "12px";
-    wrap.style.overflow = "hidden";
-    wrap.style.border = "1px solid rgba(255,255,255,.10)";
-    wrap.style.background = "rgba(0,0,0,.06)";
-    wrap.style.marginBottom = "10px";
-
-    const top = document.createElement("div");
-    top.className = "rowTop";
-    const tag = document.createElement("div");
-    tag.className = "tag";
-    tag.textContent = `Пункт ${idx+1}`;
-
-    const ctrls = document.createElement("div");
-    ctrls.style.display="flex";
-    ctrls.style.gap="6px";
-
-    const up = document.createElement("button");
-    up.className="mini"; up.textContent="↑";
-    up.onclick=()=>move(idx,-1);
-
-    const down = document.createElement("button");
-    down.className="mini"; down.textContent="↓";
-    down.onclick=()=>move(idx,+1);
-
-    const del = document.createElement("button");
-    del.className="mini"; del.textContent="✕";
-    del.onclick=()=>remove(idx);
-
-    ctrls.append(up,down,del);
-    top.append(tag,ctrls);
-
-    const row = document.createElement("div");
-    row.className="row";
-    row.dataset.index = String(idx);
-
-    const c1 = document.createElement("div"); c1.className="cell";
-    const c2 = document.createElement("div"); c2.className="cell";
-    const c3 = document.createElement("div"); c3.className="cell";
-
-    const b1 = makeBox(it.op, "Содержание пункта…", (v)=>{ items[idx].op=v; syncRowHeight(row); });
-    const b2 = makeBox(it.tt, "ТТ напротив этого пункта…", (v)=>{ items[idx].tt=v; syncRowHeight(row); });
-    const b3 = makeBox(it.dev,"Отклонения напротив этого пункта…",(v)=>{ items[idx].dev=v; syncRowHeight(row); });
-
-    c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
-    row.append(c1,c2,c3);
-
-    wrap.append(top,row);
-    rowsEl.appendChild(wrap);
-
-    // после вставки
-    requestAnimationFrame(()=>syncRowHeight(row));
-  });
-
-  modeNote.innerHTML = `Пунктов: <b>${items.length}</b>.`;
-}
-
-function add(){
-  items.push({op:"",tt:"",dev:""});
-  render();
-}
-
-function remove(i){
-  items.splice(i,1);
-  if(items.length===0) items=[{op:"",tt:"",dev:""}];
-  render();
-}
-function move(i,dir){
-  const j=i+dir;
-  if(j<0||j>=items.length) return;
-  const t=items[i]; items[i]=items[j]; items[j]=t;
-  render();
-}
-
-function saveHtmlCopy(){
-  // Делаем копию текущей страницы, но с данными прямо в SEED
-  const clone = document.documentElement.outerHTML;
-
-  // Подменяем SEED на актуальные items
-  const data = { rows: items };
-  const seedStr = "const SEED = (function(){";
-  const start = clone.indexOf(seedStr);
-  if(start === -1){
-    alert("Не нашёл блок SEED в HTML. (Это странно.)");
-    return;
-  }
-  // Простая замена содержимого BEGIN на актуальное
-  const replaced = clone.replace(
-    /const SEED = \(function\(\)\{[\s\S]*?return BEGIN;\s*\}\)\(\);\s*/m,
-    `const SEED = (function(){\n  const BEGIN = ${JSON.stringify(data, null, 2)};\n  return BEGIN;\n})();\n`
-  );
-
-  const blob = new Blob([replaced], {type:"text/html;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "p0_saved.html";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-/* ======================
-   Телефон: вкладки
-   ====================== */
-let phoneTabs = false;
-let activeTab = "op";
-
-function applyTabMode(){
-  const m = window.matchMedia("(max-width: 900px)");
-  phoneTabs = m.matches;
-
-  const tabsBar = document.getElementById("tabsBar");
-  tabsBar.style.display = phoneTabs ? "flex" : "none";
-
-  // В табличном режиме всегда видно 3 колонки (прокрутка)
-  // В режиме вкладок прячем 2 колонки
-  document.querySelectorAll(".row").forEach(row=>{
-    const cells = row.querySelectorAll(".cell");
-    if(!phoneTabs){
-      cells.forEach(c=>c.style.display="block");
-      return;
-    }
-    // phone: показываем только 1 колонку
-    const map = {op:0, tt:1, dev:2};
-    const show = map[activeTab];
-    cells.forEach((c,i)=>c.style.display = (i===show) ? "block" : "none");
-  });
-
-  // head
-  const head = document.querySelector(".head");
-  const hcells = head.querySelectorAll(".hcell");
-  if(!phoneTabs){
-    head.style.gridTemplateColumns = "var(--colOp) var(--colTT) var(--colDev)";
-    hcells.forEach(h=>h.style.display="block");
-  }else{
-    // показываем только заголовок активной колонки
-    const map = {op:0, tt:1, dev:2};
-    const show = map[activeTab];
-    head.style.gridTemplateColumns = "1fr";
-    hcells.forEach((h,i)=>h.style.display = (i===show) ? "block" : "none");
+  function sanitizeText(str){
+    if(!str) return "";
+    str = str.replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
+    str = str.replace(/\t/g,"    ");
+    str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
+    str = str.replace(/\n{6,}/g,"\n\n\n");
+    return str;
   }
 
-  modeNote.innerHTML = phoneTabs
-    ? `Пунктов: <b>${items.length}</b>. Режим телефона: <b>вкладки</b>.`
-    : `Пунктов: <b>${items.length}</b>. Режим: <b>таблица</b> (на телефоне — горизонтальная прокрутка).`;
-}
+  function insertPlainTextAtCursor(text){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const node = document.createTextNode(text);
+    range.insertNode(node);
+    range.setStartAfter(node);
+    range.setEndAfter(node);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
 
-document.getElementById("tabsBar").addEventListener("click",(e)=>{
-  const btn = e.target.closest("[data-tab]");
-  if(!btn) return;
-  activeTab = btn.dataset.tab;
-  document.querySelectorAll(".tabBtn").forEach(b=>b.classList.toggle("active", b.dataset.tab===activeTab));
-  applyTabMode();
-});
+  function syncRowHeight(rowEl){
+    const boxes = [...rowEl.querySelectorAll(".box")];
+    boxes.forEach(b => b.style.minHeight = "120px");
+    const h = Math.max(...boxes.map(b => b.scrollHeight));
+    boxes.forEach(b => b.style.minHeight = Math.max(120, h) + "px");
+  }
 
-document.getElementById("addRow").addEventListener("click", add);
-document.getElementById("saveHtml").addEventListener("click", saveHtmlCopy);
-document.getElementById("print").addEventListener("click", () => window.print());
+  function makeBox(value, ph, onInput){
+    const box = document.createElement("div");
+    box.className = "box";
+    box.contentEditable = "true";
+    box.dataset.ph = ph;
+    box.innerText = value || "";
 
-// старт
-render();
-applyTabMode();
-window.matchMedia("(max-width: 900px)").addEventListener?.("change", applyTabMode);
-window.addEventListener("resize", ()=>applyTabMode());
+    box.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const cd = e.clipboardData || window.clipboardData;
+      const plain = cd ? cd.getData("text/plain") : "";
+      insertPlainTextAtCursor(sanitizeText(plain));
+      onInput(box.innerText);
+    });
 
+    box.addEventListener("input", () => onInput(box.innerText));
+    return box;
+  }
+
+  let items = [];
+
+  function seedOnce(){
+    const op = sanitizeText(document.getElementById("seed_op").value);
+    const tt = sanitizeText(document.getElementById("seed_tt").value);
+    const dev = sanitizeText(document.getElementById("seed_dev").value);
+
+    // ОДНА операция (один пункт) = три колонки напротив.
+    // Если хочешь "много пунктов" — потом разобьём по маркерам, но сейчас спасаем то, что ты набрал.
+    items = [{ op, tt, dev }];
+  }
+
+  function render(){
+    rowsEl.innerHTML = "";
+
+    items.forEach((it, idx) => {
+      const wrap = document.createElement("div");
+      wrap.className = "wrapRow";
+
+      const top = document.createElement("div");
+      top.className = "rowTop";
+
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.textContent = `Пункт ${idx+1}`;
+
+      const ctrls = document.createElement("div");
+      ctrls.style.display="flex";
+      ctrls.style.gap="6px";
+
+      const up = document.createElement("button");
+      up.className="mini"; up.textContent="↑";
+      up.onclick=()=>move(idx,-1);
+
+      const down = document.createElement("button");
+      down.className="mini"; down.textContent="↓";
+      down.onclick=()=>move(idx,+1);
+
+      const del = document.createElement("button");
+      del.className="mini"; del.textContent="✕";
+      del.onclick=()=>remove(idx);
+
+      ctrls.append(up,down,del);
+      top.append(tag,ctrls);
+
+      const row = document.createElement("div");
+      row.className="row";
+
+      const c1 = document.createElement("div"); c1.className="cell";
+      const c2 = document.createElement("div"); c2.className="cell";
+      const c3 = document.createElement("div"); c3.className="cell";
+
+      const b1 = makeBox(it.op, "Содержание операции…", (v)=>{ items[idx].op=v; syncRowHeight(row); });
+      const b2 = makeBox(it.tt, "ТТ напротив…", (v)=>{ items[idx].tt=v; syncRowHeight(row); });
+      const b3 = makeBox(it.dev,"Отклонения напротив…",(v)=>{ items[idx].dev=v; syncRowHeight(row); });
+
+      c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
+      row.append(c1,c2,c3);
+
+      wrap.append(top,row);
+      rowsEl.appendChild(wrap);
+
+      requestAnimationFrame(()=>syncRowHeight(row));
+    });
+
+    noteEl.innerHTML = `Пунктов: <b>${items.length}</b>. На телефоне листай таблицу вбок — так сохраняется “напротив”.`;
+  }
+
+  function add(){
+    items.push({op:"",tt:"",dev:""});
+    render();
+  }
+  function remove(i){
+    items.splice(i,1);
+    if(items.length===0) items=[{op:"",tt:"",dev:""}];
+    render();
+  }
+  function move(i,dir){
+    const j=i+dir;
+    if(j<0||j>=items.length) return;
+    const t=items[i]; items[i]=items[j]; items[j]=t;
+    render();
+  }
+
+  function saveHtmlCopy(){
+    // Сохраняем КОПИЮ HTML, где тексты уже лежат в textarea
+    const html = document.documentElement.outerHTML;
+
+    // Подставляем актуальные значения в seed textarea
+    const op = items.map(x=>x.op).join("\n");
+    const tt = items.map(x=>x.tt).join("\n");
+    const dev = items.map(x=>x.dev).join("\n");
+
+    const replaced = html
+      .replace(/<textarea id="seed_op">[\s\S]*?<\/textarea>/m, `<textarea id="seed_op">\n${escapeHtml(op)}\n      </textarea>`)
+      .replace(/<textarea id="seed_tt">[\s\S]*?<\/textarea>/m, `<textarea id="seed_tt">\n${escapeHtml(tt)}\n      </textarea>`)
+      .replace(/<textarea id="seed_dev">[\s\S]*?<\/textarea>/m, `<textarea id="seed_dev">\n${escapeHtml(dev)}\n      </textarea>`);
+
+    const blob = new Blob([replaced], {type:"text/html;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "p0_saved.html";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+
+  document.getElementById("addRow").addEventListener("click", add);
+  document.getElementById("saveHtml").addEventListener("click", saveHtmlCopy);
+  document.getElementById("print").addEventListener("click", () => window.print());
+
+  // старт
+  seedOnce();
+  render();
 </script>
 </body>
 </html>
