@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Технологическая карта — p0 (вариант 2, фикс)</title>
+  <title>Технологическая карта — p0 (вставка 3 столбцов)</title>
 
   <style>
     :root{
@@ -26,6 +26,7 @@
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:var(--font);color:var(--ink)}
+    button, textarea{font-family:inherit}
 
     .scene{
       min-height:100vh;
@@ -36,7 +37,7 @@
         linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #061523 78%, var(--bg3) 100%);
     }
     .doc{
-      max-width: 1420px;
+      max-width: 1480px;
       margin:0 auto;
       border-radius: var(--r);
       background: linear-gradient(180deg, var(--glass), var(--glass2));
@@ -64,7 +65,7 @@
       margin-top:6px;
       color: var(--muted);
       font-size: 13px;
-      max-width: 920px;
+      max-width: 980px;
       line-height:1.35;
     }
     .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
@@ -82,6 +83,9 @@
     .btn.primary{
       border-color: rgba(0,255,166,.28);
       box-shadow: 0 0 18px rgba(0,255,166,.10);
+    }
+    .btn.warn{
+      border-color: rgba(255,180,0,.35);
     }
 
     .wrap{
@@ -205,7 +209,81 @@
       flex-wrap:wrap;
     }
 
-    /* ===== Editor Panel ===== */
+    /* ===== Overlay / Modal ===== */
+    .overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      z-index:80;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+    .modal{
+      width:min(1120px, 100%);
+      max-height: min(92vh, 900px);
+      background: rgba(6,14,22,.96);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.72);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .modalHead{
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .modalTitle{font-weight:950; color: var(--accent)}
+    .modalBody{
+      padding:12px;
+      overflow:auto;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:10px;
+    }
+    .mCol{display:flex; flex-direction:column; gap:6px}
+    .mLab{font-size:12px; font-weight:900; color:var(--muted)}
+    .mTa{
+      width:100%;
+      min-height: 320px;
+      resize: vertical;
+      border-radius: 12px;
+      border:1px solid rgba(33,240,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--ink);
+      outline:none;
+      padding:10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: pre;
+    }
+    .mTa:focus{border-color: rgba(33,240,255,.35)}
+    .modalFoot{
+      padding:10px 12px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .help{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+      max-width: 780px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      border-radius: 12px;
+      padding:8px 10px;
+    }
+
+    /* ===== Side Editor ===== */
     .editor{
       position: fixed;
       right: 12px;
@@ -218,7 +296,7 @@
       border-radius: 16px;
       box-shadow: 0 30px 90px rgba(0,0,0,.62);
       backdrop-filter: blur(8px);
-      z-index: 60;
+      z-index: 70;
       display: none;
       overflow:hidden;
     }
@@ -254,7 +332,6 @@
       border-color: rgba(0,255,166,.42);
       box-shadow: 0 0 0 2px rgba(0,0,0,.25) inset;
     }
-
     .editorRight{
       padding:10px;
       overflow:auto;
@@ -297,12 +374,15 @@
       padding:8px 10px;
     }
 
-    .seed{display:none}
+    @media (max-width: 980px){
+      .modalBody{grid-template-columns: 1fr}
+      :root{--colOp: 520px; --colTT: 420px; --colDev: 420px;}
+    }
 
     @media print{
       .scene{padding:0; background:#fff}
       .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.modeNote,.editor{display:none !important}
+      header,.modeNote,.editor,.overlay{display:none !important}
       .wrap{max-height:none; overflow:visible; padding:0}
       .grid{border:1px solid #ccc; background:#fff}
       .head{position:static; background:#fff}
@@ -321,24 +401,25 @@
       <div>
         <div class="title">Технологическая карта — p0</div>
         <div class="subtitle">
-          Вариант 2 (фикс): OP вставляешь сам → «Разбить OP на пункты» → ТТ/Отклонения заполняешь в редакторе «ТТ/DEV (по пунктам)».
-          Без “банка”, без «вставилось не туда».
+          Вставка сразу в 3 столбца: <b>OP / ТТ / Работы</b> → «Разбить на пункты» → редактируешь ТТ/Работы по пунктам или прямо в таблице.
+          Никаких вставок в код.
         </div>
       </div>
       <div class="btns">
-        <button class="btn primary" id="openEditorBtn">ТТ/DEV (по пунктам)</button>
+        <button class="btn primary" id="openPaste">Вставить OP/ТТ/DEV</button>
+        <button class="btn" id="splitAll">Разбить на пункты</button>
+        <button class="btn primary" id="openEditorBtn">ТТ/Работы (по пунктам)</button>
         <button class="btn" id="addRow">+ Добавить пункт</button>
-        <button class="btn" id="splitOP">Разбить OP на пункты</button>
-        <button class="btn" id="clearTTDEV">Очистить ТТ/Откл</button>
-        <button class="btn" id="saveHtml">Сохранить копию (HTML)</button>
+        <button class="btn" id="exportJson">Экспорт (JSON)</button>
         <button class="btn" id="print">Печать</button>
+        <button class="btn warn" id="resetAll">Сбросить всё</button>
       </div>
     </header>
 
     <div class="wrap">
       <div class="grid">
         <div class="head">
-          <div class="hcell">Содержание операции</div>
+          <div class="hcell">Содержание операции (OP)</div>
           <div class="hcell">Технические требования (ТТ)</div>
           <div class="hcell">Работы при отклонениях от ТТ</div>
         </div>
@@ -350,2086 +431,49 @@
       <div id="noteLeft"></div>
       <div id="noteRight"></div>
     </div>
-
-    <!-- ======================================================
-         ✅ ✅ ✅  ВОТ СЮДА ВСТАВЛЯЕШЬ "СОДЕРЖАНИЕ ОПЕРАЦИИ"  ✅ ✅ ✅
-         ТОЛЬКО ТЕКСТ. НЕ СТАВЬ В НАЧАЛЕ "<" И НЕ СТАВЬ В КОНЦЕ ">".
-         Потом в браузере нажми: "Разбить OP на пункты".
-         ====================================================== -->
-    <div class="seed">
-      <Проверьте работоспособность системы ав-томатического управления САУ-В24-1. для чего:
-
-- установите автомат защиты "САУ СИГ-НАЛ" на левом пульте АЗС в положение "ВКЛЮЧЕНО";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- включите системы и агрегаты взаимодей-ствия с САУ, гировертикаль МГВ-1СУ, кур-совую систему "ГРЕБЕНЬ-1" ножной демпфер, триммер, фрикцион, аппаратуру ДИСС-15, радиовысотомер РВ-5М, основную гидросистему.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-ПРИМЕЧАНИЕ:  В дальнейшем при описании методики проверок и регулировки САУ под током, приведенных в технологических картах, предполагается, что источники питания, бортовые системы и агрегаты, взаимодействующие с САУ, включены и функцио-нируют нормально.
-
-- При проведении проверок канала высоты ручку "ШАГ-ГАЗ" установите на 5°-7° по указателю УШВ-1К.
-- При описании всех проверок имеется ввиду поочередная задача сигналов обеих полярностей (вторая полярность указана в скобках).
-- При описании всех проверок отклонение подписного индекса нулевого индикатора на пульте управления указано относительно лицевой панели пульта управления соответствующего канала.
-
-
-Проверьте сигнализацию отказов при отсутствии питания и неисправности взаимо-действующих изделий, для чего:
-- отключите питание постоянным током, нажав на  кнопку "ОТКЛ. АП" на ручке цик-лического шага летчика;
-
-
-
-
-
-
-- включите питание  постоянным током, нажав  кнопки-лампочки "ВКЛ. " на пультах "Н", "К", "Т", "В", а также кнопки-табло   "ВЫСОТА" на  пульте ПВП и "МАРШРУТ" на пульте  ПВМ.
-
-
-
-
-
-
-
-
-- аналогично выполните проверку, отключая и включая источник питать переменным током;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите, не отпуская, контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута 
-24-7100-70, предварительно подключив его к контрольному разъему САУ (или на панели контрольных разъемов САУ, размещенной слева сзади си-дения оператора);
-
-
-
-- задайте от пульта контроля ДИСС-15 задачу № 3;
-
-
-
-- нажмите кнопку-табло "МАРШРУТ" на пульте ПВМ и отпустите.
-
-
-
-- нажмите, не отпуская, кнопку согласования курсовой системы;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите, не отпуская, на кнопку-табло "МАРШРУТ" на пульте ПВМ.
-
-
-
-
-
-
-
-- отпустите кнопку -табло "МАРШРУТ".
-
-
-
-
-
-
-
-
-
-
-
-- отпустите кнопку согласования курсовой системы;
-
-
-
-- нажмите ни кнопку-табло "МАРШРУТ" пульта ПВМ;
-
-
-
-
-
-
-
-- отпустите контрольный выключатель "ГОТОВНОСТЬ ДИСС";
-
-
-
-
-
-
-
-
-
-
-
-
-
-- поочередно нажмите на кнопки-табло "ВИСЕНИЕ", "МАРШРУТ" пульта ПВМ и "ВЫСОТА" пульта ПВП;
-
-
-
-
-
-
-
-- задайте от пульта контроля ДИСС-15 задачу № 2;
-
-
-
-- нажмите, не отпуская, контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута;
-
-- нажмите на кнопку-табло "ВИСЕНИЕ" пульта ПВМ;
-
-
-
-
-
-
-
-
-
-- отпустите контрольный выключатель "ГОТОВНОСТЬ ДИСС";
-
-
-
-
-
-
-
-
-
-- нажмите, не отпуская, контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута;
-- нажмите на кнопку-табло "ВЫСОТА" на пульте ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отключите РВ-5М;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку фрикциона на ручке "ШАГ-ГАЗ" летчика.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-лампочку "ВКЛ" на пульте управления канала высоты;
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку фрикциона на ручке "ШАГ-ГАЗ" оператора;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-лампочку "ВКЛ. " на пульте управления канала тангажа;
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку "СТАБИЛ. СКОРОСТИ" па ловом переднем пульте летчика;
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку "ОТКЛ. СКОРОСТИ" на левом переднем пульте летчика;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку  "СТАБИЛ. СКОРОСТИ";
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-лампочку  "ОТКЛ. " на пульте управления канала тангажа;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- задайте от пульта контроля ДИСС-15 задачу № 2;
-- нажмите, не отпуская, контрольный вы-ключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута;
-
-
-
-
-
-
-- нажмите кнопку-табло "ВЫСОТА".
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Проверьте включение и отключение САУ. для чего:
-- нажмите кнопку -лампочку "ВКЛ." на всех пультах управления "Н", "К", "Т", "В":
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-лампочку "ОТКЛ. " на каждом пульте управления "Н", "К", "Т", "В":
-
-
-
-
-
-
-- нажмите кнопку-лампочку "ВКЛ. " на все пультах управления "Н", "К", "Т", "В";
-
-
-
-
-
-
-- нажмите на кнопку "ОТКЛ. АП" на ручке управления вертолетом;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите  кнопка -лампочка "ВКЛ. " на пульте управления канала высоты;
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-табло "ВИСЕНИЕ" на пульте ПВП;
-
-
-
-
-
-
-- нажмите кнопку-табло "ОТКЛ. " на пульте ПВМ;
-
-
-
-
-
-
-- повторите проверку, производя отключе-ние кнопкой "ОТКЛ. АП" на ручке управле-ния вертолетом летчика;
-
-
-
-
-
-
-- нажмите кнопку-табло "ВЫСОТА" на пульте ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-табло "ОТКЛ. " на пульте ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- повторите проверку, производя отключение кнопкой "ОТКЛ. АП" на ручке управле-ния вертолетом летчика;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-табло "ВИСЕНИЕ" на пульте ПВМ;
-
-
-
-
-
-
-- нажмите кнопку-табло "МАРШРУТ" на пульте ПВМ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- задайте от пульта контроля ДДИСС-15 за-дачу № 3;
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-табло "ВЫСОТА" на пульте ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-табло "МАРШРУТ" на пульте ПВМ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-табло "ВЫСОТА" на пульте ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- нажмите на  кнопку-табло "ВИСЕНИЕ";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-табло "ОТКЛ," на пульте ПВМ;
-
-
-
-
-
-
-
-- повторите проверку,  производя отключение кнопкой "ОТКЛ. АП" на ручке управле-ния вертолетом летчика;
-
-
-
-
-
-
-
-
-
-- отпустите контрольный выключатель "ГОТОВНОСТЬ ДИСС"
-
-Проверьте работу механизмов согласования:
-А. Канала направления:
-- установите на пульте управления курсовой системы переключатель режимов работы в положение "ЗК", на счетчике магнитного склонения коррекционного механизма показание, равное нулю, и нажмите кнопку согласования на пульте управления;
-- установите на счетчике магнитных склонений коррекционного механизма со знаком "+" ("-")  значение 50°-60°,  нажмите кнопку согласования и удерживайте ее в нажатом состоянии;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отпустите кнопку согласования
-
-
-
-Б. Канал крена:
-- отклоните в пределах амортизаторов левую гировертикаль в сторону правого (левого) крена
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-В. Канал тангажа:
-- отклоните в пределах амортизаторов левую гировертикаль на пикирование (кабрирование).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Проверьте прохождение сигнала угла и высоты
-А. Канал направления:
-- установите педали нейтрально;
-- снимите ноги с педалей, нажмите кнопка-лампочка "ВКЛ." на пульте управления канала направления;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- поверните шкалу ручки центровки на пульте управления канала направления по ча-совой стрелке (против часовой стрелки) на три деления (что соответствует рассогласова-нию в 3°);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- поставьте ноги на педали;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- снимите ноги с педалей
-- поверните шкалу ручки центровки на пульте удавления канала направления по (про-тив) часовой стрелке на 3°;
-
-
-
-
-
-
-
-
-
-
-
-
-- выключатель демпфера педалей установите в положение "ОТКЛ.";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- включите демпфер педалей;
-
-
-- поверните ручку центровки на пульте управления канала направления по часовой стрелке  (против часовой стрелки) на 3°;
-
-
-
-
-
-
-
-
-
-
-
-
-- подсоедините управление оператора;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- наймите кнопку -лампочка "ОТКЛ." на пульте управления;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Б. Канал высоты:
-- нажмите на пульте управления канала высоты кнопку- лампочку "ВКЛ."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на пульте управления канала высоты переключатель "КОНТРОЛЬ" вверх (вниз);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку- лампочку "ОТКЛ." на пульте управления;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-В. Канал крена
-- нажмите на пульте управления канала крена кнопку -лампочку "ВКЛ.";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- поверните шкалу ручки центровки на пульте управления канала крена по часовой стрелке (против часовой стрелки) на пять делений (что соответствует рассогласованию в 5°);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку триммера на ручке управ-ления вертолетом летчика;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-лампочку "ОТКЛ" на пульте управления канала крена
-
-
-
-
-
-
-
-
-
-
-
-
-
-Г, Канал тангажа
-- нажмите на пульте управления канала тангажа кнопку-табло "ВКЛ.";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- поверните шкалу ручки центровки на пульте управления канала тангажа по часовой стрелке  (против часовой стрелки) на три де-ления (что соответствует рассогласованию в 3 градуса).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку триммера на ручке управления вертолетом летчика;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку- лампочку "ОТКЛ," на пульте управления;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Проверьте работоспособность КДК, для че-го:
-- нажмите кнопку -лампочку "ВКЛ." на пульте управления канала крена;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- резко отклоните ручку управления вертолетом летчика вправо (влево);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-лампочку "ОТКЛ." да пульте управления канала крена.
-
-
-
-
-
-
-
-
-
-
-
-Проверьте работоспособность КДТ, для чего:
-
-- нажмите кнопку- лампочку "ВКЛ." на пульте управления канала тангажа.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отклоните ручку управления вертолетом летчика на себя (от себя), не нажимая кнопку триммера;
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку-лампочку "ОТКЛ" на пульте управления канала тангажа;
-
-
-
-
-
-
-
-
-
-
-
-Проверьте прохождение сигналов скорости и перемещения в продольном и поперечном направлениях, для чего:
-
-- нажмите на кнопку-лампочку "ВКЛ." на пультах управления "К" и "Т";
-
-
-
-
-
-
-
-
-
-
-
-
-
-- задайте от пульта контроля ДИСС-15 за-дачу № 2;
-
-- нажмите, не отпуская, контрольный вы-ключатель "ГОТОВНОСТЬ ДИСС" и "КОН-ТРОЛЬ ДИСС" на панели технологического жгута;
-
-- нажмите, не отпуская, на кнопку-табло "ВИСЕНИЕ" пульта ПВМ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отпустите кнопку -табло "ВИСЕНИЕ";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-табло "ОТКЛ." на пульте ПВМ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отпустите контрольные выключатели "ГОТОВНОСТЬ ДИСС" и "КОНТРОЛЬ ДИСС"
-
-Проверьте прохождение сигнала вертикальной скорости и сигнала по геометрической высоте, для чего:
-- задайте от пульта контроля ДИСС-15 задачу № 2;
-- нажмите, не отпуская,  контрольные выключатели "ГОТОВНОСТЬ ДИСС" и "КОНТРОЛЬ ДИСС" на панели технологического жгута;
-- надавите на кнопку-табло "ВЫСОТА" на пульте ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- задайте от пульта контроля ДИСС-15 за-дачу № 3;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-табло "ОТКЛ." пульта ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите, не отпуская,  на кнопку "КОНТРОЛЬ" 
-указателя радиовысотомера;
-
-
-
-
-
-
-
-
-
-
-
-- через 2-3 мин натайте на кнопку-табло "ВЫСОТА" пульта ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отпустите кнопку "КОНТРОЛЬ" указа¬теля радиовысотомера и нажмите на кнопку-табло "ОТКЛ." пульта ПВП;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отпустите контрольные выключатели "ГОТОВНОСТЬ ДИСС" и"КОНТРОЛЬ ДИСС" на панели технологического жгута
-Проверьте прохождение сигнала ЗПУ. для чего:
-- установите режим работы курсовой системы "ЗК";
-- установите на Коррекционном меха¬низме курсовой системы магнитное склонение, равное "0";
-- нажмите кнопку согласования на пуль¬те управления курсовой системы;
-- установите на шкале ЗПУ угол, рав¬ный "0";
-- задайте от пульта контроля ДИСС-15 задачу № 3;
-- нажмите,  не отпуская, контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута;
-- нажмите на кнопки-лампочки "ВКЛ" на пультах управления "К" и "Н";
-
-
-
-
-
-
-
-
-
-
-
-- задайте на пультах управления "Н" и "К" угол рассогласования 4° влево (вправо);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-табло "МАРШРУТ" на пульте ПВМ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-лампочку "ОТКЛ." пульта управления "К" и кнопку-табло "ОТКЛ" пульта ПВМ:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- на индикаторе путевой скорости и угла сноса аппаратуры ДИСС-15 (на при¬борной доске летчика) установите переключатель "Р-К" в положение "К";
-
-
-
-
-
-- нажмите на кнопку -лампочку "ВКЛ." пульта управления "К" и кнопку-табло "МАРШРУТ" пульта ПВМ.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите на кнопку-лампочку "ОТКЛ.'' пульта управления "К" и кнопку-табло пульта управления ПВМ.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- поставьте переключатель
- "Р-К" в положение "Р";
-- вращением ручки ЗПУ по (против) часовой стрелке задайте угол 10° от "0";
-
-
-- нажмите на кнопку-лампочку   "ВКЛ." На пульте управления "К" и "МАРШРУТ" на пульте управления ПВМ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- нажмите кнопку "ОТКЛ. АП" на ручке управления вертолетом летчика;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- отпустите контрольный выключатель "ГОТОВНОСТЬ ДИСС" на панели технологического жгута.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->
-ВСТАВЬ СЮДА СВОЙ ТЕКСТ OP (СОДЕРЖАНИЕ ОПЕРАЦИИ) ОДНИМ КУСКОМ
-      </textarea>
-
-      <!-- Эти два textarea нужны, чтобы “Сохранить копию” сохраняло и ТТ/DEV тоже -->
-      <textarea id="seed_tt"></textarea>
-      <textarea id="seed_dev"></textarea>
-    </div>
-
   </div>
 </div>
 
-<!-- ===== Editor Panel ===== -->
+<!-- ===== Paste Modal ===== -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modalHead">
+      <div class="modalTitle">Вставь весь текст сразу в 3 столбца</div>
+      <button class="mini" id="closePaste">✕</button>
+    </div>
+
+    <div class="modalBody">
+      <div class="mCol">
+        <div class="mLab">OP (Содержание операции) — одним куском</div>
+        <textarea class="mTa" id="taOP" placeholder="Вставь OP сюда..."></textarea>
+      </div>
+      <div class="mCol">
+        <div class="mLab">ТТ — одним куском (можно пусто)</div>
+        <textarea class="mTa" id="taTT" placeholder="Вставь ТТ сюда..."></textarea>
+      </div>
+      <div class="mCol">
+        <div class="mLab">Работы/Отклонения — одним куском (можно пусто)</div>
+        <textarea class="mTa" id="taDEV" placeholder="Вставь работы при отклонениях сюда..."></textarea>
+      </div>
+    </div>
+
+    <div class="modalFoot">
+      <div class="help">
+        Как будет делиться на пункты: <b>по пустой строке</b> (две подряд строки = граница пункта).<br>
+        Если в ТТ/Работы пунктов меньше, чем в OP — недостающие пункты будут пустые (и наоборот).
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+        <button class="btn" id="applyPaste">Применить (пока без разбивки)</button>
+        <button class="btn primary" id="applyAndSplit">Применить и разбить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Side Editor ===== -->
 <div class="editor" id="editor">
   <div class="editorHead">
-    <div class="editorTitle">Редактор ТТ / Отклонений (по пунктам)</div>
+    <div class="editorTitle">Редактор ТТ / Работы (по пунктам)</div>
     <button class="mini" id="editorClose">✕</button>
   </div>
 
@@ -2439,8 +483,8 @@
     <div class="editorRight">
       <div class="hint">
         1) Выбери пункт слева.<br>
-        2) Вставь ТТ и/или Отклонения справа.<br>
-        3) Можно не жать «Сохранить»: автосохранение работает.
+        2) Правь ТТ и/или Работы справа.<br>
+        3) Автосохранение включено.
       </div>
 
       <div class="editorBtns">
@@ -2451,34 +495,71 @@
 
       <div>
         <div class="eLabel">ТТ (для выбранного пункта)</div>
-        <textarea class="eTa" id="ttTa" placeholder="Вставь ТТ именно для этого пункта..."></textarea>
+        <textarea class="eTa" id="ttTa" placeholder="ТТ для этого пункта..."></textarea>
       </div>
 
       <div>
-        <div class="eLabel">Отклонения (для выбранного пункта)</div>
-        <textarea class="eTa" id="devTa" placeholder="Вставь отклонения именно для этого пункта..."></textarea>
+        <div class="eLabel">Работы при отклонениях (для выбранного пункта)</div>
+        <textarea class="eTa" id="devTa" placeholder="Работы/Отклонения для этого пункта..."></textarea>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // ===== НАСТРОЙКА =====
-  // Если хочешь, чтобы после открытия файла OP автоматически разбивался на пункты — поставь true.
-  const AUTO_SPLIT_ON_LOAD = false;
-
-  const rowsEl = document.getElementById("rows");
-  const noteLeft = document.getElementById("noteLeft");
-  const noteRight = document.getElementById("noteRight");
+  // ===== Storage =====
+  const LS_KEY = "p0_three_cols_v1";
 
   function sanitizeText(str){
     if(!str) return "";
     str = String(str).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
     str = str.replace(/\t/g,"    ");
     str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
+    // много пустых строк слегка ужимаем
     str = str.replace(/\n{6,}/g,"\n\n\n");
     return str.trimEnd();
   }
+
+  function splitToParts(raw){
+    raw = sanitizeText(raw || "");
+    if(!raw) return [];
+    // 2+ пустых строки = граница пункта
+    return raw
+      .replace(/\n{3,}/g,"\n\n")
+      .split(/\n\s*\n/g)
+      .map(s=>sanitizeText(s))
+      .filter(Boolean);
+  }
+
+  function saveState(){
+    try{
+      localStorage.setItem(LS_KEY, JSON.stringify({items, selectedRowIndex}));
+    }catch(e){}
+  }
+
+  function loadState(){
+    try{
+      const s = localStorage.getItem(LS_KEY);
+      if(!s) return false;
+      const obj = JSON.parse(s);
+      if(!obj || !Array.isArray(obj.items)) return false;
+      items = obj.items.map(x=>({
+        op: sanitizeText(x.op),
+        tt: sanitizeText(x.tt),
+        dev: sanitizeText(x.dev),
+      }));
+      if(items.length===0) items=[{op:"",tt:"",dev:""}];
+      selectedRowIndex = Math.max(0, Math.min(items.length-1, Number(obj.selectedRowIndex||0)));
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  // ===== UI =====
+  const rowsEl = document.getElementById("rows");
+  const noteLeft = document.getElementById("noteLeft");
+  const noteRight = document.getElementById("noteRight");
 
   function insertPlainTextAtCursor(text){
     const sel = window.getSelection();
@@ -2519,68 +600,12 @@
     return box;
   }
 
-  let items = [];
+  let items = [{op:"",tt:"",dev:""}];
   let selectedRowIndex = 0;
-
-  // ===== split OP into blocks =====
-  function splitIntoBlocks(text){
-    text = sanitizeText(text || "");
-    const lines = text.split("\n");
-    const blocks = [];
-    let cur = [];
-
-    const isBullet = (s) => /^(\s*)([-•—]|\d+[\)\.])\s+/.test(s);
-
-    for(const raw of lines){
-      const s = raw.replace(/\u00A0/g," ");
-      if(s.trim()===""){
-        if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
-        continue;
-      }
-      if(isBullet(s)){
-        if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
-        cur.push(s.trim());
-      }else{
-        cur.push(s.trim());
-      }
-    }
-    if(cur.length) blocks.push(cur.join("\n").trim());
-    return blocks.filter(b => b.trim().length);
-  }
-
-  function seedOnce(){
-    const op = sanitizeText(document.getElementById("seed_op").value);
-    const tt = sanitizeText(document.getElementById("seed_tt").value);
-    const dev = sanitizeText(document.getElementById("seed_dev").value);
-
-    // Если TT/DEV уже сохранены (из p0_saved.html), восстановим по блокам (по пустой строке между пунктами)
-    const opBlocks = splitToParts(op);
-    const ttBlocks = splitToParts(tt);
-    const devBlocks = splitToParts(dev);
-
-    const n = Math.max(opBlocks.length, 1);
-    items = [];
-    for(let i=0;i<n;i++){
-      items.push({
-        op: opBlocks[i] ?? (i===0 ? op : ""),
-        tt: ttBlocks[i] ?? "",
-        dev: devBlocks[i] ?? ""
-      });
-    }
-  }
-
-  function splitToParts(raw){
-    raw = sanitizeText(raw || "");
-    if(!raw) return [];
-    return raw
-      .replace(/\n{3,}/g,"\n\n")
-      .split(/\n\s*\n/g)
-      .map(s=>sanitizeText(s))
-      .filter(Boolean);
-  }
 
   function render(){
     rowsEl.innerHTML = "";
+
     items.forEach((it, idx) => {
       const wrap = document.createElement("div");
       wrap.className = "wrapRow";
@@ -2619,9 +644,9 @@
       const c2 = document.createElement("div"); c2.className="cell";
       const c3 = document.createElement("div"); c3.className="cell";
 
-      const b1 = makeBox(it.op, "Содержание операции…", (v)=>{ items[idx].op=v; syncRowHeight(row); });
-      const b2 = makeBox(it.tt, "ТТ заполняй в редакторе…", (v)=>{ items[idx].tt=v; syncRowHeight(row); });
-      const b3 = makeBox(it.dev,"Отклонения заполняй в редакторе…",(v)=>{ items[idx].dev=v; syncRowHeight(row); });
+      const b1 = makeBox(it.op, "OP…", (v)=>{ items[idx].op=v; syncRowHeight(row); saveState(); });
+      const b2 = makeBox(it.tt, "ТТ…", (v)=>{ items[idx].tt=v; syncRowHeight(row); saveState(); });
+      const b3 = makeBox(it.dev,"Работы/Отклонения…",(v)=>{ items[idx].dev=v; syncRowHeight(row); saveState(); });
 
       c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
       row.append(c1,c2,c3);
@@ -2633,7 +658,8 @@
 
     markSelectedRow();
     noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>. Выбран: <b>${selectedRowIndex+1}</b>.`;
-    noteRight.innerHTML = `Редактор: <b>по пунктам</b> (без банка).`;
+    noteRight.innerHTML = `Редактирование: <b>в таблице</b> или <b>по пунктам</b>. Сохранение: <b>авто</b>.`;
+    saveState();
   }
 
   function markSelectedRow(){
@@ -2650,13 +676,13 @@
       fillEditorFields();
     }
     noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>. Выбран: <b>${selectedRowIndex+1}</b>.`;
+    saveState();
   }
 
   function add(){
     items.push({op:"",tt:"",dev:""});
     selectedRowIndex = items.length-1;
     render();
-    if(editor.style.display==="block"){ renderEditorList(); fillEditorFields(); }
   }
 
   function remove(i){
@@ -2664,7 +690,6 @@
     if(items.length===0) items=[{op:"",tt:"",dev:""}];
     selectedRowIndex = Math.max(0, Math.min(items.length-1, selectedRowIndex));
     render();
-    if(editor.style.display==="block"){ renderEditorList(); fillEditorFields(); }
   }
 
   function move(i,dir){
@@ -2673,66 +698,69 @@
     const t=items[i]; items[i]=items[j]; items[j]=t;
     selectedRowIndex = j;
     render();
-    if(editor.style.display==="block"){ renderEditorList(); fillEditorFields(); }
   }
 
-  function splitOPCurrent(){
-    if(!items || items.length < 1) return;
-    const base = items[0];
-    const opBlocks = splitIntoBlocks(base.op);
-    const n = Math.max(opBlocks.length, 1);
+  // ===== Split (по пустой строке) для всех трех колонок =====
+  function splitAllColumns(){
+    const opParts = splitToParts(items.map(x=>x.op).join("\n\n"));
+    const ttParts = splitToParts(items.map(x=>x.tt).join("\n\n"));
+    const devParts = splitToParts(items.map(x=>x.dev).join("\n\n"));
+    const n = Math.max(opParts.length, ttParts.length, devParts.length, 1);
 
     const newItems = [];
     for(let i=0;i<n;i++){
-      newItems.push({ op: opBlocks[i] ?? "", tt: "", dev: "" });
+      newItems.push({
+        op: opParts[i] ?? "",
+        tt: ttParts[i] ?? "",
+        dev: devParts[i] ?? ""
+      });
     }
+
+    // если OP пустой, но старое было в items[0].op — сохраним
+    if(newItems.length===1 && !newItems[0].op && items[0]?.op) newItems[0].op = items[0].op;
+
     items = newItems;
     selectedRowIndex = 0;
     render();
     if(editor.style.display==="block"){ renderEditorList(); fillEditorFields(); }
-    alert(`Готово. Пунктов: ${n}\nТТ/Отклонения очищены (заполняй в редакторе).`);
+    alert(`Готово. Пунктов: ${n}\nДеление: по пустой строке.`);
   }
 
-  function clearAllTTDEV(){
-    items.forEach(x => { x.tt=""; x.dev=""; });
+  // ===== Paste modal logic =====
+  const overlay = document.getElementById("overlay");
+  const taOP = document.getElementById("taOP");
+  const taTT = document.getElementById("taTT");
+  const taDEV = document.getElementById("taDEV");
+
+  function openPaste(){
+    // показываем текущие полные тексты
+    taOP.value  = items.map(x=>x.op).join("\n\n");
+    taTT.value  = items.map(x=>x.tt).join("\n\n");
+    taDEV.value = items.map(x=>x.dev).join("\n\n");
+    overlay.style.display = "flex";
+    setTimeout(()=>taOP.focus(), 50);
+  }
+  function closePaste(){
+    overlay.style.display = "none";
+  }
+  function applyPaste(splitAfter){
+    const op = sanitizeText(taOP.value);
+    const tt = sanitizeText(taTT.value);
+    const dev = sanitizeText(taDEV.value);
+
+    // пока без разбивки — всё в один пункт (три колонки)
+    items = [{op, tt, dev}];
+    selectedRowIndex = 0;
     render();
-    if(editor.style.display==="block"){ renderEditorList(); fillEditorFields(); }
+    if(splitAfter) splitAllColumns();
+    closePaste();
   }
 
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
-  }
-
-  function saveHtmlCopy(){
-    const html = document.documentElement.outerHTML;
-
-    const op = items.map(x=>x.op).join("\n\n");
-    const tt = items.map(x=>x.tt).join("\n\n");
-    const dev = items.map(x=>x.dev).join("\n\n");
-
-    let replaced = html
-      .replace(/<textarea id="seed_op">[\s\S]*?<\/textarea>/m, `<textarea id="seed_op">\n${escapeHtml(op)}\n      </textarea>`)
-      .replace(/<textarea id="seed_tt">[\s\S]*?<\/textarea>/m, `<textarea id="seed_tt">\n${escapeHtml(tt)}\n      </textarea>`)
-      .replace(/<textarea id="seed_dev">[\s\S]*?<\/textarea>/m, `<textarea id="seed_dev">\n${escapeHtml(dev)}\n      </textarea>`);
-
-    const blob = new Blob([replaced], {type:"text/html;charset=utf-8"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "p0_saved.html";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  // ===== Editor panel =====
+  // ===== Side Editor =====
   const editor = document.getElementById("editor");
   const pList = document.getElementById("pList");
   const ttTa = document.getElementById("ttTa");
   const devTa = document.getElementById("devTa");
-
   let editorDirtyTimer = null;
 
   function openEditor(){
@@ -2744,7 +772,6 @@
     commitEditorFields();
     editor.style.display = "none";
   }
-
   function renderEditorList(){
     pList.innerHTML = "";
     items.forEach((_, idx)=>{
@@ -2755,13 +782,11 @@
       pList.appendChild(b);
     });
   }
-
   function fillEditorFields(){
     const it = items[selectedRowIndex] || {tt:"",dev:""};
     ttTa.value = it.tt || "";
     devTa.value = it.dev || "";
   }
-
   function commitEditorFields(){
     const it = items[selectedRowIndex];
     if(!it) return;
@@ -2769,7 +794,6 @@
     it.dev = sanitizeText(devTa.value);
     render();
   }
-
   function scheduleAutoCommit(){
     if(editorDirtyTimer) clearTimeout(editorDirtyTimer);
     editorDirtyTimer = setTimeout(()=>commitEditorFields(), 250);
@@ -2777,15 +801,43 @@
   ttTa.addEventListener("input", scheduleAutoCommit);
   devTa.addEventListener("input", scheduleAutoCommit);
 
-  // ===== buttons =====
+  // ===== Export JSON =====
+  function exportJson(){
+    const payload = {
+      version: 1,
+      exported_at: new Date().toISOString(),
+      items
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "p0_export.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== Reset =====
+  function resetAll(){
+    if(!confirm("Сбросить всё? Это удалит пункты и сохранение в браузере.")) return;
+    localStorage.removeItem(LS_KEY);
+    items = [{op:"",tt:"",dev:""}];
+    selectedRowIndex = 0;
+    render();
+    closeEditor();
+    closePaste();
+  }
+
+  // ===== Buttons =====
+  document.getElementById("openPaste").addEventListener("click", openPaste);
+  document.getElementById("closePaste").addEventListener("click", closePaste);
+  document.getElementById("applyPaste").addEventListener("click", ()=>applyPaste(false));
+  document.getElementById("applyAndSplit").addEventListener("click", ()=>applyPaste(true));
+
+  document.getElementById("splitAll").addEventListener("click", splitAllColumns);
+  document.getElementById("addRow").addEventListener("click", add);
   document.getElementById("openEditorBtn").addEventListener("click", openEditor);
   document.getElementById("editorClose").addEventListener("click", closeEditor);
-
-  document.getElementById("addRow").addEventListener("click", add);
-  document.getElementById("splitOP").addEventListener("click", splitOPCurrent);
-  document.getElementById("clearTTDEV").addEventListener("click", clearAllTTDEV);
-  document.getElementById("saveHtml").addEventListener("click", saveHtmlCopy);
-  document.getElementById("print").addEventListener("click", () => window.print());
 
   document.getElementById("saveP").addEventListener("click", commitEditorFields);
   document.getElementById("prevP").addEventListener("click", ()=>{
@@ -2799,19 +851,21 @@
     renderEditorList(); fillEditorFields();
   });
 
-  // ===== start =====
-  seedOnce();
+  document.getElementById("exportJson").addEventListener("click", exportJson);
+  document.getElementById("print").addEventListener("click", ()=>window.print());
+  document.getElementById("resetAll").addEventListener("click", resetAll);
 
-  // Авто-разбивка (если включишь AUTO_SPLIT_ON_LOAD = true)
-  if(AUTO_SPLIT_ON_LOAD){
-    const opText = items[0]?.op || "";
-    const blocks = splitIntoBlocks(opText);
-    if(blocks.length > 1){
-      items = blocks.map(b=>({op:b, tt:"", dev:""}));
-      selectedRowIndex = 0;
-    }
+  // click outside modal closes
+  overlay.addEventListener("click", (e)=>{
+    if(e.target===overlay) closePaste();
+  });
+
+  // ===== Start =====
+  const restored = loadState();
+  if(!restored){
+    items = [{op:"",tt:"",dev:""}];
+    selectedRowIndex = 0;
   }
-
   render();
 </script>
 </body>
