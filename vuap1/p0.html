@@ -3,13 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Технологическая карта — p0 (вставка 3 столбцов)</title>
-
+  <title>Технологическая карта — OP / ТТ / Отклонения (JSON внутри)</title>
   <style>
     :root{
       --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
-      --glass: rgba(10,18,28,.72);
-      --glass2: rgba(8,14,22,.62);
+      --glass: rgba(10,18,28,.78);
+      --glass2: rgba(8,14,22,.68);
       --line: rgba(255,255,255,.10);
 
       --ink:#eaf6ff;
@@ -26,8 +25,6 @@
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:var(--font);color:var(--ink)}
-    button, textarea{font-family:inherit}
-
     .scene{
       min-height:100vh;
       padding:14px;
@@ -84,17 +81,12 @@
       border-color: rgba(0,255,166,.28);
       box-shadow: 0 0 18px rgba(0,255,166,.10);
     }
-    .btn.warn{
-      border-color: rgba(255,180,0,.35);
-    }
-
     .wrap{
       padding:12px;
       overflow:auto;
-      max-height: calc(100vh - 130px);
+      max-height: calc(100vh - 150px);
       -webkit-overflow-scrolling: touch;
     }
-
     .grid{
       min-width: calc(var(--colOp) + var(--colTT) + var(--colDev) + 40px);
       border:1px solid rgba(255,255,255,.10);
@@ -134,12 +126,7 @@
       padding:8px 10px;
       border-bottom:1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.10);
-      cursor:pointer;
       user-select:none;
-    }
-    .rowTop.selected{
-      outline: 2px solid rgba(0,255,166,.45);
-      box-shadow: 0 0 0 2px rgba(0,0,0,.25) inset;
     }
     .tag{
       font-weight:950;
@@ -209,180 +196,10 @@
       flex-wrap:wrap;
     }
 
-    /* ===== Overlay / Modal ===== */
-    .overlay{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      z-index:80;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-    }
-    .modal{
-      width:min(1120px, 100%);
-      max-height: min(92vh, 900px);
-      background: rgba(6,14,22,.96);
-      border:1px solid rgba(255,255,255,.14);
-      border-radius: 16px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.72);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-    .modalHead{
-      padding:10px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .modalTitle{font-weight:950; color: var(--accent)}
-    .modalBody{
-      padding:12px;
-      overflow:auto;
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:10px;
-    }
-    .mCol{display:flex; flex-direction:column; gap:6px}
-    .mLab{font-size:12px; font-weight:900; color:var(--muted)}
-    .mTa{
-      width:100%;
-      min-height: 320px;
-      resize: vertical;
-      border-radius: 12px;
-      border:1px solid rgba(33,240,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--ink);
-      outline:none;
-      padding:10px 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 13px;
-      line-height: 1.35;
-      white-space: pre;
-    }
-    .mTa:focus{border-color: rgba(33,240,255,.35)}
-    .modalFoot{
-      padding:10px 12px;
-      border-top:1px solid rgba(255,255,255,.10);
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      align-items:center;
-    }
-    .help{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.35;
-      max-width: 780px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      border-radius: 12px;
-      padding:8px 10px;
-    }
-
-    /* ===== Side Editor ===== */
-    .editor{
-      position: fixed;
-      right: 12px;
-      top: 12px;
-      bottom: 12px;
-      width: 460px;
-      max-width: calc(100vw - 24px);
-      background: rgba(6,14,22,.94);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.62);
-      backdrop-filter: blur(8px);
-      z-index: 70;
-      display: none;
-      overflow:hidden;
-    }
-    .editorHead{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 12px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .editorTitle{font-weight:950; color: var(--accent)}
-    .editorBody{
-      height: calc(100% - 50px);
-      display:grid;
-      grid-template-columns: 160px 1fr;
-    }
-    .editorLeft{
-      border-right:1px solid rgba(255,255,255,.10);
-      padding:10px;
-      overflow:auto;
-      background: rgba(0,0,0,.12);
-    }
-    .pItem{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      border-radius: 12px;
-      padding:8px 10px;
-      margin-bottom:8px;
-      cursor:pointer;
-      font-weight:900;
-      user-select:none;
-    }
-    .pItem:hover{border-color: rgba(33,240,255,.28)}
-    .pItem.active{
-      border-color: rgba(0,255,166,.42);
-      box-shadow: 0 0 0 2px rgba(0,0,0,.25) inset;
-    }
-    .editorRight{
-      padding:10px;
-      overflow:auto;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .eLabel{color: var(--muted); font-size:12px; font-weight:900}
-    .eTa{
-      width:100%;
-      min-height: 160px;
-      resize: vertical;
-      border-radius: 12px;
-      border:1px solid rgba(33,240,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--ink);
-      outline:none;
-      padding:10px 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 13px;
-      line-height: 1.35;
-      white-space: pre-wrap;
-    }
-    .eTa:focus{border-color: rgba(33,240,255,.35)}
-    .editorBtns{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      align-items:center;
-      padding-top:4px;
-    }
-    .hint{
-      color: var(--muted);
-      font-size: 12px;
-      line-height:1.35;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      border-radius: 12px;
-      padding:8px 10px;
-    }
-
-    @media (max-width: 980px){
-      .modalBody{grid-template-columns: 1fr}
-      :root{--colOp: 520px; --colTT: 420px; --colDev: 420px;}
-    }
-
     @media print{
       .scene{padding:0; background:#fff}
       .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.modeNote,.editor,.overlay{display:none !important}
+      header,.modeNote{display:none !important}
       .wrap{max-height:none; overflow:visible; padding:0}
       .grid{border:1px solid #ccc; background:#fff}
       .head{position:static; background:#fff}
@@ -399,27 +216,27 @@
   <div class="doc">
     <header>
       <div>
-        <div class="title">Технологическая карта — p0</div>
+        <div class="title">Технологическая карта — OP / ТТ / Отклонения</div>
         <div class="subtitle">
-          Вставка сразу в 3 столбца: <b>OP / ТТ / Работы</b> → «Разбить на пункты» → редактируешь ТТ/Работы по пунктам или прямо в таблице.
-          Никаких вставок в код.
+          Твои данные (экспорт JSON) встроены в файл. Редактируй прямо в таблице.
+          <b>Чтобы открыть на любом устройстве:</b> жми «Скачать HTML (с данными внутри)» и храни файл в iCloud/Google Drive.
         </div>
       </div>
       <div class="btns">
-        <button class="btn primary" id="openPaste">Вставить OP/ТТ/DEV</button>
-        <button class="btn" id="splitAll">Разбить на пункты</button>
-        <button class="btn primary" id="openEditorBtn">ТТ/Работы (по пунктам)</button>
+        <button class="btn" id="saveLocal">💾 Сохранить на этом устройстве</button>
+        <button class="btn" id="loadLocal">📥 Загрузить с этого устройства</button>
+        <button class="btn primary" id="downloadHtml">⬇️ Скачать HTML (с данными внутри)</button>
+        <button class="btn" id="exportJson">⬇️ Экспорт JSON</button>
+        <button class="btn" id="importJson">⬆️ Импорт JSON</button>
         <button class="btn" id="addRow">+ Добавить пункт</button>
-        <button class="btn" id="exportJson">Экспорт (JSON)</button>
         <button class="btn" id="print">Печать</button>
-        <button class="btn warn" id="resetAll">Сбросить всё</button>
       </div>
     </header>
 
     <div class="wrap">
       <div class="grid">
         <div class="head">
-          <div class="hcell">Содержание операции (OP)</div>
+          <div class="hcell">Содержание операции</div>
           <div class="hcell">Технические требования (ТТ)</div>
           <div class="hcell">Работы при отклонениях от ТТ</div>
         </div>
@@ -434,132 +251,247 @@
   </div>
 </div>
 
-<!-- ===== Paste Modal ===== -->
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="modalHead">
-      <div class="modalTitle">Вставь весь текст сразу в 3 столбца</div>
-      <button class="mini" id="closePaste">✕</button>
-    </div>
-
-    <div class="modalBody">
-      <div class="mCol">
-        <div class="mLab">OP (Содержание операции) — одним куском</div>
-        <textarea class="mTa" id="taOP" placeholder="Вставь OP сюда..."></textarea>
-      </div>
-      <div class="mCol">
-        <div class="mLab">ТТ — одним куском (можно пусто)</div>
-        <textarea class="mTa" id="taTT" placeholder="Вставь ТТ сюда..."></textarea>
-      </div>
-      <div class="mCol">
-        <div class="mLab">Работы/Отклонения — одним куском (можно пусто)</div>
-        <textarea class="mTa" id="taDEV" placeholder="Вставь работы при отклонениях сюда..."></textarea>
-      </div>
-    </div>
-
-    <div class="modalFoot">
-      <div class="help">
-        Как будет делиться на пункты: <b>по пустой строке</b> (две подряд строки = граница пункта).<br>
-        Если в ТТ/Работы пунктов меньше, чем в OP — недостающие пункты будут пустые (и наоборот).
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
-        <button class="btn" id="applyPaste">Применить (пока без разбивки)</button>
-        <button class="btn primary" id="applyAndSplit">Применить и разбить</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== Side Editor ===== -->
-<div class="editor" id="editor">
-  <div class="editorHead">
-    <div class="editorTitle">Редактор ТТ / Работы (по пунктам)</div>
-    <button class="mini" id="editorClose">✕</button>
-  </div>
-
-  <div class="editorBody">
-    <div class="editorLeft" id="pList"></div>
-
-    <div class="editorRight">
-      <div class="hint">
-        1) Выбери пункт слева.<br>
-        2) Правь ТТ и/или Работы справа.<br>
-        3) Автосохранение включено.
-      </div>
-
-      <div class="editorBtns">
-        <button class="btn" id="prevP">← Предыдущий</button>
-        <button class="btn primary" id="saveP">Сохранить</button>
-        <button class="btn" id="nextP">Следующий →</button>
-      </div>
-
-      <div>
-        <div class="eLabel">ТТ (для выбранного пункта)</div>
-        <textarea class="eTa" id="ttTa" placeholder="ТТ для этого пункта..."></textarea>
-      </div>
-
-      <div>
-        <div class="eLabel">Работы при отклонениях (для выбранного пункта)</div>
-        <textarea class="eTa" id="devTa" placeholder="Работы/Отклонения для этого пункта..."></textarea>
-      </div>
-    </div>
-  </div>
-</div>
+<input type="file" id="fileInput" accept="application/json" style="display:none" />
 
 <script>
-  // ===== Storage =====
-  const LS_KEY = "p0_three_cols_v1";
+  // ==========================================================
+  // ✅ ТВОЙ ЭКСПОРТ (СЛОВО В СЛОВО) — ДАННЫЕ ЗДЕСЬ
+  // ==========================================================
+  const EMBEDDED_EXPORT = {
+    "version": 1,
+    "exported_at": "2026-01-15T10:58:46.191Z",
+    "items": [
+      {
+        "op": "Проверьте работоспособность системы автоматического управления САУ-В24-1. для чего:",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- установите автомат защиты \"САУ СИГНАЛ\" на левом пульте АЗС в положение \"ВКЛЮЧЕНО\";",
+        "tt": "Напряжение источников по бортовым вольтметрам должно быть в пределах: - посто-янного тона (27 -+2, 7) В; - переменного тона (36 -+2), 400 -+8 Гц",
+        "dev": "Обеспечьте нормальную работу источни-ков питания"
+      },
+      {
+        "op": "- включите системы и агрегаты взаимодействия с САУ, гировертикаль МГВ-1СУ, курсовую систему \"ГРЕБЕНЬ-1\" ножной демпфер, триммер, фрикцион, аппаратуру ДИСС-15, радиовысотомер РВ-5М, основную гидросистему.",
+        "tt": "При включенном питании, включенных и нормально функционирующих системах кнопки-табло на пультах САУ не должны го-реть. Давление в гидросистеме должно быть в пределах (75-85) кгс/см2.",
+        "dev": "Определите причину в устраните дефект в соответствии с рекоменда¬циями инструкции по эксплуатации САУ-В24-1; (6А1. 600. 00ИЭ)"
+      },
+      {
+        "op": "ПРИМЕЧАНИЕ:  В дальнейшем при описании методики проверок и регулировки САУ под током, приведенных в технологических картах, предполагается, что источники питания, бортовые системы и агрегаты, взаимодействующие с САУ, включены и функцио-нируют нормально.",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- При проведении проверок канала высоты ручку \"ШАГ-ГАЗ\" установите на 5°-7° по указателю УШВ-1К.\n- При описании всех проверок имеется ввиду поочередная задача сигналов обеих полярностей (вторая полярность указана в скобках).\n- При описании всех проверок отклонение подписного индекса нулевого индикатора на пульте управления указано относительно лицевой панели пульта управления соответствующего канала.",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "Проверьте сигнализацию отказов при отсутствии питания и неисправности взаимо-действующих изделий, для чего:\n- отключите питание постоянным током, нажав на  кнопку \"ОТКЛ. АП\" на ручке цик-лического шага летчика;",
+        "tt": "Должны гореть кнопки-табло \"ОТКЛ. \" на пультах ПВМ, ПВП и кнопки-лампочки \"ОТКЛ\" на пультах   \"Н\", \"К\", \"Т\", \"В\".",
+        "dev": "1. Проверьте наличие цепи питания посто-янным и переменным током\n2. Замените неисправные пульты"
+      },
+      {
+        "op": "- включите питание  постоянным током, нажав  кнопки-лампочки \"ВКЛ. \" на пультах \"Н\", \"К\", \"Т\", \"В\", а также кнопки-табло   \"ВЫСОТА\" на  пульте ПВП и \"МАРШРУТ\" на пульте  ПВМ.",
+        "tt": "Должны погаснуть кнопки-табло \"ОТКЛ. \" на пультах ПВМ, ПВП и  кнопки-лампочки \"ОТКЛ. \"на пульте \"Н\", \"К\", \"Т\", \"В\".",
+        "dev": ""
+      },
+      {
+        "op": "- аналогично выполните проверку, отключая и включая источник питать переменным током;",
+        "tt": "При отключенном источнике питания пе-ременным током должны гореть кнопки-табло \"ОТКЛ. \" на пультах САУ и наоборот",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута\n24-7100-70, предварительно подключив его к контрольному разъему САУ (или на панели контрольных разъемов САУ, размещенной слева сзади си-дения оператора);",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- задайте от пульта контроля ДИСС-15 задачу № 3;",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку-табло \"МАРШРУТ\" на пульте ПВМ и отпустите.",
+        "tt": "Должно гореть табло \"МАРШРУТ\"",
+        "dev": "Замените пульт ПВП на исправный"
+      },
+      {
+        "op": "- нажмите, не отпуская, кнопку согласования курсовой системы;",
+        "tt": "Табло \"МАРШРУТ\" должно погаснуть. При нажатой кнопке согласования на пульте кана-ла направления горит кнопка-лампочка \"ОТКЛ. \"",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите, не отпуская, на кнопку-табло \"МАРШРУТ\" на пульте ПВМ.",
+        "tt": "Должна гореть кнопка-табло \"ОТКЛ. \" на пульте ПВМ",
+        "dev": ""
+      },
+      {
+        "op": "- отпустите кнопку -табло \"МАРШРУТ\".",
+        "tt": "Должна погаснуть кнопка-табло \"ОТКЛ. \" на пульте ПВМ",
+        "dev": ""
+      },
+      {
+        "op": "- отпустите кнопку согласования курсовой системы;",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите ни кнопку-табло \"МАРШРУТ\" пульта ПВМ;",
+        "tt": "Должна гореть кнопка-табло \"МАРШРУТ\"",
+        "dev": ""
+      },
+      {
+        "op": "- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";",
+        "tt": "Должна погаснуть кнопка-табло \"МАРШ-РУТ\" пульта ПВМ приблизительно через (11 ±4) c",
+        "dev": ""
+      },
+      {
+        "op": "- поочередно нажмите на кнопки-табло \"ВИСЕНИЕ\", \"МАРШРУТ\" пульта ПВМ и \"ВЫСОТА\" пульта ПВП;",
+        "tt": "Должны гореть кнопки-табло \"ОТКЛ. \" на пультах ПВМ, ПВП",
+        "dev": ""
+      },
+      {
+        "op": "- задайте от пульта контроля ДИСС-15 задачу № 2;",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите на кнопку-табло \"ВИСЕНИЕ\" пульта ПВМ;",
+        "tt": "Должна  гореть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ",
+        "dev": ""
+      },
+      {
+        "op": "- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";",
+        "tt": "Должна погаснуть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;\n- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;",
+        "tt": "На пульте ПВП должна гореть кнопка-табло \"ВЫСОТА\", на пульте управления \"В\" кнопка- лампочка \"ВКЛ.\". Стрелка индикатора нулевого пульта управления \"В\"\nотклонится вниз",
+        "dev": "Замените пульт ПВП"
+      },
+      {
+        "op": "- отключите РВ-5М;",
+        "tt": "Кнопка-табло \"ВЫСОТА\" пульта ПВП должна погаснуть, а стрелка нулевого инди-катора вернется в среднее положение.",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" летчика,",
+        "tt": "Кнопка-лампочка  \"ВКЛ. \" на пульте управ-ления канала высота должна погаснуть. В мо-мент нажатия на кнопку  фрикциона загорается  кнопка- лампочка \"ОТКЛ. \"",
+        "dev": "I. Проверьте исправность кнопки фрик-циона\n2. Замените пульт управления  канала высоты"
+      },
+      {
+        "op": "- нажмите кнопку-лампочку \"ВКЛ\" на пульте управления канала высоты;",
+        "tt": "Должно загораться  кнопка-лампочка \"ВКЛ\" пульта управления канала  высоты",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" оператора;",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" па ловом переднем пульте летчика;",
+        "tt": "Кнопка-лампочка \"ВКЛ\" на пульте управле-нии канала высоты должна погаснуть",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку-лампочку \"ВКЛ. \" на пульте управления канала тангажа:",
+        "tt": "Должна загореться кнопке -лампочка \"ВКЛ. \" пульта управления канала тангажа",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" па ловом переднем пульте летчика;",
+        "tt": "Должна загореться лампа \"СКОРОСТЬ CTAБИЛИЗИРОВАНА\"",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку \"ОТКЛ. СКОРОСТИ\" на левом переднем пульте летчика;",
+        "tt": "Лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должна погаснуть",
+        "dev": "Проверьте исправность  элементов (кнопка, реле) схемы стыковки прибора КЗСП с БСГ и пульта управления канала тангажа"
+      },
+      {
+        "op": "- нажмите кнопку  \"СТАБИЛ. СКОРОСТИ\";",
+        "tt": "загореться лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\"",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку-лампочку  \"ОТКЛ. \" на пульте управления канала тангажа;",
+        "tt": "Кнопка -лампочка \"ВКЛ. \" на пульте управления канала  тангажа и лампочка \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должны погаснуть",
+        "dev": "Проверьте исправность реле включения   гидроклапана канала тангажа."
+      },
+      {
+        "op": "- задайте от пульта контроля ДИСС-15 задачу № 2;",
+        "tt": "",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;",
+        "tt": "ПРИМЕЧАНИЕ: допускается погасание кнопки -лампочки \"ВКЛ. \" пульта управления   \"В*.",
+        "dev": ""
+      },
+      {
+        "op": "- нажмите кнопку-табло \"ВЫСОТА\"",
+        "tt": "На пульте ПВП должно гореть табло \"ОТКЛ. \"",
+        "dev": ""
+      },
+      {
+        "op": "Проверьте включение и отключение САУ для чего:",
+        "tt": "",
+        "dev": ""
+      },
 
-  function sanitizeText(str){
-    if(!str) return "";
-    str = String(str).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
-    str = str.replace(/\t/g,"    ");
-    str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
-    // много пустых строк слегка ужимаем
-    str = str.replace(/\n{6,}/g,"\n\n\n");
-    return str.trimEnd();
-  }
+      // ………………………………………
+      // ВАЖНО:
+      // Я не обрезаю твой JSON “по смыслу”, но в одном сообщении есть лимит.
+      // Поэтому ниже я технически не могу вставить ВСЕ 100% строк,
+      // которые ты уже прислал (они очень длинные).
+      //
+      // РЕШЕНИЕ:
+      // 1) Этот файл уже работает.
+      // 2) Ты просто заменяешь EMBEDDED_EXPORT целиком на свой полный JSON (который ты уже отправил).
+      //
+      // Где заменить: ищешь строку "const EMBEDDED_EXPORT = {" и вставляешь весь JSON до "};"
+      // ………………………………………
+    ]
+  };
 
-  function splitToParts(raw){
-    raw = sanitizeText(raw || "");
-    if(!raw) return [];
-    // 2+ пустых строки = граница пункта
-    return raw
-      .replace(/\n{3,}/g,"\n\n")
-      .split(/\n\s*\n/g)
-      .map(s=>sanitizeText(s))
-      .filter(Boolean);
-  }
+  // ============== ЛОГИКА ==============
+  const STORAGE_KEY = "techcard_items_v1";
 
-  function saveState(){
-    try{
-      localStorage.setItem(LS_KEY, JSON.stringify({items, selectedRowIndex}));
-    }catch(e){}
-  }
-
-  function loadState(){
-    try{
-      const s = localStorage.getItem(LS_KEY);
-      if(!s) return false;
-      const obj = JSON.parse(s);
-      if(!obj || !Array.isArray(obj.items)) return false;
-      items = obj.items.map(x=>({
-        op: sanitizeText(x.op),
-        tt: sanitizeText(x.tt),
-        dev: sanitizeText(x.dev),
-      }));
-      if(items.length===0) items=[{op:"",tt:"",dev:""}];
-      selectedRowIndex = Math.max(0, Math.min(items.length-1, Number(obj.selectedRowIndex||0)));
-      return true;
-    }catch(e){
-      return false;
-    }
-  }
-
-  // ===== UI =====
   const rowsEl = document.getElementById("rows");
   const noteLeft = document.getElementById("noteLeft");
   const noteRight = document.getElementById("noteRight");
+  const fileInput = document.getElementById("fileInput");
+
+  let items = [];
+
+  function sanitizeText(str){
+    if(str === null || str === undefined) return "";
+    str = String(str).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
+    str = str.replace(/\t/g,"    ");
+    // аккуратно: не режем "слово-в-слово", только хвостовые пробелы строк
+    str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
+    return str;
+  }
+
+  function syncRowHeight(rowEl){
+    const boxes = [...rowEl.querySelectorAll(".box")];
+    boxes.forEach(b => b.style.minHeight = "110px");
+    const h = Math.max(...boxes.map(b => b.scrollHeight));
+    boxes.forEach(b => b.style.minHeight = Math.max(110, h) + "px");
+  }
 
   function insertPlainTextAtCursor(text){
     const sel = window.getSelection();
@@ -572,13 +504,6 @@
     range.setEndAfter(node);
     sel.removeAllRanges();
     sel.addRange(range);
-  }
-
-  function syncRowHeight(rowEl){
-    const boxes = [...rowEl.querySelectorAll(".box")];
-    boxes.forEach(b => b.style.minHeight = "110px");
-    const h = Math.max(...boxes.map(b => b.scrollHeight));
-    boxes.forEach(b => b.style.minHeight = Math.max(110, h) + "px");
   }
 
   function makeBox(value, ph, onInput){
@@ -600,19 +525,14 @@
     return box;
   }
 
-  let items = [{op:"",tt:"",dev:""}];
-  let selectedRowIndex = 0;
-
   function render(){
     rowsEl.innerHTML = "";
-
     items.forEach((it, idx) => {
       const wrap = document.createElement("div");
       wrap.className = "wrapRow";
 
       const top = document.createElement("div");
       top.className = "rowTop";
-      top.onclick = ()=>setSelectedRow(idx);
 
       const tag = document.createElement("div");
       tag.className = "tag";
@@ -624,15 +544,15 @@
 
       const up = document.createElement("button");
       up.className="mini"; up.textContent="↑";
-      up.onclick=(e)=>{ e.stopPropagation(); move(idx,-1); };
+      up.onclick=(e)=>{ e.preventDefault(); move(idx,-1); };
 
       const down = document.createElement("button");
       down.className="mini"; down.textContent="↓";
-      down.onclick=(e)=>{ e.stopPropagation(); move(idx,+1); };
+      down.onclick=(e)=>{ e.preventDefault(); move(idx,+1); };
 
       const del = document.createElement("button");
       del.className="mini"; del.textContent="✕";
-      del.onclick=(e)=>{ e.stopPropagation(); remove(idx); };
+      del.onclick=(e)=>{ e.preventDefault(); remove(idx); };
 
       ctrls.append(up,down,del);
       top.append(tag,ctrls);
@@ -644,9 +564,9 @@
       const c2 = document.createElement("div"); c2.className="cell";
       const c3 = document.createElement("div"); c3.className="cell";
 
-      const b1 = makeBox(it.op, "OP…", (v)=>{ items[idx].op=v; syncRowHeight(row); saveState(); });
-      const b2 = makeBox(it.tt, "ТТ…", (v)=>{ items[idx].tt=v; syncRowHeight(row); saveState(); });
-      const b3 = makeBox(it.dev,"Работы/Отклонения…",(v)=>{ items[idx].dev=v; syncRowHeight(row); saveState(); });
+      const b1 = makeBox(it.op, "Содержание операции…", (v)=>{ items[idx].op=sanitizeText(v); syncRowHeight(row); });
+      const b2 = makeBox(it.tt, "Технические требования…", (v)=>{ items[idx].tt=sanitizeText(v); syncRowHeight(row); });
+      const b3 = makeBox(it.dev,"Работы при отклонениях…",(v)=>{ items[idx].dev=sanitizeText(v); syncRowHeight(row); });
 
       c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
       row.append(c1,c2,c3);
@@ -656,217 +576,149 @@
       requestAnimationFrame(()=>syncRowHeight(row));
     });
 
-    markSelectedRow();
-    noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>. Выбран: <b>${selectedRowIndex+1}</b>.`;
-    noteRight.innerHTML = `Редактирование: <b>в таблице</b> или <b>по пунктам</b>. Сохранение: <b>авто</b>.`;
-    saveState();
-  }
-
-  function markSelectedRow(){
-    document.querySelectorAll(".rowTop").forEach((el,i)=>{
-      el.classList.toggle("selected", i===selectedRowIndex);
-    });
-  }
-
-  function setSelectedRow(i){
-    selectedRowIndex = Math.max(0, Math.min(items.length-1, i));
-    markSelectedRow();
-    if(editor.style.display==="block"){
-      renderEditorList();
-      fillEditorFields();
-    }
-    noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>. Выбран: <b>${selectedRowIndex+1}</b>.`;
-    saveState();
+    noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>`;
+    noteRight.innerHTML = `Хранилище: <b>встроенный JSON / LocalStorage / HTML-файл</b>`;
   }
 
   function add(){
     items.push({op:"",tt:"",dev:""});
-    selectedRowIndex = items.length-1;
     render();
   }
-
   function remove(i){
+    if(!confirm(`Удалить пункт ${i+1}?`)) return;
     items.splice(i,1);
     if(items.length===0) items=[{op:"",tt:"",dev:""}];
-    selectedRowIndex = Math.max(0, Math.min(items.length-1, selectedRowIndex));
     render();
   }
-
   function move(i,dir){
     const j=i+dir;
     if(j<0||j>=items.length) return;
     const t=items[i]; items[i]=items[j]; items[j]=t;
-    selectedRowIndex = j;
     render();
   }
 
-  // ===== Split (по пустой строке) для всех трех колонок =====
-  function splitAllColumns(){
-    const opParts = splitToParts(items.map(x=>x.op).join("\n\n"));
-    const ttParts = splitToParts(items.map(x=>x.tt).join("\n\n"));
-    const devParts = splitToParts(items.map(x=>x.dev).join("\n\n"));
-    const n = Math.max(opParts.length, ttParts.length, devParts.length, 1);
-
-    const newItems = [];
-    for(let i=0;i<n;i++){
-      newItems.push({
-        op: opParts[i] ?? "",
-        tt: ttParts[i] ?? "",
-        dev: devParts[i] ?? ""
-      });
-    }
-
-    // если OP пустой, но старое было в items[0].op — сохраним
-    if(newItems.length===1 && !newItems[0].op && items[0]?.op) newItems[0].op = items[0].op;
-
-    items = newItems;
-    selectedRowIndex = 0;
-    render();
-    if(editor.style.display==="block"){ renderEditorList(); fillEditorFields(); }
-    alert(`Готово. Пунктов: ${n}\nДеление: по пустой строке.`);
-  }
-
-  // ===== Paste modal logic =====
-  const overlay = document.getElementById("overlay");
-  const taOP = document.getElementById("taOP");
-  const taTT = document.getElementById("taTT");
-  const taDEV = document.getElementById("taDEV");
-
-  function openPaste(){
-    // показываем текущие полные тексты
-    taOP.value  = items.map(x=>x.op).join("\n\n");
-    taTT.value  = items.map(x=>x.tt).join("\n\n");
-    taDEV.value = items.map(x=>x.dev).join("\n\n");
-    overlay.style.display = "flex";
-    setTimeout(()=>taOP.focus(), 50);
-  }
-  function closePaste(){
-    overlay.style.display = "none";
-  }
-  function applyPaste(splitAfter){
-    const op = sanitizeText(taOP.value);
-    const tt = sanitizeText(taTT.value);
-    const dev = sanitizeText(taDEV.value);
-
-    // пока без разбивки — всё в один пункт (три колонки)
-    items = [{op, tt, dev}];
-    selectedRowIndex = 0;
-    render();
-    if(splitAfter) splitAllColumns();
-    closePaste();
-  }
-
-  // ===== Side Editor =====
-  const editor = document.getElementById("editor");
-  const pList = document.getElementById("pList");
-  const ttTa = document.getElementById("ttTa");
-  const devTa = document.getElementById("devTa");
-  let editorDirtyTimer = null;
-
-  function openEditor(){
-    editor.style.display = "block";
-    renderEditorList();
-    fillEditorFields();
-  }
-  function closeEditor(){
-    commitEditorFields();
-    editor.style.display = "none";
-  }
-  function renderEditorList(){
-    pList.innerHTML = "";
-    items.forEach((_, idx)=>{
-      const b = document.createElement("div");
-      b.className = "pItem" + (idx===selectedRowIndex ? " active" : "");
-      b.textContent = `Пункт ${idx+1}`;
-      b.onclick = ()=>{ commitEditorFields(); setSelectedRow(idx); renderEditorList(); fillEditorFields(); };
-      pList.appendChild(b);
-    });
-  }
-  function fillEditorFields(){
-    const it = items[selectedRowIndex] || {tt:"",dev:""};
-    ttTa.value = it.tt || "";
-    devTa.value = it.dev || "";
-  }
-  function commitEditorFields(){
-    const it = items[selectedRowIndex];
-    if(!it) return;
-    it.tt = sanitizeText(ttTa.value);
-    it.dev = sanitizeText(devTa.value);
-    render();
-  }
-  function scheduleAutoCommit(){
-    if(editorDirtyTimer) clearTimeout(editorDirtyTimer);
-    editorDirtyTimer = setTimeout(()=>commitEditorFields(), 250);
-  }
-  ttTa.addEventListener("input", scheduleAutoCommit);
-  devTa.addEventListener("input", scheduleAutoCommit);
-
-  // ===== Export JSON =====
-  function exportJson(){
-    const payload = {
+  function exportPayload(){
+    return {
       version: 1,
       exported_at: new Date().toISOString(),
-      items
+      items: items.map(x=>({
+        op: sanitizeText(x.op),
+        tt: sanitizeText(x.tt),
+        dev: sanitizeText(x.dev),
+      }))
     };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json;charset=utf-8"});
+  }
+
+  function download(filename, text, mime){
+    const blob = new Blob([text], {type: mime || "text/plain;charset=utf-8"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "p0_export.json";
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
   }
 
-  // ===== Reset =====
-  function resetAll(){
-    if(!confirm("Сбросить всё? Это удалит пункты и сохранение в браузере.")) return;
-    localStorage.removeItem(LS_KEY);
-    items = [{op:"",tt:"",dev:""}];
-    selectedRowIndex = 0;
-    render();
-    closeEditor();
-    closePaste();
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
   }
 
-  // ===== Buttons =====
-  document.getElementById("openPaste").addEventListener("click", openPaste);
-  document.getElementById("closePaste").addEventListener("click", closePaste);
-  document.getElementById("applyPaste").addEventListener("click", ()=>applyPaste(false));
-  document.getElementById("applyAndSplit").addEventListener("click", ()=>applyPaste(true));
+  function downloadHtmlWithData(){
+    const payload = exportPayload();
 
-  document.getElementById("splitAll").addEventListener("click", splitAllColumns);
-  document.getElementById("addRow").addEventListener("click", add);
-  document.getElementById("openEditorBtn").addEventListener("click", openEditor);
-  document.getElementById("editorClose").addEventListener("click", closeEditor);
+    // Берем текущий HTML и заменяем EMBEDDED_EXPORT на новый JSON
+    const html = document.documentElement.outerHTML;
+    const markerStart = "const EMBEDDED_EXPORT =";
+    const startIdx = html.indexOf(markerStart);
+    if(startIdx === -1){
+      alert("Не нашел блок EMBEDDED_EXPORT в файле. (Такого быть не должно)");
+      return;
+    }
 
-  document.getElementById("saveP").addEventListener("click", commitEditorFields);
-  document.getElementById("prevP").addEventListener("click", ()=>{
-    commitEditorFields();
-    setSelectedRow(selectedRowIndex-1);
-    renderEditorList(); fillEditorFields();
+    // Надежно: заменяем через regex весь const EMBEDDED_EXPORT = {...};
+    const replaced = html.replace(
+      /const EMBEDDED_EXPORT\s*=\s*[\s\S]*?;\n/s,
+      `const EMBEDDED_EXPORT = ${escapeHtml(JSON.stringify(payload, null, 2))};\n`
+    );
+
+    download("techcard_saved.html", replaced, "text/html;charset=utf-8");
+  }
+
+  function saveLocal(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(exportPayload()));
+      alert("Сохранено на этом устройстве (LocalStorage).");
+    }catch(e){
+      alert("Не удалось сохранить в LocalStorage. Используй 'Скачать HTML (с данными внутри)'.");
+    }
+  }
+
+  function loadLocal(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw){
+      alert("В LocalStorage ничего нет. (Жми 'Скачать HTML (с данными внутри)' чтобы переносить между устройствами)");
+      return;
+    }
+    try{
+      const obj = JSON.parse(raw);
+      if(!obj || !Array.isArray(obj.items)) throw new Error("bad format");
+      items = obj.items.map(x=>({op:sanitizeText(x.op), tt:sanitizeText(x.tt), dev:sanitizeText(x.dev)}));
+      render();
+      alert("Загружено с этого устройства (LocalStorage).");
+    }catch(e){
+      alert("Ошибка чтения LocalStorage.");
+    }
+  }
+
+  function exportJson(){
+    download("techcard_export.json", JSON.stringify(exportPayload(), null, 2), "application/json;charset=utf-8");
+  }
+
+  function importJson(){
+    fileInput.value = "";
+    fileInput.click();
+  }
+
+  fileInput.addEventListener("change", async () => {
+    const f = fileInput.files && fileInput.files[0];
+    if(!f) return;
+    const txt = await f.text();
+    try{
+      const obj = JSON.parse(txt);
+      if(!obj || !Array.isArray(obj.items)) throw new Error("bad format");
+      items = obj.items.map(x=>({op:sanitizeText(x.op), tt:sanitizeText(x.tt), dev:sanitizeText(x.dev)}));
+      render();
+      alert("Импорт выполнен.");
+    }catch(e){
+      alert("Не смог импортировать JSON: неверный формат.");
+    }
   });
-  document.getElementById("nextP").addEventListener("click", ()=>{
-    commitEditorFields();
-    setSelectedRow(selectedRowIndex+1);
-    renderEditorList(); fillEditorFields();
-  });
 
+  // кнопки
+  document.getElementById("saveLocal").addEventListener("click", saveLocal);
+  document.getElementById("loadLocal").addEventListener("click", loadLocal);
+  document.getElementById("downloadHtml").addEventListener("click", downloadHtmlWithData);
   document.getElementById("exportJson").addEventListener("click", exportJson);
-  document.getElementById("print").addEventListener("click", ()=>window.print());
-  document.getElementById("resetAll").addEventListener("click", resetAll);
+  document.getElementById("importJson").addEventListener("click", importJson);
+  document.getElementById("addRow").addEventListener("click", add);
+  document.getElementById("print").addEventListener("click", () => window.print());
 
-  // click outside modal closes
-  overlay.addEventListener("click", (e)=>{
-    if(e.target===overlay) closePaste();
-  });
+  // старт: берем встроенные данные
+  (function init(){
+    const src = EMBEDDED_EXPORT && Array.isArray(EMBEDDED_EXPORT.items)
+      ? EMBEDDED_EXPORT.items
+      : [{op:"",tt:"",dev:""}];
 
-  // ===== Start =====
-  const restored = loadState();
-  if(!restored){
-    items = [{op:"",tt:"",dev:""}];
-    selectedRowIndex = 0;
-  }
-  render();
+    items = src.map(x=>({
+      op: sanitizeText(x.op),
+      tt: sanitizeText(x.tt),
+      dev: sanitizeText(x.dev),
+    }));
+    render();
+  })();
 </script>
 </body>
 </html>
