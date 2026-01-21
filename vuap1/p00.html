@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Технологическая карта — p00 (OP/TT/DEV, в файле)</title>
+  <title>p00 — Текст (внутри файла)</title>
   <style>
     :root{
       --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
@@ -13,12 +13,8 @@
       --ink:#eaf6ff;
       --muted:#b9cadd;
       --accent:#21f0ff;
-      --accent2:#00ffa6;
       --r:16px;
       --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      --colOp: 520px;
-      --colTT: 450px;
-      --colDev: 450px;
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:var(--font);color:var(--ink)}
@@ -31,7 +27,7 @@
         linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #061523 78%, var(--bg3) 100%);
     }
     .doc{
-      max-width: 1520px;
+      max-width: 1100px;
       margin:0 auto;
       border-radius: var(--r);
       background: linear-gradient(180deg, var(--glass), var(--glass2));
@@ -54,12 +50,13 @@
       letter-spacing:.6px;
       color: var(--accent);
       font-size: 18px;
+      line-height:1.2;
     }
     .subtitle{
       margin-top:6px;
       color: var(--muted);
       font-size: 13px;
-      max-width: 980px;
+      max-width: 820px;
       line-height:1.35;
     }
     .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
@@ -81,107 +78,29 @@
 
     .wrap{
       padding:12px;
-      overflow:auto;
-      max-height: calc(100vh - 160px);
-      -webkit-overflow-scrolling: touch;
     }
-    .grid{
-      min-width: calc(var(--colOp) + var(--colTT) + var(--colDev) + 40px);
-      border:1px solid rgba(255,255,255,.10);
+
+    textarea{
+      width:100%;
+      min-height: calc(100vh - 220px);
+      resize: vertical;
       border-radius: 14px;
-      overflow:hidden;
-      background: rgba(0,0,0,.08);
-    }
-    .head{
-      display:grid;
-      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
-      position: sticky;
-      top:0;
-      z-index:5;
-      background: rgba(6,14,22,.92);
-      border-bottom:1px solid rgba(255,255,255,.12);
-    }
-    .hcell{
-      padding:12px;
-      border-right:1px solid rgba(255,255,255,.08);
-      font-weight:950;
-    }
-    .hcell:last-child{border-right:none}
-
-    .rows{display:flex; flex-direction:column; gap:10px; padding:10px}
-    .wrapRow{
-      border-radius:12px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.06);
-    }
-    .rowTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      padding:8px 10px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.10);
-      user-select:none;
-    }
-    .tag{
-      font-weight:950;
-      color: var(--accent2);
-      padding:5px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(0,255,166,.22);
-      background: rgba(0,0,0,.12);
-    }
-    .mini{
-      padding:6px 10px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color:#dff7ff;
-      cursor:pointer;
-      font-weight:900;
-    }
-    .mini:hover{border-color: rgba(33,240,255,.28)}
-
-    .row{
-      display:grid;
-      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
-    }
-    .cell{
-      padding:10px;
-      border-right:1px solid rgba(255,255,255,.08);
-      background: rgba(7,14,22,.30);
-    }
-    .cell:last-child{border-right:none}
-
-    .box{
-      min-height: 110px;
-      border-radius: 10px;
-      border:1px solid rgba(33,240,255,.12);
-      background: rgba(7,14,22,.35);
-      padding: 10px 12px;
+      border:1px solid rgba(33,240,255,.14);
+      background: rgba(0,0,0,.22);
+      color: var(--ink);
       outline:none;
-
-      white-space: pre-wrap;
-      overflow-wrap: break-word;
-      hyphens: auto;
-
+      padding:12px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 14px;
       line-height: 1.35;
-      color: #eaf6ff;
-      overflow:auto;
+      white-space: pre-wrap;
     }
-    .box:focus{
+    textarea:focus{
       border-color: rgba(33,240,255,.35);
       box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 24px rgba(33,240,255,.10);
     }
-    .box:empty::before{
-      content: attr(data-ph);
-      color: rgba(185,202,221,.55);
-    }
 
-    .modeNote{
+    .note{
       color:var(--muted);
       font-size:12px;
       padding:10px 14px;
@@ -193,71 +112,16 @@
       flex-wrap:wrap;
     }
 
-    /* Modal */
-    .modal{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      display:none;
-      z-index:99;
-      padding:14px;
-    }
-    .modalCard{
-      max-width: 980px;
-      margin:0 auto;
-      height: calc(100vh - 28px);
-      background: rgba(6,14,22,.96);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.62);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-    .modalHead{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 12px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .modalTitle{font-weight:950; color: var(--accent)}
-    .modalBody{padding:10px; overflow:auto; display:grid; gap:10px}
-    .taLabel{color: var(--muted); font-size:12px; font-weight:900}
-    textarea.big{
-      width:100%;
-      min-height: 160px;
-      resize: vertical;
-      border-radius: 12px;
-      border:1px solid rgba(33,240,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--ink);
-      outline:none;
-      padding:10px 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 13px;
-      line-height: 1.35;
-      white-space: pre-wrap;
-    }
-    textarea.big:focus{border-color: rgba(33,240,255,.35)}
-    .hint{
-      color: var(--muted);
-      font-size: 12px;
-      line-height:1.35;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      border-radius: 12px;
-      padding:8px 10px;
-    }
-
     @media print{
       .scene{padding:0; background:#fff}
       .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.modeNote,.modal{display:none !important}
-      .wrap{max-height:none; overflow:visible; padding:0}
-      .grid{border:1px solid #ccc; background:#fff}
-      .head{position:static; background:#fff}
-      .cell,.box{background:#fff; color:#000}
-      .box{border:1px solid #ccc}
-      .mini,.btn{display:none}
-      .tag{color:#000; border:1px solid #ddd; background:#fff}
+      header,.note,.btns{display:none !important}
+      textarea{
+        min-height:auto;
+        border:1px solid #ccc;
+        background:#fff;
+        color:#000;
+      }
     }
   </style>
 </head>
@@ -267,91 +131,59 @@
   <div class="doc">
     <header>
       <div>
-        <div class="title">Технологическая карта — p00 (OP / ТТ / Отклонения)</div>
+        <div class="title">p00 — Один текст (внутри файла)</div>
         <div class="subtitle">
-          Данные хранятся <b>внутри файла</b>. Чтобы открыть на любом устройстве — жми
-          <b>«Скачать HTML (с данными внутри)»</b> и сохраняй файл в iCloud/Google Drive.<br>
-          Важно: редактирование сохраняется <b>внутри скачанного файла</b> (встроенные данные) + на устройстве (localStorage).
+          Вставь текст в поле. Потом нажми <b>«Скачать HTML (с текстом внутри)»</b> — и этот новый файл откроется
+          на любом устройстве (телефон/ПК) с тем же текстом.
         </div>
       </div>
       <div class="btns">
-        <button class="btn primary" id="openPaste">Вставить OP/TT/DEV</button>
-        <button class="btn" id="splitAll">Разбить на пункты</button>
-        <button class="btn" id="addRow">+ Добавить пункт</button>
-        <button class="btn" id="exportJson">Экспорт JSON</button>
-        <button class="btn" id="importJson">Импорт JSON</button>
-        <button class="btn primary" id="downloadHtml">Скачать HTML (с данными внутри)</button>
+        <button class="btn primary" id="downloadHtml">Скачать HTML (с текстом внутри)</button>
         <button class="btn" id="print">Печать</button>
-        <button class="btn" id="reset">Сбросить всё</button>
+        <button class="btn" id="clear">Очистить</button>
       </div>
     </header>
 
     <div class="wrap">
-      <div class="grid">
-        <div class="head">
-          <div class="hcell">Содержание операции (OP)</div>
-          <div class="hcell">Технические требования (ТТ)</div>
-          <div class="hcell">Работы при отклонениях (DEV)</div>
-        </div>
-        <div class="rows" id="rows"></div>
-      </div>
+      <textarea id="t" spellcheck="false" placeholder="Вставь весь текст сюда..."></textarea>
     </div>
 
-    <div class="modeNote">
-      <div id="noteLeft"></div>
-      <div id="noteRight"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Paste OP/TT/DEV -->
-<div class="modal" id="modal">
-  <div class="modalCard">
-    <div class="modalHead">
-      <div class="modalTitle">Вставка сразу в 3 колонки (OP / ТТ / DEV)</div>
-      <button class="mini" id="closeModal">✕</button>
-    </div>
-    <div class="modalBody">
-      <div class="hint">
-        Вставляй текст блоками. Сначала вставь всё в OP/TT/DEV, потом жми «Разбить на пункты».<br>
-        Правило разбиения: пункты начинаются с «1.12.1.» или «2.8.3.» и т.п. или со строки «- …».
-      </div>
-
-      <div>
-        <div class="taLabel">OP (Содержание операции) — одним куском</div>
-        <textarea class="big" id="opTa" placeholder="Вставь OP сюда..."></textarea>
-      </div>
-
-      <div>
-        <div class="taLabel">ТТ (если пока нет — оставь пустым)</div>
-        <textarea class="big" id="ttTa" placeholder="Вставь ТТ сюда..."></textarea>
-      </div>
-
-      <div>
-        <div class="taLabel">DEV (Работы при отклонениях) — если нет, пусто</div>
-        <textarea class="big" id="devTa" placeholder="Вставь DEV сюда..."></textarea>
-      </div>
-
-      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:space-between; align-items:center;">
-        <button class="btn" id="applyPaste">Применить</button>
-        <div class="hint" style="margin:0;">
-          После «Применить» нажми «Разбить на пункты».
-        </div>
-      </div>
+    <div class="note">
+      <div>Подсказка: если открыл на другом устройстве и пусто — значит ты открыл старый файл. Открывай сохранённый <b>p00_saved.html</b>.</div>
+      <div id="stat"></div>
     </div>
   </div>
 </div>
 
 <script>
   // ==========================================================
-  // 1) ДАННЫЕ ВНУТРИ ФАЙЛА (это и есть “на всех устройствах”)
+  // ДАННЫЕ ВНУТРИ ФАЙЛА (ОБЯЗАТЕЛЬНО ДЛЯ “ЛЮБОГО УСТРОЙСТВА”)
+  // 1) Вставь свой текст сюда (между обратными кавычками).
   // ==========================================================
-  // ВСТАВЬ СВОЙ ТЕКСТ ВМЕСТО PASTE_YOUR_TEXT_HERE — В ОБРАТНЫХ КАВЫЧКАХ `...`
-  const DATA = {
-    version: 1,
-    title: "p00",
-    exported_at: new Date().toISOString(),
-    source_text: `1.12. ПРОВЕРКА СИСТЕМЫ АВТОМАТИЧЕСКОГО
+  const EMBEDDED_TEXT = `ВСТАВЬ_ТЕКСТ_СЮДА`;
+
+  const ta = document.getElementById("t");
+  const stat = document.getElementById("stat");
+
+  function normalize(s){
+    if(!s) return "";
+    s = String(s).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
+    return s;
+  }
+
+  // При открытии файла: если внутри уже есть текст — покажем его.
+  ta.value = normalize(EMBEDDED_TEXT);
+
+  function updateStat(){
+    const chars = ta.value.length;
+    const lines = ta.value ? ta.value.split("\n").length : 0;
+    stat.innerHTML = `Строк: <b>${lines}</b> · Символов: <b>${chars}</b>`;
+  }
+  ta.addEventListener("input", updateStat);
+  updateStat();
+
+  function escapeForTemplateLiteral(s){
+    // Чтобы безопасно вставить текст внутрь `1.12. ПРОВЕРКА СИСТЕМЫ АВТОМАТИЧЕСКОГО
 УПРАВЛЕНИЯ САУ-В24-1
 1.12.1.		Убедиться в наличии давления в основной гидросистеме (75-85 кг/см2), проконтролировать обороты несущего винта   95±2%.  Подключить пило-тажно-командный прибор ПКП-72М к первой гировертикали, установив пе-реключатель гировертикалей «ОСНОВНОЙ АВИАГОРИЗ. 1, 2» в положение «1».  Включить гидродемпфер педалей выключателем «ДЕМПФЕР ПЕДА-ЛЕЙ».
 Предупреждения: 1. Подключение пилотажно-командного прибора 
@@ -377,7 +209,7 @@
 -	после получения команды от летчика «Беру управление на себя» плавно отклонить ручку вперед и вправо (усилия должны отсутствовать) и установить ее в походное положение на фиксатор;
 -	нажатием ног убрать опорные площадки педалей в походное положе-ние;
 -	доложить летчику о том, что управление отключилось и установлено в походное положение.
-`2.3. ВИСЕНИЕ И ПЕРЕМЕЩЕНИЯ У ЗЕМЛИ
+2.3. ВИСЕНИЕ И ПЕРЕМЕЩЕНИЯ У ЗЕМЛИ
 2.3.1.		Висение у земли производить перед каждым полетом для проверки рабо-ты силовой установки, проверки управления вертолетом, режимов «Висе-ние» и «Высота» САУ при необходимости использования их в полете, а также для определения способа взлета. 
 		Висение разрешается производить при скорости встречного ветра не бо-лее 25 м/с, бокового и попутного   не более 10 м/с.
 2.3.2.		В целях обеспечения безопасности приземления в случае отказа одного двигателя висение с нормальной и максимальной взлетными массами вы-полнять на высоте до 5 м, а с взлетными массами  11200 кг и менее   на вы-соте до 10 м. На высотах выше указанных висение разрешается выполнять по тактическим соображениям и при работе с внешней подвеской.
@@ -480,95 +312,10 @@
 		После вывода вертолета в горизонтальный полет необходимо включить канал «Маршрут».
 Предупреждения: 1. В случае самопроизвольного кренения вертолета на угол более 20° необходимо немедленно вмешаться в управление и вывести вер-толет в горизонтальный полет.  если указанное явление повторится, режим «МАРШРУТ» выключить.
 2.  До выяснения причин самопроизвольного кренения вертолета включать канал «МАРШРУТ» запрещается.
-
-	  ,
-  };
-
-  // ==========================================================
-  // 2) ЛОКАЛЬНОЕ ХРАНЕНИЕ НА УСТРОЙСТВЕ (чтобы не терялось при F5)
-  // ==========================================================
-  const STORAGE_KEY = "techcard_p00_items_v1";
-
-  const rowsEl = document.getElementById("rows");
-  const noteLeft = document.getElementById("noteLeft");
-  const noteRight = document.getElementById("noteRight");
-
-  function sanitizeText(str){
-    if(!str) return "";
-    str = String(str).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
-    str = str.replace(/\t/g,"    ");
-    str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
-    str = str.replace(/\n{6,}/g,"\n\n\n");
-    return str.trim();
-  }
-
-  function insertPlainTextAtCursor(text){
-    const sel = window.getSelection();
-    if(!sel || sel.rangeCount===0) return;
-    const range = sel.getRangeAt(0);
-    range.deleteContents();
-    const node = document.createTextNode(text);
-    range.insertNode(node);
-    range.setStartAfter(node);
-    range.setEndAfter(node);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
-  function syncRowHeight(rowEl){
-    const boxes = [...rowEl.querySelectorAll(".box")];
-    boxes.forEach(b => b.style.minHeight = "110px");
-    const h = Math.max(...boxes.map(b => b.scrollHeight));
-    boxes.forEach(b => b.style.minHeight = Math.max(110, h) + "px");
-  }
-
-  function makeBox(value, ph, onInput){
-    const box = document.createElement("div");
-    box.className = "box";
-    box.contentEditable = "true";
-    box.dataset.ph = ph;
-    box.innerText = value || "";
-
-    box.addEventListener("paste", (e) => {
-      e.preventDefault();
-      const cd = e.clipboardData || window.clipboardData;
-      const plain = cd ? cd.getData("text/plain") : "";
-      insertPlainTextAtCursor(sanitizeText(plain));
-      onInput(box.innerText);
-    });
-
-    box.addEventListener("input", () => onInput(box.innerText));
-    return box;
-  }
-
-  // Разбивка текста на пункты:
-  // - строка начинается с "1.12.1." / "2.8.10." и т.п.
-  // - или строка начинается с "- "
-  function splitIntoBlocks(text){
-    text = sanitizeText(text || "");
-    if(!text) return [];
-    const lines = text.split("\n");
-    const blocks = [];
-    let cur = [];
-
-    const isNumbered = (s) => /^\s*\d+(?:\.\d+)+\.\s*/.test(s);
-    const isBullet   = (s) => /^\s*-\s+/.test(s);
-
-    for(const raw of lines){
-      const s = raw.replace(/\u00A0/g," ");
-      if(s.trim()===""){
-        if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
-        continue;
-      }
-      if(isNumbered(s) || isBullet(s)){
-        if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
-        cur.push(s.trim());
-      }else{
-        cur.push(s.trim());
-      }
-    }
-    if(cur.length) blocks.push(cur.join("\n").trim());
-    return blocks.filter(b => b.trim().length);
+`
+    return String(s)
+      .replace(/\\/g, "\\\\")
+      .replace(/`/g, "\\`");
   }
 
   function downloadText(filename, text, mime){
@@ -581,232 +328,25 @@
     URL.revokeObjectURL(url);
   }
 
-  function saveLocal(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({version:1, items}));
-  }
-  function loadLocal(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return null;
-      const obj = JSON.parse(raw);
-      if(!obj || !Array.isArray(obj.items)) return null;
-      return obj.items;
-    }catch(e){ return null; }
-  }
-
-  let items = [];
-
-  function init(){
-    // 1) Если есть localStorage на устройстве — грузим его
-    const saved = loadLocal();
-    if(saved && saved.length){
-      items = saved.map(x=>({op:x.op||"", tt:x.tt||"", dev:x.dev||""}));
-    }else{
-      // 2) Иначе стартуем с текста, встроенного в файл
-      items = [{op: sanitizeText(DATA.source_text || ""), tt:"", dev:""}];
-    }
-    if(items.length===0) items=[{op:"",tt:"",dev:""}];
-    render();
-    updateNotes();
-    saveLocal();
-  }
-
-  function updateNotes(){
-    noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>.`;
-    noteRight.innerHTML = `Синхронизация: <b>работает через файл</b> (кнопка «Скачать HTML…»).`;
-  }
-
-  function render(){
-    rowsEl.innerHTML = "";
-    items.forEach((it, idx) => {
-      const wrap = document.createElement("div");
-      wrap.className = "wrapRow";
-
-      const top = document.createElement("div");
-      top.className = "rowTop";
-
-      const tag = document.createElement("div");
-      tag.className = "tag";
-      tag.textContent = `Пункт ${idx+1}`;
-
-      const ctrls = document.createElement("div");
-      ctrls.style.display="flex";
-      ctrls.style.gap="6px";
-
-      const up = document.createElement("button");
-      up.className="mini"; up.textContent="↑";
-      up.onclick=(e)=>{ e.stopPropagation(); move(idx,-1); };
-
-      const down = document.createElement("button");
-      down.className="mini"; down.textContent="↓";
-      down.onclick=(e)=>{ e.stopPropagation(); move(idx,+1); };
-
-      const del = document.createElement("button");
-      del.className="mini"; del.textContent="✕";
-      del.onclick=(e)=>{ e.stopPropagation(); remove(idx); };
-
-      ctrls.append(up,down,del);
-      top.append(tag,ctrls);
-
-      const row = document.createElement("div");
-      row.className="row";
-
-      const c1 = document.createElement("div"); c1.className="cell";
-      const c2 = document.createElement("div"); c2.className="cell";
-      const c3 = document.createElement("div"); c3.className="cell";
-
-      const b1 = makeBox(it.op, "OP…", (v)=>{ items[idx].op=v; saveLocal(); syncRowHeight(row); });
-      const b2 = makeBox(it.tt, "ТТ…", (v)=>{ items[idx].tt=v; saveLocal(); syncRowHeight(row); });
-      const b3 = makeBox(it.dev,"DEV…",(v)=>{ items[idx].dev=v; saveLocal(); syncRowHeight(row); });
-
-      c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
-      row.append(c1,c2,c3);
-
-      wrap.append(top,row);
-      rowsEl.appendChild(wrap);
-      requestAnimationFrame(()=>syncRowHeight(row));
-    });
-    updateNotes();
-  }
-
-  function add(){
-    items.push({op:"",tt:"",dev:""});
-    render(); saveLocal();
-  }
-  function remove(i){
-    items.splice(i,1);
-    if(items.length===0) items=[{op:"",tt:"",dev:""}];
-    render(); saveLocal();
-  }
-  function move(i,dir){
-    const j=i+dir;
-    if(j<0||j>=items.length) return;
-    const t=items[i]; items[i]=items[j]; items[j]=t;
-    render(); saveLocal();
-  }
-
-  function splitAll(){
-    const opBlocks = splitIntoBlocks(items.map(x=>x.op).join("\n\n"));
-    const ttBlocks = splitIntoBlocks(items.map(x=>x.tt).join("\n\n"));
-    const devBlocks = splitIntoBlocks(items.map(x=>x.dev).join("\n\n"));
-
-    const n = Math.max(opBlocks.length, ttBlocks.length, devBlocks.length, 1);
-    const newItems = [];
-    for(let i=0;i<n;i++){
-      newItems.push({
-        op: opBlocks[i] ?? "",
-        tt: ttBlocks[i] ?? "",
-        dev: devBlocks[i] ?? ""
-      });
-    }
-    items = newItems;
-    render(); saveLocal();
-    alert(`Готово. Пунктов: ${n}`);
-  }
-
-  // ================= Modal Paste =================
-  const modal = document.getElementById("modal");
-  const opTa = document.getElementById("opTa");
-  const ttTa = document.getElementById("ttTa");
-  const devTa = document.getElementById("devTa");
-
-  function openPaste(){
-    modal.style.display = "block";
-    opTa.value = sanitizeText(items.map(x=>x.op).join("\n\n"));
-    ttTa.value = sanitizeText(items.map(x=>x.tt).join("\n\n"));
-    devTa.value = sanitizeText(items.map(x=>x.dev).join("\n\n"));
-  }
-  function closePaste(){
-    modal.style.display = "none";
-  }
-  function applyPaste(){
-    items = [{
-      op: sanitizeText(opTa.value),
-      tt: sanitizeText(ttTa.value),
-      dev: sanitizeText(devTa.value),
-    }];
-    render(); saveLocal();
-    closePaste();
-    alert("Вставка применена. Теперь нажми «Разбить на пункты».");
-  }
-
-  // ================= JSON import/export =================
-  function exportJson(){
-    const payload = { version: 1, exported_at: new Date().toISOString(), items };
-    downloadText("p00_export.json", JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
-  }
-
-  function importJson(){
-    const inp = document.createElement("input");
-    inp.type = "file";
-    inp.accept = "application/json,.json";
-    inp.onchange = async () => {
-      const f = inp.files && inp.files[0];
-      if(!f) return;
-      const txt = await f.text();
-      try{
-        const obj = JSON.parse(txt);
-        if(!obj || !Array.isArray(obj.items)) throw new Error("bad");
-        items = obj.items.map(x=>({op: x.op||"", tt:x.tt||"", dev:x.dev||""}));
-        if(items.length===0) items=[{op:"",tt:"",dev:""}];
-        render(); saveLocal();
-        alert("Импорт выполнен.");
-      }catch(e){
-        alert("Не удалось импортировать JSON (формат неверный).");
-      }
-    };
-    inp.click();
-  }
-
-  // ================= Download HTML with embedded data =================
-  function downloadHtmlWithData(){
-    const start = { version: 1, exported_at: new Date().toISOString(), items };
-
-    // Вшиваем START_ITEMS внутрь файла (это и есть переносимость на любое устройство)
+  document.getElementById("downloadHtml").addEventListener("click", () => {
     const html = document.documentElement.outerHTML;
 
-    const marker = "const DATA = {";
-    const idx = html.indexOf(marker);
-    if(idx === -1){
-      alert("Не нашёл маркер DATA в HTML. Не могу сохранить.");
-      return;
-    }
-
-    const injection = `const START_ITEMS = ${JSON.stringify(start)};\n\n`;
-
-    let out = html.replace(marker, injection + marker);
-
-    // Правим init(): если есть START_ITEMS — стартуем с них
-    out = out.replace(
-      /function init\(\)\{\s*\/\/ 1\) Если есть localStorage[\s\S]*?const saved = loadLocal\(\);/m,
-      `function init(){\n    if(typeof START_ITEMS !== "undefined" && START_ITEMS && Array.isArray(START_ITEMS.items) && START_ITEMS.items.length){\n      items = START_ITEMS.items.map(x=>({op:x.op||"", tt:x.tt||"", dev:x.dev||""}));\n      render(); updateNotes(); saveLocal();\n      return;\n    }\n    const saved = loadLocal();`
+    const newEmbedded = "const EMBEDDED_TEXT = `" + escapeForTemplateLiteral(normalize(ta.value)) + "`;";
+    const replaced = html.replace(
+      /const EMBEDDED_TEXT = `[\s\S]*?`;/,
+      newEmbedded
     );
 
-    downloadText("p00_saved.html", out, "text/html;charset=utf-8");
-  }
-
-  // ================= Buttons =================
-  document.getElementById("openPaste").addEventListener("click", openPaste);
-  document.getElementById("closeModal").addEventListener("click", closePaste);
-  document.getElementById("applyPaste").addEventListener("click", applyPaste);
-
-  document.getElementById("splitAll").addEventListener("click", splitAll);
-  document.getElementById("addRow").addEventListener("click", add);
-
-  document.getElementById("exportJson").addEventListener("click", exportJson);
-  document.getElementById("importJson").addEventListener("click", importJson);
-
-  document.getElementById("downloadHtml").addEventListener("click", downloadHtmlWithData);
-  document.getElementById("print").addEventListener("click", ()=>window.print());
-
-  document.getElementById("reset").addEventListener("click", ()=>{
-    if(!confirm("Точно сбросить всё?")) return;
-    localStorage.removeItem(STORAGE_KEY);
-    items = [{op:"",tt:"",dev:""}];
-    render(); saveLocal();
+    downloadText("p00_saved.html", replaced, "text/html;charset=utf-8");
   });
 
-  init();
+  document.getElementById("print").addEventListener("click", () => window.print());
+
+  document.getElementById("clear").addEventListener("click", () => {
+    if(!confirm("Точно очистить поле?")) return;
+    ta.value = "";
+    updateStat();
+  });
 </script>
 </body>
 </html>
