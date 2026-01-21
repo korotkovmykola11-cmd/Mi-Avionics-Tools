@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Технологическая карта — p00 (OP/TT/DEV, в файле)</title>
+  <style>
+    :root{
+      --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
+      --glass: rgba(10,18,28,.72);
+      --glass2: rgba(8,14,22,.62);
+      --line: rgba(255,255,255,.10);
+      --ink:#eaf6ff;
+      --muted:#b9cadd;
+      --accent:#21f0ff;
+      --accent2:#00ffa6;
+      --r:16px;
+      --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      --colOp: 520px;
+      --colTT: 450px;
+      --colDev: 450px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font);color:var(--ink)}
+    .scene{
+      min-height:100vh;
+      padding:14px;
+      background:
+        radial-gradient(900px 520px at 25% 18%, rgba(120,190,255,.40), transparent 62%),
+        radial-gradient(900px 520px at 78% 22%, rgba(50,140,255,.30), transparent 62%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #061523 78%, var(--bg3) 100%);
+    }
+    .doc{
+      max-width: 1520px;
+      margin:0 auto;
+      border-radius: var(--r);
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      border:1px solid var(--line);
+      box-shadow: 0 30px 90px rgba(0,0,0,.62), 0 0 0 1px rgba(33,240,255,.10) inset;
+      backdrop-filter: blur(8px);
+      overflow:hidden;
+    }
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+    }
+    .title{
+      font-weight:950;
+      letter-spacing:.6px;
+      color: var(--accent);
+      font-size: 18px;
+    }
+    .subtitle{
+      margin-top:6px;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 980px;
+      line-height:1.35;
+    }
+    .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--ink);
+      padding:8px 10px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{border-color: rgba(33,240,255,.28)}
+    .btn.primary{
+      border-color: rgba(0,255,166,.28);
+      box-shadow: 0 0 18px rgba(0,255,166,.10);
+    }
+
+    .wrap{
+      padding:12px;
+      overflow:auto;
+      max-height: calc(100vh - 160px);
+      -webkit-overflow-scrolling: touch;
+    }
+    .grid{
+      min-width: calc(var(--colOp) + var(--colTT) + var(--colDev) + 40px);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(0,0,0,.08);
+    }
+    .head{
+      display:grid;
+      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
+      position: sticky;
+      top:0;
+      z-index:5;
+      background: rgba(6,14,22,.92);
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .hcell{
+      padding:12px;
+      border-right:1px solid rgba(255,255,255,.08);
+      font-weight:950;
+    }
+    .hcell:last-child{border-right:none}
+
+    .rows{display:flex; flex-direction:column; gap:10px; padding:10px}
+    .wrapRow{
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.06);
+    }
+    .rowTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:8px 10px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.10);
+      user-select:none;
+    }
+    .tag{
+      font-weight:950;
+      color: var(--accent2);
+      padding:5px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(0,255,166,.22);
+      background: rgba(0,0,0,.12);
+    }
+    .mini{
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color:#dff7ff;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .mini:hover{border-color: rgba(33,240,255,.28)}
+
+    .row{
+      display:grid;
+      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
+    }
+    .cell{
+      padding:10px;
+      border-right:1px solid rgba(255,255,255,.08);
+      background: rgba(7,14,22,.30);
+    }
+    .cell:last-child{border-right:none}
+
+    .box{
+      min-height: 110px;
+      border-radius: 10px;
+      border:1px solid rgba(33,240,255,.12);
+      background: rgba(7,14,22,.35);
+      padding: 10px 12px;
+      outline:none;
+
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      hyphens: auto;
+
+      font-size: 14px;
+      line-height: 1.35;
+      color: #eaf6ff;
+      overflow:auto;
+    }
+    .box:focus{
+      border-color: rgba(33,240,255,.35);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 24px rgba(33,240,255,.10);
+    }
+    .box:empty::before{
+      content: attr(data-ph);
+      color: rgba(185,202,221,.55);
+    }
+
+    .modeNote{
+      color:var(--muted);
+      font-size:12px;
+      padding:10px 14px;
+      border-top:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      z-index:99;
+      padding:14px;
+    }
+    .modalCard{
+      max-width: 980px;
+      margin:0 auto;
+      height: calc(100vh - 28px);
+      background: rgba(6,14,22,.96);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.62);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .modalHead{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .modalTitle{font-weight:950; color: var(--accent)}
+    .modalBody{padding:10px; overflow:auto; display:grid; gap:10px}
+    .taLabel{color: var(--muted); font-size:12px; font-weight:900}
+    textarea.big{
+      width:100%;
+      min-height: 160px;
+      resize: vertical;
+      border-radius: 12px;
+      border:1px solid rgba(33,240,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--ink);
+      outline:none;
+      padding:10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+    textarea.big:focus{border-color: rgba(33,240,255,.35)}
+    .hint{
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.35;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      border-radius: 12px;
+      padding:8px 10px;
+    }
+
+    @media print{
+      .scene{padding:0; background:#fff}
+      .doc{box-shadow:none; border:none; background:#fff; color:#000}
+      header,.modeNote,.modal{display:none !important}
+      .wrap{max-height:none; overflow:visible; padding:0}
+      .grid{border:1px solid #ccc; background:#fff}
+      .head{position:static; background:#fff}
+      .cell,.box{background:#fff; color:#000}
+      .box{border:1px solid #ccc}
+      .mini,.btn{display:none}
+      .tag{color:#000; border:1px solid #ddd; background:#fff}
+    }
+  </style>
+</head>
+
+<body>
+<div class="scene">
+  <div class="doc">
+    <header>
+      <div>
+        <div class="title">Технологическая карта — p00 (OP / ТТ / Отклонения)</div>
+        <div class="subtitle">
+          Данные хранятся <b>внутри файла</b>. Чтобы открыть на любом устройстве — жми
+          <b>«Скачать HTML (с данными внутри)»</b> и сохраняй файл в iCloud/Google Drive.<br>
+          Важно: редактирование в браузере сохраняется <b>на этом устройстве</b> (localStorage), пока ты не скачал обновлённый HTML.
+        </div>
+      </div>
+      <div class="btns">
+        <button class="btn primary" id="openPaste">Вставить OP/TT/DEV</button>
+        <button class="btn" id="splitAll">Разбить на пункты</button>
+        <button class="btn" id="addRow">+ Добавить пункт</button>
+        <button class="btn" id="exportJson">Экспорт JSON</button>
+        <button class="btn" id="importJson">Импорт JSON</button>
+        <button class="btn primary" id="downloadHtml">Скачать HTML (с данными внутри)</button>
+        <button class="btn" id="print">Печать</button>
+        <button class="btn" id="reset">Сбросить всё</button>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="grid">
+        <div class="head">
+          <div class="hcell">Содержание операции (OP)</div>
+          <div class="hcell">Технические требования (ТТ)</div>
+          <div class="hcell">Работы при отклонениях (DEV)</div>
+        </div>
+        <div class="rows" id="rows"></div>
+      </div>
+    </div>
+
+    <div class="modeNote">
+      <div id="noteLeft"></div>
+      <div id="noteRight"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Paste OP/TT/DEV -->
+<div class="modal" id="modal">
+  <div class="modalCard">
+    <div class="modalHead">
+      <div class="modalTitle">Вставка сразу в 3 колонки (OP / ТТ / DEV)</div>
+      <button class="mini" id="closeModal">✕</button>
+    </div>
+    <div class="modalBody">
+      <div class="hint">
+        Вставляй текст блоками. Сначала вставь всё в OP/TT/DEV, потом жми «Разбить на пункты».<br>
+        Правило разбиения: пункты начинаются с «1.12.1.» или «2.8.3.» или маркера «- ».
+      </div>
+
+      <div>
+        <div class="taLabel">OP (Содержание операции) — одним куском</div>
+        <textarea class="big" id="opTa" placeholder="Вставь OP сюда..."></textarea>
+      </div>
+
+      <div>
+        <div class="taLabel">ТТ (если пока нет — оставь пустым)</div>
+        <textarea class="big" id="ttTa" placeholder="Вставь ТТ сюда..."></textarea>
+      </div>
+
+      <div>
+        <div class="taLabel">DEV (Работы при отклонениях) — если нет, пусто</div>
+        <textarea class="big" id="devTa" placeholder="Вставь DEV сюда..."></textarea>
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:space-between; align-items:center;">
+        <button class="btn" id="applyPaste">Применить</button>
+        <div class="hint" style="margin:0;">
+          После «Применить» нажми «Разбить на пункты».
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==========================================================
+  // 1) ДАННЫЕ ВНУТРИ ФАЙЛА (чтобы открывалось на любом устройстве)
+  // ==========================================================
+  // ВСТАВЬ СВОЙ ТЕКСТ ВМЕСТО "PASTE_HERE" — ОДИН РАЗ.
+  // Можно оставить tt/dev пустыми.
+  const DATA = {
+    version: 1,
+    title: "p00",
+    exported_at: new Date().toISOString(),
+    // source_text: если тут есть текст, ты можешь сразу нажать "Вставить OP/TT/DEV" и он подставится.
+    source_text: 1.12. ПРОВЕРКА СИСТЕМЫ АВТОМАТИЧЕСКОГО
+УПРАВЛЕНИЯ САУ-В24-1
+1.12.1.		Убедиться в наличии давления в основной гидросистеме (75-85 кг/см2), проконтролировать обороты несущего винта   95±2%.  Подключить пило-тажно-командный прибор ПКП-72М к первой гировертикали, установив пе-реключатель гировертикалей «ОСНОВНОЙ АВИАГОРИЗ. 1, 2» в положение «1».  Включить гидродемпфер педалей выключателем «ДЕМПФЕР ПЕДА-ЛЕЙ».
+Предупреждения: 1. Подключение пилотажно-командного прибора 
+ПКП-72М ко второй гировертикали при включенном автопилоте за-прещается, так как возможны самовозбуждающиеся колебания вертолета.
+2. Автопилот работает только от основной гидросистемы.
+1.12.2.		Проверить функционирование автопилота, для чего:
+-	произвести плавное отклонение ручки управления вертолетом вперед и назад на 50-60 мм   подвижная шкала в секторной окне пульта управле-ния канала тан-гажа должна вращаться;
+-	включить каналы «Крен», «Тангаж» и «Направление» автопилота нажа-тием кнопок-табло «ВКЛ.» на пультах соответствующих каналов, при этом зеленые кнопки-табло «ВКЛ.» должны загореться;
+-	отклонить ручку управления влево и вправо, при этом стрелка индика-тора канала крена должна отклоняться соответственно вправо и влево с последующим плавным возвращением стрелки в нейтральное положе-ние.
+Плавно повернуть рукоятку центрирования на пульте крена влево, при этом стрелка индикатора должна отклониться влево.  Нажать на кнопку снятия усилий   стрелка индикатора должна возвратиться в нейтральное положение.  Повторить проверку при повороте рукоятки центрирования вправо.
+-	плавно отклонить ручку управления вперед, при этом стрелка индика-тора на пульте канала тангажа должна отклониться вниз.  Нажать на кнопку снятия усилий   стрелка индикатора должна возвратиться в нейтральное положение. Повторить проверку при отклонении ручки управления назад;
+-	снять ноги с педалей и повернуть рукоятку центрирования на пульте ка-нала направления влево, при этом стрелка индикатора должна откло-ниться влево. 
+Поставить ноги на педали и нажать надпедальники   стрелка индикатора должна возвратиться в нейтральное положение.
+Повторить проверку при отклонении рукоятки центрирования вправо.  Снять ноги с педалей, вновь отклонить рукояткой центрирования стрелку индикатора (влево или вправо) и выключить гидродемпфер   стрелка инди-катора должна возвратиться в нейтральное положение.  Включить гидро-демпфер;
+-	установить рычагом общего шага 2,5-3  по УШВ и включить канал «Высота» нажатием кнопки-табло «ВКЛ.» на пульте канала высоты, при этом зеленая кнопка-табло «ВКЛ.» должна загореться.
+Кратковременно (не более 1 с) нажать переключатель «КОНТРОЛЬ» на пульте канала высоты вниз и вверх, при этом стрелка индикатора должна отклониться соответственно вниз и вверх.  Уменьшение и увеличение обще-го шага проконтролировать по УШВ.
+Отклонить рычаг общего шага вниз до упора, при этом зеленая кнопка-табло «ВКЛ.» должна погаснуть, а красная кнопка-табло «ОТКЛ.» должна загореться и при освобождении кнопки фрикциона рычага общего шага по-гаснуть. Снова включить канал «Высота»;
+-	выключить автопилот кнопкой отключения» расположенной на ручке управления. Все каналы автопилота должны отключиться, и зеленые кнопки-табло «ВКЛ.» на пультах каналов должны погаснуть.  На время нажатия кнопки отключения автопилота загораются красные кнопки-табло «ОТКЛ.».
+-	нажать кнопку отключения и, не отпуская ее, установить ручку в поход-ное положение на фиксатор;
+-	повторно подключить ручку управления, предварительно нажав на ры-чаг расстопоривания на рукоятке рычага общего шага;
+-	по величине усилий на ручке убедиться в том, что ручка подключилась к управлению;
+-	доложить летчику об окончании проверки;
+-	после получения команды от летчика «Беру управление на себя» плавно отклонить ручку вперед и вправо (усилия должны отсутствовать) и установить ее в походное положение на фиксатор;
+-	нажатием ног убрать опорные площадки педалей в походное положе-ние;
+-	доложить летчику о том, что управление отключилось и установлено в походное положение.
+2.4. ВИСЕНИЕ С ВКЛЮЧЕННЫМИ РЕЖИМАМИ 
+«ВИСЕНИЕ» И «ВЫСОТА» САУ
+2.4.1.		При висении над площадкой, не имеющей бетонированного или метал-лического покрытия, на высоте 5-10 м, ориентируясь по показаниям инди-катора висения, сбалансировать вертолет и обнулить усилия на ручке управления нажатием на кнопку снятия усилий.
+2.4.2.		Убедиться в том, что подвижные индексы каналов направления, крена и тангажа автопилота находятся в нейтральном положении и последователь-ным нажатием кнопок-табло «ВИСЕНИЕ», «ВЫСОТА» включить режимы «Висение» и «Высота» САУ, при этом загорятся кнопки-табло зеленого цве-та.
+2.4.3.		Убедившись в устойчивом висении вертолета (вертолет не уходит резко в стороны и по высоте), освободить управление вертолетом, не снимая руки с рукоятки ручки управления.
+2.4.4.		Систему автоматического управления считать нормально работающей, если в течение 1 мин перемещение вертолета от начальной точки висения в горизонтальной плоскости составляет не более 15 м при ветре не более 5 м/с.
+2.4.5.		Проверить работу САУ на различных высотах висения, для чего при включенных режимах «Висение» и «Высота» нажать на кнопку расстопори-вания рычага общего шага и, не вмешиваясь в управление, изменить высоту висения отклонением только рычага общего шага.  После достижения за-данной высоты перемещение рычага общего шага прекратить и отпустить кнопку, при этом режим «Высота» САУ вновь включится и вертолет должен стабилизироваться на новой заданной высоте.
+		Отклонение от заданной высоты при автоматической стабилизации вер-толета на режиме висения не должно выходить за пределы 4 м.
+Примечание.  При нажатии на кнопку расстопоривания фрикциона рычага общего шага при включенном режиме «Высота» САУ возможен незначительный рывок рычага общего шага.
+2.4.6.		Для стабилизации вертолета на висении в заданном направлении после включения САУ необходимо снять ноги с надпедальников.
+		При нажатии на надпедальники вертолет стремится развернуться против ветра.
+2.4.7.		При необходимости продолжения висения с включенными режимами «Висение» и «Высота» сразу после проверки САУ каналы не выключать и перейти к выполнению задания с включенной системой автоматического управления.
+		Контроль вертикальной скорости снижения вне видимости земли произ-водить по вариометру и указателю вертикальной скорости аппаратуры ДИСС-15Д, а при видимости земли - и визуально.
+2.4.8.		Если использование СДУ на висении не предполагается, после оконча-ния проверки отключить каналы САУ «Висение» и «Высота»« для чего по-следовательно нажать на кнопки «ОТКЛ.» на пультах управления СДУ.  При этом зеленые кнопки-табло «ВКЛ.» каналов «Висение» и «Высота» должны погаснуть.
+		При необходимости использования этих каналов в процессе выполнения полета включить их повторно.
+2.4.9.		В процессе висения с включенной САУ возможны смещения вертолета от заданной точки.
+		Уходы вертолета от заданной точки висения устранять рычагами управ-ления, при этом усилия с ручки управления снимать только с помощью восьмипозиционного переключателя механизма МГУ-1.
+2.4.10.		На режиме висения возможно самопроизвольное отключение САУ, вы-званное кратковременным переходом аппаратуры ДИСС-15Д в режим «Па-мять»,  в случае самовыключения САУ на режиме устойчивого висения раз-решается повторное ее включение.
+		Самопроизвольное выключение САУ, как правило, происходит при висе-нии над водной поверхностью и площадкой с бетонированным или метал-лическим покрытием.
+2.4.11.		В случае самопроизвольного изменения (от начальных значений) угла крена или тангажа на величину более 7, а высоты на величину более 4 м необходимо немедленно вмешаться в управление, возвратить вертолет в режим устойчивого висения и выключить каналы «Висение», «Высота» пу-тем последовательного нажатия кнопок «ОТКЛ.» на пультах САУ.
+		Повторное включение САУ до выяснения причины ненормального пове-дения вертолета ЗАПРЕЩАЕТСЯ.
+Предупреждение.  Включать канал САУ «Висение» при установленном в рабочее положение управлении оператора запрещается.
+2.4.12.		Развороты на висении и перемещения с включенной САУ выполнять с отключенным режимом «Висение».  После выполнения разворота (переме-щения) необходимо вновь включить режим «Висение».
+		Выполнение разворотов и перемещений с включенным режимом «Висе-ние» приводит к неустойчивому висению вертолета после окончания ма-невра.
+		Для стабилизации режима в этом случае необходимо выключить и вновь включить режим «Висение».
+		Изменение высоты висения производить без выключения режимов «Висе-ние» и «Высота», действуя только рычагом общего шага.
+2.8. ПОЛЕТ ПО МАРШРУТУ С ВКЛЮЧЕННЫМ 
+РЕЖИМОМ «МАРШРУТ» САУ
+2.8.1.		Полеты по маршруту с включенным режимом «Маршрут» производить в горизонтальном полете на высотах от 50 до 3000 м и скоростях полета от 120 км/ч до максимальной.
+2.8.2.		Перед выполнением полета по маршруту с включенным режимом «Маршрут» проверить качество работы этого режима.  Проверку произво-дить над местностью, не имеющей больших  водоемов, так как при полете над гладкой водной поверхностью аппаратура ДИСС-15Д работает не-устойчиво, переходит в режим «Память» (загорается табло «П» на индика-торе путевой скорости) и САУ отключается.
+2.8.3.		Выставить заданный путевой угол (ЗПУ) с помощью задатчика ЗПУ-24. Включить канал «Маршрут», для чего:
+-	сбалансировать вертолет в прямолинейном горизонтальном полете;
+-	обнулить усилия на ручке управления нажатием кнопки снятия усилий;
+-	убедиться в том, что на пультах управления автопилота подвижные ин-дексы каналов «Направление», «Крен» и «Тангаж» находятся в нейтральном положении;
+-	включить САУ нажатием кнопки-табло «МАРШРУТ», при этом должна загореться зеленая кнопка-табло «ВКЛ.»;
+-	включить канал «Высота» автопилота и стабилизацию скорости полета.
+2.8.4.		После 10-15 с полета убедиться в том, что вертолет стабилизируется на заданном режиме, и продолжать полет с освобожденным управлением.
+2.8.5.		Нормальная работа САУ при отсутствии болтанки характеризуется устойчивой стабилизацией вертолета на заданной линии маршрута.  Пара-метры, характеризующие режим полета по маршруту, должны выдержи-ваться с точностью: 
+-	путевой угол в пределах 5°;
+-	скорость полета   в пределах 15 км/ч;
+-	барометрическая высота полета   в пределах 6 м на высоте до 1000 м и 12 м на высоте более 1000 м.
+2.8.6.		Проверить точность выхода вертолета на новый путевой угол, для чего с помощью задатчика ЗПУ-24 изменить заданный путевой угол на 10-15°  влево (вправо). Вертолет координированным разворотом без изменения вы-соты и скорости полета должен выйти на новый ЗПУ.  Крен вертолета при выполнении разворота не должен превышать 18°.  При этом возможное не-совпадение установившихся значений угла курса и путевого угла должно быть равно значению угла сноса.
+2.8.7.		Включение режима «Маршрут» допускается при любом значении пока-заний ЗПУ на задатчике ЗПУ-24 независимо от фактического путевого угла вертолета.  Однако при рассогласовании фактического путевого угла и ЗПУ на 30°  и более доворот на ЗПУ происходит продолжительное время из-за малых углов крена.
+Предупреждения: 1. При выполнении разворотов с включенной САУ крен вертолета в первоначальный момент может увеличиться до 30°, а затем плав-но уменьшиться до величины 12-18°.
+2. Если в процессе автоматического разворота произойдет от-ключение канала «МАРШРУТ», необходимо вручную вывести верто-лет на новый ЗПУ и снова включить канал «МАРШРУТ».
+3. При неисправной работе САУ режим «МАРШРУТ» выключить и продолжить выполнение задания с включенным автопилотом.
+2.8.8.		При полете по маршруту возможны уходы раздвижной тяги рулевого агрегата канала крена автопилота к упору.  В этом случае центрирование канала крена производить отклонением ручки управления в поперечном отношении в сторону ухода подвижного индекса.  Усилия с ручки управле-ния после выполнения центрирования снимать восьмипозиционным пере-ключателем механизма МГУ-1 или кнопкой снятия усилий.
+		При полете в болтанку, когда из-за ухода раздвижной тяги рулевого аг-регата канала крена на упор возможно изменение режима полета (путевого угла, скорости), необходимо отключить режим «Маршрут», восстановить заданный режим полета и вновь включить режим «Маршрут».
+2.8.9.		При полете по маршруту над водной поверхностью возможна неустой-чивая работа аппаратуры ДИСС-15Д и переход ее в режим «Память».
+		В этом случае режим «Маршрут» стабилизирует значение путевого угла в момент перехода аппаратуры ДИСС-15Д в режим «Память».
+		Если аппаратура ДИСС-15Д из режима «Память» не перешла в режим «Работа», режим «Маршрут» САУ автоматически выключится и погаснет кнопка-табло «ВКЛ.»,
+		После пролета водной поверхности, когда аппаратура ДИСС-15Д перей-дет из режима «Память» в режим «Работа», вновь включить режим «Марш-рут».
+2.8.10.		В полете с включенной САУ допускается вмешательство в управление для выполнения разрешенных Инструкцией маневров.  При этом необходи-мо помнить о том, что устойчивая работа аппаратуры ДИСС-15Д обеспе-чивается при углах крена до 25°  и углах тангажа до 7°.
+		Если маневр с изменением направления полета выполняется без превы-шения указанных угловых величин и снятия усилий с ручки управления, то после вывода вертолета в горизонтальный полет он выходит на прежний заданный путевой угол.
+		Если маневр выполнялся с нажатием кнопки снятия усилий, то при необ-ходимости дальнейшего использования САУ произвести повторное вклю-чение режима «Маршрут» в соответствии с п. 2.8.3.
+		Превышение указанных угловых величин приводит к загоранию табло «ОТКАЗ В» аппаратуры ДИСС-15Д и последующему отключению режима «Маршрут» САУ,
+		После вывода вертолета в горизонтальный полет необходимо включить канал «Маршрут».
+Предупреждения: 1. В случае самопроизвольного кренения вертолета на угол более 20° необходимо немедленно вмешаться в управление и вывести вер-толет в горизонтальный полет.  если указанное явление повторится, режим «МАРШРУТ» выключить.
+2.  До выяснения причин самопроизвольного кренения вертолета включать канал «МАРШРУТ» запрещается.
+
+  };
+
+  // ==========================================================
+  // 2) ХРАНЕНИЕ НА ЭТОМ УСТРОЙСТВЕ (чтобы не терялось при обновлении страницы)
+  // ==========================================================
+  const STORAGE_KEY = "techcard_p00_items_v1";
+
+  const rowsEl = document.getElementById("rows");
+  const noteLeft = document.getElementById("noteLeft");
+  const noteRight = document.getElementById("noteRight");
+
+  function sanitizeText(str){
+    if(!str) return "";
+    str = String(str).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
+    str = str.replace(/\t/g,"    ");
+    str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
+    str = str.replace(/\n{6,}/g,"\n\n\n");
+    return str.trim();
+  }
+
+  function insertPlainTextAtCursor(text){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const node = document.createTextNode(text);
+    range.insertNode(node);
+    range.setStartAfter(node);
+    range.setEndAfter(node);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function syncRowHeight(rowEl){
+    const boxes = [...rowEl.querySelectorAll(".box")];
+    boxes.forEach(b => b.style.minHeight = "110px");
+    const h = Math.max(...boxes.map(b => b.scrollHeight));
+    boxes.forEach(b => b.style.minHeight = Math.max(110, h) + "px");
+  }
+
+  function makeBox(value, ph, onInput){
+    const box = document.createElement("div");
+    box.className = "box";
+    box.contentEditable = "true";
+    box.dataset.ph = ph;
+    box.innerText = value || "";
+
+    box.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const cd = e.clipboardData || window.clipboardData;
+      const plain = cd ? cd.getData("text/plain") : "";
+      insertPlainTextAtCursor(sanitizeText(plain));
+      onInput(box.innerText);
+    });
+
+    box.addEventListener("input", () => onInput(box.innerText));
+    return box;
+  }
+
+  // Разбивка текста на пункты:
+  // - строка начинается с "1.12.1." / "2.8.10." и т.п.
+  // - или строка начинается с "- "
+  function splitIntoBlocks(text){
+    text = sanitizeText(text || "");
+    if(!text) return [];
+    const lines = text.split("\n");
+    const blocks = [];
+    let cur = [];
+
+    const isNumbered = (s) => /^\s*\d+(?:\.\d+)+\.\s*/.test(s); // 1.12.1.
+    const isBullet   = (s) => /^\s*-\s+/.test(s);
+
+    for(const raw of lines){
+      const s = raw.replace(/\u00A0/g," ");
+      if(s.trim()===""){
+        if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
+        continue;
+      }
+      if(isNumbered(s) || isBullet(s)){
+        if(cur.length){ blocks.push(cur.join("\n").trim()); cur=[]; }
+        cur.push(s.trim());
+      }else{
+        cur.push(s.trim());
+      }
+    }
+    if(cur.length) blocks.push(cur.join("\n").trim());
+    return blocks.filter(b => b.trim().length);
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+
+  function downloadText(filename, text, mime){
+    const blob = new Blob([text], {type: mime || "text/plain;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function saveLocal(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({version:1, items}));
+  }
+  function loadLocal(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      const obj = JSON.parse(raw);
+      if(!obj || !Array.isArray(obj.items)) return null;
+      return obj.items;
+    }catch(e){ return null; }
+  }
+
+  let items = [];
+  let selectedRowIndex = 0;
+
+  function init(){
+    const saved = loadLocal();
+    if(saved && saved.length){
+      items = saved.map(x=>({op:x.op||"", tt:x.tt||"", dev:x.dev||""}));
+    }else{
+      // если localStorage пустой — создаём 1 строку и (по желанию) подставляем source_text в OP
+      items = [{op: sanitizeText(DATA.source_text || ""), tt:"", dev:""}];
+    }
+    if(items.length===0) items=[{op:"",tt:"",dev:""}];
+    render();
+    updateNotes();
+    saveLocal();
+  }
+
+  function updateNotes(){
+    noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>.`;
+    noteRight.innerHTML = `Хранение: <b>localStorage</b> (на устройстве) + <b>HTML с данными</b> (кнопка «Скачать…»).`;
+  }
+
+  function render(){
+    rowsEl.innerHTML = "";
+    items.forEach((it, idx) => {
+      const wrap = document.createElement("div");
+      wrap.className = "wrapRow";
+
+      const top = document.createElement("div");
+      top.className = "rowTop";
+
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.textContent = `Пункт ${idx+1}`;
+
+      const ctrls = document.createElement("div");
+      ctrls.style.display="flex";
+      ctrls.style.gap="6px";
+
+      const up = document.createElement("button");
+      up.className="mini"; up.textContent="↑";
+      up.onclick=(e)=>{ e.stopPropagation(); move(idx,-1); };
+
+      const down = document.createElement("button");
+      down.className="mini"; down.textContent="↓";
+      down.onclick=(e)=>{ e.stopPropagation(); move(idx,+1); };
+
+      const del = document.createElement("button");
+      del.className="mini"; del.textContent="✕";
+      del.onclick=(e)=>{ e.stopPropagation(); remove(idx); };
+
+      ctrls.append(up,down,del);
+      top.append(tag,ctrls);
+
+      const row = document.createElement("div");
+      row.className="row";
+
+      const c1 = document.createElement("div"); c1.className="cell";
+      const c2 = document.createElement("div"); c2.className="cell";
+      const c3 = document.createElement("div"); c3.className="cell";
+
+      const b1 = makeBox(it.op, "OP…", (v)=>{ items[idx].op=v; saveLocal(); syncRowHeight(row); });
+      const b2 = makeBox(it.tt, "ТТ…", (v)=>{ items[idx].tt=v; saveLocal(); syncRowHeight(row); });
+      const b3 = makeBox(it.dev,"DEV…",(v)=>{ items[idx].dev=v; saveLocal(); syncRowHeight(row); });
+
+      c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
+      row.append(c1,c2,c3);
+
+      wrap.append(top,row);
+      rowsEl.appendChild(wrap);
+      requestAnimationFrame(()=>syncRowHeight(row));
+    });
+    updateNotes();
+  }
+
+  function add(){
+    items.push({op:"",tt:"",dev:""});
+    render(); saveLocal();
+  }
+  function remove(i){
+    items.splice(i,1);
+    if(items.length===0) items=[{op:"",tt:"",dev:""}];
+    render(); saveLocal();
+  }
+  function move(i,dir){
+    const j=i+dir;
+    if(j<0||j>=items.length) return;
+    const t=items[i]; items[i]=items[j]; items[j]=t;
+    render(); saveLocal();
+  }
+
+  function splitAll(){
+    // берём текущий OP/TT/DEV как “сырьё” (первую строку, если там большой кусок)
+    const opBlocks = splitIntoBlocks(items.map(x=>x.op).join("\n\n"));
+    const ttBlocks = splitIntoBlocks(items.map(x=>x.tt).join("\n\n"));
+    const devBlocks = splitIntoBlocks(items.map(x=>x.dev).join("\n\n"));
+
+    const n = Math.max(opBlocks.length, ttBlocks.length, devBlocks.length, 1);
+    const newItems = [];
+    for(let i=0;i<n;i++){
+      newItems.push({
+        op: opBlocks[i] ?? "",
+        tt: ttBlocks[i] ?? "",
+        dev: devBlocks[i] ?? ""
+      });
+    }
+    items = newItems;
+    render(); saveLocal();
+    alert(`Готово. Пунктов: ${n}`);
+  }
+
+  // ================= Modal Paste =================
+  const modal = document.getElementById("modal");
+  const opTa = document.getElementById("opTa");
+  const ttTa = document.getElementById("ttTa");
+  const devTa = document.getElementById("devTa");
+
+  function openPaste(){
+    modal.style.display = "block";
+    // Если первый пункт пустой — подставим source_text
+    if(!items[0]?.op && DATA.source_text && DATA.source_text !== "PASTE_HERE"){
+      opTa.value = sanitizeText(DATA.source_text);
+    }else{
+      opTa.value = sanitizeText(items.map(x=>x.op).join("\n\n"));
+    }
+    ttTa.value = sanitizeText(items.map(x=>x.tt).join("\n\n"));
+    devTa.value = sanitizeText(items.map(x=>x.dev).join("\n\n"));
+  }
+  function closePaste(){
+    modal.style.display = "none";
+  }
+  function applyPaste(){
+    items = [{
+      op: sanitizeText(opTa.value),
+      tt: sanitizeText(ttTa.value),
+      dev: sanitizeText(devTa.value),
+    }];
+    render(); saveLocal();
+    closePaste();
+    alert("Вставка применена. Теперь нажми «Разбить на пункты».");
+  }
+
+  // ================= JSON import/export =================
+  function exportJson(){
+    const payload = {
+      version: 1,
+      exported_at: new Date().toISOString(),
+      items
+    };
+    downloadText("p00_export.json", JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
+  }
+
+  function importJson(){
+    const inp = document.createElement("input");
+    inp.type = "file";
+    inp.accept = "application/json,.json";
+    inp.onchange = async () => {
+      const f = inp.files && inp.files[0];
+      if(!f) return;
+      const txt = await f.text();
+      try{
+        const obj = JSON.parse(txt);
+        if(!obj || !Array.isArray(obj.items)) throw new Error("bad");
+        items = obj.items.map(x=>({op: x.op||"", tt:x.tt||"", dev:x.dev||""}));
+        if(items.length===0) items=[{op:"",tt:"",dev:""}];
+        render(); saveLocal();
+        alert("Импорт выполнен.");
+      }catch(e){
+        alert("Не удалось импортировать JSON (формат неверный).");
+      }
+    };
+    inp.click();
+  }
+
+  // ================= Download HTML with embedded data =================
+  function downloadHtmlWithData(){
+    // Встроим текущие items прямо в DATA.source_text в виде JSON (чтобы на любом устройстве было одинаково).
+    // И плюс — положим items как стартовые данные через localStorage при первом запуске не получится,
+    // поэтому делаем простой подход: вшиваем JSON в <script> (START_ITEMS).
+    const html = document.documentElement.outerHTML;
+
+    const start = {
+      version: 1,
+      exported_at: new Date().toISOString(),
+      items
+    };
+
+    // Добавим в код строку START_ITEMS = ... рядом с DATA (ищем "const DATA = {")
+    const marker = "const DATA = {";
+    const idx = html.indexOf(marker);
+    if(idx === -1){
+      alert("Не нашёл маркер DATA в HTML. Не могу сохранить.");
+      return;
+    }
+
+    // Вставка START_ITEMS перед DATA
+    const injection =
+`const START_ITEMS = ${escapeHtml(JSON.stringify(start))};\n\n`;
+
+    let replaced = html.replace(marker, injection + marker);
+
+    // И ещё: при init() если есть START_ITEMS — используем их.
+    replaced = replaced.replace(
+      /function init\(\)\{\s*const saved = loadLocal\(\);/m,
+      `function init(){\n    // Если файл скачан с данными внутри — стартуем с них (на любом устройстве одинаково)\n    if(typeof START_ITEMS !== "undefined" && START_ITEMS && Array.isArray(START_ITEMS.items) && START_ITEMS.items.length){\n      items = START_ITEMS.items.map(x=>({op:x.op||"", tt:x.tt||"", dev:x.dev||""}));\n      render(); updateNotes(); saveLocal();\n      return;\n    }\n\n    const saved = loadLocal();`
+    );
+
+    downloadText("p00_saved.html", replaced, "text/html;charset=utf-8");
+  }
+
+  // ================= Buttons =================
+  document.getElementById("openPaste").addEventListener("click", openPaste);
+  document.getElementById("closeModal").addEventListener("click", closePaste);
+  document.getElementById("applyPaste").addEventListener("click", applyPaste);
+
+  document.getElementById("splitAll").addEventListener("click", splitAll);
+  document.getElementById("addRow").addEventListener("click", add);
+
+  document.getElementById("exportJson").addEventListener("click", exportJson);
+  document.getElementById("importJson").addEventListener("click", importJson);
+
+  document.getElementById("downloadHtml").addEventListener("click", downloadHtmlWithData);
+  document.getElementById("print").addEventListener("click", ()=>window.print());
+
+  document.getElementById("reset").addEventListener("click", ()=>{
+    if(!confirm("Точно сбросить всё?")) return;
+    localStorage.removeItem(STORAGE_KEY);
+    items = [{op:"",tt:"",dev:""}];
+    render(); saveLocal();
+  });
+
+  // старт
+  init();
+</script>
+</body>
+</html>
