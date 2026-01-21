@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>p00 — Текст (внутри файла)</title>
+  <title>p00 — Один текст (внутри файла)</title>
   <style>
     :root{
       --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
@@ -50,7 +50,6 @@
       letter-spacing:.6px;
       color: var(--accent);
       font-size: 18px;
-      line-height:1.2;
     }
     .subtitle{
       margin-top:6px;
@@ -72,35 +71,34 @@
     }
     .btn:hover{border-color: rgba(33,240,255,.28)}
     .btn.primary{
-      border-color: rgba(0,255,166,.28);
-      box-shadow: 0 0 18px rgba(0,255,166,.10);
+      border-color: rgba(33,240,255,.28);
+      box-shadow: 0 0 18px rgba(33,240,255,.10);
     }
 
-    .wrap{
-      padding:12px;
-    }
-
-    textarea{
+    .wrap{padding:12px 12px 14px}
+    .box{
       width:100%;
-      min-height: calc(100vh - 220px);
-      resize: vertical;
-      border-radius: 14px;
+      min-height: 70vh;
+      border-radius: 12px;
       border:1px solid rgba(33,240,255,.14);
-      background: rgba(0,0,0,.22);
-      color: var(--ink);
+      background: rgba(7,14,22,.35);
+      padding: 12px 14px;
       outline:none;
-      padding:12px 14px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 14px;
-      line-height: 1.35;
+
       white-space: pre-wrap;
+      overflow-wrap: break-word;
+      hyphens: auto;
+
+      font-size: 14px;
+      line-height: 1.45;
+      color: #eaf6ff;
+      overflow:auto;
     }
-    textarea:focus{
+    .box:focus{
       border-color: rgba(33,240,255,.35);
       box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 24px rgba(33,240,255,.10);
     }
-
-    .note{
+    .footer{
       color:var(--muted);
       font-size:12px;
       padding:10px 14px;
@@ -115,13 +113,10 @@
     @media print{
       .scene{padding:0; background:#fff}
       .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.note,.btns{display:none !important}
-      textarea{
-        min-height:auto;
-        border:1px solid #ccc;
-        background:#fff;
-        color:#000;
-      }
+      header,.footer{display:none !important}
+      .wrap{padding:0}
+      .box{border:1px solid #ccc; background:#fff; color:#000; min-height:auto}
+      .btn{display:none}
     }
   </style>
 </head>
@@ -133,58 +128,33 @@
       <div>
         <div class="title">p00 — Один текст (внутри файла)</div>
         <div class="subtitle">
-          Вставь текст в поле. Потом нажми <b>«Скачать HTML (с текстом внутри)»</b> — и этот новый файл откроется
-          на любом устройстве (телефон/ПК) с тем же текстом.
+          Текст уже <b>вшит в этот HTML</b>. Если отредактировал — нажми
+          <b>«Скачать HTML (с текстом внутри)»</b> и открывай уже сохранённый файл на любом ПК/телефоне.
         </div>
       </div>
       <div class="btns">
-        <button class="btn primary" id="downloadHtml">Скачать HTML (с текстом внутри)</button>
+        <button class="btn primary" id="download">Скачать HTML (с текстом внутри)</button>
         <button class="btn" id="print">Печать</button>
         <button class="btn" id="clear">Очистить</button>
       </div>
     </header>
 
     <div class="wrap">
-      <textarea id="t" spellcheck="false" placeholder="Вставь весь текст сюда..."></textarea>
+      <div id="text" class="box" contenteditable="true" spellcheck="false"></div>
     </div>
 
-    <div class="note">
-      <div>Подсказка: если открыл на другом устройстве и пусто — значит ты открыл старый файл. Открывай сохранённый <b>p00_saved.html</b>.</div>
-      <div id="stat"></div>
+    <div class="footer">
+      <div id="status"></div>
+      <div>Подсказка: на другом устройстве будет текст только в <b>скачанном</b> файле.</div>
     </div>
   </div>
 </div>
 
 <script>
-  // ==========================================================
-  // ДАННЫЕ ВНУТРИ ФАЙЛА (ОБЯЗАТЕЛЬНО ДЛЯ “ЛЮБОГО УСТРОЙСТВА”)
-  // 1) Вставь свой текст сюда (между обратными кавычками).
-  // ==========================================================
-  const EMBEDDED_TEXT = `ВСТАВЬ_ТЕКСТ_СЮДА`;
-
-  const ta = document.getElementById("t");
-  const stat = document.getElementById("stat");
-
-  function normalize(s){
-    if(!s) return "";
-    s = String(s).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
-    return s;
-  }
-
-  // При открытии файла: если внутри уже есть текст — покажем его.
-  ta.value = normalize(EMBEDDED_TEXT);
-
-  function updateStat(){
-    const chars = ta.value.length;
-    const lines = ta.value ? ta.value.split("\n").length : 0;
-    stat.innerHTML = `Строк: <b>${lines}</b> · Символов: <b>${chars}</b>`;
-  }
-  ta.addEventListener("input", updateStat);
-  updateStat();
-
-  function escapeForTemplateLiteral(s){
-    // Чтобы безопасно вставить текст внутрь `1.12. ПРОВЕРКА СИСТЕМЫ АВТОМАТИЧЕСКОГО
-УПРАВЛЕНИЯ САУ-В24-1
+  // =========================
+  // ТЕКСТ ВНУТРИ ФАЙЛА (вшит)
+  // =========================
+  const EMBEDDED_TEXT = `УПРАВЛЕНИЯ САУ-В24-1
 1.12.1.		Убедиться в наличии давления в основной гидросистеме (75-85 кг/см2), проконтролировать обороты несущего винта   95±2%.  Подключить пило-тажно-командный прибор ПКП-72М к первой гировертикали, установив пе-реключатель гировертикалей «ОСНОВНОЙ АВИАГОРИЗ. 1, 2» в положение «1».  Включить гидродемпфер педалей выключателем «ДЕМПФЕР ПЕДА-ЛЕЙ».
 Предупреждения: 1. Подключение пилотажно-командного прибора 
 ПКП-72М ко второй гировертикали при включенном автопилоте за-прещается, так как возможны самовозбуждающиеся колебания вертолета.
@@ -311,42 +281,103 @@
 		Превышение указанных угловых величин приводит к загоранию табло «ОТКАЗ В» аппаратуры ДИСС-15Д и последующему отключению режима «Маршрут» САУ,
 		После вывода вертолета в горизонтальный полет необходимо включить канал «Маршрут».
 Предупреждения: 1. В случае самопроизвольного кренения вертолета на угол более 20° необходимо немедленно вмешаться в управление и вывести вер-толет в горизонтальный полет.  если указанное явление повторится, режим «МАРШРУТ» выключить.
-2.  До выяснения причин самопроизвольного кренения вертолета включать канал «МАРШРУТ» запрещается.
-`
+2.  До выяснения причин самопроизвольного кренения вертолета включать канал «МАРШРУТ» запрещается.`;
+
+  const STORAGE_KEY = "p00_one_text_v1"; // автосохранение на этом устройстве
+
+  const box = document.getElementById("text");
+  const status = document.getElementById("status");
+
+  function nowStr(){
+    const d=new Date();
+    const pad=n=>String(n).padStart(2,"0");
+    return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  function setStatus(msg){
+    status.innerHTML = msg;
+  }
+
+  function load(){
+    try{
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if(saved && saved.length){
+        box.innerText = saved;
+        setStatus(`Автосохранение (это устройство): <b>есть</b> · ${nowStr()}`);
+        return;
+      }
+    }catch(e){}
+    box.innerText = EMBEDDED_TEXT;
+    setStatus(`Источник: <b>текст внутри файла</b> · ${nowStr()}`);
+  }
+
+  function saveLocal(){
+    try{
+      localStorage.setItem(STORAGE_KEY, box.innerText || "");
+      setStatus(`Автосохранено (это устройство) · ${nowStr()}`);
+    }catch(e){
+      setStatus(`Не удалось автосохранить (браузер запретил) · ${nowStr()}`);
+    }
+  }
+
+  // чистая вставка (без форматирования)
+  function insertPlainTextAtCursor(text){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const node = document.createTextNode(text);
+    range.insertNode(node);
+    range.setStartAfter(node);
+    range.setEndAfter(node);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  box.addEventListener("input", ()=>saveLocal());
+  box.addEventListener("paste", (e)=>{
+    e.preventDefault();
+    const cd = e.clipboardData || window.clipboardData;
+    const plain = cd ? cd.getData("text/plain") : "";
+    insertPlainTextAtCursor(plain);
+    saveLocal();
+  });
+
+  function escapeForTemplateLiteral(s){
     return String(s)
       .replace(/\\/g, "\\\\")
       .replace(/`/g, "\\`");
   }
 
-  function downloadText(filename, text, mime){
-    const blob = new Blob([text], {type: mime || "text/plain;charset=utf-8"});
+  function downloadHtmlWithText(){
+    const current = box.innerText || "";
+    const html = document.documentElement.outerHTML;
+
+    // заменяем содержимое EMBEDDED_TEXT на текущее
+    const re = /const EMBEDDED_TEXT = `[\s\S]*?`;\n/m;
+    const replaced = html.replace(re, `const EMBEDDED_TEXT = \`${escapeForTemplateLiteral(current)}\`;\n`);
+
+    // чтобы на другом устройстве НЕ подхватывал пустой localStorage из прошлого —
+    // просто сохраняем localStorage как есть, но в новом файле текст уже вшит.
+    const blob = new Blob([replaced], {type:"text/html;charset=utf-8"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = filename;
+    a.download = "p00_saved.html";
     a.click();
     URL.revokeObjectURL(url);
+    setStatus(`Скачан файл: <b>p00_saved.html</b> · ${nowStr()}`);
   }
 
-  document.getElementById("downloadHtml").addEventListener("click", () => {
-    const html = document.documentElement.outerHTML;
-
-    const newEmbedded = "const EMBEDDED_TEXT = `" + escapeForTemplateLiteral(normalize(ta.value)) + "`;";
-    const replaced = html.replace(
-      /const EMBEDDED_TEXT = `[\s\S]*?`;/,
-      newEmbedded
-    );
-
-    downloadText("p00_saved.html", replaced, "text/html;charset=utf-8");
+  document.getElementById("download").addEventListener("click", downloadHtmlWithText);
+  document.getElementById("print").addEventListener("click", ()=>window.print());
+  document.getElementById("clear").addEventListener("click", ()=>{
+    if(!confirm("Очистить текст?")) return;
+    box.innerText = "";
+    saveLocal();
   });
 
-  document.getElementById("print").addEventListener("click", () => window.print());
-
-  document.getElementById("clear").addEventListener("click", () => {
-    if(!confirm("Точно очистить поле?")) return;
-    ta.value = "";
-    updateStat();
-  });
+  load();
 </script>
 </body>
 </html>
