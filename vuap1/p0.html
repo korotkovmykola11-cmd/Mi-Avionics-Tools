@@ -1,27 +1,25 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Технологическая карта — OP / ТТ / Отклонения (JSON внутри)</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+  <title>Проверка автопилота — САУ-В24-1</title>
   <style>
-    :root{
+    :root {
       --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
-      --glass: rgba(10,18,28,.78);
-      --glass2: rgba(8,14,22,.68);
-      --line: rgba(255,255,255,.10);
-
+      --glass:rgba(10,18,28,.78);
+      --glass2:rgba(8,14,22,.68);
+      --line:rgba(255,255,255,.10);
       --ink:#eaf6ff;
       --muted:#b9cadd;
       --accent:#21f0ff;
       --accent2:#00ffa6;
-
       --r:16px;
-      --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-
-      --colOp: 560px;
-      --colTT: 420px;
-      --colDev: 420px;
+      --font:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      --colOp:560px;
+      --colTT:420px;
+      --colDev:420px;
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:var(--font);color:var(--ink)}
@@ -29,210 +27,112 @@
       min-height:100vh;
       padding:14px;
       background:
-        radial-gradient(900px 520px at 25% 18%, rgba(120,190,255,.40), transparent 62%),
-        radial-gradient(900px 520px at 78% 22%, rgba(50,140,255,.30), transparent 62%),
-        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #061523 78%, var(--bg3) 100%);
+        radial-gradient(900px 520px at 25% 18%,rgba(120,190,255,.40),transparent 62%),
+        radial-gradient(900px 520px at 78% 22%,rgba(50,140,255,.30),transparent 62%),
+        linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 55%,#061523 78%,var(--bg3) 100%);
     }
     .doc{
-      max-width: 1480px;
-      margin:0 auto;
-      border-radius: var(--r);
-      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      max-width:1480px;margin:0 auto;border-radius:var(--r);
+      background:linear-gradient(180deg,var(--glass),var(--glass2));
       border:1px solid var(--line);
-      box-shadow: 0 30px 90px rgba(0,0,0,.62), 0 0 0 1px rgba(33,240,255,.10) inset;
-      backdrop-filter: blur(8px);
-      overflow:hidden;
+      box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 0 1px rgba(33,240,255,.10) inset;
+      backdrop-filter:blur(8px);overflow:hidden;
     }
     header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-      background: rgba(0,0,0,.12);
-    }
-    .title{
-      font-weight:950;
-      letter-spacing:.6px;
-      color: var(--accent);
-      font-size: 18px;
-    }
-    .subtitle{
-      margin-top:6px;
-      color: var(--muted);
-      font-size: 13px;
-      max-width: 980px;
-      line-height:1.35;
-    }
-    .btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-    .btn{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--ink);
-      padding:8px 10px;
-      border-radius:12px;
-      font-weight:900;
-      cursor:pointer;
-      user-select:none;
-    }
-    .btn:hover{border-color: rgba(33,240,255,.28)}
-    .btn.primary{
-      border-color: rgba(0,255,166,.28);
-      box-shadow: 0 0 18px rgba(0,255,166,.10);
-    }
-    .wrap{
-      padding:12px;
-      overflow:auto;
-      max-height: calc(100vh - 150px);
-      -webkit-overflow-scrolling: touch;
-    }
-    .grid{
-      min-width: calc(var(--colOp) + var(--colTT) + var(--colDev) + 40px);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      overflow:hidden;
-      background: rgba(0,0,0,.08);
-    }
-    .head{
-      display:grid;
-      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
-      position: sticky;
-      top:0;
-      z-index:5;
-      background: rgba(6,14,22,.92);
-      border-bottom:1px solid rgba(255,255,255,.12);
-    }
-    .hcell{
-      padding:12px;
-      border-right:1px solid rgba(255,255,255,.08);
-      font-weight:950;
-    }
-    .hcell:last-child{border-right:none}
-
-    .rows{display:flex; flex-direction:column; gap:10px; padding:10px}
-
-    .wrapRow{
-      border-radius:12px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.06);
-    }
-    .rowTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      padding:8px 10px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.10);
-      user-select:none;
-    }
-    .tag{
-      font-weight:950;
-      color: var(--accent2);
-      padding:5px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(0,255,166,.22);
-      background: rgba(0,0,0,.12);
-    }
-    .mini{
-      padding:6px 10px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color:#dff7ff;
-      cursor:pointer;
-      font-weight:900;
-    }
-    .mini:hover{border-color: rgba(33,240,255,.28)}
-
-    .row{
-      display:grid;
-      grid-template-columns: var(--colOp) var(--colTT) var(--colDev);
-    }
-    .cell{
-      padding:10px;
-      border-right:1px solid rgba(255,255,255,.08);
-      background: rgba(7,14,22,.30);
-    }
-    .cell:last-child{border-right:none}
-
-    .box{
-      min-height: 110px;
-      border-radius: 10px;
-      border:1px solid rgba(33,240,255,.12);
-      background: rgba(7,14,22,.35);
-      padding: 10px 12px;
-      outline:none;
-
-      white-space: pre-wrap;
-      overflow-wrap: break-word;
-      hyphens: auto;
-
-      font-size: 14px;
-      line-height: 1.35;
-      color: #eaf6ff;
-      overflow:auto;
-    }
-    .box:focus{
-      border-color: rgba(33,240,255,.35);
-      box-shadow: 0 0 0 1px rgba(0,0,0,.30) inset, 0 0 24px rgba(33,240,255,.10);
-    }
-    .box:empty::before{
-      content: attr(data-ph);
-      color: rgba(185,202,221,.55);
-    }
-
-    .modeNote{
-      color:var(--muted);
-      font-size:12px;
-      padding:10px 14px;
-      border-top:1px solid var(--line);
-      background: rgba(0,0,0,.12);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
+      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+      padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.12);
       flex-wrap:wrap;
     }
-
+    .title{font-weight:950;letter-spacing:.6px;color:var(--accent);font-size:18px;text-transform:uppercase}
+    .subtitle{margin-top:6px;color:var(--muted);font-size:13px;max-width:980px;line-height:1.35}
+    .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--ink);
+      padding:8px 10px;border-radius:12px;font-weight:900;cursor:pointer;user-select:none;
+      font-size:13px;min-height:44px;display:flex;align-items:center;gap:4px;
+    }
+    .btn:hover{border-color:rgba(33,240,255,.28)}
+    .btn.primary{border-color:rgba(0,255,166,.28);box-shadow:0 0 18px rgba(0,255,166,.10)}
+    .wrap{padding:12px;overflow:auto;max-height:calc(100vh - 150px);-webkit-overflow-scrolling:touch}
+    .grid{
+      min-width:calc(var(--colOp) + var(--colTT) + var(--colDev) + 40px);
+      border:1px solid rgba(255,255,255,.10);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.08);
+    }
+    .head{
+      display:grid;grid-template-columns:var(--colOp) var(--colTT) var(--colDev);
+      position:sticky;top:0;z-index:5;background:rgba(6,14,22,.92);border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .hcell{padding:12px;border-right:1px solid rgba(255,255,255,.08);font-weight:950;font-size:14px}
+    .hcell:last-child{border-right:none}
+    .rows{display:flex;flex-direction:column;gap:10px;padding:10px}
+    .wrapRow{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.06)}
+    .rowTop{
+      display:flex;align-items:center;justify-content:space-between;gap:8px;
+      padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.10);user-select:none;
+    }
+    .tag{
+      font-weight:950;color:var(--accent2);padding:5px 10px;border-radius:999px;
+      border:1px solid rgba(0,255,166,.22);background:rgba(0,0,0,.12);font-size:13px;
+    }
+    .mini{
+      padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);color:#dff7ff;cursor:pointer;font-weight:900;
+      min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;
+    }
+    .mini:hover{border-color:rgba(33,240,255,.28)}
+    .row{display:grid;grid-template-columns:var(--colOp) var(--colTT) var(--colDev)}
+    .cell{padding:10px;border-right:1px solid rgba(255,255,255,.08);background:rgba(7,14,22,.30)}
+    .cell:last-child{border-right:none}
+    .box{
+      min-height:110px;border-radius:10px;border:1px solid rgba(33,240,255,.12);
+      background:rgba(7,14,22,.35);padding:10px 12px;outline:none;
+      white-space:pre-wrap;overflow-wrap:break-word;hyphens:auto;
+      font-size:14px;line-height:1.4;color:#eaf6ff;overflow:auto;
+    }
+    .box:focus{border-color:rgba(33,240,255,.35);box-shadow:0 0 0 1px rgba(0,0,0,.30) inset,0 0 24px rgba(33,240,255,.10)}
+    .box:empty::before{content:attr(data-ph);color:rgba(185,202,221,.55)}
+    .modeNote{
+      color:var(--muted);font-size:12px;padding:10px 14px;border-top:1px solid var(--line);
+      background:rgba(0,0,0,.12);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
     @media print{
-      .scene{padding:0; background:#fff}
-      .doc{box-shadow:none; border:none; background:#fff; color:#000}
-      header,.modeNote{display:none !important}
-      .wrap{max-height:none; overflow:visible; padding:0}
-      .grid{border:1px solid #ccc; background:#fff}
-      .head{position:static; background:#fff}
-      .cell,.box{background:#fff; color:#000}
+      .scene{padding:0;background:#fff}
+      .doc{box-shadow:none;border:none;background:#fff;color:#000}
+      header,.modeNote{display:none!important}
+      .wrap{max-height:none;overflow:visible;padding:0}
+      .grid{border:1px solid #ccc;background:#fff}
+      .head{position:static;background:#f5f5f5}
+      .hcell{color:#000}
+      .cell,.box{background:#fff;color:#000}
       .box{border:1px solid #ccc}
       .mini{display:none}
-      .tag{color:#000; border:1px solid #ddd; background:#fff}
+      .tag{color:#000;border:1px solid #ddd;background:#fff}
+      .rowTop{background:#f9f9f9}
+      .wrapRow{border-color:#ccc}
     }
   </style>
 </head>
-
 <body>
 <div class="scene">
   <div class="doc">
     <header>
       <div>
-        <div class="title">Технологическая карта — OP / ТТ / Отклонения</div>
+        <div class="title">Проверка автопилота</div>
         <div class="subtitle">
-          Твои данные (экспорт JSON) встроены в файл. Редактируй прямо в таблице.
-          <b>Чтобы открыть на любом устройстве:</b> жми «Скачать HTML (с данными внутри)» и храни файл в iCloud/Google Drive.
+          Технологическая карта САУ-В24-1 — ОР / ТТ / Отклонения. Редактируйте прямо в таблице.
+          <b>Чтобы сохранить:</b> жмите «Скачать HTML (с данными внутри)» и храните файл.
         </div>
       </div>
       <div class="btns">
-        <button class="btn" id="saveLocal">💾 Сохранить на этом устройстве</button>
-        <button class="btn" id="loadLocal">📥 Загрузить с этого устройства</button>
-        <button class="btn primary" id="downloadHtml">⬇️ Скачать HTML (с данными внутри)</button>
-        <button class="btn" id="exportJson">⬇️ Экспорт JSON</button>
-        <button class="btn" id="importJson">⬆️ Импорт JSON</button>
-        <button class="btn" id="addRow">+ Добавить пункт</button>
+        <button class="btn" id="saveLocal">Сохранить</button>
+        <button class="btn" id="loadLocal">Загрузить</button>
+        <button class="btn primary" id="downloadHtml">Скачать HTML</button>
+        <button class="btn" id="exportJson">Экспорт JSON</button>
+        <button class="btn" id="importJson">Импорт JSON</button>
+        <button class="btn" id="addRow">+ Добавить</button>
         <button class="btn" id="print">Печать</button>
       </div>
     </header>
-
     <div class="wrap">
       <div class="grid">
         <div class="head">
@@ -243,482 +143,187 @@
         <div class="rows" id="rows"></div>
       </div>
     </div>
-
     <div class="modeNote">
       <div id="noteLeft"></div>
       <div id="noteRight"></div>
     </div>
   </div>
 </div>
-
-<input type="file" id="fileInput" accept="application/json" style="display:none" />
-
+<input type="file" id="fileInput" accept="application/json" style="display:none"/>
 <script>
-  // ==========================================================
-  // ✅ ТВОЙ ЭКСПОРТ (СЛОВО В СЛОВО) — ДАННЫЕ ЗДЕСЬ
-  // ==========================================================
-  const EMBEDDED_EXPORT = {
-    "version": 1,
-    "exported_at": "2026-01-15T10:58:46.191Z",
-    "items": [
-      {
-        "op": "Проверьте работоспособность системы автоматического управления САУ-В24-1. для чего:",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- установите автомат защиты \"САУ СИГНАЛ\" на левом пульте АЗС в положение \"ВКЛЮЧЕНО\";",
-        "tt": "Напряжение источников по бортовым вольтметрам должно быть в пределах: - посто-янного тона (27 -+2, 7) В; - переменного тона (36 -+2), 400 -+8 Гц",
-        "dev": "Обеспечьте нормальную работу источни-ков питания"
-      },
-      {
-        "op": "- включите системы и агрегаты взаимодействия с САУ, гировертикаль МГВ-1СУ, курсовую систему \"ГРЕБЕНЬ-1\" ножной демпфер, триммер, фрикцион, аппаратуру ДИСС-15, радиовысотомер РВ-5М, основную гидросистему.",
-        "tt": "При включенном питании, включенных и нормально функционирующих системах кнопки-табло на пультах САУ не должны го-реть. Давление в гидросистеме должно быть в пределах (75-85) кгс/см2.",
-        "dev": "Определите причину в устраните дефект в соответствии с рекоменда¬циями инструкции по эксплуатации САУ-В24-1; (6А1. 600. 00ИЭ)"
-      },
-      {
-        "op": "ПРИМЕЧАНИЕ:  В дальнейшем при описании методики проверок и регулировки САУ под током, приведенных в технологических картах, предполагается, что источники питания, бортовые системы и агрегаты, взаимодействующие с САУ, включены и функцио-нируют нормально.",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- При проведении проверок канала высоты ручку \"ШАГ-ГАЗ\" установите на 5°-7° по указателю УШВ-1К.\n- При описании всех проверок имеется ввиду поочередная задача сигналов обеих полярностей (вторая полярность указана в скобках).\n- При описании всех проверок отклонение подписного индекса нулевого индикатора на пульте управления указано относительно лицевой панели пульта управления соответствующего канала.",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "Проверьте сигнализацию отказов при отсутствии питания и неисправности взаимо-действующих изделий, для чего:\n- отключите питание постоянным током, нажав на  кнопку \"ОТКЛ. АП\" на ручке цик-лического шага летчика;",
-        "tt": "Должны гореть кнопки-табло \"ОТКЛ. \" на пультах ПВМ, ПВП и кнопки-лампочки \"ОТКЛ\" на пультах   \"Н\", \"К\", \"Т\", \"В\".",
-        "dev": "1. Проверьте наличие цепи питания посто-янным и переменным током\n2. Замените неисправные пульты"
-      },
-      {
-        "op": "- включите питание  постоянным током, нажав  кнопки-лампочки \"ВКЛ. \" на пультах \"Н\", \"К\", \"Т\", \"В\", а также кнопки-табло   \"ВЫСОТА\" на  пульте ПВП и \"МАРШРУТ\" на пульте  ПВМ.",
-        "tt": "Должны погаснуть кнопки-табло \"ОТКЛ. \" на пультах ПВМ, ПВП и  кнопки-лампочки \"ОТКЛ. \"на пульте \"Н\", \"К\", \"Т\", \"В\".",
-        "dev": ""
-      },
-      {
-        "op": "- аналогично выполните проверку, отключая и включая источник питать переменным током;",
-        "tt": "При отключенном источнике питания пе-ременным током должны гореть кнопки-табло \"ОТКЛ. \" на пультах САУ и наоборот",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута\n24-7100-70, предварительно подключив его к контрольному разъему САУ (или на панели контрольных разъемов САУ, размещенной слева сзади си-дения оператора);",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- задайте от пульта контроля ДИСС-15 задачу № 3;",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку-табло \"МАРШРУТ\" на пульте ПВМ и отпустите.",
-        "tt": "Должно гореть табло \"МАРШРУТ\"",
-        "dev": "Замените пульт ПВП на исправный"
-      },
-      {
-        "op": "- нажмите, не отпуская, кнопку согласования курсовой системы;",
-        "tt": "Табло \"МАРШРУТ\" должно погаснуть. При нажатой кнопке согласования на пульте кана-ла направления горит кнопка-лампочка \"ОТКЛ. \"",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите, не отпуская, на кнопку-табло \"МАРШРУТ\" на пульте ПВМ.",
-        "tt": "Должна гореть кнопка-табло \"ОТКЛ. \" на пульте ПВМ",
-        "dev": ""
-      },
-      {
-        "op": "- отпустите кнопку -табло \"МАРШРУТ\".",
-        "tt": "Должна погаснуть кнопка-табло \"ОТКЛ. \" на пульте ПВМ",
-        "dev": ""
-      },
-      {
-        "op": "- отпустите кнопку согласования курсовой системы;",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите ни кнопку-табло \"МАРШРУТ\" пульта ПВМ;",
-        "tt": "Должна гореть кнопка-табло \"МАРШРУТ\"",
-        "dev": ""
-      },
-      {
-        "op": "- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";",
-        "tt": "Должна погаснуть кнопка-табло \"МАРШ-РУТ\" пульта ПВМ приблизительно через (11 ±4) c",
-        "dev": ""
-      },
-      {
-        "op": "- поочередно нажмите на кнопки-табло \"ВИСЕНИЕ\", \"МАРШРУТ\" пульта ПВМ и \"ВЫСОТА\" пульта ПВП;",
-        "tt": "Должны гореть кнопки-табло \"ОТКЛ. \" на пультах ПВМ, ПВП",
-        "dev": ""
-      },
-      {
-        "op": "- задайте от пульта контроля ДИСС-15 задачу № 2;",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите на кнопку-табло \"ВИСЕНИЕ\" пульта ПВМ;",
-        "tt": "Должна  гореть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ",
-        "dev": ""
-      },
-      {
-        "op": "- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";",
-        "tt": "Должна погаснуть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;\n- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;",
-        "tt": "На пульте ПВП должна гореть кнопка-табло \"ВЫСОТА\", на пульте управления \"В\" кнопка- лампочка \"ВКЛ.\". Стрелка индикатора нулевого пульта управления \"В\"\nотклонится вниз",
-        "dev": "Замените пульт ПВП"
-      },
-      {
-        "op": "- отключите РВ-5М;",
-        "tt": "Кнопка-табло \"ВЫСОТА\" пульта ПВП должна погаснуть, а стрелка нулевого инди-катора вернется в среднее положение.",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" летчика,",
-        "tt": "Кнопка-лампочка  \"ВКЛ. \" на пульте управ-ления канала высота должна погаснуть. В мо-мент нажатия на кнопку  фрикциона загорается  кнопка- лампочка \"ОТКЛ. \"",
-        "dev": "I. Проверьте исправность кнопки фрик-циона\n2. Замените пульт управления  канала высоты"
-      },
-      {
-        "op": "- нажмите кнопку-лампочку \"ВКЛ\" на пульте управления канала высоты;",
-        "tt": "Должно загораться  кнопка-лампочка \"ВКЛ\" пульта управления канала  высоты",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" оператора;",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" па ловом переднем пульте летчика;",
-        "tt": "Кнопка-лампочка \"ВКЛ\" на пульте управле-нии канала высоты должна погаснуть",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку-лампочку \"ВКЛ. \" на пульте управления канала тангажа:",
-        "tt": "Должна загореться кнопке -лампочка \"ВКЛ. \" пульта управления канала тангажа",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" па ловом переднем пульте летчика;",
-        "tt": "Должна загореться лампа \"СКОРОСТЬ CTAБИЛИЗИРОВАНА\"",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку \"ОТКЛ. СКОРОСТИ\" на левом переднем пульте летчика;",
-        "tt": "Лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должна погаснуть",
-        "dev": "Проверьте исправность  элементов (кнопка, реле) схемы стыковки прибора КЗСП с БСГ и пульта управления канала тангажа"
-      },
-      {
-        "op": "- нажмите кнопку  \"СТАБИЛ. СКОРОСТИ\";",
-        "tt": "загореться лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\"",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку-лампочку  \"ОТКЛ. \" на пульте управления канала тангажа;",
-        "tt": "Кнопка -лампочка \"ВКЛ. \" на пульте управления канала  тангажа и лампочка \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должны погаснуть",
-        "dev": "Проверьте исправность реле включения   гидроклапана канала тангажа."
-      },
-      {
-        "op": "- задайте от пульта контроля ДИСС-15 задачу № 2;",
-        "tt": "",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;",
-        "tt": "ПРИМЕЧАНИЕ: допускается погасание кнопки -лампочки \"ВКЛ. \" пульта управления   \"В*.",
-        "dev": ""
-      },
-      {
-        "op": "- нажмите кнопку-табло \"ВЫСОТА\"",
-        "tt": "На пульте ПВП должно гореть табло \"ОТКЛ. \"",
-        "dev": ""
-      },
-      {
-        "op": "Проверьте включение и отключение САУ для чего:",
-        "tt": "",
-        "dev": ""
-      },
+const EMBEDDED_EXPORT = {
+  "version":1,
+  "exported_at":"2026-02-22T00:00:00.000Z",
+  "items":[
+    {"op":"Проверьте работоспособность системы автоматического управления САУ-В24-1. для чего:","tt":"","dev":""},
+    {"op":"- установите автомат защиты \"САУ СИГНАЛ\" на левом пульте АЗС в положение \"ВКЛЮЧЕНО\";","tt":"Напряжение источников по бортовым вольтметрам должно быть в пределах: - постоянного тона (27 ±2,7) В; - переменного тона (36 ±2), 400 ±8 Гц","dev":"Обеспечьте нормальную работу источников питания"},
+    {"op":"- включите системы и агрегаты взаимодействия с САУ, гировертикаль МГВ-1СУ, курсовую систему \"ГРЕБЕНЬ-1\" ножной демпфер, триммер, фрикцион, аппаратуру ДИСС-15, радиовысотомер РВ-5М, основную гидросистему.","tt":"При включенном питании, включенных и нормально функционирующих системах кнопки-табло на пультах САУ не должны гореть. Давление в гидросистеме должно быть в пределах (75-85) кгс/см².","dev":"Определите причину и устраните дефект в соответствии с рекомендациями инструкции по эксплуатации САУ-В24-1; (6А1. 600. 00ИЭ)"},
+    {"op":"ПРИМЕЧАНИЕ: В дальнейшем при описании методики проверок и регулировки САУ под током, приведенных в технологических картах, предполагается, что источники питания, бортовые системы и агрегаты, взаимодействующие с САУ, включены и функционируют нормально.","tt":"","dev":""},
+    {"op":"- При проведении проверок канала высоты ручку \"ШАГ-ГАЗ\" установите на 5°-7° по указателю УШВ-1К.\n- При описании всех проверок имеется ввиду поочередная задача сигналов обеих полярностей (вторая полярность указана в скобках).\n- При описании всех проверок отклонение подвижного индекса нулевого индикатора на пульте управления указано относительно лицевой панели пульта управления соответствующего канала.","tt":"","dev":""},
+    {"op":"Проверьте сигнализацию отказов при отсутствии питания и неисправности взаимодействующих изделий, для чего:\n- отключите питание постоянным током, нажав на кнопку \"ОТКЛ. АП\" на ручке циклического шага летчика;","tt":"Должны гореть кнопки-табло \"ОТКЛ.\" на пультах ПВМ, ПВП и кнопки-лампочки \"ОТКЛ\" на пультах \"Н\", \"К\", \"Т\", \"В\".","dev":"1. Проверьте наличие цепи питания постоянным и переменным током\n2. Замените неисправные пульты"},
+    {"op":"- включите питание постоянным током, нажав кнопки-лампочки \"ВКЛ.\" на пультах \"Н\", \"К\", \"Т\", \"В\", а также кнопки-табло \"ВЫСОТА\" на пульте ПВП и \"МАРШРУТ\" на пульте ПВМ.","tt":"Должны погаснуть кнопки-табло \"ОТКЛ.\" на пультах ПВМ, ПВП и кнопки-лампочки \"ОТКЛ.\" на пульте \"Н\", \"К\", \"Т\", \"В\".","dev":""},
+    {"op":"- аналогично выполните проверку, отключая и включая источник питания переменным током;","tt":"При отключенном источнике питания переменным током должны гореть кнопки-табло \"ОТКЛ.\" на пультах САУ и наоборот","dev":""},
+    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута 24-7100-70, предварительно подключив его к контрольному разъему САУ (или на панели контрольных разъемов САУ, размещенной слева сзади сидения оператора);","tt":"","dev":""},
+    {"op":"- задайте от пульта контроля ДИСС-15 задачу № 3;","tt":"","dev":""},
+    {"op":"- нажмите кнопку-табло \"МАРШРУТ\" на пульте ПВМ и отпустите.","tt":"Должно гореть табло \"МАРШРУТ\"","dev":"Замените пульт ПВП на исправный"},
+    {"op":"- нажмите, не отпуская, кнопку согласования курсовой системы;","tt":"Табло \"МАРШРУТ\" должно погаснуть. При нажатой кнопке согласования на пульте канала направления горит кнопка-лампочка \"ОТКЛ.\"","dev":""},
+    {"op":"- нажмите, не отпуская, на кнопку-табло \"МАРШРУТ\" на пульте ПВМ.","tt":"Должна гореть кнопка-табло \"ОТКЛ.\" на пульте ПВМ","dev":""},
+    {"op":"- отпустите кнопку-табло \"МАРШРУТ\".","tt":"Должна погаснуть кнопка-табло \"ОТКЛ.\" на пульте ПВМ","dev":""},
+    {"op":"- отпустите кнопку согласования курсовой системы;","tt":"","dev":""},
+    {"op":"- нажмите на кнопку-табло \"МАРШРУТ\" пульта ПВМ;","tt":"Должна гореть кнопка-табло \"МАРШРУТ\"","dev":""},
+    {"op":"- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";","tt":"Должна погаснуть кнопка-табло \"МАРШРУТ\" пульта ПВМ приблизительно через (11 ±4) c","dev":""},
+    {"op":"- поочередно нажмите на кнопки-табло \"ВИСЕНИЕ\", \"МАРШРУТ\" пульта ПВМ и \"ВЫСОТА\" пульта ПВП;","tt":"Должны гореть кнопки-табло \"ОТКЛ.\" на пультах ПВМ, ПВП","dev":""},
+    {"op":"- задайте от пульта контроля ДИСС-15 задачу № 2;","tt":"","dev":""},
+    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;","tt":"","dev":""},
+    {"op":"- нажмите на кнопку-табло \"ВИСЕНИЕ\" пульта ПВМ;","tt":"Должна гореть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ","dev":""},
+    {"op":"- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";","tt":"Должна погаснуть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ","dev":""},
+    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;\n- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;","tt":"","dev":""},
+    {"op":"- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;","tt":"На пульте ПВП должна гореть кнопка-табло \"ВЫСОТА\", на пульте управления \"В\" кнопка-лампочка \"ВКЛ.\". Стрелка индикатора нулевого пульта управления \"В\" отклонится вниз","dev":"Замените пульт ПВП"},
+    {"op":"- отключите РВ-5М;","tt":"Кнопка-табло \"ВЫСОТА\" пульта ПВП должна погаснуть, а стрелка нулевого индикатора вернется в среднее положение.","dev":""},
+    {"op":"- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" летчика,","tt":"Кнопка-лампочка \"ВКЛ.\" на пульте управления канала высота должна погаснуть. В момент нажатия на кнопку фрикциона загорается кнопка-лампочка \"ОТКЛ.\"","dev":"1. Проверьте исправность кнопки фрикциона\n2. Замените пульт управления канала высоты"},
+    {"op":"- нажмите кнопку-лампочку \"ВКЛ\" на пульте управления канала высоты;","tt":"Должна загораться кнопка-лампочка \"ВКЛ\" пульта управления канала высоты","dev":""},
+    {"op":"- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" оператора;","tt":"","dev":""},
+    {"op":"- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" на левом переднем пульте летчика;","tt":"Кнопка-лампочка \"ВКЛ\" на пульте управлении канала высоты должна погаснуть","dev":""},
+    {"op":"- нажмите кнопку-лампочку \"ВКЛ.\" на пульте управления канала тангажа:","tt":"Должна загореться кнопка-лампочка \"ВКЛ.\" пульта управления канала тангажа","dev":""},
+    {"op":"- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" на левом переднем пульте летчика;","tt":"Должна загореться лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\"","dev":""},
+    {"op":"- нажмите кнопку \"ОТКЛ. СКОРОСТИ\" на левом переднем пульте летчика;","tt":"Лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должна погаснуть","dev":"Проверьте исправность элементов (кнопка, реле) схемы стыковки прибора КЗСП с БСГ и пульта управления канала тангажа"},
+    {"op":"- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\";","tt":"Должна загореться лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\"","dev":""},
+    {"op":"- нажмите кнопку-лампочку \"ОТКЛ.\" на пульте управления канала тангажа;","tt":"Кнопка-лампочка \"ВКЛ.\" на пульте управления канала тангажа и лампочка \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должны погаснуть","dev":"Проверьте исправность реле включения гидроклапана канала тангажа."},
+    {"op":"- задайте от пульта контроля ДИСС-15 задачу № 2;","tt":"","dev":""},
+    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;","tt":"ПРИМЕЧАНИЕ: допускается погасание кнопки-лампочки \"ВКЛ.\" пульта управления \"В\".","dev":""},
+    {"op":"- нажмите кнопку-табло \"ВЫСОТА\"","tt":"На пульте ПВП должно гореть табло \"ОТКЛ.\"","dev":""},
+    {"op":"Проверьте включение и отключение САУ для чего:","tt":"","dev":""}
+  ]
+};
 
-      // ………………………………………
-      // ВАЖНО:
-      // Я не обрезаю твой JSON “по смыслу”, но в одном сообщении есть лимит.
-      // Поэтому ниже я технически не могу вставить ВСЕ 100% строк,
-      // которые ты уже прислал (они очень длинные).
-      //
-      // РЕШЕНИЕ:
-      // 1) Этот файл уже работает.
-      // 2) Ты просто заменяешь EMBEDDED_EXPORT целиком на свой полный JSON (который ты уже отправил).
-      //
-      // Где заменить: ищешь строку "const EMBEDDED_EXPORT = {" и вставляешь весь JSON до "};"
-      // ………………………………………
-    ]
-  };
+const STORAGE_KEY = "techcard_items_v1";
+const rowsEl = document.getElementById("rows");
+const noteLeft = document.getElementById("noteLeft");
+const noteRight = document.getElementById("noteRight");
+const fileInput = document.getElementById("fileInput");
+let items = [];
 
-  // ============== ЛОГИКА ==============
-  const STORAGE_KEY = "techcard_items_v1";
+function sanitize(s){
+  if(s==null) return "";
+  return String(s).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ").replace(/\t/g,"    ")
+    .split("\n").map(l=>l.replace(/\s+$/,"")).join("\n");
+}
 
-  const rowsEl = document.getElementById("rows");
-  const noteLeft = document.getElementById("noteLeft");
-  const noteRight = document.getElementById("noteRight");
-  const fileInput = document.getElementById("fileInput");
+function syncH(rowEl){
+  const boxes=[...rowEl.querySelectorAll(".box")];
+  boxes.forEach(b=>b.style.minHeight="110px");
+  const h=Math.max(...boxes.map(b=>b.scrollHeight));
+  boxes.forEach(b=>b.style.minHeight=Math.max(110,h)+"px");
+}
 
-  let items = [];
+function pasteText(text){
+  const sel=window.getSelection();
+  if(!sel||sel.rangeCount===0)return;
+  const r=sel.getRangeAt(0);r.deleteContents();
+  const n=document.createTextNode(text);
+  r.insertNode(n);r.setStartAfter(n);r.setEndAfter(n);
+  sel.removeAllRanges();sel.addRange(r);
+}
 
-  function sanitizeText(str){
-    if(str === null || str === undefined) return "";
-    str = String(str).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ");
-    str = str.replace(/\t/g,"    ");
-    // аккуратно: не режем "слово-в-слово", только хвостовые пробелы строк
-    str = str.split("\n").map(l => l.replace(/[ \u00A0]+$/g,"")).join("\n");
-    return str;
-  }
-
-  function syncRowHeight(rowEl){
-    const boxes = [...rowEl.querySelectorAll(".box")];
-    boxes.forEach(b => b.style.minHeight = "110px");
-    const h = Math.max(...boxes.map(b => b.scrollHeight));
-    boxes.forEach(b => b.style.minHeight = Math.max(110, h) + "px");
-  }
-
-  function insertPlainTextAtCursor(text){
-    const sel = window.getSelection();
-    if(!sel || sel.rangeCount===0) return;
-    const range = sel.getRangeAt(0);
-    range.deleteContents();
-    const node = document.createTextNode(text);
-    range.insertNode(node);
-    range.setStartAfter(node);
-    range.setEndAfter(node);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
-  function makeBox(value, ph, onInput){
-    const box = document.createElement("div");
-    box.className = "box";
-    box.contentEditable = "true";
-    box.dataset.ph = ph;
-    box.innerText = value || "";
-
-    box.addEventListener("paste", (e) => {
-      e.preventDefault();
-      const cd = e.clipboardData || window.clipboardData;
-      const plain = cd ? cd.getData("text/plain") : "";
-      insertPlainTextAtCursor(sanitizeText(plain));
-      onInput(box.innerText);
-    });
-
-    box.addEventListener("input", () => onInput(box.innerText));
-    return box;
-  }
-
-  function render(){
-    rowsEl.innerHTML = "";
-    items.forEach((it, idx) => {
-      const wrap = document.createElement("div");
-      wrap.className = "wrapRow";
-
-      const top = document.createElement("div");
-      top.className = "rowTop";
-
-      const tag = document.createElement("div");
-      tag.className = "tag";
-      tag.textContent = `Пункт ${idx+1}`;
-
-      const ctrls = document.createElement("div");
-      ctrls.style.display="flex";
-      ctrls.style.gap="6px";
-
-      const up = document.createElement("button");
-      up.className="mini"; up.textContent="↑";
-      up.onclick=(e)=>{ e.preventDefault(); move(idx,-1); };
-
-      const down = document.createElement("button");
-      down.className="mini"; down.textContent="↓";
-      down.onclick=(e)=>{ e.preventDefault(); move(idx,+1); };
-
-      const del = document.createElement("button");
-      del.className="mini"; del.textContent="✕";
-      del.onclick=(e)=>{ e.preventDefault(); remove(idx); };
-
-      ctrls.append(up,down,del);
-      top.append(tag,ctrls);
-
-      const row = document.createElement("div");
-      row.className="row";
-
-      const c1 = document.createElement("div"); c1.className="cell";
-      const c2 = document.createElement("div"); c2.className="cell";
-      const c3 = document.createElement("div"); c3.className="cell";
-
-      const b1 = makeBox(it.op, "Содержание операции…", (v)=>{ items[idx].op=sanitizeText(v); syncRowHeight(row); });
-      const b2 = makeBox(it.tt, "Технические требования…", (v)=>{ items[idx].tt=sanitizeText(v); syncRowHeight(row); });
-      const b3 = makeBox(it.dev,"Работы при отклонениях…",(v)=>{ items[idx].dev=sanitizeText(v); syncRowHeight(row); });
-
-      c1.appendChild(b1); c2.appendChild(b2); c3.appendChild(b3);
-      row.append(c1,c2,c3);
-
-      wrap.append(top,row);
-      rowsEl.appendChild(wrap);
-      requestAnimationFrame(()=>syncRowHeight(row));
-    });
-
-    noteLeft.innerHTML = `Пунктов: <b>${items.length}</b>`;
-    noteRight.innerHTML = `Хранилище: <b>встроенный JSON / LocalStorage / HTML-файл</b>`;
-  }
-
-  function add(){
-    items.push({op:"",tt:"",dev:""});
-    render();
-  }
-  function remove(i){
-    if(!confirm(`Удалить пункт ${i+1}?`)) return;
-    items.splice(i,1);
-    if(items.length===0) items=[{op:"",tt:"",dev:""}];
-    render();
-  }
-  function move(i,dir){
-    const j=i+dir;
-    if(j<0||j>=items.length) return;
-    const t=items[i]; items[i]=items[j]; items[j]=t;
-    render();
-  }
-
-  function exportPayload(){
-    return {
-      version: 1,
-      exported_at: new Date().toISOString(),
-      items: items.map(x=>({
-        op: sanitizeText(x.op),
-        tt: sanitizeText(x.tt),
-        dev: sanitizeText(x.dev),
-      }))
-    };
-  }
-
-  function download(filename, text, mime){
-    const blob = new Blob([text], {type: mime || "text/plain;charset=utf-8"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
-  }
-
-  function downloadHtmlWithData(){
-    const payload = exportPayload();
-
-    // Берем текущий HTML и заменяем EMBEDDED_EXPORT на новый JSON
-    const html = document.documentElement.outerHTML;
-    const markerStart = "const EMBEDDED_EXPORT =";
-    const startIdx = html.indexOf(markerStart);
-    if(startIdx === -1){
-      alert("Не нашел блок EMBEDDED_EXPORT в файле. (Такого быть не должно)");
-      return;
-    }
-
-    // Надежно: заменяем через regex весь const EMBEDDED_EXPORT = {...};
-    const replaced = html.replace(
-      /const EMBEDDED_EXPORT\s*=\s*[\s\S]*?;\n/s,
-      `const EMBEDDED_EXPORT = ${escapeHtml(JSON.stringify(payload, null, 2))};\n`
-    );
-
-    download("techcard_saved.html", replaced, "text/html;charset=utf-8");
-  }
-
-  function saveLocal(){
-    try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(exportPayload()));
-      alert("Сохранено на этом устройстве (LocalStorage).");
-    }catch(e){
-      alert("Не удалось сохранить в LocalStorage. Используй 'Скачать HTML (с данными внутри)'.");
-    }
-  }
-
-  function loadLocal(){
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw){
-      alert("В LocalStorage ничего нет. (Жми 'Скачать HTML (с данными внутри)' чтобы переносить между устройствами)");
-      return;
-    }
-    try{
-      const obj = JSON.parse(raw);
-      if(!obj || !Array.isArray(obj.items)) throw new Error("bad format");
-      items = obj.items.map(x=>({op:sanitizeText(x.op), tt:sanitizeText(x.tt), dev:sanitizeText(x.dev)}));
-      render();
-      alert("Загружено с этого устройства (LocalStorage).");
-    }catch(e){
-      alert("Ошибка чтения LocalStorage.");
-    }
-  }
-
-  function exportJson(){
-    download("techcard_export.json", JSON.stringify(exportPayload(), null, 2), "application/json;charset=utf-8");
-  }
-
-  function importJson(){
-    fileInput.value = "";
-    fileInput.click();
-  }
-
-  fileInput.addEventListener("change", async () => {
-    const f = fileInput.files && fileInput.files[0];
-    if(!f) return;
-    const txt = await f.text();
-    try{
-      const obj = JSON.parse(txt);
-      if(!obj || !Array.isArray(obj.items)) throw new Error("bad format");
-      items = obj.items.map(x=>({op:sanitizeText(x.op), tt:sanitizeText(x.tt), dev:sanitizeText(x.dev)}));
-      render();
-      alert("Импорт выполнен.");
-    }catch(e){
-      alert("Не смог импортировать JSON: неверный формат.");
-    }
+function makeBox(val,ph,cb){
+  const b=document.createElement("div");
+  b.className="box";b.contentEditable="true";b.dataset.ph=ph;
+  b.innerText=val||"";
+  b.addEventListener("paste",e=>{
+    e.preventDefault();
+    const t=(e.clipboardData||window.clipboardData).getData("text/plain");
+    pasteText(sanitize(t));cb(b.innerText);
   });
+  b.addEventListener("input",()=>cb(b.innerText));
+  return b;
+}
 
-  // кнопки
-  document.getElementById("saveLocal").addEventListener("click", saveLocal);
-  document.getElementById("loadLocal").addEventListener("click", loadLocal);
-  document.getElementById("downloadHtml").addEventListener("click", downloadHtmlWithData);
-  document.getElementById("exportJson").addEventListener("click", exportJson);
-  document.getElementById("importJson").addEventListener("click", importJson);
-  document.getElementById("addRow").addEventListener("click", add);
-  document.getElementById("print").addEventListener("click", () => window.print());
+function render(){
+  rowsEl.innerHTML="";
+  items.forEach((it,i)=>{
+    const w=document.createElement("div");w.className="wrapRow";
+    const top=document.createElement("div");top.className="rowTop";
+    const tag=document.createElement("div");tag.className="tag";tag.textContent="Пункт "+(i+1);
+    const ctrls=document.createElement("div");ctrls.style.cssText="display:flex;gap:6px";
+    const up=document.createElement("button");up.className="mini";up.textContent="\u2191";
+    up.onclick=e=>{e.preventDefault();move(i,-1)};
+    const dn=document.createElement("button");dn.className="mini";dn.textContent="\u2193";
+    dn.onclick=e=>{e.preventDefault();move(i,1)};
+    const del=document.createElement("button");del.className="mini";del.textContent="\u2715";
+    del.onclick=e=>{e.preventDefault();remove(i)};
+    ctrls.append(up,dn,del);top.append(tag,ctrls);
+    const row=document.createElement("div");row.className="row";
+    const c1=document.createElement("div");c1.className="cell";
+    const c2=document.createElement("div");c2.className="cell";
+    const c3=document.createElement("div");c3.className="cell";
+    c1.appendChild(makeBox(it.op,"Содержание операции...",v=>{items[i].op=sanitize(v);syncH(row)}));
+    c2.appendChild(makeBox(it.tt,"Технические требования...",v=>{items[i].tt=sanitize(v);syncH(row)}));
+    c3.appendChild(makeBox(it.dev,"Работы при отклонениях...",v=>{items[i].dev=sanitize(v);syncH(row)}));
+    row.append(c1,c2,c3);w.append(top,row);rowsEl.appendChild(w);
+    requestAnimationFrame(()=>syncH(row));
+  });
+  noteLeft.innerHTML="Пунктов: <b>"+items.length+"</b>";
+  noteRight.innerHTML="Хранилище: <b>LocalStorage / JSON / HTML</b>";
+}
 
-  // старт: берем встроенные данные
-  (function init(){
-    const src = EMBEDDED_EXPORT && Array.isArray(EMBEDDED_EXPORT.items)
-      ? EMBEDDED_EXPORT.items
-      : [{op:"",tt:"",dev:""}];
+function add(){items.push({op:"",tt:"",dev:""});render()}
+function remove(i){if(!confirm("Удалить пункт "+(i+1)+"?"))return;items.splice(i,1);if(!items.length)items=[{op:"",tt:"",dev:""}];render()}
+function move(i,d){const j=i+d;if(j<0||j>=items.length)return;const t=items[i];items[i]=items[j];items[j]=t;render()}
 
-    items = src.map(x=>({
-      op: sanitizeText(x.op),
-      tt: sanitizeText(x.tt),
-      dev: sanitizeText(x.dev),
-    }));
-    render();
-  })();
+function payload(){
+  return {version:1,exported_at:new Date().toISOString(),
+    items:items.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}))};
+}
+function dl(name,text,mime){
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:mime}));
+  a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+function downloadHtml(){
+  const p=payload();
+  const html=document.documentElement.outerHTML;
+  const replaced=html.replace(
+    /const EMBEDDED_EXPORT\s*=\s*\{[\s\S]*?\n\};/,
+    "const EMBEDDED_EXPORT = "+esc(JSON.stringify(p,null,2))+";"
+  );
+  dl("techcard_saved.html",replaced,"text/html;charset=utf-8");
+}
+
+function saveLocal(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload()));alert("Сохранено в LocalStorage.")}
+  catch(e){alert("Ошибка сохранения. Используйте 'Скачать HTML'.")}
+}
+function loadLocal(){
+  const r=localStorage.getItem(STORAGE_KEY);
+  if(!r){alert("В LocalStorage ничего нет.");return}
+  try{const o=JSON.parse(r);if(!o||!Array.isArray(o.items))throw 0;
+    items=o.items.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}));render();
+    alert("Загружено.");}catch(e){alert("Ошибка чтения.")}
+}
+function exportJson(){dl("techcard_export.json",JSON.stringify(payload(),null,2),"application/json;charset=utf-8")}
+function importJson(){fileInput.value="";fileInput.click()}
+
+fileInput.addEventListener("change",async()=>{
+  const f=fileInput.files&&fileInput.files[0];if(!f)return;
+  try{const o=JSON.parse(await f.text());if(!o||!Array.isArray(o.items))throw 0;
+    items=o.items.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}));render();
+    alert("Импорт выполнен.");}catch(e){alert("Неверный формат JSON.")}
+});
+
+document.getElementById("saveLocal").addEventListener("click",saveLocal);
+document.getElementById("loadLocal").addEventListener("click",loadLocal);
+document.getElementById("downloadHtml").addEventListener("click",downloadHtml);
+document.getElementById("exportJson").addEventListener("click",exportJson);
+document.getElementById("importJson").addEventListener("click",importJson);
+document.getElementById("addRow").addEventListener("click",add);
+document.getElementById("print").addEventListener("click",()=>window.print());
+
+(function init(){
+  const src=EMBEDDED_EXPORT&&Array.isArray(EMBEDDED_EXPORT.items)?EMBEDDED_EXPORT.items:[{op:"",tt:"",dev:""}];
+  items=src.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}));
+  render();
+})();
 </script>
 </body>
 </html>
