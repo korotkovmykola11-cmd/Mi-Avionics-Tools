@@ -1,329 +1,189 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-  <title>Проверка автопилота — САУ-В24-1</title>
-  <style>
-    :root {
-      --bg1:#061a2e; --bg2:#0b2943; --bg3:#03110a;
-      --glass:rgba(10,18,28,.78);
-      --glass2:rgba(8,14,22,.68);
-      --line:rgba(255,255,255,.10);
-      --ink:#eaf6ff;
-      --muted:#b9cadd;
-      --accent:#21f0ff;
-      --accent2:#00ffa6;
-      --r:16px;
-      --font:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      --colOp:560px;
-      --colTT:420px;
-      --colDev:420px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--font);color:var(--ink)}
-    .scene{
-      min-height:100vh;
-      padding:14px;
-      background:
-        radial-gradient(900px 520px at 25% 18%,rgba(120,190,255,.40),transparent 62%),
-        radial-gradient(900px 520px at 78% 22%,rgba(50,140,255,.30),transparent 62%),
-        linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 55%,#061523 78%,var(--bg3) 100%);
-    }
-    .doc{
-      max-width:1480px;margin:0 auto;border-radius:var(--r);
-      background:linear-gradient(180deg,var(--glass),var(--glass2));
-      border:1px solid var(--line);
-      box-shadow:0 30px 90px rgba(0,0,0,.62),0 0 0 1px rgba(33,240,255,.10) inset;
-      backdrop-filter:blur(8px);overflow:hidden;
-    }
-    header{
-      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
-      padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.12);
-      flex-wrap:wrap;
-    }
-    .title{font-weight:950;letter-spacing:.6px;color:var(--accent);font-size:18px;text-transform:uppercase}
-    .subtitle{margin-top:6px;color:var(--muted);font-size:13px;max-width:980px;line-height:1.35}
-    .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .btn{
-      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--ink);
-      padding:8px 10px;border-radius:12px;font-weight:900;cursor:pointer;user-select:none;
-      font-size:13px;min-height:44px;display:flex;align-items:center;gap:4px;
-    }
-    .btn:hover{border-color:rgba(33,240,255,.28)}
-    .btn.primary{border-color:rgba(0,255,166,.28);box-shadow:0 0 18px rgba(0,255,166,.10)}
-    .wrap{padding:12px;overflow:auto;max-height:calc(100vh - 150px);-webkit-overflow-scrolling:touch}
-    .grid{
-      min-width:calc(var(--colOp) + var(--colTT) + var(--colDev) + 40px);
-      border:1px solid rgba(255,255,255,.10);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.08);
-    }
-    .head{
-      display:grid;grid-template-columns:var(--colOp) var(--colTT) var(--colDev);
-      position:sticky;top:0;z-index:5;background:rgba(6,14,22,.92);border-bottom:1px solid rgba(255,255,255,.12);
-    }
-    .hcell{padding:12px;border-right:1px solid rgba(255,255,255,.08);font-weight:950;font-size:14px}
-    .hcell:last-child{border-right:none}
-    .rows{display:flex;flex-direction:column;gap:10px;padding:10px}
-    .wrapRow{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.06)}
-    .rowTop{
-      display:flex;align-items:center;justify-content:space-between;gap:8px;
-      padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.10);user-select:none;
-    }
-    .tag{
-      font-weight:950;color:var(--accent2);padding:5px 10px;border-radius:999px;
-      border:1px solid rgba(0,255,166,.22);background:rgba(0,0,0,.12);font-size:13px;
-    }
-    .mini{
-      padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);color:#dff7ff;cursor:pointer;font-weight:900;
-      min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;
-    }
-    .mini:hover{border-color:rgba(33,240,255,.28)}
-    .row{display:grid;grid-template-columns:var(--colOp) var(--colTT) var(--colDev)}
-    .cell{padding:10px;border-right:1px solid rgba(255,255,255,.08);background:rgba(7,14,22,.30)}
-    .cell:last-child{border-right:none}
-    .box{
-      min-height:110px;border-radius:10px;border:1px solid rgba(33,240,255,.12);
-      background:rgba(7,14,22,.35);padding:10px 12px;outline:none;
-      white-space:pre-wrap;overflow-wrap:break-word;hyphens:auto;
-      font-size:14px;line-height:1.4;color:#eaf6ff;overflow:auto;
-    }
-    .box:focus{border-color:rgba(33,240,255,.35);box-shadow:0 0 0 1px rgba(0,0,0,.30) inset,0 0 24px rgba(33,240,255,.10)}
-    .box:empty::before{content:attr(data-ph);color:rgba(185,202,221,.55)}
-    .modeNote{
-      color:var(--muted);font-size:12px;padding:10px 14px;border-top:1px solid var(--line);
-      background:rgba(0,0,0,.12);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    }
-    @media print{
-      .scene{padding:0;background:#fff}
-      .doc{box-shadow:none;border:none;background:#fff;color:#000}
-      header,.modeNote{display:none!important}
-      .wrap{max-height:none;overflow:visible;padding:0}
-      .grid{border:1px solid #ccc;background:#fff}
-      .head{position:static;background:#f5f5f5}
-      .hcell{color:#000}
-      .cell,.box{background:#fff;color:#000}
-      .box{border:1px solid #ccc}
-      .mini{display:none}
-      .tag{color:#000;border:1px solid #ddd;background:#fff}
-      .rowTop{background:#f9f9f9}
-      .wrapRow{border-color:#ccc}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Технологическая карта — редактируемая</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:#0b1626;
+  color:#eaf6ff;
+}
+header{
+  padding:14px;
+  background:#07101c;
+  border-bottom:1px solid #1e2b44;
+}
+h1{margin:0;font-size:18px;color:#21f0ff}
+p{margin:6px 0 0;font-size:13px;color:#9fb3cc}
+
+.controls{
+  padding:10px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+button{
+  padding:10px 14px;
+  font-weight:700;
+  border-radius:10px;
+  border:1px solid #2c3f66;
+  background:#122036;
+  color:#eaf6ff;
+  cursor:pointer;
+}
+button:hover{border-color:#21f0ff}
+
+.table{
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.row{
+  border:1px solid #2c3f66;
+  border-radius:12px;
+  overflow:hidden;
+  background:#0f1d33;
+}
+.row-header{
+  padding:6px 10px;
+  background:#0a1628;
+  font-weight:800;
+  color:#00ffa6;
+  display:flex;
+  justify-content:space-between;
+}
+.cells{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+}
+.cell{
+  border-right:1px solid #2c3f66;
+  padding:8px;
+}
+.cell:last-child{border-right:none}
+
+.box{
+  width:100%;
+  min-height:100px;
+  background:#07101c;
+  border:1px solid #2c3f66;
+  border-radius:8px;
+  padding:8px;
+  color:#eaf6ff;
+  font-size:14px;
+  line-height:1.4;
+  white-space:pre-wrap;
+  outline:none;
+}
+.box:focus{border-color:#21f0ff}
+
+@media(max-width:900px){
+  .cells{grid-template-columns:1fr}
+  .cell{border-right:none;border-bottom:1px solid #2c3f66}
+  .cell:last-child{border-bottom:none}
+}
+</style>
 </head>
+
 <body>
-<div class="scene">
-  <div class="doc">
-    <header>
-      <div>
-        <div class="title">Проверка автопилота</div>
-        <div class="subtitle">
-          Технологическая карта САУ-В24-1 — ОР / ТТ / Отклонения. Редактируйте прямо в таблице.
-          <b>Чтобы сохранить:</b> жмите «Скачать HTML (с данными внутри)» и храните файл.
-        </div>
-      </div>
-      <div class="btns">
-        <button class="btn" id="saveLocal">Сохранить</button>
-        <button class="btn" id="loadLocal">Загрузить</button>
-        <button class="btn primary" id="downloadHtml">Скачать HTML</button>
-        <button class="btn" id="exportJson">Экспорт JSON</button>
-        <button class="btn" id="importJson">Импорт JSON</button>
-        <button class="btn" id="addRow">+ Добавить</button>
-        <button class="btn" id="print">Печать</button>
-      </div>
-    </header>
-    <div class="wrap">
-      <div class="grid">
-        <div class="head">
-          <div class="hcell">Содержание операции</div>
-          <div class="hcell">Технические требования (ТТ)</div>
-          <div class="hcell">Работы при отклонениях от ТТ</div>
-        </div>
-        <div class="rows" id="rows"></div>
-      </div>
-    </div>
-    <div class="modeNote">
-      <div id="noteLeft"></div>
-      <div id="noteRight"></div>
-    </div>
-  </div>
+
+<header>
+  <h1>Технологическая карта</h1>
+  <p>Редактируй пункты прямо здесь. Сохраняется локально или в HTML.</p>
+</header>
+
+<div class="controls">
+  <button onclick="addRow()">+ Добавить пункт</button>
+  <button onclick="saveLocal()">💾 Сохранить</button>
+  <button onclick="loadLocal()">📥 Загрузить</button>
+  <button onclick="downloadHTML()">⬇️ Скачать HTML</button>
 </div>
-<input type="file" id="fileInput" accept="application/json" style="display:none"/>
+
+<div class="table" id="table"></div>
+
 <script>
-const EMBEDDED_EXPORT = {
-  "version":1,
-  "exported_at":"2026-02-22T00:00:00.000Z",
-  "items":[
-    {"op":"Проверьте работоспособность системы автоматического управления САУ-В24-1. для чего:","tt":"","dev":""},
-    {"op":"- установите автомат защиты \"САУ СИГНАЛ\" на левом пульте АЗС в положение \"ВКЛЮЧЕНО\";","tt":"Напряжение источников по бортовым вольтметрам должно быть в пределах: - постоянного тона (27 ±2,7) В; - переменного тона (36 ±2), 400 ±8 Гц","dev":"Обеспечьте нормальную работу источников питания"},
-    {"op":"- включите системы и агрегаты взаимодействия с САУ, гировертикаль МГВ-1СУ, курсовую систему \"ГРЕБЕНЬ-1\" ножной демпфер, триммер, фрикцион, аппаратуру ДИСС-15, радиовысотомер РВ-5М, основную гидросистему.","tt":"При включенном питании, включенных и нормально функционирующих системах кнопки-табло на пультах САУ не должны гореть. Давление в гидросистеме должно быть в пределах (75-85) кгс/см².","dev":"Определите причину и устраните дефект в соответствии с рекомендациями инструкции по эксплуатации САУ-В24-1; (6А1. 600. 00ИЭ)"},
-    {"op":"ПРИМЕЧАНИЕ: В дальнейшем при описании методики проверок и регулировки САУ под током, приведенных в технологических картах, предполагается, что источники питания, бортовые системы и агрегаты, взаимодействующие с САУ, включены и функционируют нормально.","tt":"","dev":""},
-    {"op":"- При проведении проверок канала высоты ручку \"ШАГ-ГАЗ\" установите на 5°-7° по указателю УШВ-1К.\n- При описании всех проверок имеется ввиду поочередная задача сигналов обеих полярностей (вторая полярность указана в скобках).\n- При описании всех проверок отклонение подвижного индекса нулевого индикатора на пульте управления указано относительно лицевой панели пульта управления соответствующего канала.","tt":"","dev":""},
-    {"op":"Проверьте сигнализацию отказов при отсутствии питания и неисправности взаимодействующих изделий, для чего:\n- отключите питание постоянным током, нажав на кнопку \"ОТКЛ. АП\" на ручке циклического шага летчика;","tt":"Должны гореть кнопки-табло \"ОТКЛ.\" на пультах ПВМ, ПВП и кнопки-лампочки \"ОТКЛ\" на пультах \"Н\", \"К\", \"Т\", \"В\".","dev":"1. Проверьте наличие цепи питания постоянным и переменным током\n2. Замените неисправные пульты"},
-    {"op":"- включите питание постоянным током, нажав кнопки-лампочки \"ВКЛ.\" на пультах \"Н\", \"К\", \"Т\", \"В\", а также кнопки-табло \"ВЫСОТА\" на пульте ПВП и \"МАРШРУТ\" на пульте ПВМ.","tt":"Должны погаснуть кнопки-табло \"ОТКЛ.\" на пультах ПВМ, ПВП и кнопки-лампочки \"ОТКЛ.\" на пульте \"Н\", \"К\", \"Т\", \"В\".","dev":""},
-    {"op":"- аналогично выполните проверку, отключая и включая источник питания переменным током;","tt":"При отключенном источнике питания переменным током должны гореть кнопки-табло \"ОТКЛ.\" на пультах САУ и наоборот","dev":""},
-    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута 24-7100-70, предварительно подключив его к контрольному разъему САУ (или на панели контрольных разъемов САУ, размещенной слева сзади сидения оператора);","tt":"","dev":""},
-    {"op":"- задайте от пульта контроля ДИСС-15 задачу № 3;","tt":"","dev":""},
-    {"op":"- нажмите кнопку-табло \"МАРШРУТ\" на пульте ПВМ и отпустите.","tt":"Должно гореть табло \"МАРШРУТ\"","dev":"Замените пульт ПВП на исправный"},
-    {"op":"- нажмите, не отпуская, кнопку согласования курсовой системы;","tt":"Табло \"МАРШРУТ\" должно погаснуть. При нажатой кнопке согласования на пульте канала направления горит кнопка-лампочка \"ОТКЛ.\"","dev":""},
-    {"op":"- нажмите, не отпуская, на кнопку-табло \"МАРШРУТ\" на пульте ПВМ.","tt":"Должна гореть кнопка-табло \"ОТКЛ.\" на пульте ПВМ","dev":""},
-    {"op":"- отпустите кнопку-табло \"МАРШРУТ\".","tt":"Должна погаснуть кнопка-табло \"ОТКЛ.\" на пульте ПВМ","dev":""},
-    {"op":"- отпустите кнопку согласования курсовой системы;","tt":"","dev":""},
-    {"op":"- нажмите на кнопку-табло \"МАРШРУТ\" пульта ПВМ;","tt":"Должна гореть кнопка-табло \"МАРШРУТ\"","dev":""},
-    {"op":"- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";","tt":"Должна погаснуть кнопка-табло \"МАРШРУТ\" пульта ПВМ приблизительно через (11 ±4) c","dev":""},
-    {"op":"- поочередно нажмите на кнопки-табло \"ВИСЕНИЕ\", \"МАРШРУТ\" пульта ПВМ и \"ВЫСОТА\" пульта ПВП;","tt":"Должны гореть кнопки-табло \"ОТКЛ.\" на пультах ПВМ, ПВП","dev":""},
-    {"op":"- задайте от пульта контроля ДИСС-15 задачу № 2;","tt":"","dev":""},
-    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;","tt":"","dev":""},
-    {"op":"- нажмите на кнопку-табло \"ВИСЕНИЕ\" пульта ПВМ;","tt":"Должна гореть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ","dev":""},
-    {"op":"- отпустите контрольный выключатель \"ГОТОВНОСТЬ ДИСС\";","tt":"Должна погаснуть кнопка-табло \"ВИСЕНИЕ\" на пульте ПВМ","dev":""},
-    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;\n- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;","tt":"","dev":""},
-    {"op":"- нажмите на кнопку-табло \"ВЫСОТА\" на пульте ПВП;","tt":"На пульте ПВП должна гореть кнопка-табло \"ВЫСОТА\", на пульте управления \"В\" кнопка-лампочка \"ВКЛ.\". Стрелка индикатора нулевого пульта управления \"В\" отклонится вниз","dev":"Замените пульт ПВП"},
-    {"op":"- отключите РВ-5М;","tt":"Кнопка-табло \"ВЫСОТА\" пульта ПВП должна погаснуть, а стрелка нулевого индикатора вернется в среднее положение.","dev":""},
-    {"op":"- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" летчика,","tt":"Кнопка-лампочка \"ВКЛ.\" на пульте управления канала высота должна погаснуть. В момент нажатия на кнопку фрикциона загорается кнопка-лампочка \"ОТКЛ.\"","dev":"1. Проверьте исправность кнопки фрикциона\n2. Замените пульт управления канала высоты"},
-    {"op":"- нажмите кнопку-лампочку \"ВКЛ\" на пульте управления канала высоты;","tt":"Должна загораться кнопка-лампочка \"ВКЛ\" пульта управления канала высоты","dev":""},
-    {"op":"- нажмите кнопку фрикциона на ручке \"ШАГ-ГАЗ\" оператора;","tt":"","dev":""},
-    {"op":"- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" на левом переднем пульте летчика;","tt":"Кнопка-лампочка \"ВКЛ\" на пульте управлении канала высоты должна погаснуть","dev":""},
-    {"op":"- нажмите кнопку-лампочку \"ВКЛ.\" на пульте управления канала тангажа:","tt":"Должна загореться кнопка-лампочка \"ВКЛ.\" пульта управления канала тангажа","dev":""},
-    {"op":"- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\" на левом переднем пульте летчика;","tt":"Должна загореться лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\"","dev":""},
-    {"op":"- нажмите кнопку \"ОТКЛ. СКОРОСТИ\" на левом переднем пульте летчика;","tt":"Лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должна погаснуть","dev":"Проверьте исправность элементов (кнопка, реле) схемы стыковки прибора КЗСП с БСГ и пульта управления канала тангажа"},
-    {"op":"- нажмите кнопку \"СТАБИЛ. СКОРОСТИ\";","tt":"Должна загореться лампа \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\"","dev":""},
-    {"op":"- нажмите кнопку-лампочку \"ОТКЛ.\" на пульте управления канала тангажа;","tt":"Кнопка-лампочка \"ВКЛ.\" на пульте управления канала тангажа и лампочка \"СКОРОСТЬ СТАБИЛИЗИРОВАНА\" должны погаснуть","dev":"Проверьте исправность реле включения гидроклапана канала тангажа."},
-    {"op":"- задайте от пульта контроля ДИСС-15 задачу № 2;","tt":"","dev":""},
-    {"op":"- нажмите, не отпуская, контрольный выключатель \"ГОТОВНОСТЬ ДИСС\" на панели технологического жгута;","tt":"ПРИМЕЧАНИЕ: допускается погасание кнопки-лампочки \"ВКЛ.\" пульта управления \"В\".","dev":""},
-    {"op":"- нажмите кнопку-табло \"ВЫСОТА\"","tt":"На пульте ПВП должно гореть табло \"ОТКЛ.\"","dev":""},
-    {"op":"Проверьте включение и отключение САУ для чего:","tt":"","dev":""}
-  ]
-};
+const STORAGE_KEY="TECHCARD_DATA";
 
-const STORAGE_KEY = "techcard_items_v1";
-const rowsEl = document.getElementById("rows");
-const noteLeft = document.getElementById("noteLeft");
-const noteRight = document.getElementById("noteRight");
-const fileInput = document.getElementById("fileInput");
-let items = [];
-
-function sanitize(s){
-  if(s==null) return "";
-  return String(s).replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\u00A0/g," ").replace(/\t/g,"    ")
-    .split("\n").map(l=>l.replace(/\s+$/,"")).join("\n");
-}
-
-function syncH(rowEl){
-  const boxes=[...rowEl.querySelectorAll(".box")];
-  boxes.forEach(b=>b.style.minHeight="110px");
-  const h=Math.max(...boxes.map(b=>b.scrollHeight));
-  boxes.forEach(b=>b.style.minHeight=Math.max(110,h)+"px");
-}
-
-function pasteText(text){
-  const sel=window.getSelection();
-  if(!sel||sel.rangeCount===0)return;
-  const r=sel.getRangeAt(0);r.deleteContents();
-  const n=document.createTextNode(text);
-  r.insertNode(n);r.setStartAfter(n);r.setEndAfter(n);
-  sel.removeAllRanges();sel.addRange(r);
-}
-
-function makeBox(val,ph,cb){
-  const b=document.createElement("div");
-  b.className="box";b.contentEditable="true";b.dataset.ph=ph;
-  b.innerText=val||"";
-  b.addEventListener("paste",e=>{
-    e.preventDefault();
-    const t=(e.clipboardData||window.clipboardData).getData("text/plain");
-    pasteText(sanitize(t));cb(b.innerText);
-  });
-  b.addEventListener("input",()=>cb(b.innerText));
-  return b;
-}
+let items=[];
 
 function render(){
-  rowsEl.innerHTML="";
+  const t=document.getElementById("table");
+  t.innerHTML="";
   items.forEach((it,i)=>{
-    const w=document.createElement("div");w.className="wrapRow";
-    const top=document.createElement("div");top.className="rowTop";
-    const tag=document.createElement("div");tag.className="tag";tag.textContent="Пункт "+(i+1);
-    const ctrls=document.createElement("div");ctrls.style.cssText="display:flex;gap:6px";
-    const up=document.createElement("button");up.className="mini";up.textContent="\u2191";
-    up.onclick=e=>{e.preventDefault();move(i,-1)};
-    const dn=document.createElement("button");dn.className="mini";dn.textContent="\u2193";
-    dn.onclick=e=>{e.preventDefault();move(i,1)};
-    const del=document.createElement("button");del.className="mini";del.textContent="\u2715";
-    del.onclick=e=>{e.preventDefault();remove(i)};
-    ctrls.append(up,dn,del);top.append(tag,ctrls);
-    const row=document.createElement("div");row.className="row";
-    const c1=document.createElement("div");c1.className="cell";
-    const c2=document.createElement("div");c2.className="cell";
-    const c3=document.createElement("div");c3.className="cell";
-    c1.appendChild(makeBox(it.op,"Содержание операции...",v=>{items[i].op=sanitize(v);syncH(row)}));
-    c2.appendChild(makeBox(it.tt,"Технические требования...",v=>{items[i].tt=sanitize(v);syncH(row)}));
-    c3.appendChild(makeBox(it.dev,"Работы при отклонениях...",v=>{items[i].dev=sanitize(v);syncH(row)}));
-    row.append(c1,c2,c3);w.append(top,row);rowsEl.appendChild(w);
-    requestAnimationFrame(()=>syncH(row));
+    const r=document.createElement("div");
+    r.className="row";
+
+    const h=document.createElement("div");
+    h.className="row-header";
+    h.innerHTML=`Пункт ${i+1} <span style="cursor:pointer" onclick="removeRow(${i})">✕</span>`;
+
+    const c=document.createElement("div");
+    c.className="cells";
+
+    ["op","tt","dev"].forEach(k=>{
+      const d=document.createElement("div");
+      d.className="cell";
+      const b=document.createElement("div");
+      b.className="box";
+      b.contentEditable=true;
+      b.innerText=it[k]||"";
+      b.oninput=()=>{items[i][k]=b.innerText};
+      d.appendChild(b);
+      c.appendChild(d);
+    });
+
+    r.append(h,c);
+    t.appendChild(r);
   });
-  noteLeft.innerHTML="Пунктов: <b>"+items.length+"</b>";
-  noteRight.innerHTML="Хранилище: <b>LocalStorage / JSON / HTML</b>";
 }
 
-function add(){items.push({op:"",tt:"",dev:""});render()}
-function remove(i){if(!confirm("Удалить пункт "+(i+1)+"?"))return;items.splice(i,1);if(!items.length)items=[{op:"",tt:"",dev:""}];render()}
-function move(i,d){const j=i+d;if(j<0||j>=items.length)return;const t=items[i];items[i]=items[j];items[j]=t;render()}
-
-function payload(){
-  return {version:1,exported_at:new Date().toISOString(),
-    items:items.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}))};
+function addRow(){
+  items.push({op:"",tt:"",dev:""});
+  render();
 }
-function dl(name,text,mime){
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:mime}));
-  a.download=name;a.click();URL.revokeObjectURL(a.href);
-}
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 
-function downloadHtml(){
-  const p=payload();
-  const html=document.documentElement.outerHTML;
-  const replaced=html.replace(
-    /const EMBEDDED_EXPORT\s*=\s*\{[\s\S]*?\n\};/,
-    "const EMBEDDED_EXPORT = "+esc(JSON.stringify(p,null,2))+";"
-  );
-  dl("techcard_saved.html",replaced,"text/html;charset=utf-8");
+function removeRow(i){
+  if(!confirm("Удалить пункт "+(i+1)+"?"))return;
+  items.splice(i,1);
+  render();
 }
 
 function saveLocal(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload()));alert("Сохранено в LocalStorage.")}
-  catch(e){alert("Ошибка сохранения. Используйте 'Скачать HTML'.")}
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
+  alert("Сохранено");
 }
+
 function loadLocal(){
-  const r=localStorage.getItem(STORAGE_KEY);
-  if(!r){alert("В LocalStorage ничего нет.");return}
-  try{const o=JSON.parse(r);if(!o||!Array.isArray(o.items))throw 0;
-    items=o.items.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}));render();
-    alert("Загружено.");}catch(e){alert("Ошибка чтения.")}
+  const d=localStorage.getItem(STORAGE_KEY);
+  if(!d){alert("Нет сохранённых данных");return}
+  items=JSON.parse(d);
+  render();
 }
-function exportJson(){dl("techcard_export.json",JSON.stringify(payload(),null,2),"application/json;charset=utf-8")}
-function importJson(){fileInput.value="";fileInput.click()}
 
-fileInput.addEventListener("change",async()=>{
-  const f=fileInput.files&&fileInput.files[0];if(!f)return;
-  try{const o=JSON.parse(await f.text());if(!o||!Array.isArray(o.items))throw 0;
-    items=o.items.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}));render();
-    alert("Импорт выполнен.");}catch(e){alert("Неверный формат JSON.")}
-});
-
-document.getElementById("saveLocal").addEventListener("click",saveLocal);
-document.getElementById("loadLocal").addEventListener("click",loadLocal);
-document.getElementById("downloadHtml").addEventListener("click",downloadHtml);
-document.getElementById("exportJson").addEventListener("click",exportJson);
-document.getElementById("importJson").addEventListener("click",importJson);
-document.getElementById("addRow").addEventListener("click",add);
-document.getElementById("print").addEventListener("click",()=>window.print());
+function downloadHTML(){
+  const html=document.documentElement.outerHTML.replace(
+    /let items=\[[\s\S]*?\];/,
+    "let items="+JSON.stringify(items,null,2)+";"
+  );
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));
+  a.download="techcard_saved.html";
+  a.click();
+}
 
 (function init(){
-  const src=EMBEDDED_EXPORT&&Array.isArray(EMBEDDED_EXPORT.items)?EMBEDDED_EXPORT.items:[{op:"",tt:"",dev:""}];
-  items=src.map(x=>({op:sanitize(x.op),tt:sanitize(x.tt),dev:sanitize(x.dev)}));
+  const d=localStorage.getItem(STORAGE_KEY);
+  if(d){items=JSON.parse(d)}
+  else items=[{op:"",tt:"",dev:""}];
   render();
 })();
 </script>
+
 </body>
 </html>
