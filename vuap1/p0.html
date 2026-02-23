@@ -2,188 +2,185 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Технологическая карта — редактируемая</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Технологическая карта №63 — САУ-В24-1</title>
 
 <style>
+/* ====== PAGE ====== */
 body{
   margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:#0b1626;
-  color:#eaf6ff;
-}
-header{
-  padding:14px;
-  background:#07101c;
-  border-bottom:1px solid #1e2b44;
-}
-h1{margin:0;font-size:18px;color:#21f0ff}
-p{margin:6px 0 0;font-size:13px;color:#9fb3cc}
-
-.controls{
-  padding:10px;
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-button{
-  padding:10px 14px;
-  font-weight:700;
-  border-radius:10px;
-  border:1px solid #2c3f66;
-  background:#122036;
-  color:#eaf6ff;
-  cursor:pointer;
-}
-button:hover{border-color:#21f0ff}
-
-.table{
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  padding:24px;
+  background:#f2f4f8;
+  font-family:"Times New Roman", serif;
 }
 
-.row{
-  border:1px solid #2c3f66;
-  border-radius:12px;
-  overflow:hidden;
-  background:#0f1d33;
+/* ====== A4 ====== */
+.page{
+  max-width:1200px;
+  margin:auto;
+  background:white;
+  padding:24px;
+  box-shadow:0 0 25px rgba(0,0,0,.15);
 }
-.row-header{
-  padding:6px 10px;
-  background:#0a1628;
-  font-weight:800;
-  color:#00ffa6;
-  display:flex;
-  justify-content:space-between;
-}
-.cells{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-}
-.cell{
-  border-right:1px solid #2c3f66;
-  padding:8px;
-}
-.cell:last-child{border-right:none}
 
-.box{
+/* ====== TABLE ====== */
+table{
   width:100%;
-  min-height:100px;
-  background:#07101c;
-  border:1px solid #2c3f66;
-  border-radius:8px;
-  padding:8px;
-  color:#eaf6ff;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+
+th, td{
+  border:1px solid #1f3c88;
+  padding:8px 10px;
+  vertical-align:top;
   font-size:14px;
-  line-height:1.4;
-  white-space:pre-wrap;
+}
+
+/* ====== HEADER BLUE ====== */
+thead th{
+  background:linear-gradient(#2b55c7,#1f3c88);
+  color:white;
+  font-weight:bold;
+  text-align:center;
+}
+
+/* ====== SUBHEAD ====== */
+.subhead{
+  background:#e9eefb;
+  font-weight:bold;
+  text-align:center;
+}
+
+/* ====== EDITABLE ====== */
+[contenteditable]{
   outline:none;
 }
-.box:focus{border-color:#21f0ff}
+[contenteditable]:focus{
+  background:#fff9e6;
+}
 
-@media(max-width:900px){
-  .cells{grid-template-columns:1fr}
-  .cell{border-right:none;border-bottom:1px solid #2c3f66}
-  .cell:last-child{border-bottom:none}
+/* ====== PRINT ====== */
+@media print{
+  body{background:white}
+  .page{box-shadow:none;padding:0}
 }
 </style>
 </head>
 
 <body>
+<div class="page">
 
-<header>
-  <h1>Технологическая карта</h1>
-  <p>Редактируй пункты прямо здесь. Сохраняется локально или в HTML.</p>
-</header>
+<table>
 
-<div class="controls">
-  <button onclick="addRow()">+ Добавить пункт</button>
-  <button onclick="saveLocal()">💾 Сохранить</button>
-  <button onclick="loadLocal()">📥 Загрузить</button>
-  <button onclick="downloadHTML()">⬇️ Скачать HTML</button>
+<thead>
+<tr>
+  <th>К Единому регламенту №</th>
+  <th colspan="3">ТЕХНОЛОГИЧЕСКАЯ КАРТА № 63</th>
+  <th>На 20 страницах<br>Стр. 1</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr class="subhead">
+  <td contenteditable>Система автоматического управления</td>
+  <td colspan="3" contenteditable>
+    Проверка работоспособности системы автоматического управления САУ-В24-1  
+    с включенной гидросистемой вертолёта
+  </td>
+  <td contenteditable></td>
+</tr>
+
+<tr class="subhead">
+  <td contenteditable>Содержание операции</td>
+  <td contenteditable>Содержание операции</td>
+  <td contenteditable>Технические требования (ТТ)</td>
+  <td contenteditable>Работы, выполняемые при отклонениях от ТТ</td>
+  <td contenteditable></td>
+</tr>
+
+<tr>
+  <td contenteditable>
+    Проверьте работоспособность системы автоматического управления САУ-В24-1,  
+    для чего:
+  </td>
+  <td contenteditable>
+    Проверьте работоспособность системы автоматического управления САУ-В24-1,  
+    для чего:
+  </td>
+  <td contenteditable></td>
+  <td contenteditable></td>
+  <td contenteditable></td>
+</tr>
+
+<tr>
+  <td contenteditable>
+    – установите автомат защиты «САУ СИГНАЛ»  
+    на левом пульте АЗС в положение «ВКЛЮЧЕНО»;
+  </td>
+  <td contenteditable>
+    – установите автомат защиты «САУ СИГНАЛ»  
+    на левом пульте АЗС в положение «ВКЛЮЧЕНО»;
+  </td>
+  <td contenteditable>
+    Напряжение источников по бортовым вольтметрам должно быть в пределах:  
+    постоянного тока (27 ±2,7) В;  
+    переменного тока (36 ±2) В, 400 ±8 Гц.
+  </td>
+  <td contenteditable>
+    Обеспечьте нормальную работу источников питания.
+  </td>
+  <td contenteditable></td>
+</tr>
+
+<tr>
+  <td contenteditable>
+    – включите системы и агрегаты взаимодействия с САУ:  
+    гировертикаль МГВ-1СУ, курсовую систему «ГРЕБЕНЬ-1»,  
+    ножной демпфер, триммер, фрикцион, аппаратуру ДИСС-15,  
+    радиовысотомер РВ-5М, основную гидросистему.
+  </td>
+  <td contenteditable>
+    – включите системы и агрегаты взаимодействия с САУ:  
+    гировертикаль МГВ-1СУ, курсовую систему «ГРЕБЕНЬ-1»,  
+    ножной демпфер, триммер, фрикцион, аппаратуру ДИСС-15,  
+    радиовысотомер РВ-5М, основную гидросистему.
+  </td>
+  <td contenteditable>
+    При включенном питании и нормально функционирующих системах  
+    кнопки-табло на пультах САУ не должны гореть.  
+    Давление в гидросистеме должно быть (75–85) кгс/см².
+  </td>
+  <td contenteditable>
+    Определите причину и устраните дефект  
+    в соответствии с инструкцией по эксплуатации САУ-В24-1  
+    (6А1.600.001Э).
+  </td>
+  <td contenteditable></td>
+</tr>
+
+<tr>
+  <td contenteditable>
+    ПРИМЕЧАНИЕ:  
+    В дальнейшем при описании методики проверок и регулировок САУ под током  
+    предполагается, что источники питания, бортовые системы и агрегаты,  
+    взаимодействующие с САУ, включены и функционируют нормально.
+  </td>
+  <td contenteditable>
+    ПРИМЕЧАНИЕ:  
+    В дальнейшем при описании методики проверок и регулировок САУ под током  
+    предполагается, что источники питания, бортовые системы и агрегаты,  
+    взаимодействующие с САУ, включены и функционируют нормально.
+  </td>
+  <td contenteditable></td>
+  <td contenteditable></td>
+  <td contenteditable></td>
+</tr>
+
+</tbody>
+</table>
+
 </div>
-
-<div class="table" id="table"></div>
-
-<script>
-const STORAGE_KEY="TECHCARD_DATA";
-
-let items=[];
-
-function render(){
-  const t=document.getElementById("table");
-  t.innerHTML="";
-  items.forEach((it,i)=>{
-    const r=document.createElement("div");
-    r.className="row";
-
-    const h=document.createElement("div");
-    h.className="row-header";
-    h.innerHTML=`Пункт ${i+1} <span style="cursor:pointer" onclick="removeRow(${i})">✕</span>`;
-
-    const c=document.createElement("div");
-    c.className="cells";
-
-    ["op","tt","dev"].forEach(k=>{
-      const d=document.createElement("div");
-      d.className="cell";
-      const b=document.createElement("div");
-      b.className="box";
-      b.contentEditable=true;
-      b.innerText=it[k]||"";
-      b.oninput=()=>{items[i][k]=b.innerText};
-      d.appendChild(b);
-      c.appendChild(d);
-    });
-
-    r.append(h,c);
-    t.appendChild(r);
-  });
-}
-
-function addRow(){
-  items.push({op:"",tt:"",dev:""});
-  render();
-}
-
-function removeRow(i){
-  if(!confirm("Удалить пункт "+(i+1)+"?"))return;
-  items.splice(i,1);
-  render();
-}
-
-function saveLocal(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
-  alert("Сохранено");
-}
-
-function loadLocal(){
-  const d=localStorage.getItem(STORAGE_KEY);
-  if(!d){alert("Нет сохранённых данных");return}
-  items=JSON.parse(d);
-  render();
-}
-
-function downloadHTML(){
-  const html=document.documentElement.outerHTML.replace(
-    /let items=\[[\s\S]*?\];/,
-    "let items="+JSON.stringify(items,null,2)+";"
-  );
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));
-  a.download="techcard_saved.html";
-  a.click();
-}
-
-(function init(){
-  const d=localStorage.getItem(STORAGE_KEY);
-  if(d){items=JSON.parse(d)}
-  else items=[{op:"",tt:"",dev:""}];
-  render();
-})();
-</script>
-
 </body>
 </html>
