@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mi Avionics Tools</title>
+
   <style>
     :root{
       --ink:#0b1020;
@@ -16,8 +17,6 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#0a0f1f;
       min-height:100vh;
-
-      /* Красивый фон (не флаг) */
       background:
         radial-gradient(1100px 600px at 10% 10%, rgba(255,255,255,.18), transparent 55%),
         radial-gradient(900px 520px at 85% 25%, rgba(255,255,255,.12), transparent 55%),
@@ -26,7 +25,10 @@
     }
 
     .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 40px;}
-    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;margin-bottom:18px;flex-wrap:wrap;
+    }
     .brand{
       display:flex;flex-direction:column;gap:6px;
       padding:14px 16px;border-radius:16px;
@@ -35,8 +37,9 @@
       box-shadow:0 18px 34px rgba(0,0,0,.22);
       backdrop-filter: blur(6px);
     }
-    .brand h1{margin:0;font-size:18px;letter-spacing:.2px;color:var(--ink);}
+    .brand h1{margin:0;font-size:18px;color:var(--ink);}
     .brand p{margin:0;font-size:13px;opacity:.92;}
+
     .badge{
       padding:10px 12px;border-radius:999px;
       background:rgba(255,255,255,.80);
@@ -53,26 +56,22 @@
       border-radius:18px;padding:16px;
       box-shadow:0 18px 34px rgba(0,0,0,.22);
       backdrop-filter: blur(6px);
-      position:relative;overflow:hidden;
+      position:relative;
     }
-    .card:before{
-      content:"";position:absolute;inset:-2px;
-      background: radial-gradient(600px 180px at 20% 0%, rgba(255,255,255,.35), transparent 60%);
-      pointer-events:none;
-    }
-    .card h2{margin:0 0 8px 0;font-size:16px;color:var(--ink);position:relative;}
-    .meta{margin:0 0 14px 0;font-size:13px;line-height:1.35;opacity:.92;position:relative;}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;position:relative;}
+    .card h2{margin:0 0 8px;font-size:16px;color:var(--ink);}
+    .meta{margin:0 0 14px;font-size:13px;line-height:1.35;opacity:.92;}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;}
     a.btn{
       display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 12px;border-radius:12px;text-decoration:none;
-      font-weight:800;font-size:13px;
+      padding:10px 12px;border-radius:12px;
+      text-decoration:none;font-weight:800;font-size:13px;
       border:1px solid rgba(0,0,0,.10);
       box-shadow:0 10px 16px rgba(0,0,0,.18);
       color:var(--ink);background:#fff;
     }
     a.btn.primary{background:linear-gradient(180deg,#ffffff,#f4f7ff);}
     a.btn:active{transform:translateY(1px)}
+
     .foot{
       margin-top:16px;font-size:12px;opacity:.92;
       background:rgba(255,255,255,.80);
@@ -88,43 +87,68 @@
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <h1>Mi Avionics Tools</h1>
-        <p>Инженерные инструменты и электронные технологические карты (Mi-24 / Mi-17)</p>
-      </div>
-      <div class="badge">Единый вход • GitHub Pages</div>
-    </div>
+<div class="wrap">
 
-    <div class="grid">
-      <section class="card">
-        <h2>СПУУ-52-3 — расчёт передаточных чисел</h2>
-        <p class="meta">
-          Температура (ΔT) и разряжение/высота по гипсометрической таблице.
-          (Текущая страница СПУУ — не ломаем.)
-        </p>
-        <div class="actions">
-          <a class="btn primary" href="./page-spu52-3.html">Открыть</a>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>ВУАП-1 — инженерная инструкция</h2>
-        <p class="meta">
-          Пошаговая проверка по регламенту с полями ввода и контролем допусков.
-          (Пока создаём каркас.)
-        </p>
-        <div class="actions">
-          <a class="btn primary" href="./page-vuap-1.html">Открыть</a>
-        </div>
-      </section>
+  <div class="top">
+    <div class="brand">
+      <h1>Mi Avionics Tools</h1>
+      <p>Инженерные инструменты и электронные технологические карты<br>
+         Ми-8 / Ми-17 / Ми-24</p>
     </div>
-
-    <div class="foot">
-      Если кнопка “Открыть” ведёт на 404 — значит имя файла/папки не совпало. Тогда ты просто скажешь, что именно 404, и я дам ровно одну правку в ссылке.
-    </div>
+    <div class="badge">Единый вход · GitHub Pages</div>
   </div>
+
+  <div class="grid">
+
+    <!-- СПУУ-52 -->
+    <section class="card">
+      <h2>СПУУ-52-3</h2>
+      <p class="meta">
+        Расчёт передаточных чисел и параметров:
+        температура (ΔT), разряжение, высота по гипсометрической таблице.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="./page-spu52-3.html">Открыть</a>
+      </div>
+    </section>
+
+    <!-- ВУАП-1 -->
+    <section class="card">
+      <h2>ВУАП-1</h2>
+      <p class="meta">
+        Инженерная инструкция по регламенту:
+        коэффициенты усиления, крутизны,
+        передаточные числа и центровка.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="./page-vuap-1.html">Открыть</a>
+      </div>
+    </section>
+
+    <!-- АП-34Б -->
+    <section class="card">
+      <h2>АП-34Б — автопилот</h2>
+      <p class="meta">
+        Проверки и регулировки автопилота АП-34Б:
+        остаточный сигнал, коэффициенты усиления,
+        скорость согласования, передаточные числа
+        по углу, высоте, угловой и воздушной скорости,
+        изодрому (ωᵧ).
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="./ap34b/index.html">Открыть</a>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    Если при открытии появляется 404 — значит имя файла или папки не совпадает.
+    Просто скажи, что именно не открывается, и правка будет одна строка.
+  </div>
+
+</div>
 </body>
 </html>
