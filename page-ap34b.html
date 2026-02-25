@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ru">
 <head>
@@ -80,11 +79,10 @@
 <div class="wrap">
   <div class="card">
     <h1>АП-34Б · Пункты проверок</h1>
-    <p class="p">Меню слева · Просмотр страницы справа (на телефоне открывается переходом)</p>
+    <p class="p">Меню слева · Просмотр страницы справа (на телефоне — переход)</p>
 
     <div class="hub">
       <div class="menu" id="menu"></div>
-
       <div class="viewer">
         <iframe id="frame"></iframe>
       </div>
@@ -93,10 +91,10 @@
 </div>
 
 <script>
-// Папка, где лежат страницы пунктов (p01.html ... p12.html)
-const BASE = './ap34b/';
+/* ПАПКА С ПУНКТАМИ */
+const BASE = './AP/';
 
-// ПУНКТЫ — строго как ты дал, в той же последовательности:
+/* ПЕРЕЧЕНЬ ПУНКТОВ — СТРОГО ТВОЙ */
 const items = [
   {id:'01', title:'Выписки из РЛЭ'},
   {id:'02', title:'Проверка работоспособности автопилота без КПА в предварительную подготовку'},
@@ -129,18 +127,18 @@ function openItem(i){
   const url = `${BASE}p${items[i].id}.html`;
 
   if (window.innerWidth < 900) {
-    window.location.href = url;   // мобильный
+    window.location.href = url;
   } else {
-    frame.src = url;             // ПК
+    frame.src = url;
   }
 
-  document.querySelectorAll('.item').forEach(x=>x.classList.remove('active'));
+  [...menu.children].forEach(x=>x.classList.remove('active'));
   menu.children[i].classList.add('active');
 }
 
 build();
 
-// Можно сразу открывать первый пункт на ПК:
+/* Сразу открываем первый пункт на ПК */
 if (window.innerWidth >= 900) openItem(0);
 </script>
 </body>
