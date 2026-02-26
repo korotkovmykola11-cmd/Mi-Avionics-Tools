@@ -1,108 +1,124 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>АП-34Б — Пункты проверок</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>АП-34Б — Пункты проверок</title>
 
-  <style>
-    :root{
-      --bg1:#0b1a2a; --bg2:#153a5a;
-      --card:rgba(255,255,255,.08);
-      --stroke:rgba(255,255,255,.18);
-      --text:#e9f2ff; --muted:#b7c7dd;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
-        radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
-        linear-gradient(180deg,var(--bg1),var(--bg2));
-    }
+<style>
+:root{
+  --bg1:#0b1a2a; --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff; --muted:#b7c7dd;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
 
-    .wrap{max-width:1300px;margin:0 auto;padding:18px 14px 30px}
-    .card{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius:18px;
-      padding:14px;
-      backdrop-filter:blur(6px);
-      box-shadow:0 18px 40px rgba(0,0,0,.25);
-    }
+.wrap{max-width:1300px;margin:0 auto;padding:18px 14px 30px}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:14px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
 
-    h1{margin:0 0 6px;font-size:18px}
-    .p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+h1{margin:0 0 6px;font-size:18px}
+.p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
 
-    .hub{margin-top:12px;display:grid;grid-template-columns:380px 1fr;gap:12px}
+.hub{margin-top:12px;display:grid;grid-template-columns:380px 1fr;gap:12px}
 
-    .menu{
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      padding:10px;
-      background:rgba(0,0,0,.18);
-      max-height:78vh; overflow:auto;
-    }
+.menu{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:10px;
+  background:rgba(0,0,0,.18);
+  max-height:78vh; overflow:auto;
+}
+.item{
+  display:flex; gap:10px;
+  padding:12px; border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  cursor:pointer; margin-bottom:10px;
+}
+.item.active{background:rgba(255,255,255,.14)}
+.num{
+  min-width:44px;text-align:center;
+  padding:6px 10px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.22);
+  font-weight:900;
+}
 
-    .item{
-      display:flex; gap:10px; align-items:flex-start;
-      padding:12px; border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      cursor:pointer;
-      margin-bottom:10px;
-    }
-    .item.active{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
+.viewer{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:10px;
+  background:rgba(0,0,0,.12);
+}
 
-    .num{
-      min-width:44px; display:inline-flex; justify-content:center; align-items:center;
-      padding:6px 10px; border-radius:12px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.22);
-      font-weight:900;
-    }
+iframe{
+  width:100%;
+  height:60vh;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;
+  background:rgba(0,0,0,.25);
+}
 
-    .viewer{
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      padding:10px;
-      background:rgba(0,0,0,.12);
-    }
+/* === ФОТО === */
+.photos{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.photos img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;
+}
 
-    iframe{
-      width:100%;
-      height:60vh;
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:14px;
-      background:rgba(0,0,0,.25);
-    }
+/* === LIGHTBOX === */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+.lightbox img{
+  max-width:95vw;
+  max-height:95vh;
+  border-radius:12px;
+}
+.lightbox.show{display:flex}
 
-    /* === ФОТОГАЛЕРЕЯ === */
-    .photos{
-      margin-top:12px;
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-    }
-    .photos img{
-      width:100%;
-      height:160px;
-      object-fit:cover;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.18);
-      background:#000;
-    }
-
-    @media (max-width:1000px){
-      .photos{grid-template-columns:repeat(2,1fr);}
-    }
-    @media (max-width:600px){
-      .photos{grid-template-columns:1fr;}
-      iframe{height:50vh;}
-    }
-  </style>
+/* === МОБИЛЬНАЯ ЛОГИКА === */
+@media (max-width:900px){
+  .hub{grid-template-columns:1fr}
+  iframe{display:none}
+  .photos{grid-template-columns:1fr 1fr}
+}
+@media (max-width:480px){
+  .photos{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
@@ -117,38 +133,42 @@
       <div class="viewer">
         <iframe id="frame"></iframe>
 
-        <!-- ФОТО ПОД ТАБЛИЦЕЙ -->
+        <!-- ФОТО ВСЕГДА ВИДНЫ -->
         <div class="photos">
-          <img src="./AP/00.jpg" alt="">
-          <img src="./AP/01.jpg" alt="">
-          <img src="./AP/02.jpg" alt="">
-          <img src="./AP/03.jpg" alt="">
+          <img src="./AP/00.jpg">
+          <img src="./AP/01.jpg">
+          <img src="./AP/02.jpg">
+          <img src="./AP/03.jpg">
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-const BASE = './AP/';
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img">
+</div>
 
-const items = [
-  {id:'01', title:'Выписки из РЛЭ'},
-  {id:'02', title:'Проверка работоспособности автопилота без КПА в предварительную подготовку'},
-  {id:'03', title:'Проверка остаточного сигнала'},
-  {id:'04', title:'Проверка коэффициента усиления автопилота'},
-  {id:'05', title:'Проверка скорости согласования автопилота по каналам направления, крена и тангажа'},
-  {id:'06', title:'Проверка передаточного сигнала КДТ'},
-  {id:'07', title:'Проверка передаточного сигнала КДК'},
-  {id:'08', title:'Проверка передаточного сигнала по углу'},
-  {id:'09', title:'Проверка передаточного числа по высоте'},
-  {id:'10', title:'Проверка передаточного числа по угловой скорости'},
-  {id:'11', title:'Проверка передаточного числа по воздушной скорости'},
-  {id:'12', title:'Проверка передаточного числа по изодрому (ωᵧ), проверка работоспособности цепи по изодрому ωᵧ'}
+<script>
+const BASE='./AP/';
+const items=[
+{id:'01',title:'Выписки из РЛЭ'},
+{id:'02',title:'Проверка работоспособности автопилота без КПА в предварительную подготовку'},
+{id:'03',title:'Проверка остаточного сигнала'},
+{id:'04',title:'Проверка коэффициента усиления автопилота'},
+{id:'05',title:'Проверка скорости согласования автопилота по каналам направления, крена и тангажа'},
+{id:'06',title:'Проверка передаточного сигнала КДТ'},
+{id:'07',title:'Проверка передаточного сигнала КДК'},
+{id:'08',title:'Проверка передаточного сигнала по углу'},
+{id:'09',title:'Проверка передаточного числа по высоте'},
+{id:'10',title:'Проверка передаточного числа по угловой скорости'},
+{id:'11',title:'Проверка передаточного числа по воздушной скорости'},
+{id:'12',title:'Проверка передаточного числа по изодрому (ωᵧ)'}
 ];
 
-const menu = document.getElementById('menu');
-const frame = document.getElementById('frame');
+const menu=document.getElementById('menu');
+const frame=document.getElementById('frame');
 
 items.forEach((it,i)=>{
   const d=document.createElement('div');
@@ -159,15 +179,24 @@ items.forEach((it,i)=>{
 });
 
 function openItem(i){
-  const url = `${BASE}p${items[i].id}.html`;
-  if (window.innerWidth < 900) location.href = url;
-  else frame.src = url;
-
+  const url=`${BASE}p${items[i].id}.html`;
+  if(window.innerWidth<900)location.href=url;
+  else frame.src=url;
   [...menu.children].forEach(x=>x.classList.remove('active'));
   menu.children[i].classList.add('active');
 }
+if(window.innerWidth>=900)openItem(0);
 
-if (window.innerWidth >= 900) openItem(0);
+/* LIGHTBOX */
+const lb=document.getElementById('lightbox');
+const lbImg=document.getElementById('lightbox-img');
+document.querySelectorAll('.photos img').forEach(img=>{
+  img.onclick=()=>{
+    lbImg.src=img.src;
+    lb.classList.add('show');
+  };
+});
+lb.onclick=()=>lb.classList.remove('show');
 </script>
 </body>
 </html>
