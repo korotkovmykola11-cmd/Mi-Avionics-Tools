@@ -34,7 +34,7 @@ body{
 }
 
 h1{margin:0 0 6px;font-size:18px}
-.p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+.p{margin:0;color:var(--muted);font-size:13px}
 
 .hub{margin-top:12px;display:grid;grid-template-columns:380px 1fr;gap:12px}
 
@@ -68,15 +68,27 @@ h1{margin:0 0 6px;font-size:18px}
   background:rgba(0,0,0,.12);
 }
 
+/* КНОПКА НАЗАД */
+.back{
+  display:none;
+  margin-bottom:8px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.25);
+  cursor:pointer;
+  font-size:13px;
+}
+
 iframe{
   width:100%;
-  height:60vh;
+  height:50vh;
   border:1px solid rgba(255,255,255,.18);
   border-radius:14px;
   background:rgba(0,0,0,.25);
 }
 
-/* === ФОТО === */
+/* ФОТО */
 .photos{
   margin-top:12px;
   display:grid;
@@ -85,14 +97,14 @@ iframe{
 }
 .photos img{
   width:100%;
-  height:150px;
+  height:140px;
   object-fit:cover;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.18);
   cursor:pointer;
 }
 
-/* === LIGHTBOX === */
+/* LIGHTBOX */
 .lightbox{
   position:fixed;
   inset:0;
@@ -109,10 +121,9 @@ iframe{
 }
 .lightbox.show{display:flex}
 
-/* === МОБИЛЬНАЯ ЛОГИКА === */
+/* МОБИЛЬНЫЕ */
 @media (max-width:900px){
   .hub{grid-template-columns:1fr}
-  iframe{display:none}
   .photos{grid-template-columns:1fr 1fr}
 }
 @media (max-width:480px){
@@ -123,29 +134,28 @@ iframe{
 
 <body>
 <div class="wrap">
-  <div class="card">
-    <h1>АП-34Б · Пункты проверок</h1>
-    <p class="p">Меню слева · Просмотр страницы справа (на телефоне — переход)</p>
+<div class="card">
+<h1>АП-34Б · Пункты проверок</h1>
+<p class="p">Меню слева · Просмотр справа</p>
 
-    <div class="hub">
-      <div class="menu" id="menu"></div>
+<div class="hub">
+<div class="menu" id="menu"></div>
 
-      <div class="viewer">
-        <iframe id="frame"></iframe>
+<div class="viewer">
+  <div class="back" id="back">← Назад к списку</div>
+  <iframe id="frame"></iframe>
 
-        <!-- ФОТО ВСЕГДА ВИДНЫ -->
-        <div class="photos">
-          <img src="./AP/00.jpg">
-          <img src="./AP/01.jpg">
-          <img src="./AP/02.jpg">
-          <img src="./AP/03.jpg">
-        </div>
-      </div>
-    </div>
+  <div class="photos">
+    <img src="./AP/00.jpg">
+    <img src="./AP/01.jpg">
+    <img src="./AP/02.jpg">
+    <img src="./AP/03.jpg">
   </div>
 </div>
+</div>
+</div>
+</div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <img id="lightbox-img">
 </div>
@@ -154,21 +164,17 @@ iframe{
 const BASE='./AP/';
 const items=[
 {id:'01',title:'Выписки из РЛЭ'},
-{id:'02',title:'Проверка работоспособности автопилота без КПА в предварительную подготовку'},
+{id:'02',title:'Проверка работоспособности автопилота без КПА'},
 {id:'03',title:'Проверка остаточного сигнала'},
-{id:'04',title:'Проверка коэффициента усиления автопилота'},
-{id:'05',title:'Проверка скорости согласования автопилота по каналам направления, крена и тангажа'},
+{id:'04',title:'Проверка коэффициента усиления'},
+{id:'05',title:'Проверка скорости согласования'},
 {id:'06',title:'Проверка передаточного сигнала КДТ'},
-{id:'07',title:'Проверка передаточного сигнала КДК'},
-{id:'08',title:'Проверка передаточного сигнала по углу'},
-{id:'09',title:'Проверка передаточного числа по высоте'},
-{id:'10',title:'Проверка передаточного числа по угловой скорости'},
-{id:'11',title:'Проверка передаточного числа по воздушной скорости'},
-{id:'12',title:'Проверка передаточного числа по изодрому (ωᵧ)'}
+{id:'07',title:'Проверка передаточного сигнала КДК'}
 ];
 
 const menu=document.getElementById('menu');
 const frame=document.getElementById('frame');
+const back=document.getElementById('back');
 
 items.forEach((it,i)=>{
   const d=document.createElement('div');
@@ -179,13 +185,17 @@ items.forEach((it,i)=>{
 });
 
 function openItem(i){
-  const url=`${BASE}p${items[i].id}.html`;
-  if(window.innerWidth<900)location.href=url;
-  else frame.src=url;
+  frame.src=`${BASE}p${items[i].id}.html`;
+  back.style.display='inline-block';
   [...menu.children].forEach(x=>x.classList.remove('active'));
   menu.children[i].classList.add('active');
 }
-if(window.innerWidth>=900)openItem(0);
+
+back.onclick=()=>{
+  frame.src='';
+  back.style.display='none';
+  [...menu.children].forEach(x=>x.classList.remove('active'));
+};
 
 /* LIGHTBOX */
 const lb=document.getElementById('lightbox');
