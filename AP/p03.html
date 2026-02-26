@@ -1,1 +1,143 @@
 
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>АП-34Б · Пункт 03 · Проверка остаточного сигнала</title>
+
+<style>
+:root{
+  --bg1:#0b1a2a;
+  --bg2:#153a5a;
+  --card:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.18);
+  --text:#e9f2ff;
+  --muted:#b7c7dd;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+
+.wrap{max-width:1100px;margin:0 auto;padding:18px}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+
+h1{margin:0 0 6px;font-size:18px}
+h2{margin:18px 0 10px;font-size:15px}
+p{margin:0 0 8px;color:var(--muted);line-height:1.45}
+
+/* БЛОК ДЛЯ ТВОЕГО ТЕКСТА */
+.text{
+  white-space:pre-line;
+  font-size:14px;
+  padding:10px;
+  border:1px dashed rgba(255,255,255,.25);
+  border-radius:12px;
+}
+
+/* СХЕМА */
+.scheme{
+  margin-top:14px;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  overflow:hidden;
+  cursor:zoom-in;
+}
+.scheme img{
+  width:100%;
+  display:block;
+}
+
+/* ФОТО */
+.photos{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+.photos img{
+  width:100%;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  cursor:zoom-in;
+}
+
+/* ЛАЙТБОКС */
+#lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+#lightbox img{
+  max-width:95%;
+  max-height:95%;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+  <div class="card">
+
+    <h1>АП-34Б · Пункт 03</h1>
+    <p>Проверка остаточного сигнала</p>
+
+    <!-- ⬇⬇⬇ ТУТ ТЫ ПИШЕШЬ ТЕКСТ САМ ⬇⬇⬇ -->
+    <div class="text">
+(вставь сюда текст из РЛЭ — как в оригинале,
+с переносами строк, пунктами и примечаниями)
+    </div>
+
+    <!-- СХЕМА -->
+    <h2>Схема подключения</h2>
+    <div class="scheme">
+      <img src="./p03-scheme.jpg" alt="Схема проверки остаточного сигнала АП-34Б">
+    </div>
+
+    <!-- ФОТО -->
+    <h2>Фотоматериалы</h2>
+    <div class="photos">
+      <img src="./p03-photo-01.jpg" alt="">
+      <img src="./p03-photo-02.jpg" alt="">
+      <img src="./p03-photo-03.jpg" alt="">
+      <img src="./p03-photo-04.jpg" alt="">
+    </div>
+
+  </div>
+</div>
+
+<!-- ЛАЙТБОКС -->
+<div id="lightbox" onclick="this.style.display='none'">
+  <img src="">
+</div>
+
+<script>
+document.querySelectorAll('.scheme img, .photos img').forEach(img=>{
+  img.onclick = ()=>{
+    const lb=document.getElementById('lightbox');
+    lb.style.display='flex';
+    lb.querySelector('img').src = img.src;
+  };
+});
+</script>
+
+</body>
+</html>
