@@ -3,153 +3,251 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>АП-34Б · Пункт 03 · Проверка остаточного сигнала</title>
 
 <style>
 :root{
-  --bg:#060d18;
-  --card:#0f1e33;
-  --stroke:#27446b;
-  --text:#e6eefc;
-  --muted:#8aa2c2;
-
-  --ok:#00e5ff;
-  --bad:#ff4d4d;
+  --bg:#0b1522;
+  --panel:#101c2d;
+  --panel2:#132339;
+  --border:#1f3554;
+  --text:#e6eefb;
+  --muted:#9fb2cc;
+  --accent:#3b82f6;
+  --ok:#22c55e;
+  --bad:#ef4444;
+  --radius:14px;
 }
 
 *{box-sizing:border-box}
+
 body{
   margin:0;
-  background:radial-gradient(800px 400px at 50% 10%,#123,#060d18);
+  background:linear-gradient(180deg,#08111c,#0e1b2e);
   color:var(--text);
-  font-family:Inter,system-ui,sans-serif;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
 
-.wrap{max-width:1100px;margin:auto;padding:20px}
+/* ===== ОСНОВНАЯ СЕТКА ===== */
+.page{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:16px;
+  max-width:1400px;
+  margin:auto;
+  padding:16px;
+}
+
+/* ===== ЛЕВОЕ МЕНЮ ===== */
+.sidebar{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px;
+  height:calc(100vh - 32px);
+  overflow:auto;
+}
+
+.sidebar h2{
+  margin:0 0 12px;
+  font-size:16px;
+}
+
+.menu{
+  display:grid;
+  gap:8px;
+}
+
+.menu a{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:var(--text);
+  text-decoration:none;
+  font-size:13px;
+}
+
+.menu a.active{
+  outline:2px solid var(--accent);
+}
+
+/* ===== ПРАВАЯ КОЛОНКА ===== */
+.content{
+  display:grid;
+  grid-template-rows:auto auto auto auto;
+  gap:16px;
+  min-width:0;
+}
+
+/* ===== КАРТОЧКИ ===== */
 .card{
-  background:rgba(15,30,51,.9);
-  border:1px solid var(--stroke);
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:18px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  width:100%;
 }
 
-h1{margin:0 0 4px;font-size:20px}
-h2{margin:14px 0 8px;font-size:15px}
-.p{font-size:13px;color:var(--muted)}
+/* ===== ЗАГОЛОВОК ===== */
+.header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
 
+.back{
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:var(--text);
+  text-decoration:none;
+  font-size:13px;
+}
+
+.header h1{
+  font-size:18px;
+  margin:0;
+}
+
+/* ===== ТЕКСТ ===== */
 textarea{
   width:100%;
-  min-height:280px;
-  background:#050b15;
+  min-height:300px;
+  background:#060d17;
   color:var(--text);
-  border:1px dashed #345;
-  border-radius:12px;
-  padding:14px;
-  font-family:JetBrains Mono,monospace;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  font-family:monospace;
   font-size:13px;
-  line-height:1.6;
+  line-height:1.5;
+  resize:vertical;
 }
 
-/* ===== TABLE ===== */
-table{width:100%;border-collapse:collapse}
-th,td{padding:8px;border-bottom:1px solid #234;font-size:13px}
+/* ===== КАЛЬКУЛЯТОР ===== */
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid var(--border);
+}
+
+th{
+  text-align:left;
+  color:var(--muted);
+  font-size:12px;
+}
+
 input{
-  width:80px;
-  background:#050b15;
-  color:#fff;
-  border:1px solid #345;
+  width:100px;
+  padding:6px;
+  background:#060d17;
+  border:1px solid var(--border);
   border-radius:6px;
-  padding:4px 6px;
+  color:var(--text);
 }
-.pass{color:#00ff9c;font-weight:700}
-.fail{color:#ff4d4d;font-weight:700}
 
-/* ===== SCHEME ===== */
+.pass{color:var(--ok);font-weight:700}
+.fail{color:var(--bad);font-weight:700}
+
+/* ===== СХЕМА ===== */
+.scheme-shell{
+  width:100%;
+  overflow:hidden;
+}
+
 .scheme{
-  margin-top:14px;
-  background:#020814;
-  border:1px solid #234;
-  border-radius:14px;
+  width:100%;
+  aspect-ratio:16/9;
+  background:
+    linear-gradient(transparent 23px,rgba(255,255,255,.04) 24px),
+    linear-gradient(90deg,transparent 23px,rgba(255,255,255,.04) 24px),
+    #050b14;
+  background-size:24px 24px;
+  border-radius:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  align-items:center;
   padding:24px;
+  gap:16px;
+}
+
+.block{
+  border:2px solid #7aa2ff;
+  border-radius:12px;
+  padding:12px;
+  text-align:center;
+}
+
+.line{
+  height:4px;
+  background:#7aa2ff;
   position:relative;
 }
 
-.node{
+.line::after{
+  content:attr(data-label);
   position:absolute;
-  width:220px;
-  padding:14px;
-  border-radius:14px;
-  border:2px solid var(--ok);
-  text-align:center;
-  background:#0b1a30;
-  transition:.3s;
-}
-
-.node.fail{border-color:var(--bad)}
-
-#pult{left:20px;top:90px}
-#au{right:20px;top:40px}
-
-.node-title{font-weight:800;font-size:13px}
-.node-code{font-size:12px;color:var(--muted)}
-
-.connector{
-  display:inline-block;
-  margin:4px;
-  padding:2px 8px;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
   font-size:11px;
-  border-radius:6px;
-  background:#102a4a;
-  border:1px solid #345;
+  color:var(--muted);
 }
 
-.cable{
-  position:absolute;
-  height:4px;
-  background:linear-gradient(90deg,transparent,var(--ok),transparent);
-  animation:flow 2s linear infinite;
-}
-
-.cable.fail{
-  background:linear-gradient(90deg,transparent,var(--bad),transparent);
-}
-
-#k{left:260px;top:130px;width:520px}
-#ra{left:260px;top:160px;width:520px}
-
-#au-down{
-  left:calc(100% - 130px);
-  top:210px;
+.down{
   width:4px;
-  height:120px;
-  animation:flowV 2s linear infinite;
+  height:40px;
+  background:#22c55e;
+  margin:8px auto 0;
 }
 
-@keyframes flow{
-  from{background-position:0}
-  to{background-position:200px}
-}
-@keyframes flowV{
-  from{background-position:0}
-  to{background-position:0 200px}
-}
-
-.footer-note{
-  margin-top:12px;
-  font-size:12px;
-  color:#ffd36a;
+/* ===== МОБИЛА ===== */
+@media(max-width:900px){
+  .page{grid-template-columns:1fr}
+  .sidebar{height:auto}
+  .scheme{grid-template-columns:1fr}
+  .line{display:none}
 }
 </style>
 </head>
 
 <body>
-<div class="wrap">
 
-<div class="card">
-<h1>АП-34Б · Пункт 03</h1>
-<p class="p">Проверка остаточного сигнала</p>
+<div class="page">
 
+<!-- ===== ЛЕВО ===== -->
+<aside class="sidebar">
+  <h2>АП-34Б · Пункты проверок</h2>
+  <div class="menu">
+    <a href="#">01 · Выписки из РЛЭ</a>
+    <a href="#">02 · Проверка без КПА</a>
+    <a class="active" href="#">03 · Остаточный сигнал</a>
+    <a href="#">04 · Коэффициент усиления</a>
+  </div>
+</aside>
+
+<!-- ===== ПРАВО ===== -->
+<main class="content">
+
+  <!-- HEADER -->
+  <div class="card header">
+    <a class="back" href="../page-ap34b.html">← Назад</a>
+    <h1>Пункт 03 · Проверка остаточного сигнала</h1>
+  </div>
+
+  <!-- TEXT -->
+  <div class="card">
 <textarea>
 Отсоединить от агрегата управления разъём "РА".
 Пульт 6С2.702.007 соединить с агрегатом управления с помощью жгутов "К" и "РА" (см. схему ниже).
@@ -172,72 +270,50 @@ input{
 ПРИМЕЧАНИЕ. Нулевым положением задатчика "5" считается положение,
 соответствующее минимальному сигналу по вольтметру "1".
 </textarea>
-</div>
-
-<div class="card">
-<h2>Контроль напряжений</h2>
-<table>
-<tr><th>Канал</th><th>В</th><th>Результат</th></tr>
-<tr><td>Направление</td><td><input oninput="chk(this)"></td><td class="res"></td></tr>
-<tr><td>Крен</td><td><input oninput="chk(this)"></td><td class="res"></td></tr>
-<tr><td>Тангаж</td><td><input oninput="chk(this)"></td><td class="res"></td></tr>
-<tr><td>Высота</td><td><input oninput="chk(this)"></td><td class="res"></td></tr>
-</table>
-</div>
-
-<div class="card">
-<h2>Схема подключения</h2>
-<div class="scheme" id="scheme">
-
-  <div class="node" id="pult">
-    <div class="node-title">ПУЛЬТ</div>
-    <div class="node-code">6С2.702.007</div>
-    <div class="connector">К</div>
-    <div class="connector">РА</div>
   </div>
 
-  <div class="node" id="au">
-    <div class="node-title">АГРЕГАТ УПРАВЛЕНИЯ</div>
-    <div class="node-code">6С2.399.000</div>
-    <div class="connector">АУ</div>
-    <div class="connector">К</div>
-    <div class="connector">РА</div>
+  <!-- CALC -->
+  <div class="card">
+    <table>
+      <tr><th>Канал</th><th>В</th><th>Результат</th></tr>
+      <tr><td>Направление</td><td><input oninput="chk(this,'r1')"></td><td id="r1"></td></tr>
+      <tr><td>Крен</td><td><input oninput="chk(this,'r2')"></td><td id="r2"></td></tr>
+      <tr><td>Тангаж</td><td><input oninput="chk(this,'r3')"></td><td id="r3"></td></tr>
+      <tr><td>Высота</td><td><input oninput="chk(this,'r4')"></td><td id="r4"></td></tr>
+    </table>
   </div>
 
-  <div class="cable" id="k"></div>
-  <div class="cable" id="ra"></div>
-  <div class="cable" id="au-down"></div>
+  <!-- SCHEME -->
+  <div class="card scheme-shell">
+    <div class="scheme">
+      <div class="block">
+        <b>ПУЛЬТ</b><br>6С2.702.007<br>К · РА
+      </div>
 
-</div>
+      <div>
+        <div class="line" data-label='Жгут "К"'></div>
+        <div style="height:16px"></div>
+        <div class="line" data-label='Жгут "РА"'></div>
+      </div>
 
-<div class="footer-note">
-Жгут «АУ» → к фидерной схеме вертолёта
-</div>
-</div>
+      <div class="block">
+        <b>АГРЕГАТ</b><br>6С2.399.000<br>АУ · К · РА
+        <div class="down"></div>
+        <div style="font-size:11px;color:var(--muted)">К фидерной схеме</div>
+      </div>
+    </div>
+  </div>
 
+</main>
 </div>
 
 <script>
-function chk(el){
+function chk(el,id){
   const v=parseFloat(el.value);
-  const r=el.parentElement.nextElementSibling;
+  const r=document.getElementById(id);
   if(isNaN(v)){r.textContent='';return}
-
-  if(v<=10){
-    r.textContent='PASS';
-    r.className='res pass';
-  }else{
-    r.textContent='FAIL';
-    r.className='res fail';
-  }
-  updateScheme();
-}
-
-function updateScheme(){
-  const fails=document.querySelectorAll('.fail').length>0;
-  document.querySelectorAll('.node,.cable').forEach(e=>{
-    e.classList.toggle('fail',fails);
-  });
+  if(v<=10){r.innerHTML='<span class="pass">PASS</span>'}
+  else{r.innerHTML='<span class="fail">FAIL</span>'}
 }
 </script>
 
