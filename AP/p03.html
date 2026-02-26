@@ -16,6 +16,10 @@
   --muted:#b7c7dd;
   --ok:#39d98a;
   --bad:#ff5c5c;
+
+  --neon:#00f2ff;
+  --neon-dim:rgba(0,242,255,.2);
+  --glass:rgba(255,255,255,.03);
 }
 
 *{box-sizing:border-box}
@@ -99,63 +103,119 @@ textarea{
 .pass{color:var(--ok);font-weight:700}
 .fail{color:var(--bad);font-weight:700}
 
-/* ===== СХЕМА ===== */
+/* ===== 5D СХЕМА ===== */
 
-.scheme-wrap{
+.scheme-5d{
   margin-top:16px;
   border:1px solid var(--stroke);
-  border-radius:14px;
-  background:
-    linear-gradient(transparent 19px, rgba(255,255,255,.05) 20px),
-    linear-gradient(90deg, transparent 19px, rgba(255,255,255,.05) 20px);
-  background-size:20px 20px;
-  padding:16px;
-  overflow:auto;
+  border-radius:16px;
+  padding:20px;
+  background:#050a0f;
+  overflow-x:auto;
 }
 
-.scheme{
-  display:grid;
-  grid-template-columns:240px 1fr 240px;
-  align-items:center;
-  min-width:720px;
-  gap:20px;
-}
-
-.box{
-  border:2px solid #e9f2ff;
-  border-radius:14px;
-  padding:12px;
-  text-align:center;
-}
-
-.line{
-  position:relative;
-  height:4px;
-  background:#e9f2ff;
-  border-radius:2px;
-}
-
-.line::after{
-  content:attr(data-label);
+.grid-bg{
   position:absolute;
-  top:-20px;
+  inset:0;
+  background-image:
+    linear-gradient(var(--neon-dim) 1px, transparent 1px),
+    linear-gradient(90deg, var(--neon-dim) 1px, transparent 1px);
+  background-size:50px 50px;
+  transform:rotateX(60deg);
+  opacity:.15;
+  pointer-events:none;
+}
+
+.scene{
+  position:relative;
+  display:flex;
+  gap:80px;
+  justify-content:center;
+  align-items:center;
+  transform:rotateX(15deg) rotateY(-8deg);
+  transform-style:preserve-3d;
+  min-width:800px;
+}
+
+.node{
+  width:260px;
+  background:var(--glass);
+  border:2px solid var(--neon);
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 0 30px var(--neon-dim);
+}
+
+.node h3{
+  margin:0;
+  font-size:16px;
+  color:var(--neon);
+  text-shadow:0 0 8px var(--neon);
+}
+
+.node p{
+  font-family:monospace;
+  font-size:13px;
+  color:#9bd;
+  margin:6px 0 12px;
+}
+
+.cables{
+  display:flex;
+  flex-direction:column;
+  gap:40px;
+}
+
+.cable{
+  width:160px;
+  height:4px;
+  background:rgba(255,255,255,.15);
+  position:relative;
+}
+
+.flow{
+  position:absolute;
+  width:20px;
+  height:100%;
+  background:var(--neon);
+  box-shadow:0 0 15px var(--neon);
+  animation:flow 2s linear infinite;
+}
+
+.cable:nth-child(2) .flow{animation-delay:1s}
+
+.label{
+  position:absolute;
+  top:-22px;
   left:50%;
   transform:translateX(-50%);
-  font-size:12px;
-  color:var(--muted);
+  font-size:11px;
+  color:#b7c7dd;
   white-space:nowrap;
 }
 
-.down{
-  height:40px;
-  width:4px;
-  margin:8px auto 0;
-  background:#e9f2ff;
+.out{
+  margin-top:10px;
+  font-size:11px;
+  color:var(--neon);
+  opacity:.8;
 }
 
-@media(max-width:800px){
-  .scheme{grid-template-columns:1fr}
-  .line{display:none}
+@keyframes flow{
+  0%{left:0;opacity:0}
+  20%{opacity:1}
+  80%{opacity:1}
+  100%{left:100%;opacity:0}
+}
+
+@media(max-width:900px){
+  .scene{
+    transform:none;
+    flex-direction:column;
+    min-width:auto;
+  }
+  .cables{display:none}
 }
 </style>
 </head>
@@ -186,11 +246,11 @@ textarea{
 "13" — "0".
 
 Устанавливая переключатель "8" в положение проверяемого канала, замечать показания вольтметра "3" пульта,
-которые должны быть не более 10 В для всех каналов.
+которые должны быть не более <mark>10 В<mark/> для всех каналов.
 Если в каком-либо канале показания вольтметра "3" не укладываются в допуск,
 необходимо произвести регулировку ручкой "ЦЕНТРОВКА" агрегата управления соответствующего канала.
 
-ПРИМЕЧАНИЕ. Нулевым положением задатчика "5" считается положение,
+<mark>ПРИМЕЧАНИЕ.<mark/> Нулевым положением задатчика "5" считается положение,
 соответствующее минимальному сигналу по вольтметру "1".
 </textarea>
 
@@ -220,28 +280,31 @@ textarea{
 
 <h2>Схема подключения</h2>
 
-<div class="scheme-wrap">
-  <div class="scheme">
+<div class="scheme-5d">
+  <div class="scene">
 
-    <div class="box">
-      <b>ПУЛЬТ</b><br>
-      6С2.702.007<br><br>
-      «К»<br>
-      «РА»
+    <div class="node">
+      <h3>ПУЛЬТ</h3>
+      <p>6С2.702.007</p>
+      «К» · «РА»
     </div>
 
-    <div>
-      <div class="line" data-label='Жгут "К" 6С6.640.043'></div>
-      <div style="height:16px"></div>
-      <div class="line" data-label='Жгут "РА" 6С6.640.044'></div>
+    <div class="cables">
+      <div class="cable">
+        <div class="flow"></div>
+        <div class="label">Жгут «К» 6С6.640.043</div>
+      </div>
+      <div class="cable">
+        <div class="flow"></div>
+        <div class="label">Жгут «РА» 6С6.640.044</div>
+      </div>
     </div>
 
-    <div class="box">
-      <b>АГРЕГАТ УПРАВЛЕНИЯ</b><br>
-      6С2.399.000<br><br>
+    <div class="node">
+      <h3>АГРЕГАТ УПРАВЛЕНИЯ</h3>
+      <p>6С2.399.000</p>
       «АУ» · «К» · «РА»
-      <div class="down"></div>
-      <div class="p">Жгут «АУ» → к фидерной схеме вертолёта</div>
+      <div class="out">↓ к фидерной схеме вертолёта</div>
     </div>
 
   </div>
@@ -254,7 +317,7 @@ textarea{
 function chk(el,id){
   const v=parseFloat(el.value);
   const r=document.getElementById(id);
-  if(isNaN(v)){r.textContent='';return}
+  if(isNaN(v)){r.textContent='';r.className='cell';return}
   if(v<=10){
     r.textContent='PASS';
     r.className='cell pass';
