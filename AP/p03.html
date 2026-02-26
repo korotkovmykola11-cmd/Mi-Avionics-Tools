@@ -3,236 +3,702 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>АП-34Б · Пункт 03 · Проверка остаточного сигнала</title>
-
 <style>
-:root{
-  --bg1:#0b1a2a;
-  --bg2:#153a5a;
-  --card:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.18);
-  --text:#e9f2ff;
-  --muted:#b7c7dd;
-  --ok:#39d98a;
-  --bad:#ff5c5c;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-  --neon:#00f2ff;
-  --neon-dim:rgba(0,242,255,.2);
-  --glass:rgba(255,255,255,.03);
+:root {
+  --bg1: #060d18;
+  --bg2: #0c1929;
+  --bg3: #101e30;
+  --card: rgba(16, 30, 52, 0.85);
+  --card-elevated: rgba(22, 40, 68, 0.9);
+  --stroke: rgba(100, 160, 255, 0.12);
+  --stroke-bright: rgba(100, 160, 255, 0.25);
+  --text: #e4edf9;
+  --text-bright: #ffffff;
+  --muted: #7b8faa;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.4);
+  --accent2: #06b6d4;
+  --accent2-glow: rgba(6, 182, 212, 0.35);
+  --ok: #22c55e;
+  --ok-glow: rgba(34, 197, 94, 0.3);
+  --bad: #ef4444;
+  --bad-glow: rgba(239, 68, 68, 0.3);
+  --radius: 16px;
 }
 
-*{box-sizing:border-box}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--text);
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg1);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
   background:
-    radial-gradient(900px 500px at 15% 10%, rgba(255,255,255,.12), transparent 60%),
-    radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
-    linear-gradient(180deg,var(--bg1),var(--bg2));
+    radial-gradient(ellipse 800px 600px at 20% 5%, rgba(59, 130, 246, 0.08), transparent),
+    radial-gradient(ellipse 600px 500px at 80% 15%, rgba(6, 182, 212, 0.06), transparent),
+    radial-gradient(ellipse 1000px 400px at 50% 80%, rgba(59, 130, 246, 0.04), transparent);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.wrap{max-width:1200px;margin:auto;padding:16px}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--stroke);
-  border-radius:18px;
-  padding:16px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 18px 40px rgba(0,0,0,.25);
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 16px 60px;
+  position: relative;
+  z-index: 1;
 }
 
-h1{margin:0;font-size:18px}
-h2{margin:18px 0 8px;font-size:15px}
-.p{margin:4px 0;color:var(--muted);font-size:13px}
-
-.back{
-  display:inline-block;
-  margin-bottom:10px;
-  padding:6px 12px;
-  border-radius:10px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.08);
-  color:var(--text);
-  text-decoration:none;
-  font-size:13px;
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-textarea{
-  width:100%;
-  min-height:280px;
-  padding:12px;
-  border-radius:14px;
-  border:1px dashed rgba(255,255,255,.25);
-  background:rgba(0,0,0,.25);
-  color:var(--text);
-  font-size:14px;
-  line-height:1.45;
-  resize:vertical;
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--stroke);
+  background: var(--card);
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+.back-btn:hover {
+  background: var(--card-elevated);
+  color: var(--text);
+  border-color: var(--stroke-bright);
+}
+.back-btn svg { width: 14px; height: 14px; }
+
+.header-text h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-bright);
+}
+.header-text .subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-weight: 500;
 }
 
-/* ===== КАЛЬКУЛЯТОР ===== */
-
-.table{
-  display:grid;
-  grid-template-columns:1fr 120px 120px;
-  gap:6px;
-  margin-top:10px;
+/* ===== BADGE ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.badge-blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
 }
 
-.cell{
-  padding:8px;
-  border-radius:8px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.25);
-  font-size:13px;
+/* ===== CARD ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.02) inset,
+    0 20px 50px rgba(0,0,0,0.3);
+  margin-bottom: 20px;
 }
 
-.cell input{
-  width:100%;
-  background:none;
-  border:none;
-  color:var(--text);
-  font-size:14px;
-  outline:none;
+.card + .card { margin-top: 0; }
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.section-label svg { width: 16px; height: 16px; opacity: 0.7; }
+
+h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
 }
 
-.pass{color:var(--ok);font-weight:700}
-.fail{color:var(--bad);font-weight:700}
-
-/* ===== 5D СХЕМА ===== */
-
-.scheme-5d{
-  margin-top:16px;
-  border:1px solid var(--stroke);
-  border-radius:16px;
-  padding:20px;
-  background:#050a0f;
-  overflow-x:auto;
+/* ===== TEXTAREA ===== */
+.text-content {
+  width: 100%;
+  min-height: 320px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: rgba(0,0,0,0.3);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.text-content:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-.grid-bg{
-  position:absolute;
-  inset:0;
-  background-image:
-    linear-gradient(var(--neon-dim) 1px, transparent 1px),
-    linear-gradient(90deg, var(--neon-dim) 1px, transparent 1px);
-  background-size:50px 50px;
-  transform:rotateX(60deg);
-  opacity:.15;
-  pointer-events:none;
+/* ===== TABLE ===== */
+.voltage-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
 }
 
-.scene{
-  position:relative;
-  display:flex;
-  gap:80px;
-  justify-content:center;
-  align-items:center;
-  transform:rotateX(15deg) rotateY(-8deg);
-  transform-style:preserve-3d;
-  min-width:800px;
+.voltage-table thead th {
+  background: rgba(59, 130, 246, 0.08);
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-align: left;
+  border-bottom: 1px solid var(--stroke);
 }
 
-.node{
-  width:260px;
-  background:var(--glass);
-  border:2px solid var(--neon);
-  border-radius:16px;
-  padding:18px;
-  text-align:center;
-  box-shadow:0 0 30px var(--neon-dim);
+.voltage-table tbody td {
+  padding: 10px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(100,160,255,0.06);
+  background: rgba(0,0,0,0.15);
 }
 
-.node h3{
-  margin:0;
-  font-size:16px;
-  color:var(--neon);
-  text-shadow:0 0 8px var(--neon);
+.voltage-table tbody tr:last-child td { border-bottom: none; }
+.voltage-table tbody tr:hover td { background: rgba(59, 130, 246, 0.05); }
+
+.voltage-table .ch-name {
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ch-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.ch-icon-n { background: rgba(59, 130, 246, 0.15); color: var(--accent); }
+.ch-icon-k { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+.ch-icon-t { background: rgba(6, 182, 212, 0.15); color: var(--accent2); }
+.ch-icon-v { background: rgba(34, 197, 94, 0.15); color: var(--ok); }
+
+.voltage-input {
+  width: 100%;
+  max-width: 120px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--stroke);
+  background: rgba(0,0,0,0.3);
+  color: var(--text-bright);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.2s;
+}
+.voltage-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-.node p{
-  font-family:monospace;
-  font-size:13px;
-  color:#9bd;
-  margin:6px 0 12px;
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  min-width: 65px;
+  justify-content: center;
+}
+.result-pass {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--ok);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 12px var(--ok-glow);
+}
+.result-fail {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--bad);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 12px var(--bad-glow);
+  animation: pulse-fail 2s infinite;
 }
 
-.cables{
-  display:flex;
-  flex-direction:column;
-  gap:40px;
+@keyframes pulse-fail {
+  0%, 100% { box-shadow: 0 0 12px var(--bad-glow); }
+  50% { box-shadow: 0 0 20px var(--bad-glow); }
 }
 
-.cable{
-  width:160px;
-  height:4px;
-  background:rgba(255,255,255,.15);
-  position:relative;
+/* ===== SCHEME ===== */
+.scheme-section { margin-top: 0; }
+
+.scheme-container {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  background:
+    linear-gradient(transparent 23px, rgba(100,160,255,0.03) 24px),
+    linear-gradient(90deg, transparent 23px, rgba(100,160,255,0.03) 24px),
+    rgba(0,0,0,0.2);
+  background-size: 24px 24px, 24px 24px, 100% 100%;
+  padding: 32px 24px;
+  overflow: visible;
+  position: relative;
 }
 
-.flow{
-  position:absolute;
-  width:20px;
-  height:100%;
-  background:var(--neon);
-  box-shadow:0 0 15px var(--neon);
-  animation:flow 2s linear infinite;
+/* Desktop scheme */
+.scheme-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  position: relative;
+  min-height: 220px;
 }
 
-.cable:nth-child(2) .flow{animation-delay:1s}
-
-.label{
-  position:absolute;
-  top:-22px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:11px;
-  color:#b7c7dd;
-  white-space:nowrap;
+.device-box {
+  position: relative;
+  border: 2px solid var(--stroke-bright);
+  border-radius: 16px;
+  padding: 20px 24px;
+  text-align: center;
+  background: var(--card-elevated);
+  backdrop-filter: blur(8px);
+  min-width: 200px;
+  z-index: 2;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.device-box:hover {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 30px var(--accent-glow),
+    0 0 0 1px var(--accent) inset;
 }
 
-.out{
-  margin-top:10px;
-  font-size:11px;
-  color:var(--neon);
-  opacity:.8;
+.device-box .device-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.device-icon-pult {
+  background: linear-gradient(135deg, rgba(59,130,246,0.25), rgba(6,182,212,0.2));
+  border: 1px solid rgba(59,130,246,0.3);
+}
+.device-icon-au {
+  background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(6,182,212,0.2));
+  border: 1px solid rgba(34,197,94,0.3);
 }
 
-@keyframes flow{
-  0%{left:0;opacity:0}
-  20%{opacity:1}
-  80%{opacity:1}
-  100%{left:100%;opacity:0}
+.device-box .device-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+.device-box .device-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.device-box .device-connectors {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.connector-tag {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(59,130,246,0.12);
+  color: var(--accent);
+  border: 1px solid rgba(59,130,246,0.18);
 }
 
-@media(max-width:900px){
-  .scene{
-    transform:none;
-    flex-direction:column;
-    min-width:auto;
+/* Connection lines area */
+.connection-area {
+  flex: 1;
+  max-width: 280px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 0 12px;
+  z-index: 1;
+}
+
+.cable-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cable-track {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cable-track-k { background: rgba(59, 130, 246, 0.25); }
+.cable-track-ra { background: rgba(6, 182, 212, 0.25); }
+
+.cable-track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  border-radius: 2px;
+  animation: flow 2s linear infinite;
+}
+
+.cable-track-k::after {
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.cable-track-ra::after {
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+}
+
+@keyframes flow {
+  0% { left: -40%; }
+  100% { left: 100%; }
+}
+
+.cable-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cable-dot-k { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.cable-dot-ra { background: var(--accent2); box-shadow: 0 0 8px var(--accent2-glow); }
+
+.cable-label {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.cable-label-k {
+  color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+.cable-label-ra {
+  color: var(--accent2);
+  background: rgba(6, 182, 212, 0.1);
+}
+
+/* Arrow head */
+.cable-arrow {
+  width: 0; height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  flex-shrink: 0;
+}
+.cable-arrow-k { border-left: 8px solid var(--accent); }
+.cable-arrow-ra { border-left: 8px solid var(--accent2); }
+
+/* Down connector for AU */
+.down-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 12px;
+  position: relative;
+}
+
+.down-track {
+  width: 3px;
+  height: 40px;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(34, 197, 94, 0.25);
+}
+.down-track::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 100%;
+  height: 40%;
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, var(--ok), transparent);
+  animation: flow-down 2s linear infinite;
+}
+
+@keyframes flow-down {
+  0% { top: -40%; }
+  100% { top: 100%; }
+}
+
+.down-arrow {
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 8px solid var(--ok);
+}
+
+.down-label {
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 1px dashed rgba(34,197,94,0.25);
+  background: rgba(34,197,94,0.05);
+}
+
+/* Mobile scheme */
+.scheme-mobile { display: none; }
+
+@media (max-width: 700px) {
+  .scheme-desktop { display: none; }
+  .scheme-mobile { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+  .device-box { min-width: 0; width: 100%; max-width: 320px; }
+
+  .mob-cable-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 0;
   }
-  .cables{display:none}
+
+  .mob-cable {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+  }
+
+  .mob-cable-track {
+    width: 3px;
+    height: 32px;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mob-cable-track-k { background: rgba(59,130,246,0.25); }
+  .mob-cable-track-ra { background: rgba(6,182,212,0.25); }
+
+  .mob-cable-track::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -40%;
+    width: 100%;
+    height: 40%;
+    border-radius: 2px;
+    animation: flow-down 1.5s linear infinite;
+  }
+  .mob-cable-track-k::after { background: linear-gradient(180deg, transparent, var(--accent), transparent); }
+  .mob-cable-track-ra::after { background: linear-gradient(180deg, transparent, var(--accent2), transparent); }
+
+  .mob-cable-label {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .mob-cable-label-k { color: var(--accent); background: rgba(59,130,246,0.1); }
+  .mob-cable-label-ra { color: var(--accent2); background: rgba(6,182,212,0.1); }
+
+  .mob-cable-dots {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .mob-cable-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .mob-cable-dot-k { background: var(--accent); box-shadow: 0 0 6px var(--accent-glow); }
+  .mob-cable-dot-ra { background: var(--accent2); box-shadow: 0 0 6px var(--accent2-glow); }
+
+  .mob-down-arrow-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2px;
+  }
+}
+
+/* ===== SETTINGS LIST ===== */
+.settings-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.settings-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(100,160,255,0.05);
+}
+.settings-list .sw-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(59,130,246,0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.settings-list .sw-val { color: var(--text); }
+
+/* ===== NOTE ===== */
+.note {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  background: rgba(251, 191, 36, 0.06);
+  font-size: 12px;
+  color: #fbbf24;
+  line-height: 1.55;
+}
+.note strong { color: #fcd34d; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .wrap { padding: 12px 10px 40px; }
+  .card { padding: 16px 14px; border-radius: 14px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .header-text h1 { font-size: 18px; }
+  .text-content { min-height: 240px; font-size: 11.5px; }
+  .scheme-container { padding: 20px 14px; }
+
+  .voltage-table thead th { padding: 8px 10px; font-size: 10px; }
+  .voltage-table tbody td { padding: 8px 10px; font-size: 12px; }
+  .ch-icon { width: 24px; height: 24px; font-size: 11px; border-radius: 6px; }
+  .voltage-input { font-size: 13px; max-width: 90px; }
+}
+
+/* Print styles */
+@media print {
+  body { background: #fff; color: #111; }
+  body::before { display: none; }
+  .card { box-shadow: none; border: 1px solid #ccc; background: #fff; }
+  .text-content { background: #f5f5f5; color: #111; border-color: #ccc; }
 }
 </style>
 </head>
 
 <body>
 <div class="wrap">
-<div class="card">
 
-<a class="back" href="../page-ap34b.html">← Назад</a>
+  <!-- Header -->
+  <div class="header">
+    <a class="back-btn" href="../page-ap34b.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Назад
+    </a>
+    <div class="header-text">
+      <h1>АП-34Б · Пункт 03</h1>
+      <div class="subtitle">Проверка остаточного сигнала</div>
+    </div>
+  </div>
 
-<h1>АП-34Б · Пункт 03</h1>
-<p class="p">Проверка остаточного сигнала</p>
+  <!-- Procedure text -->
+  <div class="card">
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+      Текст проверки
+    </div>
 
-<h2>Текст проверки</h2>
-
-<textarea>
-Отсоединить от агрегата управления разъём "РА".
+    <textarea class="text-content">Отсоединить от агрегата управления разъём "РА".
 Пульт 6С2.702.007 соединить с агрегатом управления с помощью жгутов "К" и "РА" (см. схему ниже).
 
 Переключатели и ручки на пульте 6С2.702.007 установить:
@@ -245,88 +711,191 @@ textarea{
 "12" — "КОМПЛЕКТ";
 "13" — "0".
 
-Устанавливая переключатель "8" в положение проверяемого канала, замечать показания вольтметра "3" пульта,
-которые должны быть не более <mark>10 В<mark/> для всех каналов.
-Если в каком-либо канале показания вольтметра "3" не укладываются в допуск,
-необходимо произвести регулировку ручкой "ЦЕНТРОВКА" агрегата управления соответствующего канала.
+Устанавливая переключатель "8" в положение проверяемого канала, замечать показания вольтметра "3" пульта, которые должны быть не более 10 В для всех каналов.
+Если в каком-либо канале показания вольтметра "3" не укладываются в допуск, необходимо произвести регулировку ручкой "ЦЕНТРОВКА" агрегата управления соответствующего канала.
 
-<mark>ПРИМЕЧАНИЕ.<mark/> Нулевым положением задатчика "5" считается положение,
-соответствующее минимальному сигналу по вольтметру "1".
-</textarea>
-
-<h2>Контроль напряжений</h2>
-
-<div class="table">
-  <div class="cell">Канал</div>
-  <div class="cell">Напряжение, В</div>
-  <div class="cell">Результат</div>
-
-  <div class="cell">Направление</div>
-  <div class="cell"><input oninput="chk(this,'r1')"></div>
-  <div class="cell" id="r1"></div>
-
-  <div class="cell">Крен</div>
-  <div class="cell"><input oninput="chk(this,'r2')"></div>
-  <div class="cell" id="r2"></div>
-
-  <div class="cell">Тангаж</div>
-  <div class="cell"><input oninput="chk(this,'r3')"></div>
-  <div class="cell" id="r3"></div>
-
-  <div class="cell">Высота</div>
-  <div class="cell"><input oninput="chk(this,'r4')"></div>
-  <div class="cell" id="r4"></div>
-</div>
-
-<h2>Схема подключения</h2>
-
-<div class="scheme-5d">
-  <div class="scene">
-
-    <div class="node">
-      <h3>ПУЛЬТ</h3>
-      <p>6С2.702.007</p>
-      «К» · «РА»
-    </div>
-
-    <div class="cables">
-      <div class="cable">
-        <div class="flow"></div>
-        <div class="label">Жгут «К» 6С6.640.043</div>
-      </div>
-      <div class="cable">
-        <div class="flow"></div>
-        <div class="label">Жгут «РА» 6С6.640.044</div>
-      </div>
-    </div>
-
-    <div class="node">
-      <h3>АГРЕГАТ УПРАВЛЕНИЯ</h3>
-      <p>6С2.399.000</p>
-      «АУ» · «К» · «РА»
-      <div class="out">↓ к фидерной схеме вертолёта</div>
-    </div>
-
+ПРИМЕЧАНИЕ. Нулевым положением задатчика "5" считается положение, соответствующее минимальному сигналу по вольтметру "1".</textarea>
   </div>
-</div>
 
-</div>
+  <!-- Voltage control table -->
+  <div class="card">
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Контроль напряжений
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <span class="badge badge-blue"><span class="badge-dot"></span>Допуск: &le; 10 В</span>
+    </div>
+
+    <table class="voltage-table">
+      <thead>
+        <tr>
+          <th>Канал</th>
+          <th>Напряжение, В</th>
+          <th>Результат</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ch-name"><span class="ch-icon ch-icon-n">Н</span> Направление</div></td>
+          <td><input class="voltage-input" placeholder="0.00" oninput="chk(this,'r1')"></td>
+          <td id="r1"></td>
+        </tr>
+        <tr>
+          <td><div class="ch-name"><span class="ch-icon ch-icon-k">К</span> Крен</div></td>
+          <td><input class="voltage-input" placeholder="0.00" oninput="chk(this,'r2')"></td>
+          <td id="r2"></td>
+        </tr>
+        <tr>
+          <td><div class="ch-name"><span class="ch-icon ch-icon-t">Т</span> Тангаж</div></td>
+          <td><input class="voltage-input" placeholder="0.00" oninput="chk(this,'r3')"></td>
+          <td id="r3"></td>
+        </tr>
+        <tr>
+          <td><div class="ch-name"><span class="ch-icon ch-icon-v">В</span> Высота</div></td>
+          <td><input class="voltage-input" placeholder="0.00" oninput="chk(this,'r4')"></td>
+          <td id="r4"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Connection diagram -->
+  <div class="card scheme-section">
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="2" y="2" rx="2"/><rect width="8" height="8" x="14" y="2" rx="2"/><rect width="8" height="8" x="8" y="14" rx="2"/><path d="M6 10v4"/><path d="M18 10v4"/><path d="M10 18H6"/><path d="M14 18h4"/></svg>
+      Схема подключения
+    </div>
+
+    <div class="scheme-container">
+
+      <!-- Desktop layout -->
+      <div class="scheme-desktop">
+
+        <!-- ПУЛЬТ -->
+        <div class="device-box">
+          <div class="device-icon device-icon-pult">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h3"/><path d="M7 12h10"/><path d="M7 17h7"/></svg>
+          </div>
+          <div class="device-title">Пульт</div>
+          <div class="device-code">6С2.702.007</div>
+          <div class="device-connectors">
+            <span class="connector-tag">К</span>
+            <span class="connector-tag">РА</span>
+          </div>
+        </div>
+
+        <!-- Connection lines -->
+        <div class="connection-area">
+          <div class="cable-line">
+            <span class="cable-label cable-label-k">Жгут «К» 6С6.640.043</span>
+            <span class="cable-dot cable-dot-k"></span>
+            <div class="cable-track cable-track-k"></div>
+            <span class="cable-arrow cable-arrow-k"></span>
+          </div>
+          <div class="cable-line">
+            <span class="cable-label cable-label-ra">Жгут «РА» 6С6.640.044</span>
+            <span class="cable-dot cable-dot-ra"></span>
+            <div class="cable-track cable-track-ra"></div>
+            <span class="cable-arrow cable-arrow-ra"></span>
+          </div>
+        </div>
+
+        <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
+        <div class="device-box">
+          <div class="device-icon device-icon-au">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m6.343 6.343-2.828 2.828"/><path d="M2 12h4"/><path d="M12 18v4"/><path d="m17.657 6.343 2.828 2.828"/><path d="M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
+          </div>
+          <div class="device-title">Агрегат управления</div>
+          <div class="device-code">6С2.399.000</div>
+          <div class="device-connectors">
+            <span class="connector-tag">АУ</span>
+            <span class="connector-tag">К</span>
+            <span class="connector-tag">РА</span>
+          </div>
+          <div class="down-link">
+            <div class="down-track"></div>
+            <div class="down-arrow"></div>
+            <div class="down-label">Жгут «АУ» &#8594; фидерная схема вертолёта</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile layout -->
+      <div class="scheme-mobile">
+
+        <!-- ПУЛЬТ -->
+        <div class="device-box">
+          <div class="device-icon device-icon-pult">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h3"/><path d="M7 12h10"/><path d="M7 17h7"/></svg>
+          </div>
+          <div class="device-title">Пульт</div>
+          <div class="device-code">6С2.702.007</div>
+          <div class="device-connectors">
+            <span class="connector-tag">К</span>
+            <span class="connector-tag">РА</span>
+          </div>
+        </div>
+
+        <!-- Vertical cables -->
+        <div class="mob-cable-section">
+          <div style="display:flex;gap:24px;">
+            <div class="mob-cable" style="flex-direction:column;align-items:center;">
+              <div class="mob-cable-dot mob-cable-dot-k"></div>
+              <div class="mob-cable-track mob-cable-track-k"></div>
+              <div class="mob-cable-dot mob-cable-dot-k"></div>
+              <div class="mob-cable-label mob-cable-label-k">Жгут «К»</div>
+              <div style="font-size:9px;color:var(--muted);margin-top:1px;">6С6.640.043</div>
+            </div>
+            <div class="mob-cable" style="flex-direction:column;align-items:center;">
+              <div class="mob-cable-dot mob-cable-dot-ra"></div>
+              <div class="mob-cable-track mob-cable-track-ra"></div>
+              <div class="mob-cable-dot mob-cable-dot-ra"></div>
+              <div class="mob-cable-label mob-cable-label-ra">Жгут «РА»</div>
+              <div style="font-size:9px;color:var(--muted);margin-top:1px;">6С6.640.044</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
+        <div class="device-box">
+          <div class="device-icon device-icon-au">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m6.343 6.343-2.828 2.828"/><path d="M2 12h4"/><path d="M12 18v4"/><path d="m17.657 6.343 2.828 2.828"/><path d="M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
+          </div>
+          <div class="device-title">Агрегат управления</div>
+          <div class="device-code">6С2.399.000</div>
+          <div class="device-connectors">
+            <span class="connector-tag">АУ</span>
+            <span class="connector-tag">К</span>
+            <span class="connector-tag">РА</span>
+          </div>
+        </div>
+
+        <!-- Down link -->
+        <div class="mob-down-arrow-wrap">
+          <div class="down-track"></div>
+          <div class="down-arrow"></div>
+        </div>
+        <div class="down-label">Жгут «АУ» &#8594; фидерная схема вертолёта</div>
+      </div>
+
+    </div>
+
+    <div class="note">
+      <strong>ПРИМЕЧАНИЕ.</strong> Нулевым положением задатчика «5» считается положение, соответствующее минимальному сигналу по вольтметру «1».
+    </div>
+  </div>
+
 </div>
 
 <script>
-function chk(el,id){
-  const v=parseFloat(el.value);
-  const r=document.getElementById(id);
-  if(isNaN(v)){r.textContent='';r.className='cell';return}
-  if(v<=10){
-    r.textContent='PASS';
-    r.className='cell pass';
-  }else{
-    r.textContent='FAIL';
-    r.className='cell fail';
+function chk(el, id) {
+  var v = parseFloat(el.value);
+  var r = document.getElementById(id);
+  if (isNaN(v)) { r.innerHTML = ''; return; }
+  if (v <= 10) {
+    r.innerHTML = '<span class="result-badge result-pass">&#10003; PASS</span>';
+  } else {
+    r.innerHTML = '<span class="result-badge result-fail">&#10007; FAIL</span>';
   }
 }
-</script>
-
-</body>
-</html>
