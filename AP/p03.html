@@ -1,22 +1,25 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>АП-34Б · Пункт 03 · Проверка остаточного сигнала</title>
 
 <style>
 :root{
-  --bg1:#0b1a2a; --bg2:#153a5a;
+  --bg1:#0b1a2a;
+  --bg2:#153a5a;
   --card:rgba(255,255,255,.08);
   --stroke:rgba(255,255,255,.18);
-  --text:#e9f2ff; --muted:#b7c7dd;
-
-  --ok:#38e07a;
-  --bad:#ff4d4d;
-  --warn:#ffd166;
+  --text:#e9f2ff;
+  --muted:#b7c7dd;
+  --ok:#39d98a;
+  --bad:#ff5c5c;
 }
+
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
@@ -26,7 +29,9 @@ body{
     radial-gradient(800px 500px at 85% 20%, rgba(255,255,255,.10), transparent 60%),
     linear-gradient(180deg,var(--bg1),var(--bg2));
 }
-.wrap{max-width:1200px;margin:0 auto;padding:16px}
+
+.wrap{max-width:1200px;margin:auto;padding:16px}
+
 .card{
   background:var(--card);
   border:1px solid var(--stroke);
@@ -35,14 +40,15 @@ body{
   backdrop-filter:blur(6px);
   box-shadow:0 18px 40px rgba(0,0,0,.25);
 }
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-h1{margin:0 0 4px;font-size:18px}
-h2{margin:16px 0 8px;font-size:15px}
-.p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+
+h1{margin:0;font-size:18px}
+h2{margin:18px 0 8px;font-size:15px}
+.p{margin:4px 0;color:var(--muted);font-size:13px}
 
 .back{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:7px 12px;
+  display:inline-block;
+  margin-bottom:10px;
+  padding:6px 12px;
   border-radius:10px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.08);
@@ -50,258 +56,123 @@ h2{margin:16px 0 8px;font-size:15px}
   text-decoration:none;
   font-size:13px;
 }
-.badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:7px 10px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.18);
-  color:var(--muted);
-  font-size:12px;
-}
 
-.grid{
-  margin-top:12px;
-  display:grid;
-  grid-template-columns: 1.05fr .95fr;
-  gap:12px;
-}
-@media (max-width: 980px){
-  .grid{grid-template-columns:1fr}
-}
-
-.block{
-  border:1px solid var(--stroke);
-  border-radius:14px;
-  background:rgba(0,0,0,.16);
-  padding:12px;
-}
-
-textarea.textbox{
+textarea{
   width:100%;
-  min-height:220px;
-  resize:vertical;
-  border-radius:12px;
-  border:1px dashed rgba(255,255,255,.25);
-  background:rgba(0,0,0,.22);
-  color:var(--text);
+  min-height:280px;
   padding:12px;
+  border-radius:14px;
+  border:1px dashed rgba(255,255,255,.25);
+  background:rgba(0,0,0,.25);
+  color:var(--text);
   font-size:14px;
   line-height:1.45;
-  outline:none;
+  resize:vertical;
 }
-textarea.textbox::placeholder{color:rgba(183,199,221,.75)}
 
-.controls{
+/* ===== КАЛЬКУЛЯТОР ===== */
+
+.table{
   display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:10px;
+  grid-template-columns:1fr 120px 120px;
+  gap:6px;
+  margin-top:10px;
 }
-@media (max-width:560px){
-  .controls{grid-template-columns:1fr}
+
+.cell{
+  padding:8px;
+  border-radius:8px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.25);
+  font-size:13px;
 }
-.field{
-  display:flex;gap:10px;align-items:center;justify-content:space-between;
-  padding:10px;border-radius:12px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.06);
-}
-.field label{
-  font-size:13px;color:var(--muted);
-}
-.field input{
-  width:110px;
-  padding:8px 10px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.20);
+
+.cell input{
+  width:100%;
+  background:none;
+  border:none;
   color:var(--text);
+  font-size:14px;
   outline:none;
-  text-align:right;
 }
-small.hint{display:block;margin-top:8px;color:var(--muted);font-size:12px;line-height:1.35}
 
-.statusRow{
-  margin-top:10px;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-.pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:7px 10px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(0,0,0,.18);
-  font-size:12px;color:var(--muted);
-}
-.dot{width:10px;height:10px;border-radius:50%}
-.dot.ok{background:var(--ok)}
-.dot.bad{background:var(--bad)}
-.dot.warn{background:var(--warn)}
-.pill strong{color:var(--text);font-weight:800}
+.pass{color:var(--ok);font-weight:700}
+.fail{color:var(--bad);font-weight:700}
 
-.schemeWrap{
-  margin-top:10px;
+/* ===== СХЕМА ===== */
+
+.scheme-wrap{
+  margin-top:16px;
   border:1px solid var(--stroke);
   border-radius:14px;
-  background:rgba(0,0,0,.18);
-  padding:10px;
-  overflow:hidden;
-}
-.schemeBar{
-  display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;
-  margin-bottom:8px;
-}
-.btn{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:7px 10px;border-radius:10px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.08);
-  color:var(--text);
-  font-size:12px;
-  cursor:pointer;
-  user-select:none;
-}
-.btn:active{transform:translateY(1px)}
-.schemeHint{color:var(--muted);font-size:12px}
-
-.canvasHolder{
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.16);
-  background:radial-gradient(700px 220px at 40% 30%, rgba(255,255,255,.06), transparent 60%),
-             rgba(0,0,0,.22);
+  background:
+    linear-gradient(transparent 19px, rgba(255,255,255,.05) 20px),
+    linear-gradient(90deg, transparent 19px, rgba(255,255,255,.05) 20px);
+  background-size:20px 20px;
+  padding:16px;
   overflow:auto;
-  -webkit-overflow-scrolling: touch;
-  max-height:420px;
 }
-canvas{display:block; width:1100px; height:360px;} /* логический размер задаём JS, тут только CSS */
 
-.modal{
-  position:fixed; inset:0;
-  background:rgba(0,0,0,.72);
-  display:none;
-  align-items:center; justify-content:center;
-  padding:18px;
-  z-index:9999;
+.scheme{
+  display:grid;
+  grid-template-columns:240px 1fr 240px;
+  align-items:center;
+  min-width:720px;
+  gap:20px;
 }
-.modal.open{display:flex}
-.modalCard{
-  width:min(1100px, 96vw);
-  background:rgba(10,14,24,.92);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:16px;
+
+.box{
+  border:2px solid #e9f2ff;
+  border-radius:14px;
   padding:12px;
-  box-shadow:0 30px 90px rgba(0,0,0,.55);
+  text-align:center;
 }
-.modalTop{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;
+
+.line{
+  position:relative;
+  height:4px;
+  background:#e9f2ff;
+  border-radius:2px;
 }
-.modalTop .t{font-weight:900}
-.modalImg{
-  width:100%;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.25);
+
+.line::after{
+  content:attr(data-label);
+  position:absolute;
+  top:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+}
+
+.down{
+  height:40px;
+  width:4px;
+  margin:8px auto 0;
+  background:#e9f2ff;
+}
+
+@media(max-width:800px){
+  .scheme{grid-template-columns:1fr}
+  .line{display:none}
 }
 </style>
 </head>
 
 <body>
 <div class="wrap">
-  <div class="card">
-    <div class="topbar">
-      <a class="back" href="../page-ap34b.html">← Назад</a>
-      <span class="badge">Порог допуска: <b id="limitLabel">10.0 В</b> · автопроверка PASS/FAIL · сохранение в браузере</span>
-    </div>
+<div class="card">
 
-    <h1>АП-34Б · Пункт 03</h1>
-    <p class="p">Проверка остаточного сигнала</p>
+<a class="back" href="../page-ap34b.html">← Назад</a>
 
-    <div class="grid">
-      <!-- ЛЕВО: ТЕКСТ -->
-      <div class="block">
-        <h2 style="margin-top:0">Текст (вводишь сам)</h2>
-        <textarea id="txt" class="textbox" spellcheck="false" placeholder="Вставь сюда текст из РЛЭ (как в оригинале: пункты, переносы, примечания)."></textarea>
-        <small class="hint">
-          Подсказка: текст сохраняется автоматически (LocalStorage). Можно открыть код и печатать прямо там — я потом подкорректирую.
-        </small>
-      </div>
+<h1>АП-34Б · Пункт 03</h1>
+<p class="p">Проверка остаточного сигнала</p>
 
-      <!-- ПРАВО: ВВОД НАПРЯЖЕНИЙ + СТАТУС -->
-      <div class="block">
-        <h2 style="margin-top:0">Контроль напряжения по каналам</h2>
-        <div class="controls">
-          <div class="field">
-            <label for="vYaw">Направление (YAW), В</label>
-            <input id="vYaw" inputmode="decimal" placeholder="0.0" />
-          </div>
-          <div class="field">
-            <label for="vRoll">Крен (ROLL), В</label>
-            <input id="vRoll" inputmode="decimal" placeholder="0.0" />
-          </div>
-          <div class="field">
-            <label for="vPitch">Тангаж (PITCH), В</label>
-            <input id="vPitch" inputmode="decimal" placeholder="0.0" />
-          </div>
-          <div class="field">
-            <label for="vAlt">Высота (ALT), В</label>
-            <input id="vAlt" inputmode="decimal" placeholder="0.0" />
-          </div>
-        </div>
+<h2>Текст проверки</h2>
 
-        <div class="statusRow" id="statusRow" aria-live="polite"></div>
-
-        <small class="hint">
-          Логика: если значение <b>≤ 10.0 В</b> → <b style="color:var(--ok)">PASS</b>, иначе → <b style="color:var(--bad)">FAIL</b>.
-          Пустое поле = «нет данных».
-        </small>
-
-        <h2>Схема подключения (NO-HOW, не SVG)</h2>
-        <div class="schemeWrap">
-          <div class="schemeBar">
-            <div class="schemeHint">Интерактивная схема на <b>Canvas</b>: масштабируется, экспортируется в PNG, кликом открывается крупно.</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <div class="btn" id="zoomIn">＋ Увеличить</div>
-              <div class="btn" id="zoomOut">－ Уменьшить</div>
-              <div class="btn" id="resetZoom">⟲ Сброс</div>
-              <div class="btn" id="exportPng">⇩ PNG</div>
-            </div>
-          </div>
-
-          <div class="canvasHolder" id="canvasHolder">
-            <canvas id="schemeCanvas"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modalCard">
-    <div class="modalTop">
-      <div class="t">Схема подключения · просмотр</div>
-      <div class="btn" id="closeModal">✕ Закрыть</div>
-    </div>
-    <img id="modalImg" class="modalImg" alt="Схема подключения" />
-  </div>
-</div>
-
-<script>
-/* =========================
-   НАСТРОЙКИ
-========================= */
-const LIMIT_V = 10.0; // допуск
-document.getElementById('limitLabel').textContent = LIMIT_V.toFixed(1) + ' В';
-
-const STORAGE_KEY = 'ap34b_p03_v1';
-
-/* =========================
-   ТЕКСТ: автосохранение
-========================= */
-const txt = document.getElementById('txt');
-
-/* (опционально) стартовый «исправленный» текст — можно удалить полностью, если не нужно */
-const DEFAULT_TEXT =
-`Отсоединить от агрегата управления разъём "РА".
+<textarea>
+Отсоединить от агрегата управления разъём "РА".
 Пульт 6С2.702.007 соединить с агрегатом управления с помощью жгутов "К" и "РА" (см. схему ниже).
 
 Переключатели и ручки на пульте 6С2.702.007 установить:
@@ -320,325 +191,79 @@ const DEFAULT_TEXT =
 необходимо произвести регулировку ручкой "ЦЕНТРОВКА" агрегата управления соответствующего канала.
 
 ПРИМЕЧАНИЕ. Нулевым положением задатчика "5" считается положение,
-соответствующее минимальному сигналу по вольтметру "1".`;
+соответствующее минимальному сигналу по вольтметру "1".
+</textarea>
 
-function loadState(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw){
-      txt.value = DEFAULT_TEXT; // можно заменить на пусто: ''
-      return;
-    }
-    const st = JSON.parse(raw);
-    txt.value = st.text ?? DEFAULT_TEXT;
-    setInput('vYaw', st.vYaw);
-    setInput('vRoll', st.vRoll);
-    setInput('vPitch', st.vPitch);
-    setInput('vAlt', st.vAlt);
-    zoom = st.zoom ?? 1;
-  }catch(e){
-    txt.value = DEFAULT_TEXT;
+<h2>Контроль напряжений</h2>
+
+<div class="table">
+  <div class="cell">Канал</div>
+  <div class="cell">Напряжение, В</div>
+  <div class="cell">Результат</div>
+
+  <div class="cell">Направление</div>
+  <div class="cell"><input oninput="chk(this,'r1')"></div>
+  <div class="cell" id="r1"></div>
+
+  <div class="cell">Крен</div>
+  <div class="cell"><input oninput="chk(this,'r2')"></div>
+  <div class="cell" id="r2"></div>
+
+  <div class="cell">Тангаж</div>
+  <div class="cell"><input oninput="chk(this,'r3')"></div>
+  <div class="cell" id="r3"></div>
+
+  <div class="cell">Высота</div>
+  <div class="cell"><input oninput="chk(this,'r4')"></div>
+  <div class="cell" id="r4"></div>
+</div>
+
+<h2>Схема подключения</h2>
+
+<div class="scheme-wrap">
+  <div class="scheme">
+
+    <div class="box">
+      <b>ПУЛЬТ</b><br>
+      6С2.702.007<br><br>
+      «К»<br>
+      «РА»
+    </div>
+
+    <div>
+      <div class="line" data-label='Жгут "К" 6С6.640.043'></div>
+      <div style="height:16px"></div>
+      <div class="line" data-label='Жгут "РА" 6С6.640.044'></div>
+    </div>
+
+    <div class="box">
+      <b>АГРЕГАТ УПРАВЛЕНИЯ</b><br>
+      6С2.399.000<br><br>
+      «АУ» · «К» · «РА»
+      <div class="down"></div>
+      <div class="p">Жгут «АУ» → к фидерной схеме вертолёта</div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+function chk(el,id){
+  const v=parseFloat(el.value);
+  const r=document.getElementById(id);
+  if(isNaN(v)){r.textContent='';return}
+  if(v<=10){
+    r.textContent='PASS';
+    r.className='cell pass';
+  }else{
+    r.textContent='FAIL';
+    r.className='cell fail';
   }
 }
-function saveState(){
-  const st = {
-    text: txt.value,
-    vYaw: getRaw('vYaw'),
-    vRoll: getRaw('vRoll'),
-    vPitch: getRaw('vPitch'),
-    vAlt: getRaw('vAlt'),
-    zoom
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(st));
-}
-txt.addEventListener('input', saveState);
-
-/* =========================
-   PASS / FAIL
-========================= */
-const inputs = ['vYaw','vRoll','vPitch','vAlt'].map(id=>document.getElementById(id));
-const statusRow = document.getElementById('statusRow');
-
-function normNumber(s){
-  if(s==null) return null;
-  const t = String(s).trim().replace(',', '.');
-  if(!t) return null;
-  const n = Number(t);
-  return Number.isFinite(n) ? n : null;
-}
-function setInput(id, v){
-  const el = document.getElementById(id);
-  if(v === undefined || v === null || v === '') return;
-  el.value = String(v);
-}
-function getRaw(id){
-  return document.getElementById(id).value ?? '';
-}
-function mkPill(name, n){
-  // пусто
-  if(n === null){
-    return `<span class="pill"><span class="dot warn"></span><strong>${name}:</strong> нет данных</span>`;
-  }
-  const ok = n <= LIMIT_V;
-  const cls = ok ? 'ok' : 'bad';
-  const text = ok ? 'PASS' : 'FAIL';
-  return `<span class="pill"><span class="dot ${cls}"></span><strong>${name}:</strong> ${n.toFixed(2)} В · <b style="color:${ok?'var(--ok)':'var(--bad)'}">${text}</b></span>`;
-}
-function recalc(){
-  const vYaw = normNumber(document.getElementById('vYaw').value);
-  const vRoll = normNumber(document.getElementById('vRoll').value);
-  const vPitch = normNumber(document.getElementById('vPitch').value);
-  const vAlt = normNumber(document.getElementById('vAlt').value);
-
-  const pills = [
-    mkPill('Направление', vYaw),
-    mkPill('Крен', vRoll),
-    mkPill('Тангаж', vPitch),
-    mkPill('Высота', vAlt),
-  ];
-
-  // общий статус: FAIL если хотя бы одно заполненное > LIMIT, PASS если есть хотя бы одно заполненное и все <= LIMIT
-  const arr = [vYaw,vRoll,vPitch,vAlt].filter(v=>v!==null);
-  let overall = `<span class="pill"><span class="dot warn"></span><strong>ИТОГО:</strong> нет данных</span>`;
-  if(arr.length){
-    const okAll = arr.every(v=>v<=LIMIT_V);
-    overall = `<span class="pill"><span class="dot ${okAll?'ok':'bad'}"></span><strong>ИТОГО:</strong> <b style="color:${okAll?'var(--ok)':'var(--bad)'}">${okAll?'PASS':'FAIL'}</b></span>`;
-  }
-
-  statusRow.innerHTML = overall + pills.join('');
-  saveState();
-}
-inputs.forEach(el=>{
-  el.addEventListener('input', recalc);
-  el.addEventListener('change', recalc);
-});
-
-/* =========================
-   NO-HOW СХЕМА: CANVAS
-   - не SVG
-   - масштаб
-   - экспорт PNG
-   - модал увеличения
-========================= */
-const canvas = document.getElementById('schemeCanvas');
-const holder = document.getElementById('canvasHolder');
-const ctx = canvas.getContext('2d');
-
-let zoom = 1;
-
-function dpr(){
-  return window.devicePixelRatio || 1;
-}
-
-function setCanvasSize(){
-  // базовый логический размер
-  const baseW = 1100, baseH = 360;
-  const scale = dpr();
-
-  canvas.style.width = (baseW * zoom) + 'px';
-  canvas.style.height = (baseH * zoom) + 'px';
-
-  canvas.width = Math.round(baseW * zoom * scale);
-  canvas.height = Math.round(baseH * zoom * scale);
-
-  ctx.setTransform(scale,0,0,scale,0,0);
-  // дальше рисуем в CSS-пикселях, но учитываем zoom вручную через размеры стиля
-  drawScheme(baseW * zoom, baseH * zoom);
-}
-
-function roundRect(x,y,w,h,r){
-  const rr = Math.min(r, w/2, h/2);
-  ctx.beginPath();
-  ctx.moveTo(x+rr,y);
-  ctx.arcTo(x+w,y,x+w,y+h,rr);
-  ctx.arcTo(x+w,y+h,x,y+h,rr);
-  ctx.arcTo(x,y+h,x,y,rr);
-  ctx.arcTo(x,y,x+w,y,rr);
-  ctx.closePath();
-}
-
-function drawGlowLine(x1,y1,x2,y2){
-  ctx.save();
-  ctx.lineCap = 'round';
-
-  // glow
-  ctx.strokeStyle = 'rgba(233,242,255,.18)';
-  ctx.lineWidth = 10;
-  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-
-  // core
-  ctx.strokeStyle = 'rgba(233,242,255,.92)';
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-  ctx.restore();
-}
-
-function drawLabel(x,y,text,align='center'){
-  ctx.save();
-  ctx.fillStyle = 'rgba(183,199,221,.95)';
-  ctx.font = '12px system-ui, -apple-system, Segoe UI, Roboto, Arial';
-  ctx.textAlign = align;
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, x, y);
-  ctx.restore();
-}
-
-function drawTitle(x,y,text){
-  ctx.save();
-  ctx.fillStyle = 'rgba(233,242,255,.98)';
-  ctx.font = '700 13px system-ui, -apple-system, Segoe UI, Roboto, Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, x, y);
-  ctx.restore();
-}
-
-function drawScheme(w,h){
-  // background
-  ctx.clearRect(0,0,w,h);
-
-  // subtle grid (no-how визуальный)
-  ctx.save();
-  ctx.globalAlpha = 0.12;
-  ctx.strokeStyle = 'rgba(255,255,255,.22)';
-  ctx.lineWidth = 1;
-  for(let x=0;x<=w;x+=40){
-    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke();
-  }
-  for(let y=0;y<=h;y+=40){
-    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
-  }
-  ctx.restore();
-
-  // card sheen
-  const grad = ctx.createRadialGradient(w*0.25,h*0.15,30,w*0.25,h*0.15,w*0.9);
-  grad.addColorStop(0,'rgba(255,255,255,.10)');
-  grad.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,w,h);
-
-  // positions
-  const leftBox = {x:90, y:120, w:260, h:140};
-  const rightBox = {x:w-370, y:90, w:300, h:190};
-
-  // boxes
-  ctx.save();
-  ctx.strokeStyle = 'rgba(233,242,255,.95)';
-  ctx.lineWidth = 2;
-  ctx.fillStyle = 'rgba(0,0,0,.14)';
-  roundRect(leftBox.x,leftBox.y,leftBox.w,leftBox.h,14);
-  ctx.fill(); ctx.stroke();
-
-  roundRect(rightBox.x,rightBox.y,rightBox.w,rightBox.h,14);
-  ctx.fill(); ctx.stroke();
-  ctx.restore();
-
-  // box titles
-  drawTitle(leftBox.x+leftBox.w/2, leftBox.y+26, 'ПУЛЬТ');
-  drawTitle(leftBox.x+leftBox.w/2, leftBox.y+48, '6С2.702.007');
-
-  drawTitle(rightBox.x+rightBox.w/2, rightBox.y+28, 'АГРЕГАТ УПРАВЛЕНИЯ');
-  drawTitle(rightBox.x+rightBox.w/2, rightBox.y+52, '6С2.399.000');
-
-  // ports labels
-  drawLabel(leftBox.x+40, leftBox.y+86, '«К»','left');
-  drawLabel(leftBox.x+40, leftBox.y+110, '«РА»','left');
-
-  drawLabel(rightBox.x+55, rightBox.y+115, '«АУ»','left');
-  drawLabel(rightBox.x+140, rightBox.y+115, '«К»','left');
-  drawLabel(rightBox.x+225, rightBox.y+115, '«РА»','left');
-
-  // harness lines (K & RA)
-  const yK  = leftBox.y+86;
-  const yRA = leftBox.y+110;
-
-  const xL = leftBox.x+leftBox.w;
-  const xR = rightBox.x;
-
-  drawGlowLine(xL, yK, xR, rightBox.y+110);   // to "K"
-  drawGlowLine(xL, yRA, xR, rightBox.y+145);  // to "RA"
-
-  // harness labels
-  drawLabel((xL+xR)/2, yK-14, 'Жгут «К» 6С6.640.043');
-  drawLabel((xL+xR)/2, yRA+18, 'Жгут «РА» 6С6.640.044');
-
-  // AU down line to feeder scheme
-  const auX = rightBox.x + 70;
-  const auY = rightBox.y + rightBox.h;
-  drawGlowLine(auX, auY, auX, h-54);
-  drawLabel(auX+170, h-54, 'Жгут «АУ» → к фидерной схеме вертолёта', 'left');
-
-  // decorative "connector blocks" (no-how look)
-  function connector(x,y){
-    ctx.save();
-    ctx.fillStyle = 'rgba(255,255,255,.12)';
-    ctx.strokeStyle = 'rgba(233,242,255,.55)';
-    ctx.lineWidth = 1;
-    roundRect(x,y,26,18,6);
-    ctx.fill(); ctx.stroke();
-    ctx.restore();
-  }
-  connector(xL-10, yK-10);
-  connector(xL-10, yRA-10);
-  connector(xR-16, rightBox.y+102);
-  connector(xR-16, rightBox.y+137);
-
-  // footer note
-  ctx.save();
-  ctx.fillStyle = 'rgba(183,199,221,.85)';
-  ctx.font = '11px system-ui, -apple-system, Segoe UI, Roboto, Arial';
-  ctx.textAlign = 'right';
-  ctx.fillText('Canvas-схема (не SVG) · масштаб/экспорт · p03.html', w-14, h-14);
-  ctx.restore();
-}
-
-function zoomApply(newZoom){
-  zoom = Math.max(0.7, Math.min(1.8, newZoom));
-  setCanvasSize();
-  saveState();
-}
-
-// zoom buttons
-document.getElementById('zoomIn').onclick  = ()=>zoomApply(zoom+0.1);
-document.getElementById('zoomOut').onclick = ()=>zoomApply(zoom-0.1);
-document.getElementById('resetZoom').onclick = ()=>zoomApply(1);
-
-// export
-document.getElementById('exportPng').onclick = ()=>{
-  const url = canvas.toDataURL('image/png');
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'AP34B_p03_scheme.png';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-};
-
-// click canvas -> modal
-const modal = document.getElementById('modal');
-const modalImg = document.getElementById('modalImg');
-function openModal(){
-  modalImg.src = canvas.toDataURL('image/png');
-  modal.classList.add('open');
-}
-function closeModal(){
-  modal.classList.remove('open');
-}
-canvas.addEventListener('click', openModal);
-document.getElementById('closeModal').addEventListener('click', closeModal);
-modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
-
-/* =========================
-   INIT
-========================= */
-loadState();
-recalc();
-setCanvasSize();
-
-window.addEventListener('resize', ()=>{
-  // canvas размер фикс по логике, но DPR может меняться (например, перетаскивание окна)
-  setCanvasSize();
-});
 </script>
+
 </body>
 </html>
