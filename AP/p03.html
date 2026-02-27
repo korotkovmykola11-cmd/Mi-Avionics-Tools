@@ -760,35 +760,17 @@ h2 {
     </table>
   </div>
 
-  <!-- Connection diagram -->
-  <div class="card scheme-section">
-    <div class="section-label">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="2" y="2" rx="2"/><rect width="8" height="8" x="14" y="2" rx="2"/><rect width="8" height="8" x="8" y="14" rx="2"/><path d="M6 10v4"/><path d="M18 10v4"/><path d="M10 18H6"/><path d="M14 18h4"/></svg>
-      Схема подключения
-    </div>
+ <!-- БЕЛАЯ (Ч/Б) СХЕМА ПОДКЛЮЧЕНИЯ — ТЕХНОЛОГИЯ -->
 
-    <div class="scheme-container">
-
-     <!-- Desktop layout -->
-<div class="scheme-desktop">
+<div class="scheme-desktop" style="filter: grayscale(100%);">
 
   <!-- ПУЛЬТ -->
-  <div class="device-box">
-    <div class="device-icon device-icon-pult">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-           stroke="#3b82f6" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <rect width="18" height="18" x="3" y="3" rx="2"/>
-        <path d="M7 7h3"/>
-        <path d="M7 12h10"/>
-        <path d="M7 17h7"/>
-      </svg>
-    </div>
-    <div class="device-title">Пульт</div>
+  <div class="device-box" style="background:#fff;color:#000;border:2px solid #000;">
+    <div class="device-title">ПУЛЬТ</div>
     <div class="device-code">6С2.702.007</div>
     <div class="device-connectors">
-      <span class="connector-tag">К</span>
-      <span class="connector-tag">РА</span>
+      <span class="connector-tag" style="border-color:#000;color:#000;">К</span>
+      <span class="connector-tag" style="border-color:#000;color:#000;">РА</span>
     </div>
   </div>
 
@@ -797,53 +779,41 @@ h2 {
 
     <!-- К → К -->
     <div class="cable-line">
-      <span class="cable-label cable-label-k">
+      <span class="cable-label" style="color:#000;background:#fff;border:1px solid #000;">
         Жгут «К» 6С6.640.043
       </span>
-      <span class="cable-dot cable-dot-k"></span>
-      <div class="cable-track cable-track-k"></div>
-      <span class="cable-arrow cable-arrow-k"></span>
+      <span class="cable-dot" style="background:#000;"></span>
+      <div class="cable-track" style="background:#000;"></div>
+      <span class="cable-arrow" style="border-left:8px solid #000;"></span>
     </div>
 
     <!-- РА → РА -->
     <div class="cable-line">
-      <span class="cable-label cable-label-ra">
+      <span class="cable-label" style="color:#000;background:#fff;border:1px solid #000;">
         Жгут «РА» 6С6.640.044
       </span>
-      <span class="cable-dot cable-dot-ra"></span>
-      <div class="cable-track cable-track-ra"></div>
-      <span class="cable-arrow cable-arrow-ra"></span>
+      <span class="cable-dot" style="background:#000;"></span>
+      <div class="cable-track" style="background:#000;"></div>
+      <span class="cable-arrow" style="border-left:8px solid #000;"></span>
     </div>
 
   </div>
 
   <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
-  <div class="device-box">
-    <div class="device-icon device-icon-au">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-           stroke="#22c55e" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2v4"/>
-        <path d="m6.343 6.343-2.828 2.828"/>
-        <path d="M2 12h4"/>
-        <path d="M12 18v4"/>
-        <path d="m17.657 6.343 2.828 2.828"/>
-        <path d="M18 12h4"/>
-        <circle cx="12" cy="12" r="4"/>
-      </svg>
-    </div>
-    <div class="device-title">Агрегат управления</div>
+  <div class="device-box" style="background:#fff;color:#000;border:2px solid #000;">
+    <div class="device-title">АГРЕГАТ УПРАВЛЕНИЯ</div>
     <div class="device-code">6С2.399.000</div>
     <div class="device-connectors">
-      <span class="connector-tag">АУ</span>
-      <span class="connector-tag">К</span>
-      <span class="connector-tag">РА</span>
+      <span class="connector-tag" style="border-color:#000;color:#000;">АУ</span>
+      <span class="connector-tag" style="border-color:#000;color:#000;">К</span>
+      <span class="connector-tag" style="border-color:#000;color:#000;">РА</span>
     </div>
 
+    <!-- ВЫХОД В БОРТОВУЮ СХЕМУ -->
     <div class="down-link">
-      <div class="down-track"></div>
-      <div class="down-arrow"></div>
-      <div class="down-label">
+      <div class="down-track" style="background:#000;"></div>
+      <div class="down-arrow" style="border-top:8px solid #000;"></div>
+      <div class="down-label" style="color:#000;border:1px dashed #000;background:#fff;">
         Жгут «АУ» → фидерная схема вертолёта
       </div>
     </div>
