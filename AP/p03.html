@@ -291,79 +291,16 @@ h2 {
   50% { box-shadow: 0 0 20px var(--bad-glow); }
 }
 
-/* ===== SCHEME TOGGLE ===== */
-.scheme-toggle {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  background: rgba(0,0,0,0.2);
-  padding: 4px;
-  border-radius: 10px;
-  width: fit-content;
-}
-
-.toggle-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.toggle-btn.active {
-  background: var(--accent);
-  color: white;
-  box-shadow: 0 0 12px var(--accent-glow);
-}
-
-.toggle-btn:hover:not(.active) {
-  background: rgba(59, 130, 246, 0.1);
-  color: var(--text);
-}
-
 /* ===== SCHEME ===== */
 .scheme-section { margin-top: 0; }
 
 .scheme-container {
   border: 1px solid var(--stroke);
   border-radius: 14px;
-  background:
-    linear-gradient(transparent 23px, rgba(100,160,255,0.03) 24px),
-    linear-gradient(90deg, transparent 23px, rgba(100,160,255,0.03) 24px),
-    rgba(0,0,0,0.2);
-  background-size: 24px 24px, 24px 24px, 100% 100%;
-  padding: 24px 12px;
+  background: white;
+  padding: 40px 20px;
   overflow: hidden;
   position: relative;
-}
-
-.scheme-svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.scheme-view {
-  display: none;
-}
-
-.scheme-view.active {
-  display: block;
-}
-
-/* SVG animation keyframes */
-@keyframes dash-flow-k {
-  to { stroke-dashoffset: -24; }
-}
-@keyframes dash-flow-ra {
-  to { stroke-dashoffset: -24; }
-}
-@keyframes dash-flow-au {
-  to { stroke-dashoffset: -24; }
 }
 
 /* ===== NOTE ===== */
@@ -399,7 +336,6 @@ h2 {
   body::before { display: none; }
   .card { box-shadow: none; border: 1px solid #ccc; background: #fff; }
   .text-content { background: #f5f5f5; color: #111; border-color: #ccc; }
-  .scheme-toggle { display: none; }
 }
 </style>
 </head>
@@ -488,185 +424,75 @@ h2 {
     </table>
   </div>
 
-  <!-- Connection diagram with toggle -->
+  <!-- Connection diagram -->
   <div class="card scheme-section">
     <div class="section-label">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="2" y="2" rx="2"/><rect width="8" height="8" x="14" y="2" rx="2"/><rect width="8" height="8" x="8" y="14" rx="2"/><path d="M6 10v4"/><path d="M18 10v4"/><path d="M10 18H6"/><path d="M14 18h4"/></svg>
       Схема подключения
     </div>
 
-    <!-- Toggle between schemes -->
-    <div class="scheme-toggle">
-      <button class="toggle-btn active" onclick="switchScheme('svg')">🎨 Цветная SVG</button>
-      <button class="toggle-btn" onclick="switchScheme('tech')">📋 Технология (Ч/Б)</button>
-    </div>
-
-    <!-- SVG Scheme (animated, colorful) -->
-    <div id="scheme-svg" class="scheme-view active">
-      <div class="scheme-container">
-        <svg class="scheme-svg" viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="glow-k" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="4" result="blur"/>
-              <feFlood flood-color="#3b82f6" flood-opacity="0.5"/>
-              <feComposite in2="blur" operator="in"/>
-              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="glow-ra" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="4" result="blur"/>
-              <feFlood flood-color="#06b6d4" flood-opacity="0.5"/>
-              <feComposite in2="blur" operator="in"/>
-              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="glow-au" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="4" result="blur"/>
-              <feFlood flood-color="#22c55e" flood-opacity="0.5"/>
-              <feComposite in2="blur" operator="in"/>
-              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="box-shadow" x="-10%" y="-10%" width="120%" height="130%">
-              <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
-            </filter>
-          </defs>
-
-          <!-- ПУЛЬТ -->
-          <g filter="url(#box-shadow)">
-            <rect x="30" y="260" width="210" height="140" rx="14" fill="rgba(22,40,68,0.92)" stroke="rgba(100,160,255,0.25)" stroke-width="2"/>
-            <rect x="31" y="261" width="208" height="138" rx="13" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-          </g>
-          <rect x="108" y="276" width="54" height="34" rx="10" fill="rgba(59,130,246,0.12)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
-          <text x="135" y="299" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#3b82f6" opacity="0.8">&#9635;</text>
-          <text x="135" y="330" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="800" letter-spacing="0.06em" fill="#fff">ПУЛЬТ</text>
-          <text x="135" y="348" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#7b8faa">6С2.702.007</text>
-
-          <rect x="220" y="303" width="30" height="22" rx="6" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-          <text x="235" y="318" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#3b82f6">К</text>
-          <circle cx="250" cy="314" r="5" fill="#3b82f6" opacity="0.9">
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
-          </circle>
-
-          <rect x="220" y="345" width="30" height="22" rx="6" fill="rgba(6,182,212,0.15)" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
-          <text x="235" y="360" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#06b6d4">РА</text>
-          <circle cx="250" cy="356" r="5" fill="#06b6d4" opacity="0.9">
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.5s" repeatCount="indefinite"/>
-          </circle>
-
-          <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
-          <g filter="url(#box-shadow)">
-            <rect x="430" y="30" width="240" height="130" rx="14" fill="rgba(22,40,68,0.92)" stroke="rgba(100,160,255,0.25)" stroke-width="2"/>
-            <rect x="431" y="31" width="238" height="128" rx="13" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-          </g>
-          <rect x="523" y="44" width="54" height="34" rx="10" fill="rgba(34,197,94,0.12)" stroke="rgba(34,197,94,0.25)" stroke-width="1"/>
-          <text x="550" y="67" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" font-weight="700" fill="#22c55e" opacity="0.8">&#9881;</text>
-          <text x="550" y="98" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="800" letter-spacing="0.06em" fill="#fff">АГРЕГАТ УПРАВЛЕНИЯ</text>
-          <text x="550" y="116" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#7b8faa">6С2.399.000</text>
-
-          <rect x="470" y="140" width="30" height="22" rx="6" fill="rgba(34,197,94,0.15)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
-          <text x="485" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#22c55e">АУ</text>
-          <circle cx="485" cy="167" r="5" fill="#22c55e" opacity="0.9">
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.3s" repeatCount="indefinite"/>
-          </circle>
-
-          <rect x="535" y="140" width="30" height="22" rx="6" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
-          <text x="550" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#3b82f6">К</text>
-          <circle cx="550" cy="167" r="5" fill="#3b82f6" opacity="0.9">
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="0.7s" repeatCount="indefinite"/>
-          </circle>
-
-          <rect x="600" y="140" width="30" height="22" rx="6" fill="rgba(6,182,212,0.15)" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
-          <text x="615" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#06b6d4">РА</text>
-          <circle cx="615" cy="167" r="5" fill="#06b6d4" opacity="0.9">
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" begin="1s" repeatCount="indefinite"/>
-          </circle>
-
-          <!-- Cables -->
-          <path d="M 255 314 L 370 314 L 370 200 L 550 200 L 550 172"
-                fill="none" stroke="rgba(59,130,246,0.15)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M 255 314 L 370 314 L 370 200 L 550 200 L 550 172"
-                fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
-                stroke-dasharray="8 16" style="animation: dash-flow-k 1s linear infinite;" filter="url(#glow-k)"/>
-
-          <path d="M 255 356 L 400 356 L 400 230 L 615 230 L 615 172"
-                fill="none" stroke="rgba(6,182,212,0.15)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M 255 356 L 400 356 L 400 230 L 615 230 L 615 172"
-                fill="none" stroke="#06b6d4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
-                stroke-dasharray="8 16" style="animation: dash-flow-ra 1s linear infinite; animation-delay: 0.3s;" filter="url(#glow-ra)"/>
-
-          <path d="M 485 172 L 485 440"
-                fill="none" stroke="rgba(34,197,94,0.15)" stroke-width="6" stroke-linecap="round"/>
-          <path d="M 485 172 L 485 440"
-                fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round"
-                stroke-dasharray="8 16" style="animation: dash-flow-au 1s linear infinite; animation-delay: 0.6s;" filter="url(#glow-au)"/>
-          <polygon points="485,448 479,436 491,436" fill="#22c55e"/>
-
-          <!-- Labels -->
-          <rect x="20" y="18" width="180" height="42" rx="10" fill="rgba(6,182,212,0.06)" stroke="rgba(6,182,212,0.2)" stroke-width="1"/>
-          <text x="30" y="36" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#06b6d4" letter-spacing="0.03em">ЖГУТ «РА»</text>
-          <text x="30" y="52" font-family="JetBrains Mono,monospace" font-size="10" fill="#7b8faa">6С6.640.044</text>
-          <line x1="200" y1="39" x2="395" y2="290" stroke="rgba(6,182,212,0.25)" stroke-width="1" stroke-dasharray="4 4"/>
-          <circle cx="395" cy="290" r="3" fill="#06b6d4" opacity="0.5"/>
-
-          <rect x="20" y="72" width="180" height="42" rx="10" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
-          <text x="30" y="90" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#3b82f6" letter-spacing="0.03em">ЖГУТ «К»</text>
-          <text x="30" y="106" font-family="JetBrains Mono,monospace" font-size="10" fill="#7b8faa">6С6.640.043</text>
-          <line x1="200" y1="93" x2="365" y2="260" stroke="rgba(59,130,246,0.25)" stroke-width="1" stroke-dasharray="4 4"/>
-          <circle cx="365" cy="260" r="3" fill="#3b82f6" opacity="0.5"/>
-
-          <rect x="385" y="454" width="200" height="20" rx="6" fill="rgba(34,197,94,0.06)" stroke="rgba(34,197,94,0.2)" stroke-width="1" stroke-dasharray="4 3"/>
-          <text x="485" y="468" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#7b8faa">К ФИДЕРНОЙ СХЕМЕ ВЕРТОЛЁТА</text>
-        </svg>
-      </div>
-    </div>
-
-    <!-- Technology Scheme (black & white) -->
-    <div id="scheme-tech" class="scheme-view">
-      <div class="scheme-container" style="background: white; padding: 40px 20px;">
-        <svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
-          
-          <text x="280" y="40" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">ЖГУТ „К"</text>
-          <text x="280" y="58" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">6С6.640.043</text>
-          
-          <rect x="80" y="150" width="220" height="140" fill="none" stroke="#000" stroke-width="2"/>
-          <text x="190" y="180" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">ПУЛЬТ</text>
-          <text x="190" y="210" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.702.007</text>
-          <text x="280" y="245" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="end">„К"</text>
-          <text x="280" y="270" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="end">„РА"</text>
-          
-          <rect x="480" y="80" width="240" height="160" fill="none" stroke="#000" stroke-width="2"/>
-          <text x="600" y="110" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">АГРЕГАТ</text>
-          <text x="600" y="130" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">УПРАВЛЕНИЯ</text>
-          <text x="600" y="155" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.399.000</text>
-          
-          <text x="520" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„АУ"</text>
-          <text x="600" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„К"</text>
-          <text x="680" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„РА"</text>
-          
-          <rect x="505" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
-          <rect x="585" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
-          <rect x="665" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
-          
-          <line x1="300" y1="240" x2="340" y2="220" stroke="#000" stroke-width="2"/>
-          <line x1="340" y1="220" x2="340" y2="100" stroke="#000" stroke-width="2"/>
-          <line x1="340" y1="100" x2="600" y2="100" stroke="#000" stroke-width="2"/>
-          <line x1="600" y1="100" x2="600" y2="240" stroke="#000" stroke-width="2"/>
-          <rect x="300" y="235" width="20" height="10" fill="#000" stroke="#000" stroke-width="1"/>
-          
-          <line x1="300" y1="265" x2="680" y2="265" stroke="#000" stroke-width="2"/>
-          <line x1="680" y1="265" x2="680" y2="240" stroke="#000" stroke-width="2"/>
-          <rect x="300" y="260" width="20" height="10" fill="#000" stroke="#000" stroke-width="1"/>
-          
-          <line x1="280" y1="60" x2="340" y2="150" stroke="#000" stroke-width="1" stroke-dasharray="3,3"/>
-          
-          <line x1="520" y1="255" x2="520" y2="330" stroke="#000" stroke-width="2"/>
-          <line x1="600" y1="255" x2="600" y2="330" stroke="#000" stroke-width="2"/>
-          
-          <text x="560" y="360" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">К ФИДЕРНОЙ</text>
-          <text x="560" y="380" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">СХЕМЕ ВЕРТОЛЁТА</text>
-          
-          <text x="400" y="440" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle" font-style="italic">Рис.2. Схема подключения пульта 6С2.702.007 при</text>
-          <text x="400" y="458" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle" font-style="italic">проверке автопилота на вертолете с помощью жгута "К".</text>
-        </svg>
-      </div>
+    <div class="scheme-container">
+      <svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+        
+        <!-- ЖГУТ "К" label (top) -->
+        <text x="400" y="40" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">ЖГУТ „К"</text>
+        <text x="400" y="58" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">6С6.640.043</text>
+        
+        <!-- ПУЛЬТ (left box) -->
+        <rect x="80" y="150" width="220" height="140" fill="none" stroke="#000" stroke-width="2"/>
+        
+        <text x="190" y="185" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">ПУЛЬТ</text>
+        <text x="190" y="210" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.702.007</text>
+        
+        <!-- Labels "К" and "РА" inside ПУЛЬТ -->
+        <text x="280" y="250" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="end">„К"</text>
+        <text x="280" y="275" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="end">„РА"</text>
+        
+        <!-- АГРЕГАТ УПРАВЛЕНИЯ (right box) -->
+        <rect x="480" y="80" width="240" height="160" fill="none" stroke="#000" stroke-width="2"/>
+        
+        <text x="600" y="110" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">АГРЕГАТ</text>
+        <text x="600" y="130" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">УПРАВЛЕНИЯ</text>
+        <text x="600" y="155" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.399.000</text>
+        
+        <!-- Connectors labels on АГРЕГАТ -->
+        <text x="520" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„АУ"</text>
+        <text x="600" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„К"</text>
+        <text x="680" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„РА"</text>
+        
+        <!-- Small connector boxes at bottom of АГРЕГАТ -->
+        <rect x="505" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
+        <rect x="585" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
+        <rect x="665" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
+        
+        <!-- Cable "К" connection line (HORIZONTAL from bottom) -->
+        <line x1="300" y1="245" x2="585" y2="245" stroke="#000" stroke-width="2"/>
+        
+        <!-- Connector at ПУЛЬТ for "К" -->
+        <rect x="300" y="240" width="20" height="10" fill="#000" stroke="#000" stroke-width="1"/>
+        
+        <!-- Cable "РА" line (horizontal) -->
+        <line x1="300" y1="270" x2="665" y2="270" stroke="#000" stroke-width="2"/>
+        <line x1="665" y1="270" x2="665" y2="255" stroke="#000" stroke-width="2"/>
+        
+        <!-- Connector at ПУЛЬТ for "РА" -->
+        <rect x="300" y="265" width="20" height="10" fill="#000" stroke="#000" stroke-width="1"/>
+        
+        <!-- Diagonal line from ЖГУТ label to cable К -->
+        <line x1="400" y1="60" x2="400" y2="200" stroke="#000" stroke-width="1" stroke-dasharray="3,3"/>
+        
+        <!-- Vertical lines down from АГРЕГАТ (АУ connectors) -->
+        <line x1="520" y1="255" x2="520" y2="330" stroke="#000" stroke-width="2"/>
+        <line x1="600" y1="255" x2="600" y2="330" stroke="#000" stroke-width="2"/>
+        
+        <!-- Text at bottom -->
+        <text x="560" y="360" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">К ФИДЕРНОЙ</text>
+        <text x="560" y="380" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">СХЕМЕ ВЕРТОЛЁТА</text>
+        
+        <!-- Caption at bottom -->
+        <text x="400" y="440" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle" font-style="italic">Рис.2. Схема подключения пульта 6С2.702.007 при</text>
+        <text x="400" y="458" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle" font-style="italic">проверке автопилота на вертолете с помощью жгута "К".</text>
+      </svg>
     </div>
 
     <div class="note">
@@ -685,23 +511,6 @@ function chk(el, id) {
     r.innerHTML = '<span class="result-badge result-pass">&#10003; PASS</span>';
   } else {
     r.innerHTML = '<span class="result-badge result-fail">&#10007; FAIL</span>';
-  }
-}
-
-function switchScheme(type) {
-  const buttons = document.querySelectorAll('.toggle-btn');
-  buttons.forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-  
-  const svgScheme = document.getElementById('scheme-svg');
-  const techScheme = document.getElementById('scheme-tech');
-  
-  if (type === 'svg') {
-    svgScheme.classList.add('active');
-    techScheme.classList.remove('active');
-  } else {
-    svgScheme.classList.remove('active');
-    techScheme.classList.add('active');
   }
 }
 </script>
