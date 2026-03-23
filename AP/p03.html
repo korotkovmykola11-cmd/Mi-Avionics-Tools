@@ -432,66 +432,77 @@ h2 {
     </div>
 
     <div class="scheme-container">
-      <svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+      <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
         
-        <!-- ЖГУТ "К" label (top) -->
-        <text x="400" y="40" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">ЖГУТ „К"</text>
-        <text x="400" y="58" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">6С6.640.043</text>
+        <!-- ЖГУТ "К" label (top left) -->
+        <text x="150" y="30" font-family="Arial, sans-serif" font-size="13" fill="#000" font-weight="bold">ЖГУТ „К"</text>
+        <text x="150" y="48" font-family="Arial, sans-serif" font-size="11" fill="#000">6С6.640.043</text>
+        
+        <!-- ЖГУТ "РА" label (top center) -->
+        <text x="350" y="30" font-family="Arial, sans-serif" font-size="13" fill="#000" font-weight="bold">ЖГУТ „РА"</text>
+        <text x="350" y="48" font-family="Arial, sans-serif" font-size="11" fill="#000">6С6.640.044</text>
         
         <!-- ПУЛЬТ (left box) -->
-        <rect x="80" y="150" width="220" height="140" fill="none" stroke="#000" stroke-width="2"/>
+        <rect x="80" y="150" width="240" height="130" fill="none" stroke="#000" stroke-width="2.5"/>
         
-        <text x="190" y="185" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">ПУЛЬТ</text>
-        <text x="190" y="210" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.702.007</text>
+        <text x="200" y="185" font-family="Arial, sans-serif" font-size="15" fill="#000" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
+        <text x="200" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">6С2.702.007</text>
         
-        <!-- Labels "К" and "РА" inside ПУЛЬТ -->
-        <text x="280" y="250" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="end">„К"</text>
-        <text x="280" y="275" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="end">„РА"</text>
+        <!-- Labels "К" and "РА" on right side of ПУЛЬТ -->
+        <text x="300" y="245" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="end">„К"</text>
+        <text x="300" y="265" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="end">„РА"</text>
         
         <!-- АГРЕГАТ УПРАВЛЕНИЯ (right box) -->
-        <rect x="480" y="80" width="240" height="160" fill="none" stroke="#000" stroke-width="2"/>
+        <rect x="500" y="80" width="260" height="160" fill="none" stroke="#000" stroke-width="2.5"/>
         
-        <text x="600" y="110" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">АГРЕГАТ</text>
-        <text x="600" y="130" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle">УПРАВЛЕНИЯ</text>
-        <text x="600" y="155" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.399.000</text>
+        <text x="630" y="115" font-family="Arial, sans-serif" font-size="15" fill="#000" text-anchor="middle" font-weight="bold">АГРЕГАТ</text>
+        <text x="630" y="135" font-family="Arial, sans-serif" font-size="15" fill="#000" text-anchor="middle" font-weight="bold">УПРАВЛЕНИЯ</text>
+        <text x="630" y="160" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">6С2.399.000</text>
         
         <!-- Connectors labels on АГРЕГАТ -->
-        <text x="520" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„АУ"</text>
-        <text x="600" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„К"</text>
-        <text x="680" y="210" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„РА"</text>
+        <text x="540" y="210" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">„АУ"</text>
+        <text x="630" y="210" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">„К"</text>
+        <text x="720" y="210" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">„РА"</text>
         
         <!-- Small connector boxes at bottom of АГРЕГАТ -->
-        <rect x="505" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
-        <rect x="585" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
-        <rect x="665" y="240" width="30" height="15" fill="#000" stroke="#000" stroke-width="1"/>
-        
-        <!-- Cable "К" connection line (HORIZONTAL from bottom) -->
-        <line x1="300" y1="245" x2="585" y2="245" stroke="#000" stroke-width="2"/>
+        <rect x="525" y="240" width="30" height="15" fill="#000"/>
+        <rect x="615" y="240" width="30" height="15" fill="#000"/>
+        <rect x="705" y="240" width="30" height="15" fill="#000"/>
         
         <!-- Connector at ПУЛЬТ for "К" -->
-        <rect x="300" y="240" width="20" height="10" fill="#000" stroke="#000" stroke-width="1"/>
+        <rect x="320" y="237" width="22" height="12" fill="#000"/>
         
-        <!-- Cable "РА" line (horizontal) -->
-        <line x1="300" y1="270" x2="665" y2="270" stroke="#000" stroke-width="2"/>
-        <line x1="665" y1="270" x2="665" y2="255" stroke="#000" stroke-width="2"/>
+        <!-- Cable "К" line (HORIZONTAL) -->
+        <line x1="342" y1="243" x2="615" y2="243" stroke="#000" stroke-width="2.5"/>
+        
+        <!-- Diagonal line from ЖГУТ "К" label to cable -->
+        <line x1="200" y1="50" x2="250" y2="170" stroke="#000" stroke-width="1" stroke-dasharray="4,4"/>
         
         <!-- Connector at ПУЛЬТ for "РА" -->
-        <rect x="300" y="265" width="20" height="10" fill="#000" stroke="#000" stroke-width="1"/>
+        <rect x="320" y="257" width="22" height="12" fill="#000"/>
         
-        <!-- Diagonal line from ЖГУТ label to cable К -->
-        <line x1="400" y1="60" x2="400" y2="200" stroke="#000" stroke-width="1" stroke-dasharray="3,3"/>
+        <!-- Cable "РА" line (HORIZONTAL) -->
+        <line x1="342" y1="263" x2="705" y2="263" stroke="#000" stroke-width="2.5"/>
+        <line x1="705" y1="263" x2="705" y2="255" stroke="#000" stroke-width="2.5"/>
+        <line x1="720" y1="263" x2="720" y2="255" stroke="#000" stroke-width="2.5"/>
         
-        <!-- Vertical lines down from АГРЕГАТ (АУ connectors) -->
-        <line x1="520" y1="255" x2="520" y2="330" stroke="#000" stroke-width="2"/>
-        <line x1="600" y1="255" x2="600" y2="330" stroke="#000" stroke-width="2"/>
+        <!-- Diagonal line from ЖГУТ "РА" label to cable -->
+        <line x1="400" y1="50" x2="500" y2="180" stroke="#000" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        <!-- Vertical line down from АГРЕГАТ (АУ connector) -->
+        <line x1="540" y1="255" x2="540" y2="340" stroke="#000" stroke-width="2.5"/>
+        
+        <!-- Arrow down -->
+        <polygon points="540,345 535,335 545,335" fill="#000"/>
         
         <!-- Text at bottom -->
-        <text x="560" y="360" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">К ФИДЕРНОЙ</text>
-        <text x="560" y="380" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">СХЕМЕ ВЕРТОЛЁТА</text>
+        <text x="540" y="375" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">К ФИДЕРНОЙ</text>
+        <text x="540" y="393" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">СХЕМЕ ВЕРТОЛЁТА</text>
         
         <!-- Caption at bottom -->
-        <text x="400" y="440" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle" font-style="italic">Рис.2. Схема подключения пульта 6С2.702.007 при</text>
-        <text x="400" y="458" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle" font-style="italic">проверке автопилота на вертолете с помощью жгута "К".</text>
+        <text x="400" y="430" font-family="Arial, sans-serif" font-size="11" fill="#000" text-anchor="middle" font-style="italic">
+          Рис.2. Схема подключения пульта 6С2.702.007 при проверке автопилота на вертолете с помощью жгута "К".
+        </text>
       </svg>
     </div>
 
