@@ -573,12 +573,12 @@ body {
 }
 
 .calc-tab {
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-dim);
   background: transparent;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -595,7 +595,7 @@ body {
 
 .calc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 14px;
   margin-bottom: 20px;
 }
@@ -647,7 +647,7 @@ body {
 
 .calc-result-info .result-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(24px, 6vw, 32px);
+  font-size: clamp(22px, 5vw, 28px);
   font-weight: 700;
   color: var(--accent-cyan);
 }
@@ -673,6 +673,61 @@ body {
   color: var(--accent-rose);
 }
 
+.calc-steps {
+  margin-top: 16px;
+  padding: 14px;
+  background: rgba(0,0,0,0.15);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+.calc-steps strong {
+  color: var(--accent-cyan);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  font-size: 12px;
+}
+.info-table th, .info-table td {
+  padding: 8px 12px;
+  border: 1px solid var(--border-dim);
+  text-align: center;
+}
+.info-table th {
+  background: rgba(0,0,0,0.2);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.info-table td {
+  color: var(--text-primary);
+}
+
+.why-block {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-md);
+}
+.why-block-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-emerald);
+  margin-bottom: 10px;
+}
+.why-block-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
 @media print {
   body { background: #fff !important; color: #000 !important; }
   .bg-grid { display: none !important; }
@@ -689,6 +744,8 @@ body {
   .op-table thead th:nth-child(3),
   .op-table tbody td:nth-child(3) { display: none; }
   .switch-grid { grid-template-columns: repeat(2, 1fr); }
+  .calc-tabs { gap: 6px; }
+  .calc-tab { padding: 6px 10px; font-size: 10px; }
 }
 </style>
 </head>
@@ -725,17 +782,23 @@ body {
       </div>
       <div class="intro-text">
         Перед проверкой необходимо выписать из паспорта на <strong>АП-34Б</strong>, АП-34Б серия 2 &sect;9 "Заметки по эксплуатации" крутизну корректора высоты <strong>Ккв (В/м)</strong>.<br><br>
+        В паспорте или в ПКД смотри систему крутизны характеристики корректора высоты для ГПК, ПВ для разных высот (800, 1000 м и т.д.).<br><br>
         В случае отсутствия в паспорте этой записи, необходимо произвести замер крутизны корректора высоты.
       </div>
     </div>
 
     <div class="expert-note">
       <div class="pencil-text">
-        <span class="pencil-important">Пример:</span> Нам надо задать напряжение по вольтметру "3" для 8 метров:<br>
-        <span class="pencil-formula">8 × 0,16 = 1,28 В</span><br><br>
-        Где <span class="pencil-formula">0,16</span> — это крутизна характеристики по высоте, взято из паспорта КВ-11 или рассчитано самим.<br><br>
-        <span class="pencil-important">Расчёт крутизны:</span> Напряжение получили 16 В по вольтметру "3" при 100 м:<br>
-        <span class="pencil-formula">16 : 100 = 0,16 В/м</span>
+        <span class="pencil-important">Пример 1 (малые высоты 80-100м):</span><br>
+        Напряжение получили 16 В по вольтметру "3" при 100 м:<br>
+        <span class="pencil-formula">16 : 100 = 0,16 В/м</span><br>
+        Для 8 метров: <span class="pencil-formula">8 × 0,16 = 1,28 В</span><br><br>
+        
+        <span class="pencil-important">Пример 2 (большие высоты 800-1000м):</span><br>
+        Напряжение получили 8,8 В по вольтметру "3" при 1000 м:<br>
+        <span class="pencil-formula">8,8 : 1000 = 0,0088 В/м</span><br>
+        Для 8 метров: <span class="pencil-formula">0,0088 × 8 = 0,0704 В</span>
+        
         <div class="pencil-calc">
           <span class="pencil-important">** Пример проверки:</span><br>
           50 × 0,16 / 1,28 = 6,25<br>
@@ -744,6 +807,13 @@ body {
           - где 1,28 — напряжение для высоты 8 метров<br><br>
           Иногда фигурирует <span class="pencil-formula">1,44 В</span> для высоты 7-8 м (при Ккв=0,18)
         </div>
+      </div>
+    </div>
+
+    <div class="why-block">
+      <div class="why-block-title">Почему именно 7-8 метров?</div>
+      <div class="why-block-text">
+        7-8 метров — это стандартная высота висения вертолёта МИ-8 при взлёте, посадке и выполнении работ. Автопилот должен стабильно удерживать именно эту высоту, поэтому проверка передаточного числа проводится на рабочем режиме. Корректор высоты КВ-11 наиболее точно работает в диапазоне малых высот.
       </div>
     </div>
   </section>
@@ -817,7 +887,7 @@ body {
           <td class="op-num">30</td>
           <td>
             Включить канал высоты кнопкой-лампочкой <strong>"Вкл.высота"</strong> на пульте управления.<br><br>
-            Задать от <strong>КПУ-3</strong> в корректор высоты разряжение порядка <strong>80-100 м</strong> высоты.<br><br>
+            Задать от <strong>КПУ-3</strong> в корректор высоты разряжение порядка <strong>80-100 м</strong> (или 800-1000 м) высоты.<br><br>
             По высотомеру замерить заданное разряжение и соответствующее ему напряжение по вольтметру "3".<br><br>
             Крутизну корректора высоты (Ккв) подсчитать по формуле.
           </td>
@@ -877,14 +947,20 @@ body {
         </tr>
         <tr>
           <td class="op-num">33</td>
-          <td>Переключатель "9" поставить в положение <strong>"КУ"</strong>, потенциометром "2" установить нуль на приборе "3".<br><br>Переключатель "10" поставить в положение <strong>"δ"</strong> и зафиксировать показание прибора "3". Подвижный индекс "В" индикатора должен при этом отклониться <strong>вверх</strong>.</td>
+          <td>Переключатель "9" поставить в положение <strong>"КУ"</strong>, потенциометром "2" установить нуль на приборе "3".<br><br>Переключатель "10" поставить в положение <strong>"δ"</strong>.</td>
           <td class="op-deviation">—</td>
           <td class="op-check"><input type="checkbox"></td>
         </tr>
         <tr>
           <td class="op-num">34</td>
-          <td>Поворотом ручки задатчика высоты <strong>"6"</strong> по часовой стрелке задать сигнал по вольтметру "3", соответствующий <strong>7-8 м</strong> высоты.<br><br>Показания прибора "3" должны соответствовать <strong>таблице 3</strong>.</td>
+          <td>Поворотом ручки задатчика высоты <strong>"6"</strong> <u>по часовой стрелке</u> задать сигнал по вольтметру "3", соответствующий <strong>7-8 м</strong> высоты.<br><br>Подвижный индекс "В" индикатора должен при этом отклониться <strong>вниз</strong>.<br><br>Показания прибора "3" должны соответствовать <strong>таблице 3</strong>.</td>
           <td class="op-deviation">Если не в допуске — регулировка потенциометром <strong>"ВЫСОТА"</strong> на передней панели агрегата управления</td>
+          <td class="op-check"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="op-num">35</td>
+          <td>Перед включением канала высоты задатчик "6" повернуть по часовой стрелке до упора.<br><br>Проделать описанную выше проверку, задавая сигнал высоты поворотом ручки задатчика высоты "6" в <u>противоположную сторону</u> (против часовой стрелки).<br><br>Подвижный индекс "В" индикатора должен при этом отклониться <strong>вверх</strong>.</td>
+          <td class="op-deviation">—</td>
           <td class="op-check"><input type="checkbox"></td>
         </tr>
       </tbody>
@@ -932,7 +1008,7 @@ body {
         <tr>
           <td style="font-weight: 700; color: var(--accent-cyan);">МИ-8</td>
           <td><div class="channel-cell"><span class="channel-badge">В</span> Высота</div></td>
-          <td class="val">7 ÷ 8</td>
+          <td class="val">7 - 8</td>
           <td class="val">(6,65 ± 2,65) · Н</td>
           <td class="val">6,65 ± 2,65</td>
         </tr>
@@ -950,22 +1026,18 @@ body {
 
     <div class="scheme-wrapper">
       <svg class="scheme-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
-        <!-- ПУЛЬТ 6С2.702.007 -->
         <rect x="50" y="80" width="220" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
         <text x="160" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
         <text x="160" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.702.007</text>
         
-        <!-- Connector К on ПУЛЬТ (bottom) -->
         <rect x="140" y="220" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
         <rect x="155" y="240" width="10" height="15" fill="#2c3e50"/>
         <text x="160" y="275" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"К"</text>
         
-        <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
         <rect x="500" y="80" width="260" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
         <text x="630" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
         <text x="630" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.399.000</text>
         
-        <!-- Connectors on АГРЕГАТ (bottom) -->
         <rect x="530" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
         <rect x="538" y="260" width="14" height="18" fill="#2c3e50"/>
         <text x="545" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"АУ"</text>
@@ -978,14 +1050,11 @@ body {
         <rect x="708" y="260" width="14" height="18" fill="#2c3e50"/>
         <text x="715" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"РА"</text>
         
-        <!-- Cable from ПУЛЬТ bottom to АГРЕГАТ bottom (black, goes below) -->
         <path d="M 160 255 L 160 340 L 630 340 L 630 278" stroke="#1a1a1a" stroke-width="4" fill="none"/>
         
-        <!-- To feeder -->
         <line x1="545" y1="278" x2="545" y2="360" stroke="#2c3e50" stroke-width="3"/>
         <line x1="715" y1="278" x2="715" y2="360" stroke="#2c3e50" stroke-width="3"/>
         
-        <!-- Bracket -->
         <path d="M 545 360 L 545 375 Q 545 385 555 385 L 705 385 Q 715 385 715 375 L 715 360" stroke="#2c3e50" stroke-width="2" fill="none"/>
         <line x1="630" y1="385" x2="630" y2="405" stroke="#2c3e50" stroke-width="2"/>
         <polygon points="630,415 622,400 638,400" fill="#2c3e50"/>
@@ -1064,7 +1133,8 @@ body {
       </div>
 
       <div class="calc-tabs">
-        <button class="calc-tab active" onclick="showCalcTab('kkv')">Ккв</button>
+        <button class="calc-tab active" onclick="showCalcTab('kkv')">Ккв (малые H)</button>
+        <button class="calc-tab" onclick="showCalcTab('kkv2')">Ккв (большие H)</button>
         <button class="calc-tab" onclick="showCalcTab('voltage')">U (напряжение)</button>
         <button class="calc-tab" onclick="showCalcTab('ratio')">i (передаточное)</button>
       </div>
@@ -1076,27 +1146,72 @@ body {
             <input class="calc-input" type="number" id="kkv-u" placeholder="16" value="16" step="0.01" oninput="calcKkv()">
           </div>
           <div class="calc-field">
-            <label>H — Высота (м)</label>
+            <label>H — Высота замера (м)</label>
             <input class="calc-input" type="number" id="kkv-h" placeholder="100" value="100" oninput="calcKkv()">
           </div>
         </div>
         <div class="calc-result">
           <div class="calc-result-info">
             <div class="result-label">Ккв =</div>
-            <div class="result-value" id="kkv-result">0.16</div>
+            <div class="result-value" id="kkv-result">0.1600</div>
           </div>
           <span class="result-badge pass">В/м</span>
         </div>
+        <div class="calc-steps" id="kkv-steps">
+          Расчёт: <strong>16 / 100 = 0.1600</strong> В/м<br>
+          Напряжение для 8м: <strong>0.1600 × 8 = 1.28</strong> В
+        </div>
+      </div>
+
+      <div class="calc-content" id="calc-kkv2">
+        <div class="calc-grid">
+          <div class="calc-field">
+            <label>U — Напряжение (В)</label>
+            <input class="calc-input" type="number" id="kkv2-u" placeholder="8.8" value="8.8" step="0.01" oninput="calcKkv2()">
+          </div>
+          <div class="calc-field">
+            <label>H — Высота замера (м)</label>
+            <input class="calc-input" type="number" id="kkv2-h" placeholder="1000" value="1000" oninput="calcKkv2()">
+          </div>
+          <div class="calc-field">
+            <label>Целевая высота (м)</label>
+            <input class="calc-input" type="number" id="kkv2-target" placeholder="8" value="8" oninput="calcKkv2()">
+          </div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-info">
+            <div class="result-label">Ккв =</div>
+            <div class="result-value" id="kkv2-result">0.0088</div>
+          </div>
+          <span class="result-badge pass">В/м</span>
+        </div>
+        <div class="calc-steps" id="kkv2-steps">
+          Расчёт: <strong>8.8 / 1000 = 0.0088</strong> В/м (для 1м)<br>
+          Напряжение для 8м: <strong>0.0088 × 8 = 0.0704</strong> В
+        </div>
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Высота</th>
+              <th>Крутизна, мм вод.ст./В</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1.0 км</td><td>Не более 20</td></tr>
+            <tr><td>12 км</td><td>Не более 8</td></tr>
+            <tr><td>20 км</td><td>Не более 3</td></tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="calc-content" id="calc-voltage">
         <div class="calc-grid">
           <div class="calc-field">
             <label>Ккв (В/м)</label>
-            <input class="calc-input" type="number" id="volt-kkv" placeholder="0.16" value="0.16" step="0.01" oninput="calcVoltage()">
+            <input class="calc-input" type="number" id="volt-kkv" placeholder="0.16" value="0.16" step="0.0001" oninput="calcVoltage()">
           </div>
           <div class="calc-field">
-            <label>H — Высота (м)</label>
+            <label>H — Целевая высота (м)</label>
             <input class="calc-input" type="number" id="volt-h" placeholder="8" value="8" oninput="calcVoltage()">
           </div>
         </div>
@@ -1107,17 +1222,20 @@ body {
           </div>
           <span class="result-badge pass">Вольт</span>
         </div>
+        <div class="calc-steps" id="volt-steps">
+          Расчёт: <strong>0.16 × 8 = 1.28</strong> В
+        </div>
       </div>
 
       <div class="calc-content" id="calc-ratio">
         <div class="calc-grid">
           <div class="calc-field">
-            <label>A — Показание "3"</label>
+            <label>A — Показание "3" (дел)</label>
             <input class="calc-input" type="number" id="ratio-a" placeholder="50" value="50" oninput="calcRatio()">
           </div>
           <div class="calc-field">
             <label>Ккв (В/м)</label>
-            <input class="calc-input" type="number" id="ratio-kkv" placeholder="0.16" value="0.16" step="0.01" oninput="calcRatio()">
+            <input class="calc-input" type="number" id="ratio-kkv" placeholder="0.16" value="0.16" step="0.0001" oninput="calcRatio()">
           </div>
           <div class="calc-field">
             <label>U (В)</label>
@@ -1130,6 +1248,10 @@ body {
             <div class="result-value" id="ratio-result">6.25</div>
           </div>
           <span class="result-badge pass" id="ratio-badge">ГОДЕН</span>
+        </div>
+        <div class="calc-steps" id="ratio-steps">
+          Расчёт: <strong>50 × 0.16 / 1.28 = 6.25</strong><br>
+          Допуск: 4.00 - 9.30 (6.65 ± 2.65)
         </div>
       </div>
     </div>
@@ -1150,13 +1272,33 @@ function showCalcTab(tab) {
 function calcKkv() {
   const u = parseFloat(document.getElementById('kkv-u').value) || 0;
   const h = parseFloat(document.getElementById('kkv-h').value) || 1;
-  document.getElementById('kkv-result').textContent = (u / h).toFixed(4);
+  const kkv = u / h;
+  const u8 = kkv * 8;
+  document.getElementById('kkv-result').textContent = kkv.toFixed(4);
+  document.getElementById('kkv-steps').innerHTML = 
+    'Расчёт: <strong>' + u + ' / ' + h + ' = ' + kkv.toFixed(4) + '</strong> В/м<br>' +
+    'Напряжение для 8м: <strong>' + kkv.toFixed(4) + ' × 8 = ' + u8.toFixed(2) + '</strong> В';
+}
+
+function calcKkv2() {
+  const u = parseFloat(document.getElementById('kkv2-u').value) || 0;
+  const h = parseFloat(document.getElementById('kkv2-h').value) || 1;
+  const target = parseFloat(document.getElementById('kkv2-target').value) || 8;
+  const kkv = u / h;
+  const uTarget = kkv * target;
+  document.getElementById('kkv2-result').textContent = kkv.toFixed(4);
+  document.getElementById('kkv2-steps').innerHTML = 
+    'Расчёт: <strong>' + u + ' / ' + h + ' = ' + kkv.toFixed(4) + '</strong> В/м (для 1м)<br>' +
+    'Напряжение для ' + target + 'м: <strong>' + kkv.toFixed(4) + ' × ' + target + ' = ' + uTarget.toFixed(4) + '</strong> В';
 }
 
 function calcVoltage() {
   const kkv = parseFloat(document.getElementById('volt-kkv').value) || 0;
   const h = parseFloat(document.getElementById('volt-h').value) || 0;
-  document.getElementById('volt-result').textContent = (kkv * h).toFixed(2);
+  const u = kkv * h;
+  document.getElementById('volt-result').textContent = u.toFixed(4);
+  document.getElementById('volt-steps').innerHTML = 
+    'Расчёт: <strong>' + kkv + ' × ' + h + ' = ' + u.toFixed(4) + '</strong> В';
 }
 
 function calcRatio() {
@@ -1165,6 +1307,9 @@ function calcRatio() {
   const u = parseFloat(document.getElementById('ratio-u').value) || 1;
   const result = (a * kkv) / u;
   document.getElementById('ratio-result').textContent = result.toFixed(2);
+  document.getElementById('ratio-steps').innerHTML = 
+    'Расчёт: <strong>' + a + ' × ' + kkv + ' / ' + u + ' = ' + result.toFixed(2) + '</strong><br>' +
+    'Допуск: 4.00 - 9.30 (6.65 ± 2.65)';
   const badge = document.getElementById('ratio-badge');
   if (result >= 4.0 && result <= 9.3) {
     badge.className = 'result-badge pass';
@@ -1176,6 +1321,7 @@ function calcRatio() {
 }
 
 calcKkv();
+calcKkv2();
 calcVoltage();
 calcRatio();
 </script>
