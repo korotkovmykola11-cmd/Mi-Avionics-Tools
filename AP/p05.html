@@ -1,4 +1,3 @@
-Thought for 5s```html
 <!doctype html>
 <html lang="ru">
 <head>
@@ -169,7 +168,7 @@ h2 {
 /* ===== TEXTAREA ===== */
 .text-content {
   width: 100%;
-  min-height: 580px;
+  min-height: 520px;
   padding: 16px 18px;
   border-radius: 12px;
   border: 1px solid var(--stroke);
@@ -185,6 +184,20 @@ h2 {
 .text-content:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ===== RED WARNING TEXT ===== */
+.red-warning {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  font-weight: 500;
 }
 
 /* ===== TABLE ===== */
@@ -394,6 +407,7 @@ h2 {
   body::before { display: none; }
   .card { box-shadow: none; border: 1px solid #ccc; background: #fff; }
   .text-content { background: #f5f5f5; color: #111; border-color: #ccc; }
+  .red-warning { background: #fee2e2; border-color: #fca5a5; }
 }
 </style>
 </head>
@@ -447,7 +461,9 @@ h2 {
 
 б) Проделать описанную выше проверку для каналов крена и тангажа, устанавливая переключатель "8" пульта в положение "К" и "Т" и оперируя соответственно шкалами крена и тангажа, кнопкой "Вкл.крен-тангаж" на пульте управления и кнопкой "Откл.АП" на ручке лётчика.
 
-Скорость согласования автопилота по каналам направления, крена и тангажа должна быть не менее 15 град/сек.После окончания проверки отсоединить разъём "РА" пульта 6С2.702.007 от разъёма "РА" агрегата управления и соединить последний с разъёмом "РА" фидерной схемы вертолёта</textarea>
+Скорость согласования автопилота по каналам направления, крена и тангажа должна быть не менее 15 град/сек.</textarea>
+
+    <div class="red-warning">После окончания проверки отсоединить разъём "РА" пульта 6С2.702.007 от разъёма "РА" агрегата управления и соединить последний с разъёмом "РА" фидерной схемы вертолёта.</div>
   </div>
 
   <!-- Speed calculator -->
@@ -612,4 +628,3 @@ function calc(tId, vId, rId) {
 
 </body>
 </html>
-```
