@@ -272,9 +272,16 @@ body {
   margin-bottom: 14px;
 }
 
+.switch-panel-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
 .switch-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 10px;
 }
 
@@ -308,6 +315,17 @@ body {
   color: #c4b5fd;
   font-weight: 500;
   line-height: 1.3;
+}
+
+.switch-highlight {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+.switch-highlight .switch-num {
+  background: var(--accent-rose);
+}
+.switch-highlight .switch-pos {
+  color: #fda4af;
 }
 
 .op-table {
@@ -728,6 +746,69 @@ body {
   line-height: 1.7;
 }
 
+.mode-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.mode-card {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-dim);
+}
+.mode-card.mode-delta {
+  background: rgba(244, 63, 94, 0.06);
+  border-color: rgba(244, 63, 94, 0.3);
+}
+.mode-card.mode-deltah {
+  background: rgba(59, 130, 246, 0.06);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+.mode-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.mode-card.mode-delta .mode-card-title { color: var(--accent-rose); }
+.mode-card.mode-deltah .mode-card-title { color: var(--accent-blue); }
+.mode-card-symbol {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.mode-card.mode-delta .mode-card-symbol {
+  background: rgba(244, 63, 94, 0.2);
+  color: var(--accent-rose);
+}
+.mode-card.mode-deltah .mode-card-symbol {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--accent-blue);
+}
+.mode-card-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.mode-card-use {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 @media print {
   body { background: #fff !important; color: #000 !important; }
   .bg-grid { display: none !important; }
@@ -784,6 +865,32 @@ body {
         Перед проверкой необходимо выписать из паспорта на <strong>АП-34Б</strong>, АП-34Б серия 2 &sect;9 "Заметки по эксплуатации" крутизну корректора высоты <strong>Ккв (В/м)</strong>.<br><br>
         В паспорте или в ПКД смотри систему крутизны характеристики корректора высоты для ГПК, ПВ для разных высот (800, 1000 м и т.д.).<br><br>
         В случае отсутствия в паспорте этой записи, необходимо произвести замер крутизны корректора высоты.
+      </div>
+    </div>
+
+    <!-- Разъяснение положений переключателя "10" -->
+    <div class="mode-comparison">
+      <div class="mode-card mode-delta">
+        <div class="mode-card-title">
+          <span class="mode-card-symbol">δ</span>
+          Положение "δ" (дельта)
+        </div>
+        <div class="mode-card-desc">
+          Режим измерения <strong>отклонения</strong> (передаточного числа).<br>
+          Используется для проверки передаточного числа по высоте.
+        </div>
+        <div class="mode-card-use">Применяется в п.33-35 при проверке</div>
+      </div>
+      <div class="mode-card mode-deltah">
+        <div class="mode-card-title">
+          <span class="mode-card-symbol">ΔН</span>
+          Положение "ΔН" (дельта H)
+        </div>
+        <div class="mode-card-desc">
+          Режим измерения <strong>остаточного сигнала</strong> по высоте.<br>
+          Используется для проверки остаточного сигнала канала.
+        </div>
+        <div class="mode-card-use">Применяется в п.31-32 (начальная настройка)</div>
       </div>
     </div>
 
@@ -846,12 +953,13 @@ body {
     </table>
 
     <div class="switch-panel">
-      <div class="switch-panel-title">Положения переключателей на пульте 6С2.702.007</div>
+      <div class="switch-panel-title">Начальные положения переключателей (для остаточного сигнала)</div>
+      <div class="switch-panel-subtitle">Переключатель "10" в положении "ΔН" для проверки остаточного сигнала</div>
       <div class="switch-grid">
         <div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">среднее</span></div>
         <div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
         <div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"ОСТ.СИГН."</span></div>
-        <div class="switch-item"><span class="switch-num">"10"</span><span class="switch-pos">"δ"</span></div>
+        <div class="switch-item switch-highlight"><span class="switch-num">"10"</span><span class="switch-pos">"ΔН"</span></div>
         <div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
         <div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
       </div>
@@ -859,8 +967,7 @@ body {
 
     <div class="expert-note">
       <div class="pencil-text">
-        <span class="pencil-important">Нейтраль:</span> Ручка <span class="pencil-formula">Шаг-Газ</span> в среднем (нейтральном) положении!<br><br>
-        Масштаб: <span class="pencil-formula">"9"</span> в положение "ОСТ.СИГН.", <span class="pencil-formula">"10"</span> в положение "δ".
+        <span class="pencil-important">Нейтраль:</span> Ручка <span class="pencil-formula">Шаг-Газ</span> в среднем (нейтральном) положении!
       </div>
     </div>
   </section>
@@ -935,7 +1042,7 @@ body {
       <tbody>
         <tr>
           <td class="op-num">31</td>
-          <td>Установить ручку <strong>Шаг-Газ</strong> в среднее положение (нейтраль).<br><br>Зафиксировать показание прибора "3", которое должно быть <strong>не более ±15</strong>.</td>
+          <td>Установить ручку <strong>Шаг-Газ</strong> в среднее положение (нейтраль).<br><br>Переключатель "10" в положении <strong>"ΔН"</strong>.<br><br>Зафиксировать показание прибора "3", которое должно быть <strong>не более ±15</strong>.</td>
           <td class="op-deviation">—</td>
           <td class="op-check"><input type="checkbox"></td>
         </tr>
@@ -965,6 +1072,19 @@ body {
         </tr>
       </tbody>
     </table>
+
+    <div class="switch-panel">
+      <div class="switch-panel-title">Положения переключателей для проверки передаточного числа (п.33-35)</div>
+      <div class="switch-panel-subtitle">Переключатель "10" переводится в положение "δ" для измерения отклонения</div>
+      <div class="switch-grid">
+        <div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">нуль на "3"</span></div>
+        <div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
+        <div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"КУ"</span></div>
+        <div class="switch-item switch-highlight"><span class="switch-num">"10"</span><span class="switch-pos">"δ"</span></div>
+        <div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
+        <div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
+      </div>
+    </div>
   </section>
 
   <section class="card">
@@ -1025,39 +1145,55 @@ body {
     </div>
 
     <div class="scheme-wrapper">
-      <svg class="scheme-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+      <svg class="scheme-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+        <!-- ПУЛЬТ -->
         <rect x="50" y="80" width="220" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
         <text x="160" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
         <text x="160" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.702.007</text>
         
+        <!-- Разъём К на пульте -->
         <rect x="140" y="220" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
         <rect x="155" y="240" width="10" height="15" fill="#2c3e50"/>
-        <text x="160" y="275" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"К"</text>
         
+        <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
         <rect x="500" y="80" width="260" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
         <text x="630" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
         <text x="630" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.399.000</text>
         
+        <!-- Разъёмы на агрегате -->
         <rect x="530" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
         <rect x="538" y="260" width="14" height="18" fill="#2c3e50"/>
-        <text x="545" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"АУ"</text>
         
         <rect x="615" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
         <rect x="623" y="260" width="14" height="18" fill="#2c3e50"/>
-        <text x="630" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"К"</text>
         
         <rect x="700" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
         <rect x="708" y="260" width="14" height="18" fill="#2c3e50"/>
-        <text x="715" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"РА"</text>
         
-        <path d="M 160 255 L 160 340 L 630 340 L 630 278" stroke="#1a1a1a" stroke-width="4" fill="none"/>
+        <!-- Кабель (рисуем ДО надписей) -->
+        <path d="M 160 255 L 160 370 L 630 370 L 630 278" stroke="#1a1a1a" stroke-width="4" fill="none"/>
         
-        <line x1="545" y1="278" x2="545" y2="360" stroke="#2c3e50" stroke-width="3"/>
-        <line x1="715" y1="278" x2="715" y2="360" stroke="#2c3e50" stroke-width="3"/>
+        <!-- Линии к борту -->
+        <line x1="545" y1="278" x2="545" y2="390" stroke="#2c3e50" stroke-width="3"/>
+        <line x1="715" y1="278" x2="715" y2="390" stroke="#2c3e50" stroke-width="3"/>
         
-        <path d="M 545 360 L 545 375 Q 545 385 555 385 L 705 385 Q 715 385 715 375 L 715 360" stroke="#2c3e50" stroke-width="2" fill="none"/>
-        <line x1="630" y1="385" x2="630" y2="405" stroke="#2c3e50" stroke-width="2"/>
-        <polygon points="630,415 622,400 638,400" fill="#2c3e50"/>
+        <!-- Скобка -->
+        <path d="M 545 390 L 545 405 Q 545 415 555 415 L 705 415 Q 715 415 715 405 L 715 390" stroke="#2c3e50" stroke-width="2" fill="none"/>
+        <line x1="630" y1="415" x2="630" y2="435" stroke="#2c3e50" stroke-width="2"/>
+        <polygon points="630,445 622,430 638,430" fill="#2c3e50"/>
+        
+        <!-- Надписи разъёмов (рисуем ПОСЛЕ линий с белой подложкой) -->
+        <rect x="145" y="290" width="30" height="18" fill="#f8fafc" rx="2"/>
+        <text x="160" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
+        
+        <rect x="527" y="290" width="36" height="18" fill="#f8fafc" rx="2"/>
+        <text x="545" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"АУ"</text>
+        
+        <rect x="615" y="290" width="30" height="18" fill="#f8fafc" rx="2"/>
+        <text x="630" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
+        
+        <rect x="697" y="290" width="36" height="18" fill="#f8fafc" rx="2"/>
+        <text x="715" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"РА"</text>
         
         <text x="630" y="30" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">Рис. 202</text>
       </svg>
@@ -1121,7 +1257,7 @@ body {
 
     <div class="pult-image-container">
       <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image.png-CHI3qhhgSbOPYZ5BHSyJKFQxO4MR2U.jpeg" alt="Пульт 6С2.702.007" class="pult-image">
-      <div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "12", "13", потенциометры "2", "14", "15", задатчик высоты, вольтметр "3"</div>
+      <div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "12", "13", потенциометры "2", "14", "15", задатчик высоты "6", вольтметр "3"</div>
     </div>
   </section>
 
