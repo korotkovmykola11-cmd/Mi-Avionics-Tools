@@ -9,7 +9,6 @@
 
 :root {
   --bg-primary: #0a0e17;
-  --bg-secondary: #111827;
   --bg-card: rgba(17, 24, 39, 0.95);
   --bg-elevated: rgba(31, 41, 55, 0.9);
   --border-dim: rgba(75, 85, 99, 0.3);
@@ -24,7 +23,6 @@
   --accent-rose: #f43f5e;
   --accent-violet: #8b5cf6;
   --glow-blue: rgba(59, 130, 246, 0.15);
-  --glow-emerald: rgba(16, 185, 129, 0.15);
   --glow-amber: rgba(245, 158, 11, 0.15);
   --pencil-color: #374151;
   --paper-bg: #fefce8;
@@ -63,7 +61,6 @@ body {
   z-index: 1;
 }
 
-/* HEADER */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -135,7 +132,6 @@ body {
 .print-btn:hover { background: var(--accent-blue); color: #fff; }
 .print-btn svg { width: 16px; height: 16px; }
 
-/* CARD */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-dim);
@@ -174,7 +170,6 @@ body {
   color: var(--accent-cyan);
 }
 
-/* INTRO */
 .intro-block {
   padding: clamp(16px, 3vw, 24px);
   border-radius: var(--radius-md);
@@ -203,7 +198,6 @@ body {
 }
 .intro-text strong { color: var(--accent-amber); }
 
-/* PENCIL NOTES */
 .expert-note {
   position: relative;
   margin: 20px 0;
@@ -260,7 +254,6 @@ body {
   font-size: clamp(17px, 3.5vw, 20px);
 }
 
-/* SWITCH PANEL */
 .switch-panel {
   padding: clamp(16px, 3vw, 24px);
   border-radius: var(--radius-md);
@@ -317,7 +310,6 @@ body {
   line-height: 1.3;
 }
 
-/* OP TABLE */
 .op-table {
   width: 100%;
   border-collapse: separate;
@@ -377,7 +369,6 @@ body {
   accent-color: var(--accent-emerald);
 }
 
-/* FORMULA */
 .formula-card {
   padding: clamp(16px, 3vw, 24px);
   border-radius: var(--radius-md);
@@ -439,7 +430,6 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* DATA TABLE */
 .data-table {
   width: 100%;
   border-collapse: separate;
@@ -506,7 +496,6 @@ body {
   color: var(--accent-cyan);
 }
 
-/* SCHEME */
 .scheme-wrapper {
   padding: clamp(16px, 4vw, 32px);
   background: linear-gradient(135deg, #f8fafc, #f1f5f9);
@@ -535,7 +524,6 @@ body {
 }
 .scheme-caption strong { color: #d97706; }
 
-/* PULT IMAGE */
 .pult-image-container {
   margin: 20px 0;
   border-radius: var(--radius-md);
@@ -557,7 +545,6 @@ body {
   text-align: center;
 }
 
-/* CALCULATOR */
 .calc-panel {
   padding: clamp(16px, 4vw, 28px);
   background: var(--bg-elevated);
@@ -686,7 +673,6 @@ body {
   color: var(--accent-rose);
 }
 
-/* PRINT */
 @media print {
   body { background: #fff !important; color: #000 !important; }
   .bg-grid { display: none !important; }
@@ -697,7 +683,6 @@ body {
   h1 { font-size: 16pt !important; }
 }
 
-/* MOBILE */
 @media (max-width: 640px) {
   .page-header { flex-direction: column; }
   .header-actions { width: 100%; justify-content: space-between; }
@@ -713,7 +698,6 @@ body {
 
 <div class="container">
 
-  <!-- HEADER -->
   <header class="page-header">
     <div class="header-main">
       <button class="back-btn" onclick="history.back()">
@@ -733,7 +717,6 @@ body {
     </div>
   </header>
 
-  <!-- INTRO -->
   <section class="card">
     <div class="intro-block">
       <div class="intro-title">
@@ -749,13 +732,13 @@ body {
     <div class="expert-note">
       <div class="pencil-text">
         <span class="pencil-important">Пример:</span> Нам надо задать напряжение по вольтметру "3" для 8 метров:<br>
-        <span class="pencil-formula">8 x 0,16 = 1,28 В</span><br><br>
+        <span class="pencil-formula">8 × 0,16 = 1,28 В</span><br><br>
         Где <span class="pencil-formula">0,16</span> — это крутизна характеристики по высоте, взято из паспорта КВ-11 или рассчитано самим.<br><br>
         <span class="pencil-important">Расчёт крутизны:</span> Напряжение получили 16 В по вольтметру "3" при 100 м:<br>
         <span class="pencil-formula">16 : 100 = 0,16 В/м</span>
         <div class="pencil-calc">
           <span class="pencil-important">** Пример проверки:</span><br>
-          50 x 0,16 / 1,28 = 6,25<br>
+          50 × 0,16 / 1,28 = 6,25<br>
           - где 50 — значение полученное по вольтметру "3"<br>
           - где 0,16 — крутизна (Ккв)<br>
           - где 1,28 — напряжение для высоты 8 метров<br><br>
@@ -765,7 +748,6 @@ body {
     </div>
   </section>
 
-  <!-- SETUP -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -799,7 +781,7 @@ body {
         <div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">среднее</span></div>
         <div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
         <div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"ОСТ.СИГН."</span></div>
-        <div class="switch-item"><span class="switch-num">"10"</span><span class="switch-pos">"&delta;" или "ΔН"</span></div>
+        <div class="switch-item"><span class="switch-num">"10"</span><span class="switch-pos">"δ"</span></div>
         <div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
         <div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
       </div>
@@ -808,12 +790,11 @@ body {
     <div class="expert-note">
       <div class="pencil-text">
         <span class="pencil-important">Нейтраль:</span> Ручка <span class="pencil-formula">Шаг-Газ</span> в среднем (нейтральном) положении!<br><br>
-        Масштаб выставляется: <span class="pencil-formula">"9"</span> в положение "ОСТ.СИГН.", <span class="pencil-formula">"10"</span> в положение "&delta;" или "ΔН".
+        Масштаб: <span class="pencil-formula">"9"</span> в положение "ОСТ.СИГН.", <span class="pencil-formula">"10"</span> в положение "δ".
       </div>
     </div>
   </section>
 
-  <!-- MEASUREMENT -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -864,7 +845,6 @@ body {
     </div>
   </section>
 
-  <!-- CHECK -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -885,19 +865,19 @@ body {
       <tbody>
         <tr>
           <td class="op-num">31</td>
-          <td>Установить ручку <strong>Шаг-Газ</strong> в среднее положение (нейтраль).<br><br>Зафиксировать показание прибора "3", которое должно быть <strong>не более &plusmn;15</strong>.</td>
+          <td>Установить ручку <strong>Шаг-Газ</strong> в среднее положение (нейтраль).<br><br>Зафиксировать показание прибора "3", которое должно быть <strong>не более ±15</strong>.</td>
           <td class="op-deviation">—</td>
           <td class="op-check"><input type="checkbox"></td>
         </tr>
         <tr>
           <td class="op-num">32</td>
           <td>Включить канал высоты кнопкой <strong>"Вкл.высота"</strong>.<br><br>Зафиксировать показание прибора "3".<br><br>Разность в показаниях до и после включения канала высоты должна быть <strong>не более 20</strong>.</td>
-          <td class="op-deviation">Если разность &gt; 20, произвести центровку потенциометром <strong>"ЦЕНТР-ВЫСОТА"</strong> на передней панели агрегата управления</td>
+          <td class="op-deviation">Если разность > 20, произвести центровку потенциометром <strong>"ЦЕНТР-ВЫСОТА"</strong> на передней панели агрегата управления</td>
           <td class="op-check"><input type="checkbox"></td>
         </tr>
         <tr>
           <td class="op-num">33</td>
-          <td>Переключатель "9" поставить в положение <strong>"КУ"</strong>, потенциометром "2" установить нуль на приборе "3".<br><br>Переключатель "10" поставить в положение <strong>"&Delta;Н"</strong>.</td>
+          <td>Переключатель "9" поставить в положение <strong>"КУ"</strong>, потенциометром "2" установить нуль на приборе "3".<br><br>Переключатель "10" поставить в положение <strong>"δ"</strong> и зафиксировать показание прибора "3". Подвижный индекс "В" индикатора должен при этом отклониться <strong>вверх</strong>.</td>
           <td class="op-deviation">—</td>
           <td class="op-check"><input type="checkbox"></td>
         </tr>
@@ -911,7 +891,6 @@ body {
     </table>
   </section>
 
-  <!-- FORMULA & TABLE -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -926,7 +905,7 @@ body {
         <span>i</span>
         <span>=</span>
         <span class="frac">
-          <span class="num">A &middot; Ккв</span>
+          <span class="num">A · Ккв</span>
           <span class="denom">U</span>
         </span>
         <span class="formula-unit">[% х.разд. / метр]</span>
@@ -953,15 +932,14 @@ body {
         <tr>
           <td style="font-weight: 700; color: var(--accent-cyan);">МИ-8</td>
           <td><div class="channel-cell"><span class="channel-badge">В</span> Высота</div></td>
-          <td class="val">7 &divide; 8</td>
-          <td class="val">(6,65 &plusmn; 2,65) &middot; Н</td>
-          <td class="val">6,65 &plusmn; 2,65</td>
+          <td class="val">7 ÷ 8</td>
+          <td class="val">(6,65 ± 2,65) · Н</td>
+          <td class="val">6,65 ± 2,65</td>
         </tr>
       </tbody>
     </table>
   </section>
 
-  <!-- SCHEME RIS.202 -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -971,112 +949,87 @@ body {
     </div>
 
     <div class="scheme-wrapper">
-      <svg class="scheme-svg" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+      <svg class="scheme-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
         <!-- ПУЛЬТ 6С2.702.007 -->
-        <rect x="50" y="100" width="220" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
-        <text x="160" y="145" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
-        <text x="160" y="170" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.702.007</text>
+        <rect x="50" y="80" width="220" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+        <text x="160" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
+        <text x="160" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.702.007</text>
         
-        <!-- Connector К on ПУЛЬТ -->
-        <rect x="270" y="155" width="30" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="300" y="160" width="12" height="10" fill="#2c3e50"/>
-        <text x="285" y="195" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"К"</text>
-        
-        <!-- Connector РА on ПУЛЬТ -->
-        <rect x="140" y="240" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="155" y="260" width="10" height="15" fill="#2c3e50"/>
-        <text x="160" y="290" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"РА"</text>
+        <!-- Connector К on ПУЛЬТ (bottom) -->
+        <rect x="140" y="220" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="155" y="240" width="10" height="15" fill="#2c3e50"/>
+        <text x="160" y="275" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"К"</text>
         
         <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
-        <rect x="500" y="50" width="260" height="120" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
-        <text x="630" y="90" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
-        <text x="630" y="115" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.399.000</text>
+        <rect x="500" y="80" width="260" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+        <text x="630" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
+        <text x="630" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.399.000</text>
         
-        <!-- Connectors on АГРЕГАТ -->
-        <rect x="530" y="170" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="538" y="210" width="14" height="18" fill="#2c3e50"/>
-        <text x="545" y="155" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"АУ"</text>
+        <!-- Connectors on АГРЕГАТ (bottom) -->
+        <rect x="530" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="538" y="260" width="14" height="18" fill="#2c3e50"/>
+        <text x="545" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"АУ"</text>
         
-        <rect x="615" y="170" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="623" y="210" width="14" height="18" fill="#2c3e50"/>
-        <text x="630" y="155" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"К"</text>
+        <rect x="615" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="623" y="260" width="14" height="18" fill="#2c3e50"/>
+        <text x="630" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"К"</text>
         
-        <rect x="700" y="170" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="708" y="210" width="14" height="18" fill="#2c3e50"/>
-        <text x="715" y="155" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"РА"</text>
+        <rect x="700" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="708" y="260" width="14" height="18" fill="#2c3e50"/>
+        <text x="715" y="295" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">"РА"</text>
         
-        <!-- Cable К -->
-        <line x1="312" y1="165" x2="430" y2="165" stroke="#e74c3c" stroke-width="4"/>
-        <line x1="430" y1="165" x2="430" y2="190" stroke="#e74c3c" stroke-width="4"/>
-        <line x1="430" y1="190" x2="630" y2="190" stroke="#e74c3c" stroke-width="4"/>
-        <line x1="630" y1="190" x2="630" y2="210" stroke="#e74c3c" stroke-width="4"/>
-        
-        <!-- Cable label -->
-        <rect x="440" y="150" width="100" height="22" fill="#fff" stroke="#e74c3c" stroke-width="1" rx="4"/>
-        <text x="490" y="166" font-family="Arial, sans-serif" font-size="12" fill="#e74c3c" text-anchor="middle" font-weight="bold">Жгут "К"</text>
-        <text x="490" y="145" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="middle">6С6.640.043</text>
+        <!-- Cable from ПУЛЬТ bottom to АГРЕГАТ bottom (black, goes below) -->
+        <path d="M 160 255 L 160 340 L 630 340 L 630 278" stroke="#1a1a1a" stroke-width="4" fill="none"/>
         
         <!-- To feeder -->
-        <line x1="545" y1="228" x2="545" y2="310" stroke="#2c3e50" stroke-width="3"/>
-        <line x1="715" y1="228" x2="715" y2="310" stroke="#2c3e50" stroke-width="3"/>
+        <line x1="545" y1="278" x2="545" y2="360" stroke="#2c3e50" stroke-width="3"/>
+        <line x1="715" y1="278" x2="715" y2="360" stroke="#2c3e50" stroke-width="3"/>
         
         <!-- Bracket -->
-        <path d="M 545 310 L 545 325 Q 545 335 555 335 L 705 335 Q 715 335 715 325 L 715 310" stroke="#2c3e50" stroke-width="2" fill="none"/>
-        <line x1="630" y1="335" x2="630" y2="365" stroke="#2c3e50" stroke-width="2"/>
-        <polygon points="630,375 622,358 638,358" fill="#2c3e50"/>
+        <path d="M 545 360 L 545 375 Q 545 385 555 385 L 705 385 Q 715 385 715 375 L 715 360" stroke="#2c3e50" stroke-width="2" fill="none"/>
+        <line x1="630" y1="385" x2="630" y2="405" stroke="#2c3e50" stroke-width="2"/>
+        <polygon points="630,415 622,400 638,400" fill="#2c3e50"/>
         
-        <text x="630" y="395" font-family="Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle" font-style="italic">К фидерной схеме вертолёта</text>
+        <text x="630" y="30" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">Рис. 202</text>
       </svg>
     </div>
     <div class="scheme-caption">
-      <strong>Рис. 202.</strong> Схема подключения пульта 6С2.702.007 при проверке автопилота АП-34Б на вертолёте с помощью жгута "К" (6С6.640.043).
+      <strong>Рис. 202.</strong> Схема подключения пульта 6С2.702.007 при проверке автопилота АП-34Б на вертолёте.
     </div>
   </section>
 
-  <!-- SCHEME RIS.3 (KPU-3) -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/></svg>
       </div>
       <div class="section-title">Схема подключения КПУ-3 (Рис. 3)</div>
     </div>
 
     <div class="scheme-wrapper">
       <svg class="scheme-svg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
-        <!-- ВЫСОТОМЕР -->
         <ellipse cx="150" cy="80" rx="70" ry="45" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
         <text x="150" y="75" font-family="Arial" font-size="13" fill="#555" text-anchor="middle">ВЫСОТОМЕР</text>
         <text x="150" y="95" font-family="Arial" font-size="10" fill="#888" text-anchor="middle">(водяной манометр)</text>
         
-        <!-- Connection line from ВЫСОТОМЕР down -->
         <line x1="150" y1="125" x2="150" y2="180" stroke="#2c3e50" stroke-width="3"/>
         
-        <!-- КВ-11 -->
         <rect x="450" y="50" width="140" height="70" rx="5" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
         <text x="520" y="80" font-family="Arial" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">КВ-11</text>
         <text x="520" y="100" font-family="Arial" font-size="11" fill="#555" text-anchor="middle">Корректор высоты</text>
         
-        <!-- Connection line from ВЫСОТОМЕР to КВ-11 -->
         <line x1="220" y1="80" x2="450" y2="80" stroke="#2c3e50" stroke-width="3"/>
-        
-        <!-- Tube representation -->
         <rect x="280" y="72" width="100" height="16" rx="4" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-        <text x="330" y="60" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">трубопровод</text>
         
-        <!-- ОТ КПУ-3 -->
         <rect x="80" y="200" width="140" height="60" rx="5" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
         <text x="150" y="225" font-family="Arial" font-size="11" fill="#555" text-anchor="middle">КОМПЛЕКТ</text>
         <text x="150" y="245" font-family="Arial" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">КПУ-3</text>
         
-        <!-- Arrow from КПУ-3 up -->
         <line x1="150" y1="200" x2="150" y2="185" stroke="#10b981" stroke-width="3"/>
         <polygon points="150,175 143,190 157,190" fill="#10b981"/>
         
-        <!-- Label -->
         <text x="150" y="290" font-family="Arial" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">ОТ КПУ-3</text>
         
-        <!-- Note box -->
         <rect x="420" y="180" width="220" height="100" rx="5" fill="rgba(59,130,246,0.05)" stroke="rgba(59,130,246,0.2)"/>
         <text x="530" y="205" font-family="Arial" font-size="10" fill="#3b82f6" text-anchor="middle" font-weight="bold">ПРИМЕЧАНИЕ:</text>
         <text x="530" y="225" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">При использовании водяного</text>
@@ -1089,7 +1042,6 @@ body {
     </div>
   </section>
 
-  <!-- PULT IMAGE -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -1104,7 +1056,6 @@ body {
     </div>
   </section>
 
-  <!-- CALCULATOR -->
   <section class="card">
     <div class="calc-panel">
       <div class="calc-title">
@@ -1118,7 +1069,6 @@ body {
         <button class="calc-tab" onclick="showCalcTab('ratio')">i (передаточное)</button>
       </div>
 
-      <!-- Ккв -->
       <div class="calc-content active" id="calc-kkv">
         <div class="calc-grid">
           <div class="calc-field">
@@ -1139,7 +1089,6 @@ body {
         </div>
       </div>
 
-      <!-- U -->
       <div class="calc-content" id="calc-voltage">
         <div class="calc-grid">
           <div class="calc-field">
@@ -1160,7 +1109,6 @@ body {
         </div>
       </div>
 
-      <!-- i -->
       <div class="calc-content" id="calc-ratio">
         <div class="calc-grid">
           <div class="calc-field">
