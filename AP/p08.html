@@ -1,49 +1,52 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>АП-34Б · Пункт 5.7 · Проверка передаточного числа по углу</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Roboto+Slab:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Roboto+Slab:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap');
 
 :root {
-  --bg1: #060d18;
-  --bg2: #0c1929;
-  --bg3: #101e30;
-  --card: rgba(16, 30, 52, 0.85);
-  --card-elevated: rgba(22, 40, 68, 0.9);
-  --stroke: rgba(100, 160, 255, 0.12);
-  --stroke-bright: rgba(100, 160, 255, 0.25);
-  --text: #e4edf9;
+  --bg1: #050a12;
+  --bg2: #0a1220;
+  --bg3: #0f1a2e;
+  --card: rgba(14, 26, 46, 0.92);
+  --card-elevated: rgba(20, 36, 62, 0.95);
+  --stroke: rgba(80, 140, 220, 0.12);
+  --stroke-bright: rgba(80, 140, 220, 0.25);
+  --text: #dce8f8;
   --text-bright: #ffffff;
-  --muted: #7b8faa;
-  --accent: #3b82f6;
-  --accent-glow: rgba(59, 130, 246, 0.4);
-  --accent2: #06b6d4;
-  --ok: #22c55e;
-  --ok-glow: rgba(34, 197, 94, 0.3);
+  --muted: #6b82a0;
+  --accent: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.35);
+  --accent2: #0ea5e9;
+  --ok: #10b981;
+  --ok-glow: rgba(16, 185, 129, 0.25);
   --bad: #ef4444;
-  --bad-glow: rgba(239, 68, 68, 0.3);
+  --bad-glow: rgba(239, 68, 68, 0.25);
+  --warning: #f59e0b;
   --scale-color: #f97316;
-  --scale-bg: rgba(249, 115, 22, 0.08);
+  --scale-bg: rgba(249, 115, 22, 0.06);
   --neutral-color: #10b981;
-  --neutral-bg: rgba(16, 185, 129, 0.08);
+  --neutral-bg: rgba(16, 185, 129, 0.06);
+  --deviation-color: #ef4444;
+  --deviation-bg: rgba(239, 68, 68, 0.06);
   --ch-n: #3b82f6;
-  --ch-k: #a855f7;
+  --ch-k: #8b5cf6;
   --ch-t: #06b6d4;
-  --radius: 16px;
+  --radius: 14px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   color: var(--text);
   background: var(--bg1);
   min-height: 100vh;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 body::before {
@@ -51,34 +54,42 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 800px 600px at 20% 5%, rgba(59, 130, 246, 0.08), transparent),
-    radial-gradient(ellipse 600px 500px at 80% 15%, rgba(6, 182, 212, 0.06), transparent),
-    radial-gradient(ellipse 1000px 400px at 50% 80%, rgba(59, 130, 246, 0.04), transparent);
+    radial-gradient(ellipse 900px 700px at 15% 0%, rgba(37, 99, 235, 0.07), transparent),
+    radial-gradient(ellipse 700px 500px at 85% 10%, rgba(14, 165, 233, 0.05), transparent),
+    radial-gradient(ellipse 1200px 500px at 50% 100%, rgba(37, 99, 235, 0.04), transparent);
   pointer-events: none;
   z-index: 0;
 }
 
 .wrap {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 20px 16px 60px;
+  padding: 20px 16px 80px;
   position: relative;
   z-index: 1;
 }
 
 /* ===== HEADER ===== */
-.header {
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.header-left {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
 }
 
 .back-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border-radius: 10px;
   border: 1px solid var(--stroke);
   background: var(--card);
@@ -88,27 +99,66 @@ body::before {
   font-weight: 500;
   transition: all 0.2s;
   backdrop-filter: blur(8px);
-  flex-shrink: 0;
+  cursor: pointer;
 }
 .back-btn:hover {
   background: var(--card-elevated);
   color: var(--text);
   border-color: var(--stroke-bright);
 }
-.back-btn svg { width: 14px; height: 14px; }
+.back-btn svg { width: 16px; height: 16px; }
 
-.header-text h1 {
-  font-size: 22px;
+.header-info h1 {
+  font-size: 26px;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--text-bright);
+  line-height: 1.2;
 }
-.header-text .subtitle {
-  font-size: 13px;
+
+.header-info .doc-ref {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
   color: var(--muted);
-  margin-top: 2px;
-  font-weight: 500;
+  margin-top: 4px;
 }
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.current-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 6px 12px;
+  background: var(--card);
+  border-radius: 8px;
+  border: 1px solid var(--stroke);
+}
+
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.print-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.print-btn svg { width: 16px; height: 16px; }
 
 /* ===== CARD ===== */
 .card {
@@ -117,44 +167,113 @@ body::before {
   border-radius: var(--radius);
   padding: 24px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset, 0 20px 50px rgba(0,0,0,0.3);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset, 0 25px 60px rgba(0,0,0,0.4);
   margin-bottom: 20px;
 }
 
 .section-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--accent);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
-.section-label svg { width: 16px; height: 16px; opacity: 0.7; }
+.section-label svg { width: 18px; height: 18px; opacity: 0.8; }
+
+/* ===== OPERATION TABLE ===== */
+.op-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  font-size: 13px;
+}
+
+.op-table thead th {
+  background: rgba(37, 99, 235, 0.08);
+  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-align: left;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.op-table thead th:nth-child(1) { width: 60px; text-align: center; }
+.op-table thead th:nth-child(3) { width: 220px; }
+.op-table thead th:nth-child(4) { width: 70px; text-align: center; }
+
+.op-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(80,140,220,0.06);
+  background: rgba(0,0,0,0.15);
+  vertical-align: top;
+}
+
+.op-table tbody tr:last-child td { border-bottom: none; }
+.op-table tbody tr:hover td { background: rgba(37, 99, 235, 0.04); }
+
+.op-table .op-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent2);
+  text-align: center;
+  font-size: 14px;
+}
+
+.op-table .op-content {
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.op-table .op-deviation {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--deviation-color);
+  font-family: 'PT Serif', serif;
+  font-style: italic;
+}
+
+.op-table .op-check {
+  text-align: center;
+}
+
+.op-table .op-check input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--ok);
+}
 
 /* ===== SCALING BLOCK ===== */
 .scaling-block {
-  padding: 20px;
+  padding: 22px;
   border-radius: 14px;
   border: 2px solid var(--scale-color);
   background: var(--scale-bg);
-  margin-bottom: 20px;
+  margin: 16px 0;
 }
 
 .scaling-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .scaling-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: rgba(249, 115, 22, 0.2);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(249, 115, 22, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -163,23 +282,23 @@ body::before {
 
 .scaling-title {
   font-family: 'Roboto Slab', serif;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--scale-color);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .scaling-content {
   font-family: 'Roboto Slab', serif;
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.8;
   color: #fdba74;
 }
 
 .scaling-content ol {
-  margin: 12px 0 0 0;
-  padding-left: 20px;
+  margin: 14px 0 0 0;
+  padding-left: 22px;
 }
 
 .scaling-content li {
@@ -193,9 +312,9 @@ body::before {
 
 .switch-val {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 2px 10px;
   border-radius: 6px;
-  background: rgba(249, 115, 22, 0.25);
+  background: rgba(249, 115, 22, 0.2);
   color: #fff;
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
@@ -203,13 +322,13 @@ body::before {
 }
 
 .scaling-warning {
-  margin-top: 16px;
-  padding: 12px 14px;
-  background: rgba(249, 115, 22, 0.15);
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: rgba(249, 115, 22, 0.12);
   border-radius: 10px;
   border-left: 4px solid var(--scale-color);
   font-family: 'Roboto Slab', serif;
-  font-size: 12.5px;
+  font-size: 13px;
   color: #fff;
 }
 
@@ -220,26 +339,26 @@ body::before {
   border-spacing: 0;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(249, 115, 22, 0.3);
-  margin: 14px 0;
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  margin: 16px 0;
 }
 
 .switch-table thead th {
-  background: rgba(249, 115, 22, 0.18);
-  padding: 10px 14px;
+  background: rgba(249, 115, 22, 0.12);
+  padding: 12px 16px;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--scale-color);
   text-align: left;
-  border-bottom: 1px solid rgba(249, 115, 22, 0.3);
+  border-bottom: 1px solid rgba(249, 115, 22, 0.25);
 }
 
 .switch-table tbody td {
-  padding: 8px 14px;
+  padding: 10px 16px;
   font-size: 13px;
-  border-bottom: 1px solid rgba(249, 115, 22, 0.1);
+  border-bottom: 1px solid rgba(249, 115, 22, 0.08);
   background: rgba(0,0,0,0.2);
   font-family: 'JetBrains Mono', monospace;
 }
@@ -257,25 +376,25 @@ body::before {
 
 /* ===== NEUTRAL BLOCK ===== */
 .neutral-block {
-  padding: 20px;
+  padding: 22px;
   border-radius: 14px;
   border: 2px solid var(--neutral-color);
   background: var(--neutral-bg);
-  margin-bottom: 20px;
+  margin: 16px 0;
 }
 
 .neutral-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .neutral-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: rgba(16, 185, 129, 0.2);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,25 +403,48 @@ body::before {
 
 .neutral-title {
   font-family: 'Roboto Slab', serif;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--neutral-color);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .neutral-content {
   font-family: 'Roboto Slab', serif;
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.8;
   color: #6ee7b7;
+}
+
+.neutral-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.neutral-type-card {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.neutral-type-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--neutral-color);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .neutral-steps {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -310,20 +452,20 @@ body::before {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
-  border-radius: 10px;
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .neutral-step-num {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: var(--neutral-color);
   color: #000;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -331,37 +473,38 @@ body::before {
 
 .neutral-step-text {
   font-family: 'Roboto Slab', serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #fff;
 }
 
 .neutral-arrow {
   color: var(--neutral-color);
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 /* ===== CHANNEL TABS ===== */
 .channel-tabs {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
 .channel-tab {
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
   border: 2px solid transparent;
   background: rgba(0,0,0,0.3);
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .channel-tab:hover {
@@ -374,32 +517,32 @@ body::before {
 
 .channel-tab[data-ch="n"].active {
   border-color: var(--ch-n);
-  background: rgba(59, 130, 246, 0.15);
+  background: rgba(59, 130, 246, 0.12);
 }
 
 .channel-tab[data-ch="k"].active {
   border-color: var(--ch-k);
-  background: rgba(168, 85, 247, 0.15);
+  background: rgba(139, 92, 246, 0.12);
 }
 
 .channel-tab[data-ch="t"].active {
   border-color: var(--ch-t);
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(6, 182, 212, 0.12);
 }
 
 .ch-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
 }
 
 .ch-icon-n { background: rgba(59, 130, 246, 0.2); color: var(--ch-n); }
-.ch-icon-k { background: rgba(168, 85, 247, 0.2); color: var(--ch-k); }
+.ch-icon-k { background: rgba(139, 92, 246, 0.2); color: var(--ch-k); }
 .ch-icon-t { background: rgba(6, 182, 212, 0.2); color: var(--ch-t); }
 
 /* ===== CHANNEL CONTENT ===== */
@@ -411,185 +554,247 @@ body::before {
   display: block;
 }
 
-/* ===== TEXTAREA ===== */
-.text-content {
-  width: 100%;
-  min-height: 380px;
-  padding: 16px 18px;
-  border-radius: 12px;
-  border: 1px solid var(--stroke);
-  background: rgba(0,0,0,0.3);
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
-  line-height: 1.65;
-  resize: vertical;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.text-content:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-/* ===== TOLERANCE BOX ===== */
-.tolerance-box {
-  margin-top: 16px;
-  padding: 16px 20px;
-  border-radius: 12px;
+/* ===== VOLTMETER ===== */
+.voltmeter-section {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 12px;
 }
 
-.tolerance-box.ch-n-box {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+.voltmeter-container {
+  flex: 0 0 320px;
+  padding: 20px;
+  background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
-.tolerance-box.ch-k-box {
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.25);
-}
-
-.tolerance-box.ch-t-box {
-  background: rgba(6, 182, 212, 0.1);
-  border: 1px solid rgba(6, 182, 212, 0.25);
-}
-
-.tolerance-label {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.tolerance-value {
+.voltmeter-title {
+  text-align: center;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 700;
+  color: var(--accent2);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
-.tolerance-box.ch-n-box .tolerance-value { color: var(--ch-n); }
-.tolerance-box.ch-k-box .tolerance-value { color: var(--ch-k); }
-.tolerance-box.ch-t-box .tolerance-value { color: var(--ch-t); }
+.voltmeter-display {
+  position: relative;
+  width: 280px;
+  height: 160px;
+  margin: 0 auto;
+  background: radial-gradient(ellipse at center, #f5f5dc 0%, #e8e4c9 100%);
+  border-radius: 12px 12px 140px 140px;
+  border: 3px solid #333;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
 
-.tolerance-calc {
+.voltmeter-scale {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.voltmeter-needle {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  width: 4px;
+  height: 110px;
+  background: linear-gradient(to top, #c0392b 0%, #e74c3c 50%, #e74c3c 100%);
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(0deg);
+  border-radius: 2px 2px 0 0;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+.voltmeter-needle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background: #333;
+  border-radius: 50%;
+  border: 2px solid #555;
+}
+
+.voltmeter-digital {
+  margin-top: 16px;
+  padding: 12px;
+  background: #0a0a0a;
+  border-radius: 8px;
+  border: 1px solid #333;
+  text-align: center;
+}
+
+.voltmeter-digital-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 10px rgba(0,255,136,0.5);
+}
+
+.voltmeter-digital-label {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.voltmeter-slider {
+  margin-top: 16px;
+}
+
+.voltmeter-slider label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.voltmeter-slider input[type="range"] {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, var(--bad), #333 50%, var(--ok));
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.voltmeter-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.voltmeter-info {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* ===== TOLERANCE TABLE ===== */
+.tolerance-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  margin: 16px 0;
+}
+
+.tolerance-table caption {
+  padding: 14px;
+  background: rgba(37, 99, 235, 0.08);
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
-  color: var(--muted);
-  background: rgba(0,0,0,0.2);
-  padding: 8px 12px;
-  border-radius: 8px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: left;
+  border-bottom: 1px solid var(--stroke);
 }
 
-/* ===== RED WARNING ===== */
-.red-warning {
-  margin-top: 16px;
-  padding: 14px 18px;
-  border-radius: 12px;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
-  line-height: 1.65;
-  font-weight: 500;
+.tolerance-table thead th {
+  background: rgba(37, 99, 235, 0.05);
+  padding: 12px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent2);
+  text-align: center;
+  border-bottom: 1px solid var(--stroke);
 }
 
-/* ===== FORMULA ===== */
-.formula-box {
+.tolerance-table tbody td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(80,140,220,0.06);
+  background: rgba(0,0,0,0.12);
+  text-align: center;
+  font-size: 14px;
+}
+
+.tolerance-table tbody tr:last-child td { border-bottom: none; }
+
+.tolerance-table .ch-name {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+  gap: 10px;
+  justify-content: flex-start;
+  text-align: left;
+  font-weight: 600;
+}
+
+.tolerance-table .val {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--accent2);
+}
+
+/* ===== FORMULA BOX ===== */
+.formula-box {
   padding: 20px;
   border-radius: 12px;
-  background: rgba(59, 130, 246, 0.06);
-  border: 1px solid rgba(59, 130, 246, 0.15);
-  margin-bottom: 16px;
-  flex-wrap: wrap;
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  margin: 16px 0;
+  text-align: center;
 }
 
 .formula {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 600;
   color: var(--text-bright);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .formula .frac {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
 }
 
 .formula .frac .num {
-  border-bottom: 2px solid var(--accent);
-  padding-bottom: 4px;
-  margin-bottom: 4px;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 6px;
+  margin-bottom: 6px;
 }
 
 .formula .frac .denom {
-  font-size: 20px;
+  font-size: 22px;
   color: var(--muted);
 }
 
 .formula-unit {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
-  margin-left: 8px;
-}
-
-.formula-examples {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-
-.formula-example-item {
-  padding: 14px 16px;
-  border-radius: 10px;
-  background: rgba(0,0,0,0.25);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  text-align: center;
-}
-
-.formula-example-item.ex-n {
-  border-left: 3px solid var(--ch-n);
-  color: var(--ch-n);
-}
-
-.formula-example-item.ex-k {
-  border-left: 3px solid var(--ch-k);
-  color: var(--ch-k);
-}
-
-.formula-example-item.ex-t {
-  border-left: 3px solid var(--ch-t);
-  color: var(--ch-t);
-}
-
-.formula-example-item .ex-title {
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 6px;
+  margin-left: 10px;
 }
 
 .formula-legend {
-  margin-top: 16px;
-  padding: 14px 18px;
-  border-radius: 10px;
-  background: rgba(0,0,0,0.2);
+  margin-top: 14px;
   font-size: 12px;
   color: var(--muted);
   line-height: 1.8;
@@ -603,15 +808,15 @@ body::before {
 /* ===== CALCULATOR ===== */
 .calc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .calc-item {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .calc-item label {
@@ -619,11 +824,11 @@ body::before {
   font-weight: 600;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
-.calc-input {
-  padding: 12px 14px;
+.calc-input, .calc-select {
+  padding: 14px 16px;
   border-radius: 10px;
   border: 1px solid var(--stroke);
   background: rgba(0,0,0,0.3);
@@ -635,44 +840,32 @@ body::before {
   transition: all 0.2s;
 }
 
-.calc-input:focus {
+.calc-input:focus, .calc-select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.channel-select {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--stroke);
-  background: rgba(0,0,0,0.3);
-  color: var(--text-bright);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  outline: none;
-  cursor: pointer;
 }
 
 .result-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 22px;
+  padding: 20px 24px;
   border-radius: 12px;
-  background: rgba(59, 130, 246, 0.06);
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.15);
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
 
-.result-label {
-  font-size: 14px;
+.result-info .result-label {
+  font-size: 13px;
   color: var(--muted);
+  margin-bottom: 4px;
 }
 
-.result-value {
+.result-info .result-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 28px;
+  font-size: 36px;
   font-weight: 700;
   color: var(--accent2);
 }
@@ -680,123 +873,100 @@ body::before {
 .result-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 12px;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .result-pass {
-  background: rgba(34, 197, 94, 0.12);
+  background: rgba(16, 185, 129, 0.12);
   color: var(--ok);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  box-shadow: 0 0 12px var(--ok-glow);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  box-shadow: 0 0 20px var(--ok-glow);
 }
 
 .result-fail {
   background: rgba(239, 68, 68, 0.12);
   color: var(--bad);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  box-shadow: 0 0 12px var(--bad-glow);
-}
-
-/* ===== TABLE ===== */
-.param-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--stroke);
-  margin-top: 16px;
-}
-
-.param-table thead th {
-  background: rgba(59, 130, 246, 0.08);
-  padding: 12px 16px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-  text-align: left;
-  border-bottom: 1px solid var(--stroke);
-}
-
-.param-table tbody td {
-  padding: 12px 16px;
-  font-size: 13px;
-  border-bottom: 1px solid rgba(100,160,255,0.06);
-  background: rgba(0,0,0,0.15);
-}
-
-.param-table tbody tr:last-child td { border-bottom: none; }
-
-.param-table .ch-cell {
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.param-table .val-cell {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  color: var(--accent2);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  box-shadow: 0 0 20px var(--bad-glow);
 }
 
 /* ===== SCHEME ===== */
 .scheme-container {
   border: 1px solid var(--stroke);
   border-radius: 14px;
-  background: #ffffff;
-  padding: 24px 12px;
-  overflow: hidden;
+  background: #fafafa;
+  padding: 30px 20px;
+  overflow-x: auto;
 }
 
 .scheme-svg {
   width: 100%;
+  min-width: 700px;
   height: auto;
   display: block;
 }
 
-.note {
-  margin-top: 16px;
+.scheme-note {
+  margin-top: 14px;
   padding: 12px 16px;
   border-radius: 10px;
   border: 1px solid rgba(251, 191, 36, 0.2);
   background: rgba(251, 191, 36, 0.06);
   font-size: 12px;
   color: #fbbf24;
-  line-height: 1.55;
 }
-.note strong { color: #fcd34d; }
+.scheme-note strong { color: #fcd34d; }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+  body::before { display: none !important; }
+  .wrap { padding: 10mm; max-width: none; }
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    background: #fff !important;
+    page-break-inside: avoid;
+  }
+  .back-btn, .print-btn, .voltmeter-slider, .channel-tabs { display: none !important; }
+  .channel-content { display: block !important; page-break-inside: avoid; }
+  .scaling-block { background: #fff7ed !important; border-color: #f97316 !important; }
+  .neutral-block { background: #ecfdf5 !important; border-color: #10b981 !important; }
+  .op-table, .tolerance-table, .switch-table { font-size: 10pt; }
+  .voltmeter-container { display: none; }
+  .voltmeter-info { flex: 1 1 100%; }
+  h1 { font-size: 18pt !important; }
+  .section-label { color: #2563eb !important; }
+}
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
-  .wrap { padding: 12px 10px 40px; }
-  .card { padding: 16px 14px; border-radius: 14px; }
-  .header { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .header-text h1 { font-size: 18px; }
-  .text-content { min-height: 300px; font-size: 11.5px; }
+@media (max-width: 768px) {
+  .wrap { padding: 12px 10px 50px; }
+  .card { padding: 18px 14px; }
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .header-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+  .header-info h1 { font-size: 20px; }
+  .op-table { font-size: 12px; }
+  .op-table thead th:nth-child(3), .op-table thead th:nth-child(4) { display: none; }
+  .op-table tbody td:nth-child(3), .op-table tbody td:nth-child(4) { display: none; }
   .scaling-block, .neutral-block { padding: 16px; }
-  .neutral-steps { flex-direction: column; align-items: stretch; }
-  .neutral-arrow { display: none; }
+  .neutral-types { grid-template-columns: 1fr; }
   .channel-tabs { flex-direction: column; }
-  .formula { font-size: 20px; }
-  .result-value { font-size: 22px; }
-  .formula-examples { grid-template-columns: 1fr; }
-}
-
-@media print {
-  body { background: #fff; color: #111; }
-  body::before { display: none; }
-  .card { box-shadow: none; border: 1px solid #ccc; background: #fff; }
-  .scaling-block { background: #fff7ed; border-color: #f97316; }
-  .neutral-block { background: #ecfdf5; border-color: #10b981; }
+  .voltmeter-section { flex-direction: column; }
+  .voltmeter-container { flex: 1 1 100%; width: 100%; }
+  .formula { font-size: 22px; }
+  .result-info .result-value { font-size: 28px; }
+  .calc-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -804,42 +974,72 @@ body::before {
 <body>
 <div class="wrap">
 
-  <!-- Header -->
-  <div class="header">
-    <a class="back-btn" href="../page-ap34b.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-      Назад
-    </a>
-    <div class="header-text">
-      <h1>АП-34Б · Пункт 5.7</h1>
-      <div class="subtitle">Проверка передаточного числа по углу</div>
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="header-left">
+      <button class="back-btn" onclick="history.back()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Назад
+      </button>
+      <div class="header-info">
+        <h1>Пункт 5.7 (К). Проверка передаточного числа по углу</h1>
+        <div class="doc-ref">АП-34Б | Технологическая карта | Таблица 202</div>
+      </div>
     </div>
-  </div>
+    <div class="header-right">
+      <div class="current-date" id="currentDate"></div>
+      <button class="print-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Печать
+      </button>
+    </div>
+  </header>
 
-  <!-- Preparation -->
-  <div class="card">
+  <!-- PREPARATION -->
+  <section class="card">
     <div class="section-label">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
       Подготовка к проверке
     </div>
 
-    <textarea class="text-content" style="min-height: 100px;">Подключить пульт 6С2.702.007 с помощью жгута "К" (6С6.640.043) к разъёму "К" агрегата управления (рис.2).
+    <table class="op-table">
+      <thead>
+        <tr>
+          <th>П.</th>
+          <th>Содержание операции и технические требования (ТТ)</th>
+          <th>Работы при отклонениях от ТТ</th>
+          <th>Контр.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="op-num">18</td>
+          <td class="op-content">Подключите пульт 6С2.702.007 с помощью жгута "К" (6С6.640.043) к разъёму "К" агрегата управления (см. рис. 202).</td>
+          <td class="op-deviation">—</td>
+          <td class="op-check"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="op-num">19</td>
+          <td class="op-content">Перед проверкой необходимо произвести регулировку масштаба прибора "3" пульта, измеряющего положение хода штока малого цилиндра рулевого агрегата проверяемого канала.</td>
+          <td class="op-deviation">—</td>
+          <td class="op-check"><input type="checkbox"></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-Перед проверкой необходимо произвести регулировку масштаба прибора "3" пульта 6С2.702.007, измеряющего положение хода штока малого цилиндра рулевого агрегата проверяемого канала.</textarea>
-  </div>
-
-  <!-- Scaling Block -->
-  <div class="card">
+  <!-- SCALING PROCEDURE -->
+  <section class="card">
     <div class="scaling-block">
       <div class="scaling-header">
         <div class="scaling-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="M21 15v6"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="M21 15v6"/></svg>
         </div>
         <div class="scaling-title">Процедура масштабирования прибора "3"</div>
       </div>
       
       <div class="scaling-content">
-        <p>Переключатели и ручки на пульте 6С2.702.007 установить в следующие положения:</p>
+        <p>Переключатели и ручки на пульте 6С2.702.007 установите в следующие положения:</p>
         
         <table class="switch-table">
           <thead>
@@ -850,71 +1050,94 @@ body::before {
           </thead>
           <tbody>
             <tr><td class="sw-num">"2"</td><td class="sw-pos">среднее положение</td></tr>
-            <tr><td class="sw-num">"8"</td><td class="sw-pos">"Н" / "К" / "Т" (по каналу)</td></tr>
+            <tr><td class="sw-num">"8"</td><td class="sw-pos">"Н" (или "К" / "Т" по каналу)</td></tr>
             <tr><td class="sw-num">"9"</td><td class="sw-pos">"ОСТ.СИГН."</td></tr>
             <tr><td class="sw-num">"10"</td><td class="sw-pos">"δ"</td></tr>
             <tr><td class="sw-num">"11"</td><td class="sw-pos">"ОТКЛ."</td></tr>
             <tr><td class="sw-num">"12"</td><td class="sw-pos">"КОМПЛЕКТ"</td></tr>
             <tr><td class="sw-num">"13"</td><td class="sw-pos">"0"</td></tr>
             <tr><td class="sw-num">"14"</td><td class="sw-pos">среднее положение</td></tr>
+            <tr><td class="sw-num">"15"</td><td class="sw-pos">среднее положение</td></tr>
           </tbody>
         </table>
+
+        <p style="margin-top: 14px;">Отсчёт ведите по шкале <strong>100-0-100</strong> вольтметра "3".</p>
 
         <ol>
           <li>Ручкой <span class="switch-val">"0"</span> (переключатель "13") выставить <strong>равномерно плечи</strong> по вольтметру №3.</li>
           <li>Ручкой <span class="switch-val">"МАСШТАБ"</span> раздвинуть плечи до показаний <strong>+100</strong> и <strong>-100</strong> по вольтметру №3.</li>
-          <li>Включить проверяемый канал на пульте управления.</li>
-          <li>Отклонить шток малого цилиндра РА в одно и другое крайние положения переключателем "13" в положения "−" и "+".</li>
-          <li>Заметить разность показаний прибора "3" в одну и другую сторону.</li>
-          <li>Потенциометром <span class="switch-val">"14"</span> отсимметрировать показания прибора.</li>
-          <li>Потенциометром <span class="switch-val">"15"</span> увеличить показание до деления <strong>100</strong>.</li>
-          <li>Отклонить шток в противоположную сторону и убедиться, что прибор показывает <strong>100</strong>.</li>
-          <li>В случае несимметрии — повторить регулировку.</li>
+          <li>Включите канал автопилота.</li>
+          <li>Отклоните шток малого цилиндра рулевого агрегата в одно и другое крайние положения, устанавливая переключатель <span class="switch-val">"13"</span> пульта в положения <strong>"−"</strong>, <strong>"+"</strong>.</li>
+          <li>Заметьте разность показаний прибора "3" в одну и другую стороны.</li>
+          <li>Потенциометром <span class="switch-val">"14"</span> отсимметрируйте показания прибора.</li>
+          <li>Потенциометром <span class="switch-val">"15"</span> увеличьте показание до деления <strong>100</strong>.</li>
+          <li>Отклоните шток в противоположную сторону и убедитесь, что прибор показывает <strong>100</strong>.</li>
         </ol>
         
         <div class="scaling-warning">
+          <strong>В случае несимметрии — повторите регулировку.</strong><br><br>
           <strong>ВАЖНО:</strong> После масштабирования переключатель <span class="switch-val">"9"</span> поставить в положение <span class="switch-val">"КУ"</span>.<br>
           По вольтметру №3 установить ноль ручкой <span class="switch-val">"2"</span>.
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Neutral Block -->
-  <div class="card">
+  <!-- NEUTRAL BLOCK -->
+  <section class="card">
     <div class="neutral-block">
       <div class="neutral-header">
         <div class="neutral-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>
         </div>
-        <div class="neutral-title">Установка нейтрали (для каналов крена и тангажа)</div>
+        <div class="neutral-title">Установка нейтрали (для всех каналов)</div>
       </div>
       
       <div class="neutral-content">
-        <p>Перед проверкой передаточного числа каналов крена и тангажа необходимо установить ручку управления лётчика в нейтральное положение:</p>
+        <p>Перед проверкой передаточного числа необходимо установить органы управления в нейтральное положение:</p>
         
-        <div class="neutral-steps">
-          <div class="neutral-step">
-            <div class="neutral-step-num">1</div>
-            <div class="neutral-step-text">Заштырить в нейтрале</div>
+        <div class="neutral-types">
+          <div class="neutral-type-card">
+            <div class="neutral-type-title">Канал направления (педали)</div>
+            <div class="neutral-steps">
+              <div class="neutral-step">
+                <div class="neutral-step-num">1</div>
+                <div class="neutral-step-text">Установите педали нейтрально</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">2</div>
+                <div class="neutral-step-text">Снимите ноги с педалей</div>
+              </div>
+            </div>
           </div>
-          <span class="neutral-arrow">→</span>
-          <div class="neutral-step">
-            <div class="neutral-step-num">2</div>
-            <div class="neutral-step-text">Оттриммировать</div>
-          </div>
-          <span class="neutral-arrow">→</span>
-          <div class="neutral-step">
-            <div class="neutral-step-num">3</div>
-            <div class="neutral-step-text">Снять штырь</div>
+          
+          <div class="neutral-type-card">
+            <div class="neutral-type-title">Каналы крена и тангажа (ручка)</div>
+            <div class="neutral-steps">
+              <div class="neutral-step">
+                <div class="neutral-step-num">1</div>
+                <div class="neutral-step-text">Заштырить в нейтрале</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">2</div>
+                <div class="neutral-step-text">Оттриммировать</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">3</div>
+                <div class="neutral-step-text">Снять штырь</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Channel Tabs -->
-  <div class="card">
+  <!-- CHANNEL PROCEDURES -->
+  <section class="card">
     <div class="section-label">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
       Проверка по каналам
@@ -937,265 +1160,433 @@ body::before {
 
     <!-- НАПРАВЛЕНИЕ -->
     <div class="channel-content active" id="ch-n">
-      <textarea class="text-content">а) Регулировка масштаба прибора "3" для канала "направление".
-
-Переключатель "8" на пульте 6С2.702.007 установить в положение "Н".
-
-Отсчёт вести по шкале 100-0-100 вольтметра "3".
-
-Включить канал направления кнопкой-лампочкой "Вкл.направление" на пульте управления автопилота.
-
-Отклонить шток малого цилиндра РА в одно и другое крайние положения, устанавливая переключатель "13" пульта 6С2.702.007 в положения "−", "+". Заметить разность показаний прибора "3" в одну и другую стороны и потенциометром "14" отсимметрировать показания прибора. Потенциометром "15" увеличить показание до деления 100. Отклонить шток в противоположную сторону и убедиться в том, что прибор показывает 100. В случае несимметрии повторить регулировку.
-
-Отключить канал направления. Зафиксировать показание прибора "3", которое должно быть не более ±15.
-
-Включить канал направления кнопкой "Вкл.направление" на пульте управления. Зафиксировать показание прибора "3". Разность в показаниях прибора до и после включения канала должна быть не более 20. Если разность показаний больше 20, произвести центровку потенциометром "центр-направление" на передней панели агрегата управления.
-
-Совместить ближайшую риску шкалы "направление" с риской на лицевой панели пульта управления.
-
-Переключатель "9" поставить в положение "КУ" и ручкой "2" установить нуль на приборе "3".
-
-Поворотом шкалы "направление" на пульте управления по часовой стрелке (против часовой стрелки) от установленного положения задать угол 3° и зафиксировать показание прибора "3".
-
-Если показания не укладываются в допуск — регулировать потенциометром "угол-направление" на передней панели агрегата управления.</textarea>
-
-      <div class="tolerance-box ch-n-box">
-        <div>
-          <div class="tolerance-label">Допуск показаний прибора "3" при угле 3°</div>
-          <div class="tolerance-value">50 ± 1</div>
-        </div>
-        <div class="tolerance-calc">i = 50 / 3 ≈ 16.67</div>
-      </div>
+      <table class="op-table">
+        <thead>
+          <tr>
+            <th>П.</th>
+            <th>Содержание операции и технические требования (ТТ)</th>
+            <th>Работы при отклонениях от ТТ</th>
+            <th>Контр.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="op-num">20</td>
+            <td class="op-content">Произведите регулировку масштаба прибора "3" для канала направления.<br><br>Переключатель "8" установите в положение <strong>"Н"</strong>.</td>
+            <td class="op-deviation">В случае несимметрии повторите регулировку</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">21</td>
+            <td class="op-content">
+              Отключите канал направления кнопкой <strong>ОТКЛ.НАПРАВЛЕНИЕ</strong> на пульте управления.<br><br>
+              Установите педали нейтрально. Снимите ноги с педалей.<br><br>
+              Зафиксируйте показание прибора "3" пульта 6С2.702.007, которое должно быть <strong>не более ±15</strong>.<br><br>
+              Включите канал направления кнопкой <strong>ВКЛ.НАПРАВЛЕНИЕ</strong> на пульте управления.<br><br>
+              Зафиксируйте показание прибора "3".<br><br>
+              Разность в показаниях прибора до и после включения канала должна быть <strong>не более 20</strong>.
+            </td>
+            <td class="op-deviation">Если разность показаний больше 20, то необходимо произвести центровку потенциометром <strong>ЦЕНТР-НАПРАВЛЕНИЕ</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">22</td>
+            <td class="op-content">
+              Совместите ближайшую риску шкалы <strong>НАПРАВЛЕНИЕ</strong> с риской на лицевой панели пульта управления.<br><br>
+              Переключатель "9" на пульте 6С2.702.007 поставьте в положение <strong>"КУ"</strong> и потенциометром "2" установите нуль на приборе "3".<br><br>
+              Поворотом шкалы <strong>НАПРАВЛЕНИЕ</strong> на пульте управления по часовой стрелке (против часовой стрелки) от установленного положения задайте угол <strong>3°</strong> и зафиксируйте показание прибора "3".<br><br>
+              Показания прибора "3" должны соответствовать требованиям <strong>табл. 202</strong>.
+            </td>
+            <td class="op-deviation">Произвести регулировку потенциометром <strong>УГОЛ-НАПРАВЛЕНИЕ</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- КРЕН -->
     <div class="channel-content" id="ch-k">
-      <textarea class="text-content">б) Установить переключатель "8" на пульте 6С2.702.007 в положение "К", отрегулировать масштаб прибора "3" по описанной выше методике.
-
-НЕЙТРАЛЬ: Заштырить ручку управления в нейтрале, оттриммировать, снять штырь.
-
-Отключить канал крена кнопкой "Откл.АП" на ручке лётчика.
-
-Установить ручку лётчика в среднее положение. Зафиксировать показание прибора "3" пульта 6С2.702.007, которое должно быть не более ±15.
-
-Включить канал крена кнопкой "Вкл.крен-тангаж" на пульте управления. Зафиксировать показание прибора "3". Разность в показаниях прибора до и после включения канала должна быть не более 20. Если разность показаний больше 20, то необходимо произвести центровку потенциометром "центр-крен", находящимся на передней панели агрегата управления.
-
-Совместить ближайшую риску шкалы "крен" с риской на лицевой панели пульта управления.
-
-Переключатель "9" на пульте 6С2.702.007 поставить в положение "КУ" и потенциометром "2" установить нуль на приборе "3".
-
-Поворотом шкалы "крен" на пульте управления по часовой стрелке (против часовой стрелки) от установленного положения задать угол 3° и зафиксировать показание прибора "3".
-
-Если показания прибора "3" не укладываются в допуск, необходимо произвести регулировку потенциометром "угол-крен", находящимся на передней панели агрегата управления.</textarea>
-
-      <div class="tolerance-box ch-k-box">
-        <div>
-          <div class="tolerance-label">Допуск показаний прибора "3" при угле 3°</div>
-          <div class="tolerance-value">50 ± 1</div>
-        </div>
-        <div class="tolerance-calc">i = 50 / 3 ≈ 16.67</div>
-      </div>
+      <table class="op-table">
+        <thead>
+          <tr>
+            <th>П.</th>
+            <th>Содержание операции и технические требования (ТТ)</th>
+            <th>Работы при отклонениях от ТТ</th>
+            <th>Контр.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="op-num">23</td>
+            <td class="op-content">
+              Установите переключатель "8" на пульте 6С2.702.007 в положение <strong>"К"</strong> и отрегулируйте масштаб прибора "3" по описанной выше методике.
+            </td>
+            <td class="op-deviation">В случае несимметрии повторите регулировку</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">24</td>
+            <td class="op-content">
+              Отключите канал крена кнопкой <strong>ОТКЛ.АП</strong> на ручке лётчика.<br><br>
+              <strong style="color: var(--neutral-color);">НЕЙТРАЛЬ:</strong> <em style="color: #6ee7b7; font-family: 'Roboto Slab', serif;">Заштырить ручку управления в нейтрале, оттриммировать, снять штырь.</em><br><br>
+              Установите ручку лётчика в среднее положение.<br><br>
+              Зафиксируйте показание прибора "3" пульта 6С2.702.007, которое должно быть <strong>не более ±15</strong>.<br><br>
+              Включите канал крена кнопкой <strong>ВКЛ.КРЕН-ТАНГАЖ</strong> на пульте управления.<br><br>
+              Зафиксируйте показание прибора "3".<br><br>
+              Разность в показаниях прибора до и после включения канала должна быть <strong>не более 20</strong>.
+            </td>
+            <td class="op-deviation">Если разность показаний больше 20, то необходимо произвести центровку потенциометром <strong>ЦЕНТР-КРЕН</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">25</td>
+            <td class="op-content">
+              Совместите ближайшую риску шкалы <strong>КРЕН</strong> с риской на лицевой панели пульта управления.<br><br>
+              Переключатель "9" на пульте 6С2.702.007 поставьте в положение <strong>"КУ"</strong> и потенциометром "2" установите нуль на приборе "3".<br><br>
+              Поворотом шкалы <strong>КРЕН</strong> на пульте управления по часовой стрелке (против часовой стрелки) от установленного положения задайте угол <strong>3°</strong> и зафиксируйте показание прибора "3".<br><br>
+              Показания прибора "3" должны соответствовать требованиям <strong>табл. 202</strong>.
+            </td>
+            <td class="op-deviation">Произведите регулировку потенциометром <strong>УГОЛ-КРЕН</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- ТАНГАЖ -->
     <div class="channel-content" id="ch-t">
-      <textarea class="text-content">в) Установить переключатель "8" на пульте 6С2.702.007 в положение "Т", отрегулировать масштаб прибора "3" по описанной выше методике.
-
-НЕЙТРАЛЬ: Заштырить ручку управления в нейтрале, оттриммировать, снять штырь.
-
-Отключить канал тангажа кнопкой "Откл.АП" на ручке лётчика.
-
-Установить ручку лётчика в среднее положение. Зафиксировать показание прибора "3" пульта 6С2.702.007, которое должно быть не более ±15.
-
-Включить канал тангажа кнопкой "Вкл.крен-тангаж" на пульте управления. Зафиксировать показание прибора "3". Разность в показаниях прибора до и после включения канала должна быть не более 20. Если разность показаний больше 20, то необходимо произвести центровку потенциометром "центр-тангаж", находящимся на передней панели агрегата управления.
-
-Совместить ближайшую риску шкалы "тангаж" с риской на лицевой панели пульта управления.
-
-Переключатель "9" на пульте 6С2.702.007 поставить в положение "КУ" и вращением ручки потенциометра "2" установить нуль на приборе "3".
-
-Поворотом шкалы "тангаж" на пульте управления по часовой стрелке (против часовой стрелки) от установленного положения задать угол 3° и зафиксировать показание прибора "3".
-
-Если показания прибора "3" не укладываются в допуск, необходимо произвести регулировку потенциометром "угол-тангаж", находящимся на передней панели агрегата управления.</textarea>
-
-      <div class="tolerance-box ch-t-box">
-        <div>
-          <div class="tolerance-label">Допуск показаний прибора "3" при угле 3°</div>
-          <div class="tolerance-value">60 ± 2</div>
-        </div>
-        <div class="tolerance-calc">i = 60 / 3 = 20</div>
-      </div>
+      <table class="op-table">
+        <thead>
+          <tr>
+            <th>П.</th>
+            <th>Содержание операции и технические требования (ТТ)</th>
+            <th>Работы при отклонениях от ТТ</th>
+            <th>Контр.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="op-num">26</td>
+            <td class="op-content">
+              Установите переключатель "8" на пульте 6С2.702.007 в положение <strong>"Т"</strong> и отрегулируйте масштаб прибора "3" по описанной выше методике.
+            </td>
+            <td class="op-deviation">В случае несимметрии повторите регулировку</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">27</td>
+            <td class="op-content">
+              Отключите канал тангажа кнопкой <strong>ОТКЛ.АП</strong> на ручке лётчика.<br><br>
+              <strong style="color: var(--neutral-color);">НЕЙТРАЛЬ:</strong> <em style="color: #6ee7b7; font-family: 'Roboto Slab', serif;">Заштырить ручку управления в нейтрале, оттриммировать, снять штырь.</em><br><br>
+              Установите ручку лётчика в среднее положение.<br><br>
+              Зафиксируйте показание прибора "3", которое должно быть в пределах <strong>±15</strong>.<br><br>
+              Включите канал тангажа кнопкой <strong>ВКЛ.КРЕН-ТАНГАЖ</strong> на пульте управления.<br><br>
+              Зафиксируйте показание прибора "3".<br><br>
+              Разность показаний прибора до и после включения канала должна быть <strong>не более 20</strong>.
+            </td>
+            <td class="op-deviation">Если разность показаний больше 20, то необходимо произвести центровку потенциометром <strong>ЦЕНТР-ТАНГАЖ</strong>, находящимся на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">28</td>
+            <td class="op-content">
+              Совместите ближайшую риску шкалы <strong>ТАНГАЖ</strong> с риской на лицевой панели пульта управления.<br><br>
+              Переключатель "9" пульта 6С2.702.007 поставьте в положение <strong>"КУ"</strong> и вращением ручки потенциометра "2" установите нуль на приборе "3".<br><br>
+              Поворотом шкалы <strong>ТАНГАЖ</strong> на пульте управления по часовой стрелке (против часовой стрелки) от установленного положения задайте угол <strong>3°</strong> и зафиксируйте показание прибора "3".<br><br>
+              Показания прибора "3" должны соответствовать требованиям <strong>табл. 202</strong>.
+            </td>
+            <td class="op-deviation">Произведите регулировку потенциометром <strong>УГОЛ-ТАНГАЖ</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <div class="red-warning">После окончания проверки убедиться в правильности подключения всех разъёмов к фидерной схеме вертолёта. Переключатель "9" должен быть в положении "КУ".</div>
-  </div>
-
-  <!-- Calculator -->
-  <div class="card">
+  <!-- VOLTMETER & TABLE 202 -->
+  <section class="card">
     <div class="section-label">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/></svg>
-      Расчёт передаточного числа по углу
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Прибор "3" и Таблица 202
     </div>
 
-    <div class="formula-box">
-      <div class="formula">
-        <span>i</span>
-        <span>=</span>
-        <span class="frac">
-          <span class="num">A</span>
-          <span class="denom">α</span>
-        </span>
-        <span class="formula-unit">[% х.раздв. / град.]</span>
+    <div class="voltmeter-section">
+      <div class="voltmeter-container">
+        <div class="voltmeter-title">Вольтметр №3</div>
+        <div class="voltmeter-display">
+          <svg class="voltmeter-scale" viewBox="0 0 280 160">
+            <!-- Scale background arc -->
+            <path d="M 30 140 A 110 110 0 0 1 250 140" fill="none" stroke="#333" stroke-width="2"/>
+            
+            <!-- Scale ticks and labels -->
+            <!-- -100 -->
+            <line x1="35" y1="130" x2="45" y2="120" stroke="#333" stroke-width="2"/>
+            <text x="25" y="115" font-size="12" fill="#333" font-weight="bold">-100</text>
+            
+            <!-- -80 -->
+            <line x1="45" y1="105" x2="55" y2="98" stroke="#333" stroke-width="1.5"/>
+            <text x="38" y="90" font-size="10" fill="#555">-80</text>
+            
+            <!-- -60 -->
+            <line x1="60" y1="82" x2="70" y2="78" stroke="#333" stroke-width="1.5"/>
+            <text x="55" y="68" font-size="10" fill="#555">-60</text>
+            
+            <!-- -40 -->
+            <line x1="82" y1="62" x2="90" y2="60" stroke="#333" stroke-width="1.5"/>
+            <text x="78" y="50" font-size="10" fill="#555">-40</text>
+            
+            <!-- -20 -->
+            <line x1="108" y1="48" x2="115" y2="50" stroke="#333" stroke-width="1.5"/>
+            <text x="105" y="38" font-size="10" fill="#555">-20</text>
+            
+            <!-- 0 (center) -->
+            <line x1="140" y1="40" x2="140" y2="52" stroke="#c0392b" stroke-width="3"/>
+            <text x="135" y="30" font-size="14" fill="#c0392b" font-weight="bold">0</text>
+            
+            <!-- +20 -->
+            <line x1="172" y1="48" x2="165" y2="50" stroke="#333" stroke-width="1.5"/>
+            <text x="168" y="38" font-size="10" fill="#555">20</text>
+            
+            <!-- +40 -->
+            <line x1="198" y1="62" x2="190" y2="60" stroke="#333" stroke-width="1.5"/>
+            <text x="195" y="50" font-size="10" fill="#555">40</text>
+            
+            <!-- +60 -->
+            <line x1="220" y1="82" x2="210" y2="78" stroke="#333" stroke-width="1.5"/>
+            <text x="218" y="68" font-size="10" fill="#555">60</text>
+            
+            <!-- +80 -->
+            <line x1="235" y1="105" x2="225" y2="98" stroke="#333" stroke-width="1.5"/>
+            <text x="232" y="90" font-size="10" fill="#555">80</text>
+            
+            <!-- +100 -->
+            <line x1="245" y1="130" x2="235" y2="120" stroke="#333" stroke-width="2"/>
+            <text x="240" y="115" font-size="12" fill="#333" font-weight="bold">100</text>
+            
+            <!-- Unit label -->
+            <text x="140" y="130" font-size="11" fill="#666" text-anchor="middle">дел.</text>
+          </svg>
+          <div class="voltmeter-needle" id="voltmeterNeedle"></div>
+        </div>
+        
+        <div class="voltmeter-digital">
+          <div class="voltmeter-digital-value" id="voltmeterValue">0</div>
+          <div class="voltmeter-digital-label">Показание прибора</div>
+        </div>
+        
+        <div class="voltmeter-slider">
+          <label>Установка показания прибора "3"</label>
+          <input type="range" id="voltmeterSlider" min="-100" max="100" value="0" oninput="updateVoltmeter(this.value)">
+        </div>
+      </div>
+      
+      <div class="voltmeter-info">
+        <table class="tolerance-table">
+          <caption>Таблица 202 — Передаточное число по углу</caption>
+          <thead>
+            <tr>
+              <th>Канал</th>
+              <th>Угол, град</th>
+              <th>Показания прибора "3", дел.</th>
+              <th>Передаточное число, % х.разд./град</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="ch-name"><span class="ch-icon ch-icon-n">Н</span> Направление</div></td>
+              <td class="val">3</td>
+              <td class="val">50 ± 20</td>
+              <td class="val">16,7 ± 6,7</td>
+            </tr>
+            <tr>
+              <td><div class="ch-name"><span class="ch-icon ch-icon-k">К</span> Крен</div></td>
+              <td class="val">3</td>
+              <td class="val">50 ± 20</td>
+              <td class="val">16,7 ± 6,7</td>
+            </tr>
+            <tr>
+              <td><div class="ch-name"><span class="ch-icon ch-icon-t">Т</span> Тангаж</div></td>
+              <td class="val">3</td>
+              <td class="val">60 ± 24</td>
+              <td class="val">20 ± 8</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="formula-box">
+          <div class="formula">
+            <span>i</span>
+            <span>=</span>
+            <span class="frac">
+              <span class="num">A</span>
+              <span class="denom">α</span>
+            </span>
+            <span class="formula-unit">[% х.разд. / град]</span>
+          </div>
+          <div class="formula-legend">
+            <strong>A</strong> — показание прибора "3" (деления)<br>
+            <strong>α</strong> — задаваемый угол (градусы)
+          </div>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="formula-examples">
-      <div class="formula-example-item ex-n">
-        <div class="ex-title">Направление</div>
-        i = 50 / 3 ≈ 16.67
-      </div>
-      <div class="formula-example-item ex-k">
-        <div class="ex-title">Крен</div>
-        i = 50 / 3 ≈ 16.67
-      </div>
-      <div class="formula-example-item ex-t">
-        <div class="ex-title">Тангаж</div>
-        i = 60 / 3 = 20
-      </div>
+  <!-- CALCULATOR -->
+  <section class="card">
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+      Калькулятор передаточного числа
     </div>
 
-    <div class="calc-grid" style="margin-top: 20px;">
+    <div class="calc-grid">
       <div class="calc-item">
         <label>Канал</label>
-        <select class="channel-select" id="calcChannel" onchange="calcAngle()">
-          <option value="n">Направление (50±1)</option>
-          <option value="k">Крен (50±1)</option>
-          <option value="t">Тангаж (60±2)</option>
+        <select class="calc-select" id="calcChannel" onchange="calculate()">
+          <option value="n">Направление (50±20)</option>
+          <option value="k">Крен (50±20)</option>
+          <option value="t">Тангаж (60±24)</option>
         </select>
       </div>
       <div class="calc-item">
-        <label>A — Показание прибора "3" (дел.)</label>
-        <input class="calc-input" type="number" id="A" placeholder="50" value="50" oninput="calcAngle()">
+        <label>A — Показание прибора "3"</label>
+        <input class="calc-input" type="number" id="calcA" placeholder="50" value="50" oninput="calculate()">
       </div>
       <div class="calc-item">
-        <label>α — Задаваемый угол (град)</label>
-        <input class="calc-input" type="number" id="alpha" placeholder="3" value="3" oninput="calcAngle()">
+        <label>α — Угол (град)</label>
+        <input class="calc-input" type="number" id="calcAlpha" placeholder="3" value="3" oninput="calculate()">
       </div>
     </div>
 
     <div class="result-box">
-      <div>
+      <div class="result-info">
         <div class="result-label">Передаточное число i =</div>
         <div class="result-value" id="resultValue">16.67</div>
       </div>
       <div id="resultBadge"><span class="result-badge result-pass">ГОДЕН</span></div>
     </div>
+  </section>
 
-    <div class="formula-legend">
-      <strong>A</strong> — показание прибора "3" (деления вольтметра)<br>
-      <strong>α</strong> — задаваемый угол поворота шкалы на пульте управления (градусы, обычно 3°)
-    </div>
-
-    <!-- Tolerance Table -->
-    <table class="param-table">
-      <thead>
-        <tr>
-          <th>Канал</th>
-          <th>Показание прибора "3" при α=3°</th>
-          <th>Передаточное число i</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><div class="ch-cell"><span class="ch-icon ch-icon-n">Н</span> Направление</div></td>
-          <td class="val-cell">50 ± 1</td>
-          <td class="val-cell">≈ 16.67</td>
-        </tr>
-        <tr>
-          <td><div class="ch-cell"><span class="ch-icon ch-icon-k">К</span> Крен</div></td>
-          <td class="val-cell">50 ± 1</td>
-          <td class="val-cell">≈ 16.67</td>
-        </tr>
-        <tr>
-          <td><div class="ch-cell"><span class="ch-icon ch-icon-t">Т</span> Тангаж</div></td>
-          <td class="val-cell">60 ± 2</td>
-          <td class="val-cell">20</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Scheme -->
-  <div class="card">
+  <!-- SCHEME -->
+  <section class="card">
     <div class="section-label">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="2" y="2" rx="2"/><rect width="8" height="8" x="14" y="2" rx="2"/><rect width="8" height="8" x="8" y="14" rx="2"/></svg>
-      Схема подключения (Рис.2)
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="2" y="2" rx="2"/><rect width="8" height="8" x="14" y="2" rx="2"/><rect width="8" height="8" x="8" y="14" rx="2"/><path d="M6 10v4"/><path d="M18 10v4"/></svg>
+      Схема подключения (Рис. 202)
     </div>
 
     <div class="scheme-container">
-      <svg class="scheme-svg" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
-        <!-- ПУЛЬТ -->
-        <rect x="60" y="100" width="240" height="160" fill="none" stroke="#000" stroke-width="2.5"/>
-        <text x="180" y="155" font-family="Arial, sans-serif" font-size="18" fill="#000" text-anchor="middle" font-style="italic">ПУЛЬТ</text>
-        <text x="180" y="185" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.702.007</text>
-        <text x="280" y="220" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="end">„К"</text>
-        <text x="180" y="245" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle">„РА"</text>
-        <rect x="300" y="208" width="28" height="16" rx="3" fill="none" stroke="#000" stroke-width="2"/>
-        <rect x="328" y="211" width="12" height="10" fill="#000"/>
+      <svg class="scheme-svg" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- ПУЛЬТ 6С2.702.007 -->
+        <rect x="50" y="100" width="220" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+        <text x="160" y="145" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
+        <text x="160" y="170" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.702.007</text>
+        
+        <!-- Connector К on ПУЛЬТ -->
+        <rect x="270" y="155" width="30" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="300" y="160" width="12" height="10" fill="#2c3e50"/>
+        <text x="285" y="195" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">„К"</text>
+        
+        <!-- Connector РА on ПУЛЬТ -->
+        <rect x="140" y="240" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="155" y="260" width="10" height="15" fill="#2c3e50"/>
+        <text x="160" y="290" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">„РА"</text>
         
         <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
-        <rect x="500" y="40" width="260" height="130" fill="none" stroke="#000" stroke-width="2.5"/>
-        <text x="630" y="75" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle" font-style="italic">АГРЕГАТ</text>
-        <text x="630" y="97" font-family="Arial, sans-serif" font-size="16" fill="#000" text-anchor="middle" font-style="italic">УПРАВЛЕНИЯ</text>
-        <text x="630" y="125" font-family="Arial, sans-serif" font-size="14" fill="#000" text-anchor="middle">6С2.399.000</text>
-        <text x="545" y="155" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">„АУ"</text>
-        <text x="630" y="155" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">„К"</text>
-        <text x="715" y="155" font-family="Arial, sans-serif" font-size="12" fill="#000" text-anchor="middle">„РА"</text>
+        <rect x="500" y="50" width="260" height="120" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+        <text x="630" y="90" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
+        <text x="630" y="115" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.399.000</text>
         
-        <!-- Connectors -->
-        <rect x="532" y="170" width="26" height="35" rx="3" fill="none" stroke="#000" stroke-width="2"/>
-        <rect x="536" y="205" width="18" height="15" fill="#000"/>
-        <rect x="617" y="170" width="26" height="35" rx="3" fill="none" stroke="#000" stroke-width="2"/>
-        <rect x="621" y="205" width="18" height="15" fill="#000"/>
-        <rect x="702" y="170" width="26" height="35" rx="3" fill="none" stroke="#000" stroke-width="2"/>
-        <rect x="706" y="205" width="18" height="15" fill="#000"/>
+        <!-- Connectors on АГРЕГАТ -->
+        <rect x="530" y="170" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="538" y="210" width="14" height="18" fill="#2c3e50"/>
+        <text x="545" y="155" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">„АУ"</text>
         
-        <!-- Cable -->
-        <line x1="340" y1="216" x2="630" y2="216" stroke="#000" stroke-width="3"/>
-        <line x1="630" y1="216" x2="630" y2="205" stroke="#000" stroke-width="3"/>
+        <rect x="615" y="170" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="623" y="210" width="14" height="18" fill="#2c3e50"/>
+        <text x="630" y="155" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">„К"</text>
+        
+        <rect x="700" y="170" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="708" y="210" width="14" height="18" fill="#2c3e50"/>
+        <text x="715" y="155" font-family="Arial, sans-serif" font-size="11" fill="#555" text-anchor="middle">„РА"</text>
+        
+        <!-- Cable К -->
+        <line x1="312" y1="165" x2="430" y2="165" stroke="#e74c3c" stroke-width="4"/>
+        <line x1="430" y1="165" x2="430" y2="190" stroke="#e74c3c" stroke-width="4"/>
+        <line x1="430" y1="190" x2="630" y2="190" stroke="#e74c3c" stroke-width="4"/>
+        <line x1="630" y1="190" x2="630" y2="210" stroke="#e74c3c" stroke-width="4"/>
+        
+        <!-- Cable label -->
+        <rect x="440" y="150" width="100" height="22" fill="#fff" stroke="#e74c3c" stroke-width="1" rx="4"/>
+        <text x="490" y="166" font-family="Arial, sans-serif" font-size="12" fill="#e74c3c" text-anchor="middle" font-weight="bold">Жгут „К"</text>
+        <text x="490" y="145" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="middle">6С6.640.043</text>
         
         <!-- To feeder -->
-        <line x1="545" y1="220" x2="545" y2="320" stroke="#000" stroke-width="3"/>
-        <line x1="715" y1="220" x2="715" y2="320" stroke="#000" stroke-width="3"/>
-        <path d="M 545 320 L 545 335 Q 545 345 555 345 L 705 345 Q 715 345 715 335 L 715 320" stroke="#000" stroke-width="2" fill="none"/>
-        <line x1="630" y1="345" x2="630" y2="370" stroke="#000" stroke-width="2"/>
-        <polygon points="630,380 623,365 637,365" fill="#000"/>
-        <text x="630" y="400" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle" font-style="italic">К ФИДЕРНОЙ</text>
-        <text x="630" y="418" font-family="Arial, sans-serif" font-size="13" fill="#000" text-anchor="middle" font-style="italic">СХЕМЕ ВЕРТОЛЁТА</text>
+        <line x1="545" y1="228" x2="545" y2="310" stroke="#2c3e50" stroke-width="3"/>
+        <line x1="715" y1="228" x2="715" y2="310" stroke="#2c3e50" stroke-width="3"/>
+        
+        <!-- Bracket -->
+        <path d="M 545 310 L 545 325 Q 545 335 555 335 L 705 335 Q 715 335 715 325 L 715 310" stroke="#2c3e50" stroke-width="2" fill="none"/>
+        <line x1="630" y1="335" x2="630" y2="365" stroke="#2c3e50" stroke-width="2"/>
+        <polygon points="630,375 622,358 638,358" fill="#2c3e50"/>
+        
+        <text x="630" y="395" font-family="Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle" font-style="italic">К фидерной схеме вертолёта</text>
       </svg>
     </div>
 
-    <div class="note">
-      <strong>Рис.2.</strong> Схема подключения пульта 6С2.702.007 при проверке автопилота на вертолёте с помощью жгута „К".
+    <div class="scheme-note">
+      <strong>Рис. 202.</strong> Схема подключения пульта 6С2.702.007 при проверке автопилота АП-34Б на вертолёте с помощью жгута „К" (6С6.640.043).
     </div>
-  </div>
+  </section>
 
 </div>
 
 <script>
+// Set current date
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
+  day: '2-digit',
+  month: '2-digit', 
+  year: 'numeric'
+});
+
+// Channel switching
 function showChannel(ch) {
   document.querySelectorAll('.channel-tab').forEach(tab => tab.classList.remove('active'));
   document.querySelector('.channel-tab[data-ch="' + ch + '"]').classList.add('active');
-  document.querySelectorAll('.channel-content').forEach(content => content.classList.remove('active'));
+  document.querySelectorAll('.channel-content').forEach(c => c.classList.remove('active'));
   document.getElementById('ch-' + ch).classList.add('active');
 }
 
-function calcAngle() {
-  var channel = document.getElementById('calcChannel').value;
-  var A = parseFloat(document.getElementById('A').value);
-  var alpha = parseFloat(document.getElementById('alpha').value);
+// Voltmeter
+function updateVoltmeter(value) {
+  const needle = document.getElementById('voltmeterNeedle');
+  const display = document.getElementById('voltmeterValue');
   
-  var resultValue = document.getElementById('resultValue');
-  var resultBadge = document.getElementById('resultBadge');
+  // Convert value (-100 to 100) to angle (-90 to 90 degrees)
+  const angle = (value / 100) * 90;
+  needle.style.transform = 'translateX(-50%) rotate(' + angle + 'deg)';
+  
+  // Update digital display
+  display.textContent = value;
+  
+  // Color coding
+  const absVal = Math.abs(value);
+  if (absVal <= 15) {
+    display.style.color = '#00ff88';
+  } else if (absVal <= 50) {
+    display.style.color = '#fbbf24';
+  } else {
+    display.style.color = '#ef4444';
+  }
+}
+
+// Calculator
+function calculate() {
+  const channel = document.getElementById('calcChannel').value;
+  const A = parseFloat(document.getElementById('calcA').value);
+  const alpha = parseFloat(document.getElementById('calcAlpha').value);
+  
+  const resultValue = document.getElementById('resultValue');
+  const resultBadge = document.getElementById('resultBadge');
   
   if (isNaN(A) || isNaN(alpha) || alpha <= 0) {
     resultValue.textContent = '—';
@@ -1203,30 +1594,36 @@ function calcAngle() {
     return;
   }
   
-  var i = A / alpha;
+  const i = A / alpha;
   resultValue.textContent = i.toFixed(2);
   
-  // Tolerance check based on channel
-  var nominal, tolerance;
+  // Tolerance check
+  let nominal, tolerance;
   if (channel === 'n' || channel === 'k') {
     nominal = 50;
-    tolerance = 1;
+    tolerance = 20;
   } else {
     nominal = 60;
-    tolerance = 2;
+    tolerance = 24;
   }
   
-  var minA = nominal - tolerance;
-  var maxA = nominal + tolerance;
+  const minA = nominal - tolerance;
+  const maxA = nominal + tolerance;
   
   if (A >= minA && A <= maxA) {
     resultBadge.innerHTML = '<span class="result-badge result-pass">ГОДЕН</span>';
   } else {
     resultBadge.innerHTML = '<span class="result-badge result-fail">НЕ ГОДЕН</span>';
   }
+  
+  // Update voltmeter
+  document.getElementById('voltmeterSlider').value = Math.min(100, Math.max(-100, A));
+  updateVoltmeter(Math.min(100, Math.max(-100, A)));
 }
 
-calcAngle();
+// Initialize
+calculate();
+updateVoltmeter(0);
 </script>
 
 </body>
