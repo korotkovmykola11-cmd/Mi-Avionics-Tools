@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>АП-34Б · Пункт 5.8 · Проверка передаточного числа по высоте</title>
+<title>АП-34Б · Пункт 5.7 · Проверка передаточного числа по углу</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap');
 
 :root {
   --bg-primary: #0a0e17;
@@ -24,8 +24,9 @@
   --accent-violet: #8b5cf6;
   --glow-blue: rgba(59, 130, 246, 0.15);
   --glow-amber: rgba(245, 158, 11, 0.15);
-  --pencil-color: #374151;
-  --paper-bg: #fefce8;
+  --ch-n: #3b82f6;
+  --ch-k: #8b5cf6;
+  --ch-t: #06b6d4;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -54,9 +55,9 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 20px 16px 80px;
+  padding: clamp(12px, 3vw, 24px) clamp(10px, 2vw, 20px) 80px;
   position: relative;
   z-index: 1;
 }
@@ -66,18 +67,18 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
-.header-main { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 280px; }
+.header-main { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 280px; }
 
 .back-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-dim);
   background: var(--bg-card);
@@ -87,26 +88,27 @@ body {
   flex-shrink: 0;
 }
 .back-btn:hover { background: var(--bg-elevated); color: var(--accent-blue); }
-.back-btn svg { width: 20px; height: 20px; }
+.back-btn svg { width: 18px; height: 18px; }
 
 .header-text h1 {
-  font-size: clamp(18px, 4vw, 26px);
+  font-size: clamp(16px, 3.5vw, 24px);
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text-primary);
+  line-height: 1.2;
 }
 
 .header-text .doc-ref {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: clamp(10px, 2vw, 12px);
   color: var(--text-muted);
   margin-top: 4px;
 }
 
-.header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 .date-display {
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: var(--radius-sm);
   background: var(--bg-card);
   border: 1px solid var(--border-dim);
@@ -119,7 +121,7 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--accent-blue);
   background: rgba(59, 130, 246, 0.1);
@@ -130,27 +132,27 @@ body {
   transition: all 0.2s;
 }
 .print-btn:hover { background: var(--accent-blue); color: #fff; }
-.print-btn svg { width: 16px; height: 16px; }
+.print-btn svg { width: 14px; height: 14px; }
 
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-dim);
   border-radius: var(--radius-lg);
-  padding: clamp(16px, 4vw, 28px);
-  margin-bottom: 20px;
+  padding: clamp(14px, 3vw, 24px);
+  margin-bottom: 16px;
   backdrop-filter: blur(12px);
 }
 
 .section-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .section-icon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -160,198 +162,17 @@ body {
   color: var(--accent-blue);
   flex-shrink: 0;
 }
-.section-icon svg { width: 20px; height: 20px; }
+.section-icon svg { width: 18px; height: 18px; }
 
 .section-title {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--accent-cyan);
 }
 
-.intro-block {
-  padding: clamp(16px, 3vw, 24px);
-  border-radius: var(--radius-md);
-  background: var(--glow-amber);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  margin-bottom: 20px;
-}
-
-.intro-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Roboto Slab', serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent-amber);
-  margin-bottom: 12px;
-}
-.intro-title svg { width: 20px; height: 20px; flex-shrink: 0; }
-
-.intro-text {
-  font-family: 'Roboto Slab', serif;
-  font-size: 13px;
-  line-height: 1.8;
-  color: #fcd34d;
-}
-.intro-text strong { color: var(--accent-amber); }
-
-.expert-note {
-  position: relative;
-  margin: 20px 0;
-  padding: 20px;
-  background: var(--paper-bg);
-  border-radius: var(--radius-md);
-  border: 1px solid #d4c5a9;
-  transform: rotate(-0.2deg);
-  box-shadow: 2px 3px 10px rgba(0,0,0,0.1);
-}
-
-.expert-note::before {
-  content: 'Записи из практики';
-  position: absolute;
-  top: -10px;
-  left: 16px;
-  padding: 2px 10px;
-  background: var(--accent-amber);
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 700;
-  color: #000;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.pencil-text {
-  font-family: 'Caveat', cursive;
-  font-size: clamp(18px, 4vw, 22px);
-  color: var(--pencil-color);
-  line-height: 1.7;
-}
-
-.pencil-formula {
-  display: inline-block;
-  padding: 2px 8px;
-  margin: 2px 4px;
-  background: rgba(59, 130, 246, 0.12);
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(13px, 3vw, 15px);
-  color: #1d4ed8;
-}
-
-.pencil-important { color: #dc2626; font-weight: 600; }
-
-.pencil-calc {
-  display: block;
-  margin-top: 14px;
-  padding: 12px 14px;
-  background: rgba(0,0,0,0.04);
-  border-left: 3px solid var(--pencil-color);
-  font-family: 'Caveat', cursive;
-  font-size: clamp(17px, 3.5vw, 20px);
-}
-
-.switch-panel {
-  padding: clamp(16px, 3vw, 24px);
-  border-radius: var(--radius-md);
-  background: rgba(139, 92, 246, 0.06);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  margin: 20px 0;
-}
-
-.switch-panel.delta-h {
-  background: rgba(59, 130, 246, 0.06);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.switch-panel.delta {
-  background: rgba(244, 63, 94, 0.06);
-  border-color: rgba(244, 63, 94, 0.3);
-}
-
-.switch-panel-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--accent-violet);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 14px;
-}
-
-.switch-panel.delta-h .switch-panel-title { color: var(--accent-blue); }
-.switch-panel.delta .switch-panel-title { color: var(--accent-rose); }
-
-.switch-panel-subtitle {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-  font-style: italic;
-}
-
-.switch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 10px;
-}
-
-.switch-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: rgba(0,0,0,0.2);
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(139, 92, 246, 0.12);
-}
-
-.switch-num {
-  min-width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent-violet);
-  border-radius: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.switch-pos {
-  font-size: 12px;
-  color: #c4b5fd;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.switch-highlight-blue {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-.switch-highlight-blue .switch-num {
-  background: var(--accent-blue);
-}
-.switch-highlight-blue .switch-pos {
-  color: #93c5fd;
-}
-
-.switch-highlight-rose {
-  background: rgba(244, 63, 94, 0.15);
-  border: 1px solid rgba(244, 63, 94, 0.3);
-}
-.switch-highlight-rose .switch-num {
-  background: var(--accent-rose);
-}
-.switch-highlight-rose .switch-pos {
-  color: #fda4af;
-}
-
+/* Operation Table */
 .op-table {
   width: 100%;
   border-collapse: separate;
@@ -359,45 +180,45 @@ body {
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-dim);
-  font-size: 13px;
+  font-size: clamp(12px, 2.5vw, 13px);
 }
 
 .op-table thead th {
   background: rgba(59, 130, 246, 0.08);
-  padding: 14px 12px;
-  font-size: 10px;
+  padding: clamp(10px, 2vw, 14px) clamp(8px, 2vw, 12px);
+  font-size: clamp(9px, 2vw, 10px);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--accent-cyan);
   text-align: left;
   border-bottom: 1px solid var(--border-dim);
 }
 
-.op-table thead th:first-child { width: 50px; text-align: center; }
-.op-table thead th:nth-child(3) { width: 200px; }
-.op-table thead th:last-child { width: 60px; text-align: center; }
+.op-table thead th:first-child { width: 45px; text-align: center; }
+.op-table thead th:nth-child(3) { width: 180px; }
+.op-table thead th:last-child { width: 50px; text-align: center; }
 
 .op-table tbody td {
-  padding: 14px 12px;
+  padding: clamp(10px, 2vw, 14px) clamp(8px, 2vw, 12px);
   background: rgba(0,0,0,0.12);
   border-bottom: 1px solid rgba(75, 85, 99, 0.1);
   vertical-align: top;
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 .op-table tbody tr:last-child td { border-bottom: none; }
 
 .op-num {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 15px;
+  font-size: clamp(13px, 2.5vw, 15px);
   font-weight: 700;
   color: var(--accent-cyan);
   text-align: center;
 }
 
 .op-deviation {
-  font-size: 12px;
+  font-size: clamp(11px, 2vw, 12px);
   color: var(--accent-rose);
   font-style: italic;
   line-height: 1.5;
@@ -405,58 +226,393 @@ body {
 
 .op-check { text-align: center; }
 .op-check input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
+  width: clamp(18px, 4vw, 22px);
+  height: clamp(18px, 4vw, 22px);
   cursor: pointer;
   accent-color: var(--accent-emerald);
 }
 
-.inline-switch {
-  display: inline-flex;
+/* Scaling Block */
+.scaling-block {
+  padding: clamp(14px, 3vw, 22px);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--accent-amber);
+  background: var(--glow-amber);
+  margin: 16px 0;
+}
+
+.scaling-header {
+  display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.scaling-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-amber);
+  flex-shrink: 0;
+}
+.scaling-icon svg { width: 20px; height: 20px; }
+
+.scaling-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(14px, 3vw, 18px);
+  font-weight: 700;
+  color: var(--accent-amber);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.scaling-content {
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(12px, 2.5vw, 13px);
+  line-height: 1.75;
+  color: #fcd34d;
+}
+
+.scaling-content ol {
+  margin: 12px 0 0 0;
+  padding-left: 20px;
+}
+
+.scaling-content li {
+  margin-bottom: 8px;
+}
+
+.scaling-content strong {
+  color: var(--accent-amber);
   font-weight: 600;
 }
-.inline-switch.blue {
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
+
+.switch-val {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: rgba(245, 158, 11, 0.2);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(10px, 2vw, 12px);
+  font-weight: 600;
 }
-.inline-switch.rose {
+
+.scaling-warning {
+  margin-top: 14px;
+  padding: clamp(10px, 2vw, 14px);
+  background: rgba(244, 63, 94, 0.15);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-rose);
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(11px, 2.5vw, 13px);
+  color: #fda4af;
+}
+
+.scaling-warning strong {
+  color: var(--accent-rose);
+}
+
+/* Switch Table */
+.switch-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  margin: 14px 0;
+  font-size: clamp(11px, 2.5vw, 13px);
+}
+
+.switch-table thead th {
+  background: rgba(245, 158, 11, 0.12);
+  padding: clamp(8px, 2vw, 12px);
+  font-size: clamp(9px, 2vw, 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-amber);
+  text-align: left;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.switch-table tbody td {
+  padding: clamp(8px, 2vw, 10px) clamp(10px, 2vw, 16px);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.08);
+  background: rgba(0,0,0,0.2);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.switch-table tbody tr:last-child td { border-bottom: none; }
+
+.switch-table .sw-num {
+  font-weight: 700;
+  color: var(--accent-amber);
+}
+
+.switch-table .sw-pos {
+  color: #fcd34d;
+}
+
+/* Neutral Block */
+.neutral-block {
+  padding: clamp(14px, 3vw, 22px);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--accent-emerald);
+  background: rgba(16, 185, 129, 0.06);
+  margin: 16px 0;
+}
+
+.neutral-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.neutral-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-emerald);
+  flex-shrink: 0;
+}
+.neutral-icon svg { width: 20px; height: 20px; }
+
+.neutral-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(14px, 3vw, 18px);
+  font-weight: 700;
+  color: var(--accent-emerald);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.neutral-content {
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(12px, 2.5vw, 13px);
+  line-height: 1.75;
+  color: #6ee7b7;
+}
+
+.neutral-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.neutral-type-card {
+  padding: clamp(12px, 2vw, 16px);
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.neutral-type-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(10px, 2vw, 12px);
+  font-weight: 700;
+  color: var(--accent-emerald);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.neutral-steps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.neutral-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.neutral-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  color: #000;
+  font-weight: 700;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.neutral-step-text {
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(10px, 2vw, 12px);
+  font-weight: 600;
+  color: #fff;
+}
+
+.neutral-arrow {
+  color: var(--accent-emerald);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Channel Tabs */
+.channel-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.channel-tab {
+  padding: clamp(8px, 2vw, 12px) clamp(14px, 3vw, 20px);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: rgba(0,0,0,0.3);
+  color: var(--text-muted);
+  font-size: clamp(12px, 2.5vw, 14px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.channel-tab:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.channel-tab.active {
+  color: #fff;
+}
+
+.channel-tab[data-ch="n"].active {
+  border-color: var(--ch-n);
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.channel-tab[data-ch="k"].active {
+  border-color: var(--ch-k);
+  background: rgba(139, 92, 246, 0.12);
+}
+
+.channel-tab[data-ch="t"].active {
+  border-color: var(--ch-t);
+  background: rgba(6, 182, 212, 0.12);
+}
+
+.ch-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ch-icon-n { background: rgba(59, 130, 246, 0.2); color: var(--ch-n); }
+.ch-icon-k { background: rgba(139, 92, 246, 0.2); color: var(--ch-k); }
+.ch-icon-t { background: rgba(6, 182, 212, 0.2); color: var(--ch-t); }
+
+.channel-content {
+  display: none;
+}
+
+.channel-content.active {
+  display: block;
+}
+
+/* Important Step Block */
+.important-step {
+  margin: 12px 0;
+  padding: clamp(10px, 2vw, 14px);
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  border-radius: 8px;
+}
+
+.important-step-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-rose);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.important-step-title svg {
+  width: 16px;
+  height: 16px;
+}
+
+.important-step-content {
+  font-size: clamp(11px, 2.5vw, 12px);
+  color: #fda4af;
+  line-height: 1.6;
+}
+
+.important-step-content .switch-inline {
+  display: inline-block;
+  padding: 2px 6px;
   background: rgba(244, 63, 94, 0.2);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
   color: #fb7185;
 }
 
+/* Formula Card */
 .formula-card {
-  padding: clamp(16px, 3vw, 24px);
+  padding: clamp(14px, 3vw, 20px);
   border-radius: var(--radius-md);
   background: rgba(6, 182, 212, 0.06);
   border: 1px solid rgba(6, 182, 212, 0.2);
-  margin: 20px 0;
+  margin: 16px 0;
 }
 
 .formula-card-title {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--text-muted);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .formula-display {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(20px, 5vw, 28px);
+  font-size: clamp(18px, 4vw, 26px);
   font-weight: 600;
   color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .formula-display .frac {
@@ -472,7 +628,7 @@ body {
 }
 
 .formula-display .frac .denom {
-  font-size: clamp(16px, 4vw, 22px);
+  font-size: clamp(14px, 3vw, 20px);
   color: var(--text-secondary);
 }
 
@@ -482,15 +638,16 @@ body {
 }
 
 .formula-legend {
-  font-size: 12px;
+  font-size: clamp(11px, 2.5vw, 12px);
   color: var(--text-secondary);
-  line-height: 1.8;
+  line-height: 1.75;
 }
 .formula-legend strong {
   color: var(--accent-cyan);
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* Data Table */
 .data-table {
   width: 100%;
   border-collapse: separate;
@@ -498,13 +655,14 @@ body {
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-dim);
+  font-size: clamp(11px, 2.5vw, 13px);
 }
 
 .data-table caption {
-  padding: 14px 16px;
+  padding: clamp(10px, 2vw, 14px);
   background: rgba(16, 185, 129, 0.1);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: clamp(11px, 2.5vw, 13px);
   font-weight: 700;
   color: var(--accent-emerald);
   text-align: left;
@@ -513,43 +671,45 @@ body {
 
 .data-table thead th {
   background: rgba(0,0,0,0.15);
-  padding: 12px;
-  font-size: 10px;
+  padding: clamp(8px, 2vw, 12px);
+  font-size: clamp(9px, 2vw, 10px);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: var(--text-secondary);
   text-align: center;
   border-bottom: 1px solid var(--border-dim);
 }
 
 .data-table tbody td {
-  padding: 14px 12px;
+  padding: clamp(10px, 2vw, 14px) clamp(8px, 2vw, 12px);
   background: rgba(0,0,0,0.08);
   text-align: center;
-  font-size: 13px;
 }
 
 .data-table .channel-cell {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   justify-content: center;
   font-weight: 600;
 }
 
 .channel-badge {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--accent-emerald);
+  flex-shrink: 0;
 }
+
+.channel-badge-n { background: rgba(59, 130, 246, 0.2); color: var(--ch-n); }
+.channel-badge-k { background: rgba(139, 92, 246, 0.2); color: var(--ch-k); }
+.channel-badge-t { background: rgba(6, 182, 212, 0.2); color: var(--ch-t); }
 
 .data-table .val {
   font-family: 'JetBrains Mono', monospace;
@@ -557,8 +717,9 @@ body {
   color: var(--accent-cyan);
 }
 
+/* Scheme Wrapper */
 .scheme-wrapper {
-  padding: clamp(16px, 4vw, 32px);
+  padding: clamp(12px, 3vw, 28px);
   background: linear-gradient(135deg, #f8fafc, #f1f5f9);
   border-radius: var(--radius-md);
   border: 1px solid #e2e8f0;
@@ -567,26 +728,27 @@ body {
 
 .scheme-svg {
   width: 100%;
-  min-width: 500px;
-  max-width: 800px;
+  min-width: 480px;
+  max-width: 760px;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
 .scheme-caption {
-  margin-top: 14px;
-  padding: 12px 14px;
+  margin-top: 12px;
+  padding: 10px 12px;
   background: rgba(245, 158, 11, 0.08);
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--accent-amber);
-  font-size: 12px;
+  font-size: clamp(11px, 2.5vw, 12px);
   color: var(--accent-amber);
 }
 .scheme-caption strong { color: #d97706; }
 
+/* Pult Image */
 .pult-image-container {
-  margin: 20px 0;
+  margin: 16px 0;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-dim);
@@ -599,15 +761,16 @@ body {
 }
 
 .pult-caption {
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: rgba(0,0,0,0.3);
-  font-size: 12px;
+  font-size: clamp(10px, 2.5vw, 12px);
   color: var(--text-secondary);
   text-align: center;
 }
 
+/* Calculator */
 .calc-panel {
-  padding: clamp(16px, 4vw, 28px);
+  padding: clamp(14px, 3vw, 24px);
   background: var(--bg-elevated);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-accent);
@@ -616,75 +779,47 @@ body {
 .calc-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13px;
+  gap: 8px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--accent-blue);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
-.calc-title svg { width: 22px; height: 22px; }
-
-.calc-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.calc-tab {
-  padding: 8px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-dim);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.calc-tab:hover { background: rgba(255,255,255,0.05); }
-.calc-tab.active {
-  background: var(--accent-blue);
-  border-color: var(--accent-blue);
-  color: #fff;
-}
-
-.calc-content { display: none; }
-.calc-content.active { display: block; }
+.calc-title svg { width: 20px; height: 20px; }
 
 .calc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .calc-field { display: flex; flex-direction: column; gap: 6px; }
 
 .calc-field label {
-  font-size: 10px;
+  font-size: clamp(9px, 2vw, 10px);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: var(--text-muted);
 }
 
-.calc-input {
-  padding: 12px 14px;
+.calc-input, .calc-select {
+  padding: clamp(10px, 2vw, 12px);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-dim);
   background: rgba(0,0,0,0.3);
   color: var(--text-primary);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 16px;
+  font-size: clamp(14px, 3vw, 16px);
   font-weight: 500;
   outline: none;
   transition: all 0.2s;
   width: 100%;
 }
-.calc-input:focus {
+.calc-input:focus, .calc-select:focus {
   border-color: var(--accent-blue);
   box-shadow: 0 0 0 3px var(--glow-blue);
 }
@@ -693,11 +828,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: clamp(12px, 3vw, 18px);
   background: rgba(0,0,0,0.25);
   border-radius: var(--radius-md);
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
 }
 
 .calc-result-info .result-label {
@@ -708,7 +843,7 @@ body {
 
 .calc-result-info .result-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(22px, 5vw, 28px);
+  font-size: clamp(20px, 5vw, 28px);
   font-weight: 700;
   color: var(--accent-cyan);
 }
@@ -716,12 +851,12 @@ body {
 .result-badge {
   display: inline-flex;
   align-items: center;
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 18px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 .result-badge.pass {
   background: rgba(16, 185, 129, 0.15);
@@ -735,141 +870,43 @@ body {
 }
 
 .calc-steps {
-  margin-top: 16px;
-  padding: 14px;
+  margin-top: 12px;
+  padding: 12px;
   background: rgba(0,0,0,0.15);
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: clamp(11px, 2.5vw, 12px);
   color: var(--text-secondary);
-  line-height: 1.8;
+  line-height: 1.7;
 }
 .calc-steps strong {
   color: var(--accent-cyan);
   font-family: 'JetBrains Mono', monospace;
 }
 
-.info-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 16px;
-  font-size: 12px;
-}
-.info-table th, .info-table td {
-  padding: 8px 12px;
-  border: 1px solid var(--border-dim);
-  text-align: center;
-}
-.info-table th {
-  background: rgba(0,0,0,0.2);
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-.info-table td {
-  color: var(--text-primary);
-}
-
-.why-block {
-  margin-top: 20px;
-  padding: 16px;
-  background: rgba(16, 185, 129, 0.06);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-radius: var(--radius-md);
-}
-.why-block-title {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--accent-emerald);
-  margin-bottom: 10px;
-}
-.why-block-text {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-
-.mode-comparison {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-  margin: 20px 0;
-}
-
-.mode-card {
-  padding: 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-dim);
-}
-.mode-card.mode-deltah {
-  background: rgba(59, 130, 246, 0.06);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-.mode-card.mode-delta {
-  background: rgba(244, 63, 94, 0.06);
-  border-color: rgba(244, 63, 94, 0.3);
-}
-.mode-card-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-.mode-card.mode-deltah .mode-card-title { color: var(--accent-blue); }
-.mode-card.mode-delta .mode-card-title { color: var(--accent-rose); }
-.mode-card-symbol {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 700;
-}
-.mode-card.mode-deltah .mode-card-symbol {
-  background: rgba(59, 130, 246, 0.2);
-  color: var(--accent-blue);
-}
-.mode-card.mode-delta .mode-card-symbol {
-  background: rgba(244, 63, 94, 0.2);
-  color: var(--accent-rose);
-}
-.mode-card-desc {
-  font-size: 12px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-.mode-card-use {
-  margin-top: 10px;
-  padding: 8px 12px;
-  background: rgba(0,0,0,0.2);
-  border-radius: 6px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
+/* Print Styles */
 @media print {
   body { background: #fff !important; color: #000 !important; }
   .bg-grid { display: none !important; }
   .container { padding: 10mm; max-width: none; }
   .card { box-shadow: none !important; border: 1px solid #ccc !important; background: #fff !important; page-break-inside: avoid; }
-  .back-btn, .print-btn, .calc-tabs { display: none !important; }
-  .expert-note { background: #fffbeb !important; }
+  .back-btn, .print-btn, .channel-tabs { display: none !important; }
+  .channel-content { display: block !important; page-break-inside: avoid; }
+  .scaling-block { background: #fff7ed !important; }
+  .neutral-block { background: #ecfdf5 !important; }
   h1 { font-size: 16pt !important; }
 }
 
+/* Mobile */
 @media (max-width: 640px) {
   .page-header { flex-direction: column; }
   .header-actions { width: 100%; justify-content: space-between; }
   .op-table thead th:nth-child(3),
   .op-table tbody td:nth-child(3) { display: none; }
-  .switch-grid { grid-template-columns: repeat(2, 1fr); }
-  .calc-tabs { gap: 6px; }
-  .calc-tab { padding: 6px 10px; font-size: 10px; }
+  .channel-tabs { flex-direction: column; gap: 6px; }
+  .neutral-types { grid-template-columns: 1fr; }
+  .calc-grid { grid-template-columns: 1fr; }
+  .neutral-steps { flex-direction: column; align-items: flex-start; }
+  .neutral-arrow { transform: rotate(90deg); align-self: center; }
 }
 </style>
 </head>
@@ -885,8 +922,8 @@ body {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
       </button>
       <div class="header-text">
-        <h1>Пункт 5.8. Проверка передаточного числа по высоте</h1>
-        <div class="doc-ref">АП-34Б | МИ-8 | Таблица 3</div>
+        <h1>Пункт 5.7. Проверка передаточного числа по углу</h1>
+        <div class="doc-ref">АП-34Б | МИ-8 | Таблица 202</div>
       </div>
     </div>
     <div class="header-actions">
@@ -898,70 +935,13 @@ body {
     </div>
   </header>
 
-  <section class="card">
-    <div class="intro-block">
-      <div class="intro-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        Перед проверкой
-      </div>
-      <div class="intro-text">
-        Перед проверкой необходимо выписать из паспорта на <strong>АП-34Б</strong>, АП-34Б серия 2 &sect;9 "Заметки по эксплуатации" крутизну корректора высоты <strong>Ккв (В/м)</strong>.<br><br>
-        В случае отсутствия в паспорте этой записи, необходимо произвести замер крутизны корректора высоты.
-      </div>
-    </div>
-
-    <div class="mode-comparison">
-      <div class="mode-card mode-deltah">
-        <div class="mode-card-title">
-          <span class="mode-card-symbol">ΔН</span>
-          Положение "ΔН" (дельта H)
-        </div>
-        <div class="mode-card-desc">
-          Режим <strong>задания сигнала высоты</strong>.<br>
-          Используется для задания напряжения, соответствующего 7-8 м высоты задатчиком "6".
-        </div>
-        <div class="mode-card-use">Применяется ПЕРВЫМ (п.33) - задаём сигнал</div>
-      </div>
-      <div class="mode-card mode-delta">
-        <div class="mode-card-title">
-          <span class="mode-card-symbol">δ</span>
-          Положение "δ" (дельта)
-        </div>
-        <div class="mode-card-desc">
-          Режим <strong>измерения отклонения</strong> (передаточного числа).<br>
-          Используется для фиксации показания прибора "3" и проверки индекса "В".
-        </div>
-        <div class="mode-card-use">Применяется ВТОРЫМ (п.34) - измеряем</div>
-      </div>
-    </div>
-
-    <div class="expert-note">
-      <div class="pencil-text">
-        <span class="pencil-important">Пример расчёта (Ккв = 0,18 В/м):</span><br>
-        Напряжение для 8 метров: <span class="pencil-formula">U = 0,18 × 8 = 1,44 В</span><br><br>
-        
-        <span class="pencil-important">Пример проверки:</span><br>
-        <span class="pencil-formula">i = A × Ккв / U = 50 × 0,18 / 1,44 = 6,25</span><br>
-        - где 50 — показание прибора "3"<br>
-        - где 0,18 — крутизна (Ккв) из паспорта<br>
-        - где 1,44 — напряжение для высоты 8 м
-      </div>
-    </div>
-
-    <div class="why-block">
-      <div class="why-block-title">Почему именно 7-8 метров?</div>
-      <div class="why-block-text">
-        7-8 метров — это стандартная высота висения вертолёта МИ-8 при взлёте, посадке и выполнении работ. Автопилот должен стабильно удерживать именно эту высоту.
-      </div>
-    </div>
-  </section>
-
+  <!-- PREPARATION -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
       </div>
-      <div class="section-title">Подключение</div>
+      <div class="section-title">Подготовка к проверке</div>
     </div>
 
     <table class="op-table">
@@ -975,8 +955,14 @@ body {
       </thead>
       <tbody>
         <tr>
-          <td class="op-num">29</td>
-          <td>Подсоединить к корректору высоты <strong>КПУ-3</strong> и высотомер (допускается водяной манометр — рис.3).<br><br>Подсоединить пульт 6С2.702.007 с помощью жгута к разъёму "К" агрегата управления (рис.202).</td>
+          <td class="op-num">18</td>
+          <td>Подключите пульт <strong>6С2.702.007</strong> с помощью жгута "К" (6С6.640.043) к разъёму <strong>"К"</strong> агрегата управления (см. рис. 202).</td>
+          <td class="op-deviation">—</td>
+          <td class="op-check"><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="op-num">19</td>
+          <td>Перед проверкой необходимо произвести <strong>регулировку масштаба</strong> прибора "3" пульта, измеряющего положение хода штока малого цилиндра рулевого агрегата проверяемого канала.</td>
           <td class="op-deviation">—</td>
           <td class="op-check"><input type="checkbox"></td>
         </tr>
@@ -984,176 +970,397 @@ body {
     </table>
   </section>
 
+  <!-- SCALING PROCEDURE -->
   <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    <div class="scaling-block">
+      <div class="scaling-header">
+        <div class="scaling-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 6H3"/><path d="M10 12H3"/><path d="M10 18H3"/><circle cx="17" cy="15" r="3"/><path d="M21 15v6"/></svg>
+        </div>
+        <div class="scaling-title">Процедура масштабирования прибора "3"</div>
       </div>
-      <div class="section-title">Проверка остаточного сигнала</div>
-    </div>
+      
+      <div class="scaling-content">
+        <p>Переключатели и ручки на пульте 6С2.702.007 установите в следующие положения:</p>
+        
+        <table class="switch-table">
+          <thead>
+            <tr>
+              <th>Переключатель</th>
+              <th>Положение</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="sw-num">"2"</td><td class="sw-pos">среднее положение</td></tr>
+            <tr><td class="sw-num">"8"</td><td class="sw-pos">"Н" (или "К" / "Т" по каналу)</td></tr>
+            <tr><td class="sw-num">"9"</td><td class="sw-pos">"ОСТ.СИГН."</td></tr>
+            <tr><td class="sw-num">"10"</td><td class="sw-pos">"δ"</td></tr>
+            <tr><td class="sw-num">"11"</td><td class="sw-pos">"ОТКЛ."</td></tr>
+            <tr><td class="sw-num">"12"</td><td class="sw-pos">"КОМПЛЕКТ"</td></tr>
+            <tr><td class="sw-num">"13"</td><td class="sw-pos">"0"</td></tr>
+            <tr><td class="sw-num">"14"</td><td class="sw-pos">среднее положение</td></tr>
+            <tr><td class="sw-num">"15"</td><td class="sw-pos">среднее положение</td></tr>
+          </tbody>
+        </table>
 
-    <table class="op-table">
-      <thead>
-        <tr>
-          <th>П.</th>
-          <th>Содержание операции</th>
-          <th>Работы при отклонениях</th>
-          <th>Контр.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="op-num">30</td>
-          <td>Установить ручку <strong>общего шага</strong> в среднее положение.<br><br>Зафиксировать показание прибора "3" пульта 6С2.702.007, которое должно быть <strong>не более ±15</strong>.</td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">31</td>
-          <td>Включить канал высоты кнопкой <strong>"Вкл.высота"</strong> на пульте автопилота.<br><br>Зафиксировать показание прибора "3".<br><br>Разность в показаниях прибора до и после включения канала высоты должна быть <strong>не более 20</strong>.</td>
-          <td class="op-deviation">Если разность > 20, произвести центровку потенциометром <strong>"ЦЕНТР-ВЫСОТА"</strong> на передней панели агрегата управления</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-      </tbody>
-    </table>
+        <p style="margin-top: 12px;">Отсчёт ведите по шкале <strong>100-0-100</strong> вольтметра "3".</p>
+
+        <ol>
+          <li>Ручкой <span class="switch-val">"0"</span> (переключатель "13") выставить <strong>равномерно плечи</strong> по вольтметру "3".</li>
+          <li>Ручкой <span class="switch-val">"МАСШТАБ"</span> раздвинуть плечи до показаний <strong>+100</strong> и <strong>-100</strong> по вольтметру "3".</li>
+          <li>Включите канал автопилота.</li>
+          <li>Отклоните шток малого цилиндра рулевого агрегата в одно и другое крайние положения, устанавливая переключатель <span class="switch-val">"13"</span> пульта в положения <strong>"−"</strong>, <strong>"+"</strong>.</li>
+          <li>Заметьте разность показаний прибора "3" в одну и другую стороны.</li>
+          <li>Потенциометром <span class="switch-val">"14"</span> отсимметрируйте показания прибора.</li>
+          <li>Потенциометром <span class="switch-val">"15"</span> увеличьте показание до деления <strong>100</strong>.</li>
+          <li>Отклоните шток в противоположную сторону и убедитесь, что прибор показывает <strong>100</strong>.</li>
+        </ol>
+        
+        <div class="scaling-warning">
+          <strong>ВАЖНО! После масштабирования:</strong><br><br>
+          1. Переключатель <span class="switch-val">"9"</span> поставить в положение <span class="switch-val">"КУ"</span><br>
+          2. По вольтметру "3" установить <strong>ноль</strong> ручкой <span class="switch-val">"2"</span><br><br>
+          В случае несимметрии — повторите регулировку масштаба.
+        </div>
+      </div>
+    </div>
   </section>
 
+  <!-- NEUTRAL BLOCK -->
+  <section class="card">
+    <div class="neutral-block">
+      <div class="neutral-header">
+        <div class="neutral-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>
+        </div>
+        <div class="neutral-title">Установка нейтрали (для всех каналов)</div>
+      </div>
+      
+      <div class="neutral-content">
+        <p>Перед проверкой передаточного числа необходимо установить органы управления в нейтральное положение:</p>
+        
+        <div class="neutral-types">
+          <div class="neutral-type-card">
+            <div class="neutral-type-title">Канал направления (педали)</div>
+            <div class="neutral-steps">
+              <div class="neutral-step">
+                <div class="neutral-step-num">1</div>
+                <div class="neutral-step-text">Заштырить педали в нейтрали</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">2</div>
+                <div class="neutral-step-text">Оттриммировать</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">3</div>
+                <div class="neutral-step-text">Снять штырь</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="neutral-type-card">
+            <div class="neutral-type-title">Канал крена (ручка влево-вправо)</div>
+            <div class="neutral-steps">
+              <div class="neutral-step">
+                <div class="neutral-step-num">1</div>
+                <div class="neutral-step-text">Заштырить ручку в нейтрали</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">2</div>
+                <div class="neutral-step-text">Оттриммировать</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">3</div>
+                <div class="neutral-step-text">Снять штырь</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="neutral-type-card">
+            <div class="neutral-type-title">Канал тангажа (ручка вперёд-назад)</div>
+            <div class="neutral-steps">
+              <div class="neutral-step">
+                <div class="neutral-step-num">1</div>
+                <div class="neutral-step-text">Заштырить ручку в нейтрали</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">2</div>
+                <div class="neutral-step-text">Оттриммировать</div>
+              </div>
+              <span class="neutral-arrow">→</span>
+              <div class="neutral-step">
+                <div class="neutral-step-num">3</div>
+                <div class="neutral-step-text">Снять штырь</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHANNEL PROCEDURES -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
       </div>
-      <div class="section-title">Проверка передаточного числа</div>
+      <div class="section-title">Проверка по каналам</div>
     </div>
 
-    <table class="op-table">
-      <thead>
-        <tr>
-          <th>П.</th>
-          <th>Содержание операции</th>
-          <th>Работы при отклонениях</th>
-          <th>Контр.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="op-num">32</td>
-          <td>Переключатель <strong>"9"</strong> пульта 6С2.702.007 поставить в положение <strong>"КУ"</strong>.<br><br>Вращением ручки потенциометра <strong>"2"</strong> установить нуль на приборе "3".</td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">33</td>
-          <td>Переключатель <strong>"10"</strong> поставить в положение <span class="inline-switch blue">"ΔН"</span>.<br><br>Поворотом задатчика высоты <strong>"6"</strong> <u>по часовой стрелке</u> задать сигнал по вольтметру "3", соответствующий <strong>7-8 м</strong> высоты.<br><br><em>Величина задаваемого сигнала: U = Ккв × Н (например: 0,18 × 8 = 1,44 В)</em></td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">34</td>
-          <td>Переключатель <strong>"10"</strong> поставить в положение <span class="inline-switch rose">"δ"</span>.<br><br>Зафиксировать показание прибора "3".<br><br>Подвижный индекс "В" индикатора нулевого должен при этом отклониться <strong>вниз</strong>.<br><br>Показания прибора "3" должны соответствовать <strong>таблице 3</strong>.</td>
-          <td class="op-deviation">Если не в допуске — регулировка потенциометром <strong>"ВЫСОТА"</strong> на передней панели агрегата управления</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">35</td>
-          <td>Проделать описанную выше проверку, задавая сигнал высоты поворотом ручки задатчика высоты "6" в <u>противоположную сторону</u> (против часовой стрелки).<br><br>При этом перед включением канала высоты задатчик "6" следует повернуть по часовой стрелке до упора.<br><br>Подвижный индекс "В" индикатора должен при этом отклониться <strong>вверх</strong>.</td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="switch-panel delta-h">
-      <div class="switch-panel-title">Положения для задания сигнала (п.32-33)</div>
-      <div class="switch-panel-subtitle">Переключатель "10" в положении "ΔН" - задаём напряжение для 7-8м</div>
-      <div class="switch-grid">
-        <div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">нуль на "3"</span></div>
-        <div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
-        <div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"КУ"</span></div>
-        <div class="switch-item switch-highlight-blue"><span class="switch-num">"10"</span><span class="switch-pos">"ΔН"</span></div>
-        <div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
-        <div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
+    <div class="channel-tabs">
+      <div class="channel-tab active" data-ch="n" onclick="showChannel('n')">
+        <span class="ch-icon ch-icon-n">Н</span>
+        Направление
+      </div>
+      <div class="channel-tab" data-ch="k" onclick="showChannel('k')">
+        <span class="ch-icon ch-icon-k">К</span>
+        Крен
+      </div>
+      <div class="channel-tab" data-ch="t" onclick="showChannel('t')">
+        <span class="ch-icon ch-icon-t">Т</span>
+        Тангаж
       </div>
     </div>
 
-    <div class="switch-panel delta">
-      <div class="switch-panel-title">Положения для измерения (п.34-35)</div>
-      <div class="switch-panel-subtitle">Переключатель "10" переводится в положение "δ" - фиксируем показание и проверяем индекс</div>
-      <div class="switch-grid">
-        <div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">без изменений</span></div>
-        <div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
-        <div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"КУ"</span></div>
-        <div class="switch-item switch-highlight-rose"><span class="switch-num">"10"</span><span class="switch-pos">"δ"</span></div>
-        <div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
-        <div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
-      </div>
+    <!-- НАПРАВЛЕНИЕ -->
+    <div class="channel-content active" id="ch-n">
+      <table class="op-table">
+        <thead>
+          <tr>
+            <th>П.</th>
+            <th>Содержание операции и технические требования</th>
+            <th>Работы при отклонениях</th>
+            <th>Контр.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="op-num">20</td>
+            <td>Произведите регулировку масштаба прибора "3" для канала направления.<br><br>Переключатель "8" установите в положение <strong>"Н"</strong>.</td>
+            <td class="op-deviation">В случае несимметрии повторите регулировку</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">21</td>
+            <td>
+              Отключите канал направления кнопкой <strong>ОТКЛ.НАПРАВЛЕНИЕ</strong> на пульте управления.<br><br>
+              <strong style="color: var(--accent-emerald);">НЕЙТРАЛЬ:</strong> <em style="color: #6ee7b7;">Заштырить педали в нейтрали, оттриммировать, снять штырь.</em><br><br>
+              Установите педали нейтрально. Снимите ноги с педалей.<br><br>
+              Зафиксируйте показание прибора "3", которое должно быть <strong>не более ±15</strong>.<br><br>
+              Включите канал направления кнопкой <strong>ВКЛ.НАПРАВЛЕНИЕ</strong>.<br><br>
+              Зафиксируйте показание прибора "3".<br><br>
+              Разность показаний до и после включения канала должна быть <strong>не более 20</strong>.
+            </td>
+            <td class="op-deviation">Если разность > 20, произвести центровку потенциометром <strong>ЦЕНТР-НАПРАВЛЕНИЕ</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">22</td>
+            <td>
+              <div class="important-step">
+                <div class="important-step-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  После масштабирования
+                </div>
+                <div class="important-step-content">
+                  Переключатель <span class="switch-inline">"9"</span> поставить в положение <span class="switch-inline">"КУ"</span><br>
+                  Потенциометром <span class="switch-inline">"2"</span> установить <strong>ноль</strong> на приборе "3"
+                </div>
+              </div>
+              Совместите ближайшую риску шкалы <strong>НАПРАВЛЕНИЕ</strong> с риской на лицевой панели пульта управления.<br><br>
+              Поворотом шкалы <strong>НАПРАВЛЕНИЕ</strong> по часовой стрелке (против часовой стрелки) задайте угол <strong>3°</strong> и зафиксируйте показание прибора "3".<br><br>
+              Показания прибора "3" должны соответствовать <strong>табл. 202</strong>.
+            </td>
+            <td class="op-deviation">Регулировка потенциометром <strong>УГОЛ-НАПРАВЛЕНИЕ</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- КРЕН -->
+    <div class="channel-content" id="ch-k">
+      <table class="op-table">
+        <thead>
+          <tr>
+            <th>П.</th>
+            <th>Содержание операции и технические требования</th>
+            <th>Работы при отклонениях</th>
+            <th>Контр.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="op-num">23</td>
+            <td>
+              Установите переключатель "8" в положение <strong>"К"</strong> и отрегулируйте масштаб прибора "3" по описанной выше методике.
+            </td>
+            <td class="op-deviation">В случае несимметрии повторите регулировку</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">24</td>
+            <td>
+              Отключите канал крена кнопкой <strong>ОТКЛ.АП</strong> на ручке лётчика.<br><br>
+              <strong style="color: var(--accent-emerald);">НЕЙТРАЛЬ:</strong> <em style="color: #6ee7b7;">Заштырить ручку управления в нейтрали, оттриммировать, снять штырь.</em><br><br>
+              Установите ручку лётчика в среднее положение.<br><br>
+              Зафиксируйте показание прибора "3", которое должно быть <strong>не более ±15</strong>.<br><br>
+              Включите канал крена кнопкой <strong>ВКЛ.КРЕН-ТАНГАЖ</strong>.<br><br>
+              Разность показаний до и после включения канала должна быть <strong>не более 20</strong>.
+            </td>
+            <td class="op-deviation">Если разность > 20, произвести центровку потенциометром <strong>ЦЕНТР-КРЕН</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">25</td>
+            <td>
+              <div class="important-step">
+                <div class="important-step-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  После масштабирования
+                </div>
+                <div class="important-step-content">
+                  Переключатель <span class="switch-inline">"9"</span> поставить в положение <span class="switch-inline">"КУ"</span><br>
+                  Потенциометром <span class="switch-inline">"2"</span> установить <strong>ноль</strong> на приборе "3"
+                </div>
+              </div>
+              Совместите ближайшую риску шкалы <strong>КРЕН</strong> с риской на лицевой панели пульта управления.<br><br>
+              Поворотом шкалы <strong>КРЕН</strong> по часовой стрелке (против часовой стрелки) задайте угол <strong>3°</strong> и зафиксируйте показание прибора "3".<br><br>
+              Показания прибора "3" должны соответствовать <strong>табл. 202</strong>.
+            </td>
+            <td class="op-deviation">Регулировка потенциометром <strong>УГОЛ-КРЕН</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ТАНГАЖ -->
+    <div class="channel-content" id="ch-t">
+      <table class="op-table">
+        <thead>
+          <tr>
+            <th>П.</th>
+            <th>Содержание операции и технические требования</th>
+            <th>Работы при отклонениях</th>
+            <th>Контр.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="op-num">26</td>
+            <td>
+              Установите переключатель "8" в положение <strong>"Т"</strong> и отрегулируйте масштаб прибора "3" по описанной выше методике.
+            </td>
+            <td class="op-deviation">В случае несимметрии повторите регулировку</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">27</td>
+            <td>
+              Отключите канал тангажа кнопкой <strong>ОТКЛ.АП</strong> на ручке лётчика.<br><br>
+              <strong style="color: var(--accent-emerald);">НЕЙТРАЛЬ:</strong> <em style="color: #6ee7b7;">Заштырить ручку управления в нейтрали, оттриммировать, снять штырь.</em><br><br>
+              Установите ручку лётчика в среднее положение.<br><br>
+              Зафиксируйте показание прибора "3", которое должно быть <strong>не более ±15</strong>.<br><br>
+              Включите канал тангажа кнопкой <strong>ВКЛ.КРЕН-ТАНГАЖ</strong>.<br><br>
+              Разность показаний до и после включения канала должна быть <strong>не более 20</strong>.
+            </td>
+            <td class="op-deviation">Если разность > 20, произвести центровку потенциометром <strong>ЦЕНТР-ТАНГАЖ</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="op-num">28</td>
+            <td>
+              <div class="important-step">
+                <div class="important-step-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  После масштабирования
+                </div>
+                <div class="important-step-content">
+                  Переключатель <span class="switch-inline">"9"</span> поставить в положение <span class="switch-inline">"КУ"</span><br>
+                  Потенциометром <span class="switch-inline">"2"</span> установить <strong>ноль</strong> на приборе "3"
+                </div>
+              </div>
+              Совместите ближайшую риску шкалы <strong>ТАНГАЖ</strong> с риской на лицевой панели пульта управления.<br><br>
+              Поворотом шкалы <strong>ТАНГАЖ</strong> по часовой стрелке (против часовой стрелки) задайте угол <strong>3°</strong> и зафиксируйте показание прибора "3".<br><br>
+              Показания прибора "3" должны соответствовать <strong>табл. 202</strong>.
+            </td>
+            <td class="op-deviation">Регулировка потенциометром <strong>УГОЛ-ТАНГАЖ</strong> на передней панели агрегата управления</td>
+            <td class="op-check"><input type="checkbox"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
+  <!-- FORMULA & TABLE -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
       </div>
-      <div class="section-title">Формула и Таблица 3</div>
+      <div class="section-title">Формула и Таблица 202</div>
     </div>
 
     <div class="formula-card">
-      <div class="formula-card-title">Величина задаваемого сигнала</div>
-      <div class="formula-display">
-        <span>U</span>
-        <span>=</span>
-        <span>Ккв × Н</span>
-        <span class="formula-unit">[В]</span>
-      </div>
-      <div class="formula-legend">
-        <strong>U</strong> (в) — задаваемый сигнал<br>
-        <strong>Н</strong> (м) — сигнал высоты (7-8 м)<br>
-        <strong>Ккв</strong> (в/м) — крутизна характеристики корректора высоты из паспорта
-      </div>
-    </div>
-
-    <div class="formula-card">
-      <div class="formula-card-title">Передаточное число по высоте</div>
+      <div class="formula-card-title">Передаточное число по углу</div>
       <div class="formula-display">
         <span>i</span>
         <span>=</span>
         <span class="frac">
-          <span class="num">A × Ккв</span>
-          <span class="denom">U</span>
+          <span class="num">A</span>
+          <span class="denom">φ</span>
         </span>
-        <span class="formula-unit">[% х.разд. / метр]</span>
+        <span class="formula-unit">[% х.разд. / градус]</span>
       </div>
       <div class="formula-legend">
         <strong>A</strong> (дел) — показание прибора "3"<br>
-        <strong>U</strong> (в) — напряжение по вольтметру "3", соответствующее заданной высоте<br>
-        <strong>Ккв</strong> (в/м) — крутизна сигнала корректора высоты из паспорта
+        <strong>φ</strong> (°) — заданный угол (3° для всех каналов)
       </div>
     </div>
 
     <table class="data-table">
-      <caption>Таблица 3 — Передаточное число по высоте (МИ-8)</caption>
+      <caption>Таблица 202 — Передаточное число по углу (МИ-8)</caption>
       <thead>
         <tr>
           <th>Тип</th>
           <th>Канал</th>
-          <th>Высота, м</th>
+          <th>Угол, °</th>
           <th>Показания "3", дел.</th>
           <th>Передаточное число</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td style="font-weight: 700; color: var(--accent-cyan);">МИ-8</td>
-          <td><div class="channel-cell"><span class="channel-badge">В</span> Высота</div></td>
-          <td class="val">7 - 8</td>
-          <td class="val">(6,65 ± 2,65) × Н</td>
-          <td class="val">6,65 ± 2,65</td>
+          <td rowspan="3" style="font-weight: 700; color: var(--accent-cyan); vertical-align: middle;">МИ-8</td>
+          <td><div class="channel-cell"><span class="channel-badge channel-badge-n">Н</span> Направление</div></td>
+          <td class="val">3</td>
+          <td class="val">24 ± 6</td>
+          <td class="val">8 ± 2</td>
+        </tr>
+        <tr>
+          <td><div class="channel-cell"><span class="channel-badge channel-badge-k">К</span> Крен</div></td>
+          <td class="val">3</td>
+          <td class="val">24 ± 6</td>
+          <td class="val">8 ± 2</td>
+        </tr>
+        <tr>
+          <td><div class="channel-cell"><span class="channel-badge channel-badge-t">Т</span> Тангаж</div></td>
+          <td class="val">3</td>
+          <td class="val">24 ± 6</td>
+          <td class="val">8 ± 2</td>
         </tr>
       </tbody>
     </table>
   </section>
 
+  <!-- SCHEME RIS.202 -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -1163,49 +1370,49 @@ body {
     </div>
 
     <div class="scheme-wrapper">
-      <svg class="scheme-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
-        <rect x="50" y="80" width="220" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
-        <text x="160" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
-        <text x="160" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.702.007</text>
+      <svg class="scheme-svg" viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+        <rect x="40" y="70" width="200" height="130" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+        <text x="140" y="115" font-family="Arial, sans-serif" font-size="15" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
+        <text x="140" y="140" font-family="Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">6С2.702.007</text>
         
-        <rect x="140" y="220" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="155" y="240" width="10" height="15" fill="#2c3e50"/>
+        <rect x="120" y="200" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="135" y="220" width="10" height="14" fill="#2c3e50"/>
         
-        <rect x="500" y="80" width="260" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
-        <text x="630" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
-        <text x="630" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.399.000</text>
+        <rect x="480" y="70" width="240" height="130" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+        <text x="600" y="115" font-family="Arial, sans-serif" font-size="15" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
+        <text x="600" y="140" font-family="Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">6С2.399.000</text>
         
-        <rect x="530" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="538" y="260" width="14" height="18" fill="#2c3e50"/>
+        <rect x="510" y="200" width="28" height="36" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="517" y="236" width="14" height="16" fill="#2c3e50"/>
         
-        <rect x="615" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="623" y="260" width="14" height="18" fill="#2c3e50"/>
+        <rect x="586" y="200" width="28" height="36" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="593" y="236" width="14" height="16" fill="#2c3e50"/>
         
-        <rect x="700" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="708" y="260" width="14" height="18" fill="#2c3e50"/>
+        <rect x="662" y="200" width="28" height="36" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+        <rect x="669" y="236" width="14" height="16" fill="#2c3e50"/>
         
-        <path d="M 160 255 L 160 370 L 630 370 L 630 278" stroke="#1a1a1a" stroke-width="4" fill="none"/>
+        <path d="M 140 234 L 140 340 L 600 340 L 600 252" stroke="#1a1a1a" stroke-width="3.5" fill="none"/>
         
-        <line x1="545" y1="278" x2="545" y2="390" stroke="#2c3e50" stroke-width="3"/>
-        <line x1="715" y1="278" x2="715" y2="390" stroke="#2c3e50" stroke-width="3"/>
+        <line x1="524" y1="252" x2="524" y2="360" stroke="#2c3e50" stroke-width="2.5"/>
+        <line x1="676" y1="252" x2="676" y2="360" stroke="#2c3e50" stroke-width="2.5"/>
         
-        <path d="M 545 390 L 545 405 Q 545 415 555 415 L 705 415 Q 715 415 715 405 L 715 390" stroke="#2c3e50" stroke-width="2" fill="none"/>
-        <line x1="630" y1="415" x2="630" y2="435" stroke="#2c3e50" stroke-width="2"/>
-        <polygon points="630,445 622,430 638,430" fill="#2c3e50"/>
+        <path d="M 524 360 L 524 375 Q 524 385 534 385 L 666 385 Q 676 385 676 375 L 676 360" stroke="#2c3e50" stroke-width="2" fill="none"/>
+        <line x1="600" y1="385" x2="600" y2="405" stroke="#2c3e50" stroke-width="2"/>
+        <polygon points="600,415 592,400 608,400" fill="#2c3e50"/>
         
-        <rect x="145" y="290" width="30" height="18" fill="#f8fafc" rx="2"/>
-        <text x="160" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
+        <rect x="125" y="265" width="30" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+        <text x="140" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
         
-        <rect x="527" y="290" width="36" height="18" fill="#f8fafc" rx="2"/>
-        <text x="545" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"АУ"</text>
+        <rect x="507" y="265" width="34" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+        <text x="524" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"АУ"</text>
         
-        <rect x="615" y="290" width="30" height="18" fill="#f8fafc" rx="2"/>
-        <text x="630" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
+        <rect x="583" y="265" width="34" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+        <text x="600" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
         
-        <rect x="697" y="290" width="36" height="18" fill="#f8fafc" rx="2"/>
-        <text x="715" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"РА"</text>
+        <rect x="659" y="265" width="34" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+        <text x="676" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"РА"</text>
         
-        <text x="630" y="30" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">Рис. 202</text>
+        <text x="600" y="30" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">Рис. 202</text>
       </svg>
     </div>
     <div class="scheme-caption">
@@ -1213,50 +1420,7 @@ body {
     </div>
   </section>
 
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/></svg>
-      </div>
-      <div class="section-title">Схема подключения КПУ-3 (Рис. 3)</div>
-    </div>
-
-    <div class="scheme-wrapper">
-      <svg class="scheme-svg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="150" cy="80" rx="70" ry="45" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
-        <text x="150" y="75" font-family="Arial" font-size="13" fill="#555" text-anchor="middle">ВЫСОТОМЕР</text>
-        <text x="150" y="95" font-family="Arial" font-size="10" fill="#888" text-anchor="middle">(водяной манометр)</text>
-        
-        <line x1="150" y1="125" x2="150" y2="180" stroke="#2c3e50" stroke-width="3"/>
-        
-        <rect x="450" y="50" width="140" height="70" rx="5" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
-        <text x="520" y="80" font-family="Arial" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">КВ-11</text>
-        <text x="520" y="100" font-family="Arial" font-size="11" fill="#555" text-anchor="middle">Корректор высоты</text>
-        
-        <line x1="220" y1="80" x2="450" y2="80" stroke="#2c3e50" stroke-width="3"/>
-        <rect x="280" y="72" width="100" height="16" rx="4" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-        
-        <rect x="80" y="200" width="140" height="60" rx="5" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
-        <text x="150" y="225" font-family="Arial" font-size="11" fill="#555" text-anchor="middle">КОМПЛЕКТ</text>
-        <text x="150" y="245" font-family="Arial" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">КПУ-3</text>
-        
-        <line x1="150" y1="200" x2="150" y2="185" stroke="#10b981" stroke-width="3"/>
-        <polygon points="150,175 143,190 157,190" fill="#10b981"/>
-        
-        <text x="150" y="290" font-family="Arial" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">ОТ КПУ-3</text>
-        
-        <rect x="420" y="180" width="220" height="100" rx="5" fill="rgba(59,130,246,0.05)" stroke="rgba(59,130,246,0.2)"/>
-        <text x="530" y="205" font-family="Arial" font-size="10" fill="#3b82f6" text-anchor="middle" font-weight="bold">ПРИМЕЧАНИЕ:</text>
-        <text x="530" y="225" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">При использовании водяного</text>
-        <text x="530" y="240" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">манометра учитывать перевод:</text>
-        <text x="530" y="265" font-family="Arial" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">1,2 мм вод.ст. = 1 м высоты</text>
-      </svg>
-    </div>
-    <div class="scheme-caption">
-      <strong>Рис. 3.</strong> Схема подключения КПУ-3 к высотомеру и корректору высоты КВ-11.
-    </div>
-  </section>
-
+  <!-- PULT IMAGE -->
   <section class="card">
     <div class="section-header">
       <div class="section-icon">
@@ -1267,72 +1431,48 @@ body {
 
     <div class="pult-image-container">
       <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image.png-CHI3qhhgSbOPYZ5BHSyJKFQxO4MR2U.jpeg" alt="Пульт 6С2.702.007" class="pult-image">
-      <div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "12", "13", потенциометры "2", "14", "15", задатчик высоты "6", вольтметр "3"</div>
+      <div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "11", "12", "13", потенциометры "2", "14", "15", вольтметр "3"</div>
     </div>
   </section>
 
+  <!-- CALCULATOR -->
   <section class="card">
     <div class="calc-panel">
       <div class="calc-title">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/></svg>
-        Калькулятор
+        Калькулятор передаточного числа
       </div>
 
-      <div class="calc-tabs">
-        <button class="calc-tab active" onclick="showCalcTab('voltage')">U (напряжение)</button>
-        <button class="calc-tab" onclick="showCalcTab('ratio')">i (передаточное)</button>
-      </div>
-
-      <div class="calc-content active" id="calc-voltage">
-        <div class="calc-grid">
-          <div class="calc-field">
-            <label>Ккв (В/м) из паспорта</label>
-            <input class="calc-input" type="number" id="volt-kkv" placeholder="0.18" value="0.18" step="0.01" oninput="calcVoltage()">
-          </div>
-          <div class="calc-field">
-            <label>H — высота (м)</label>
-            <input class="calc-input" type="number" id="volt-h" placeholder="8" value="8" oninput="calcVoltage()">
-          </div>
+      <div class="calc-grid">
+        <div class="calc-field">
+          <label>Канал</label>
+          <select class="calc-select" id="calc-channel" onchange="calcRatio()">
+            <option value="n">Направление (Н)</option>
+            <option value="k">Крен (К)</option>
+            <option value="t">Тангаж (Т)</option>
+          </select>
         </div>
-        <div class="calc-result">
-          <div class="calc-result-info">
-            <div class="result-label">U = Ккв × Н =</div>
-            <div class="result-value" id="volt-result">1.44</div>
-          </div>
-          <span class="result-badge pass">Вольт</span>
+        <div class="calc-field">
+          <label>A — Показание "3" (дел)</label>
+          <input class="calc-input" type="number" id="calc-a" placeholder="24" value="24" oninput="calcRatio()">
         </div>
-        <div class="calc-steps" id="volt-steps">
-          Расчёт: <strong>0.18 × 8 = 1.44</strong> В<br>
-          Это напряжение нужно задать на вольтметре "3" в режиме "ΔН"
+        <div class="calc-field">
+          <label>φ — Угол (°)</label>
+          <input class="calc-input" type="number" id="calc-phi" placeholder="3" value="3" oninput="calcRatio()">
         </div>
       </div>
 
-      <div class="calc-content" id="calc-ratio">
-        <div class="calc-grid">
-          <div class="calc-field">
-            <label>A — Показание "3" (дел)</label>
-            <input class="calc-input" type="number" id="ratio-a" placeholder="50" value="50" oninput="calcRatio()">
-          </div>
-          <div class="calc-field">
-            <label>Ккв (В/м)</label>
-            <input class="calc-input" type="number" id="ratio-kkv" placeholder="0.18" value="0.18" step="0.01" oninput="calcRatio()">
-          </div>
-          <div class="calc-field">
-            <label>U (В)</label>
-            <input class="calc-input" type="number" id="ratio-u" placeholder="1.44" value="1.44" step="0.01" oninput="calcRatio()">
-          </div>
+      <div class="calc-result">
+        <div class="calc-result-info">
+          <div class="result-label">i = A / φ =</div>
+          <div class="result-value" id="calc-result">8.00</div>
         </div>
-        <div class="calc-result">
-          <div class="calc-result-info">
-            <div class="result-label">i = A × Ккв / U =</div>
-            <div class="result-value" id="ratio-result">6.25</div>
-          </div>
-          <span class="result-badge pass" id="ratio-badge">ГОДЕН</span>
-        </div>
-        <div class="calc-steps" id="ratio-steps">
-          Расчёт: <strong>50 × 0.18 / 1.44 = 6.25</strong><br>
-          Допуск: 4.00 - 9.30 (6.65 ± 2.65)
-        </div>
+        <span class="result-badge pass" id="calc-badge">ГОДЕН</span>
+      </div>
+
+      <div class="calc-steps" id="calc-steps">
+        Расчёт: <strong>24 / 3 = 8.00</strong><br>
+        Допуск для канала Направление: 6 - 10 (8 ± 2)
       </div>
     </div>
   </section>
@@ -1342,34 +1482,29 @@ body {
 <script>
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'});
 
-function showCalcTab(tab) {
-  document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.calc-content').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('calc-' + tab).classList.add('active');
-}
-
-function calcVoltage() {
-  const kkv = parseFloat(document.getElementById('volt-kkv').value) || 0;
-  const h = parseFloat(document.getElementById('volt-h').value) || 0;
-  const u = kkv * h;
-  document.getElementById('volt-result').textContent = u.toFixed(2);
-  document.getElementById('volt-steps').innerHTML = 
-    'Расчёт: <strong>' + kkv + ' × ' + h + ' = ' + u.toFixed(2) + '</strong> В<br>' +
-    'Это напряжение нужно задать на вольтметре "3" в режиме "ΔН"';
+function showChannel(ch) {
+  document.querySelectorAll('.channel-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.channel-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('.channel-tab[data-ch="' + ch + '"]').classList.add('active');
+  document.getElementById('ch-' + ch).classList.add('active');
 }
 
 function calcRatio() {
-  const a = parseFloat(document.getElementById('ratio-a').value) || 0;
-  const kkv = parseFloat(document.getElementById('ratio-kkv').value) || 0;
-  const u = parseFloat(document.getElementById('ratio-u').value) || 1;
-  const result = (a * kkv) / u;
-  document.getElementById('ratio-result').textContent = result.toFixed(2);
-  document.getElementById('ratio-steps').innerHTML = 
-    'Расчёт: <strong>' + a + ' × ' + kkv + ' / ' + u + ' = ' + result.toFixed(2) + '</strong><br>' +
-    'Допуск: 4.00 - 9.30 (6.65 ± 2.65)';
-  const badge = document.getElementById('ratio-badge');
-  if (result >= 4.0 && result <= 9.3) {
+  const channel = document.getElementById('calc-channel').value;
+  const a = parseFloat(document.getElementById('calc-a').value) || 0;
+  const phi = parseFloat(document.getElementById('calc-phi').value) || 1;
+  const result = a / phi;
+  
+  const channelNames = { n: 'Направление', k: 'Крен', t: 'Тангаж' };
+  const min = 6, max = 10;
+  
+  document.getElementById('calc-result').textContent = result.toFixed(2);
+  document.getElementById('calc-steps').innerHTML = 
+    'Расчёт: <strong>' + a + ' / ' + phi + ' = ' + result.toFixed(2) + '</strong><br>' +
+    'Допуск для канала ' + channelNames[channel] + ': ' + min + ' - ' + max + ' (8 ± 2)';
+  
+  const badge = document.getElementById('calc-badge');
+  if (result >= min && result <= max) {
     badge.className = 'result-badge pass';
     badge.textContent = 'ГОДЕН';
   } else {
@@ -1378,7 +1513,6 @@ function calcRatio() {
   }
 }
 
-calcVoltage();
 calcRatio();
 </script>
 
