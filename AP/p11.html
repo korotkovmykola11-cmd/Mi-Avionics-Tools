@@ -1,1 +1,784 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проверка передаточного числа по воздушной скорости | АП-34Б</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%);
+            color: #e5e7eb;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(14, 165, 233, 0.4);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #0ea5e9;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: clamp(24px, 5vw, 36px);
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .header-subtitle { color: #9ca3af; font-size: 14px; }
+        
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 8px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .meta-item strong { color: #e5e7eb; }
+        
+        .section {
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .section-icon.cyan { background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.4); color: #06b6d4; }
+        .section-icon.amber { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #f59e0b; }
+        .section-icon.green { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; }
+        .section-icon.blue { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; }
+        .section-icon.rose { background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.4); color: #f43f5e; }
+        .section-icon.sky { background: rgba(14, 165, 233, 0.15); border: 1px solid rgba(14, 165, 233, 0.4); color: #0ea5e9; }
+        
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .section-title.cyan { color: #06b6d4; }
+        .section-title.amber { color: #f59e0b; }
+        .section-title.green { color: #10b981; }
+        .section-title.blue { color: #3b82f6; }
+        .section-title.rose { color: #f43f5e; }
+        .section-title.sky { color: #0ea5e9; }
+        
+        .info-box {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .info-box.amber { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-left: 3px solid #f59e0b; }
+        .info-box.blue { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-left: 3px solid #3b82f6; }
+        .info-box.green { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-left: 3px solid #10b981; }
+        .info-box.sky { background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.2); border-left: 3px solid #0ea5e9; }
+        .info-box.rose { background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.2); border-left: 3px solid #f43f5e; }
+        
+        .info-box-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        
+        .info-box.amber .info-box-title { color: #f59e0b; }
+        .info-box.blue .info-box-title { color: #3b82f6; }
+        .info-box.green .info-box-title { color: #10b981; }
+        .info-box.sky .info-box-title { color: #0ea5e9; }
+        .info-box.rose .info-box-title { color: #f43f5e; }
+        
+        .info-box p { font-size: 13px; color: #d1d5db; }
+        
+        .image-container {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        
+        .image-container img { width: 100%; height: auto; display: block; }
+        
+        .image-caption {
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 12px;
+            color: #9ca3af;
+            text-align: center;
+        }
+        
+        .switch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+        
+        .switch-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            border: 1px solid rgba(14, 165, 233, 0.15);
+        }
+        
+        .switch-item.highlight-red { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.3); }
+        .switch-item.highlight-green { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+        
+        .switch-num {
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0ea5e9;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .switch-item.highlight-red .switch-num { background: #f43f5e; }
+        .switch-item.highlight-green .switch-num { background: #10b981; }
+        
+        .switch-value { font-size: 12px; color: #7dd3fc; }
+        .switch-item.highlight-red .switch-value { color: #fda4af; }
+        .switch-item.highlight-green .switch-value { color: #6ee7b7; }
+        
+        .table-container { overflow-x: auto; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        
+        th {
+            padding: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+        }
+        
+        th.sky { background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+        th.cyan { background: rgba(6, 182, 212, 0.1); color: #06b6d4; }
+        th.amber { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        th.green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        
+        td {
+            padding: 14px;
+            font-size: 14px;
+            text-align: center;
+            background: rgba(14, 165, 233, 0.05);
+            border-bottom: 1px solid rgba(75, 85, 99, 0.1);
+            color: #e5e7eb;
+        }
+        
+        td strong { color: #7dd3fc; }
+        
+        .steps-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .step-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(75, 85, 99, 0.2);
+        }
+        
+        .step-item.highlight {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+        
+        .step-item.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: rgba(14, 165, 233, 0.2);
+            border: 1px solid rgba(14, 165, 233, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0ea5e9;
+            flex-shrink: 0;
+        }
+        
+        .step-item.warning .step-num {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.4);
+            color: #f59e0b;
+        }
+        
+        .step-content { flex: 1; }
+        .step-content p { font-size: 13px; color: #d1d5db; }
+        .step-content strong { color: #e5e7eb; }
+        
+        .in4-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .in4-card { padding: 16px; border-radius: 12px; }
+        .in4-card.up { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .in4-card.down { background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.3); }
+        
+        .in4-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+        .in4-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .in4-card.up .in4-title { color: #10b981; }
+        .in4-card.down .in4-title { color: #f43f5e; }
+        
+        .in4-svg-container {
+            padding: 16px;
+            background: #1f2937;
+            border-radius: 12px;
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            margin-bottom: 12px;
+        }
+        
+        .in4-result { padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; font-size: 13px; }
+        .in4-card.up .in4-result { color: #6ee7b7; }
+        .in4-card.down .in4-result { color: #fda4af; }
+        
+        .formula-box {
+            padding: 20px;
+            background: rgba(14, 165, 233, 0.06);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .formula { font-size: 28px; font-family: 'Times New Roman', serif; color: #0ea5e9; margin-bottom: 12px; }
+        .formula-desc { font-size: 12px; color: #9ca3af; }
+        
+        .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .calc-field { display: flex; flex-direction: column; gap: 8px; }
+        .calc-label { font-size: 12px; font-weight: 600; color: #9ca3af; }
+        
+        .calc-input {
+            padding: 12px 16px;
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            border-radius: 8px;
+            font-size: 16px;
+            color: #e5e7eb;
+            outline: none;
+        }
+        
+        .calc-input:focus { border-color: #0ea5e9; }
+        
+        .calc-result {
+            padding: 20px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .calc-result-label { font-size: 12px; color: #0ea5e9; margin-bottom: 8px; }
+        .calc-result-value { font-size: 32px; font-weight: 700; font-family: monospace; color: #7dd3fc; }
+        .calc-result-unit { font-size: 14px; color: #9ca3af; margin-top: 4px; }
+        
+        #status { margin-top: 16px; padding: 12px; border-radius: 8px; text-align: center; font-size: 13px; }
+        
+        .note-box {
+            position: relative;
+            padding: 20px;
+            padding-top: 30px;
+            background: rgba(244, 63, 94, 0.06);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+        
+        .note-badge {
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            padding: 4px 12px;
+            background: #f43f5e;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        
+        .note-box p { font-size: 13px; color: #fda4af; }
+        
+        @media (max-width: 640px) {
+            .container { padding: 12px; }
+            .section { padding: 16px; }
+            .header { padding: 24px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-badge">Технологическая карта</div>
+            <h1>Проверка передаточного числа по воздушной скорости</h1>
+            <p class="header-subtitle">Автопилот АП-34Б | Канал тангажа</p>
+            <div class="header-meta">
+                <div class="meta-item">
+                    <span>Дата:</span>
+                    <strong id="currentDate"></strong>
+                </div>
+                <div class="meta-item">
+                    <span>Установка:</span>
+                    <strong>КПУ-3 (КПА-ПВД)</strong>
+                </div>
+                <div class="meta-item">
+                    <span>Источник давления:</span>
+                    <strong>ПВД-6М правый / КЗСП</strong>
+                </div>
+            </div>
+        </header>
+
+        <!-- Important Notes -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon rose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <span class="section-title rose">Важные особенности проверки</span>
+            </div>
+            
+            <div class="info-box sky">
+                <div class="info-box-title">Подача давления</div>
+                <p>Давление задаётся от <strong>правого ПВД-6М</strong>. Допускается подача давления напрямую в систему <strong>КЗСП</strong>.</p>
+            </div>
+            
+            <div class="info-box amber">
+                <div class="info-box-title">Для вертолётов без переключателя "СТАБ. V"</div>
+                <p>На вертолётах, <strong>не оборудованных переключателем и табло "Стабилизация скорости"</strong>, режим включается нажатием на <strong>кнопки-лампы каналов крена, тангажа и высоты</strong> одновременно.</p>
+            </div>
+            
+            <div class="info-box rose">
+                <div class="info-box-title">Расположение регулировочного резистора</div>
+                <p>Регулировочный резистор <strong>"ПЕРЕДАТОЧНОЕ ЧИСЛО ПО СКОРОСТИ"</strong> установлен в <strong>грузовой кабине</strong>, в панели предохранителей <strong>справа по полёту</strong>.</p>
+            </div>
+        </section>
+
+        <!-- Connection Diagram -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon cyan">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 20V10M12 20V4M6 20v-6"/>
+                    </svg>
+                </div>
+                <span class="section-title cyan">Схема подключения пульта 6С2.702.007</span>
+            </div>
+            
+            <div class="image-container">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0WxU2QsOgw8HrtmQJpJSNc35tWjs32.svg" alt="Схема подключения пульта 6С2.702.007">
+                <div class="image-caption">Подключение пульта 6С2.702.007 жгутом «К» к разъёму «К» агрегата управления</div>
+            </div>
+        </section>
+
+        <!-- Switch Positions -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon sky">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20v-6M6 20V10M18 20V4"/>
+                    </svg>
+                </div>
+                <span class="section-title sky">Положения переключателей и ручек на пульте 6С2.702.007</span>
+            </div>
+            
+            <div class="switch-grid">
+                <div class="switch-item">
+                    <span class="switch-num">"2"</span>
+                    <span class="switch-value">в среднее положение</span>
+                </div>
+                <div class="switch-item highlight-red">
+                    <span class="switch-num">"8"</span>
+                    <span class="switch-value">в положение <strong>"Т"</strong></span>
+                </div>
+                <div class="switch-item">
+                    <span class="switch-num">"9"</span>
+                    <span class="switch-value"><strong>"КУ"</strong></span>
+                </div>
+                <div class="switch-item">
+                    <span class="switch-num">"10"</span>
+                    <span class="switch-value"><strong>"δ"</strong></span>
+                </div>
+                <div class="switch-item">
+                    <span class="switch-num">"11"</span>
+                    <span class="switch-value"><strong>"ОТКЛ."</strong></span>
+                </div>
+                <div class="switch-item highlight-green">
+                    <span class="switch-num">"12"</span>
+                    <span class="switch-value"><strong>"КОМПЛЕКТ"</strong></span>
+                </div>
+                <div class="switch-item">
+                    <span class="switch-num">"13"</span>
+                    <span class="switch-value"><strong>"0"</strong></span>
+                </div>
+                <div class="switch-item">
+                    <span class="switch-num">"14"</span>
+                    <span class="switch-value">в среднее положение</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Procedure -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon blue">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <span class="section-title blue">Порядок проверки</span>
+            </div>
+            
+            <div class="steps-list">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <p>Подсоедините установку <strong>КПУ-3</strong> к камере полного давления правого приёмника <strong>ПВД-6М</strong> (или напрямую в КЗСП).</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <p>Задайте от КПУ-3 в динамическую систему КЗСП давление, соответствующее скорости <strong>Vпр = 150 км/ч</strong>.</p>
+                    </div>
+                </div>
+                <div class="step-item highlight">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <p>Включите <strong>канал тангажа</strong> и выключатель <strong>"СТАБ. V"</strong>.<br>
+                        <em style="color: #f59e0b;">Для вертолётов без "СТАБ. V": нажмите кнопки-лампы каналов крена, тангажа и высоты.</em></p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <p>Совместите ближайшую риску шкалы <strong>ТАНГАЖ</strong> на пульте управления с риской на лицевой панели пульта.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <p>Ручкой центровки <strong>"2"</strong> пульта 6С2.702.007 добейтесь нулевого показания вольтметра "3".</p>
+                    </div>
+                </div>
+                <div class="step-item warning">
+                    <div class="step-num">6</div>
+                    <div class="step-content">
+                        <p><strong>Увеличьте давление</strong> до величины, соответствующей <strong>Vпр = 170 км/ч</strong>. При этом подвижный индекс индикатора "Т" должен <strong>отклониться вверх</strong>, а показания вольтметра "3" должны увеличиться.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">7</div>
+                    <div class="step-content">
+                        <p>Поворотом шкалы ТАНГАЖ <strong>по часовой стрелке</strong> доведите до нуля показания вольтметра "3", заметив угол поворота шкалы от исходного положения.</p>
+                    </div>
+                </div>
+                <div class="step-item warning">
+                    <div class="step-num">8</div>
+                    <div class="step-content">
+                        <p>Повторите проверку, <strong>уменьшая давление</strong> до величины <strong>Vпр = 130 км/ч</strong>. Подвижный индекс "Т" должен <strong>отклониться вниз</strong>. Компенсируйте сигнал поворотом шкалы ТАНГАЖ <strong>против часовой стрелки</strong>.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">9</div>
+                    <div class="step-content">
+                        <p>Значение углов тангажа должно соответствовать требованиям <strong>табл. 205</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IN-4 Indicator Visualization -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon green">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <span class="section-title green">Индикатор ИН-4 — положение индекса "Т" при изменении скорости</span>
+            </div>
+            
+            <div class="in4-grid">
+                <!-- Speed Increase -->
+                <div class="in4-card up">
+                    <div class="in4-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                            <path d="M12 19V5M5 12l7-7 7 7"/>
+                        </svg>
+                        <span class="in4-title">Увеличение скорости (150 → 170 км/ч)</span>
+                    </div>
+                    
+                    <div class="in4-svg-container">
+                        <svg viewBox="0 0 200 100" width="100%">
+                            <rect x="0" y="0" width="200" height="100" rx="8" fill="#1a1a1a"/>
+                            <rect x="60" y="15" width="80" height="70" rx="6" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+                            <rect x="65" y="20" width="70" height="60" fill="#1a2332"/>
+                            <line x1="65" y1="50" x2="135" y2="50" stroke="#333" stroke-width="1"/>
+                            <!-- Horizontal line moving UP -->
+                            <line x1="70" y1="50" x2="130" y2="50" stroke="#10b981" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+                            <line x1="70" y1="32" x2="130" y2="32" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Arrow UP -->
+                            <path d="M100 45 L100 28" stroke="#10b981" stroke-width="2" fill="none"/>
+                            <polygon points="100,28 96,35 104,35" fill="#10b981"/>
+                            <text x="100" y="95" font-family="Arial" font-size="10" fill="#9ca3af" text-anchor="middle">Т</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="in4-result">
+                        <strong>Индекс "Т"</strong> отклоняется <strong>ВВЕРХ</strong><br>
+                        Компенсация: шкала ТАНГАЖ <strong>по часовой стрелке</strong>
+                    </div>
+                </div>
+                
+                <!-- Speed Decrease -->
+                <div class="in4-card down">
+                    <div class="in4-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2">
+                            <path d="M12 5v14M5 12l7 7 7-7"/>
+                        </svg>
+                        <span class="in4-title">Уменьшение скорости (150 → 130 км/ч)</span>
+                    </div>
+                    
+                    <div class="in4-svg-container">
+                        <svg viewBox="0 0 200 100" width="100%">
+                            <rect x="0" y="0" width="200" height="100" rx="8" fill="#1a1a1a"/>
+                            <rect x="60" y="15" width="80" height="70" rx="6" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+                            <rect x="65" y="20" width="70" height="60" fill="#1a2332"/>
+                            <line x1="65" y1="50" x2="135" y2="50" stroke="#333" stroke-width="1"/>
+                            <!-- Horizontal line moving DOWN -->
+                            <line x1="70" y1="50" x2="130" y2="50" stroke="#f43f5e" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+                            <line x1="70" y1="68" x2="130" y2="68" stroke="#f43f5e" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Arrow DOWN -->
+                            <path d="M100 55 L100 72" stroke="#f43f5e" stroke-width="2" fill="none"/>
+                            <polygon points="100,72 96,65 104,65" fill="#f43f5e"/>
+                            <text x="100" y="95" font-family="Arial" font-size="10" fill="#9ca3af" text-anchor="middle">Т</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="in4-result">
+                        <strong>Индекс "Т"</strong> отклоняется <strong>ВНИЗ</strong><br>
+                        Компенсация: шкала ТАНГАЖ <strong>против часовой стрелки</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Table 205 -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon rose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                </div>
+                <span class="section-title rose">Таблица 205 — Передаточное число по воздушной скорости</span>
+            </div>
+            
+            <div class="table-container" style="margin-bottom: 20px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="sky">Приращение воздушной скорости, км/ч</th>
+                            <th class="amber">Угол тангажа, град</th>
+                            <th class="green">Передаточное число, град/(км/ч)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>20</strong></td>
+                            <td><strong>8 ± 3,2</strong></td>
+                            <td><strong>0,4 ± 0,16</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="formula-box">
+                <div class="formula">i<sub>v</sub> = ϑ / ΔV [град / (км/ч)]</div>
+                <div class="formula-desc">
+                    где <strong>ϑ (град)</strong> — угол, отсчитанный по шкале тангажа; <strong>ΔV (км/ч)</strong> — задаваемое приращение воздушной скорости
+                </div>
+            </div>
+            
+            <div class="info-box green" style="margin-top: 16px;">
+                <div class="info-box-title">Упрощённый расчёт</div>
+                <p>Передаточное число = <strong>Угол (град) / 20</strong></p>
+            </div>
+            
+            <div class="note-box">
+                <span class="note-badge">Регулировка</span>
+                <p>При отклонении от допуска произвести регулировку потенциометром <strong>"ПЕРЕДАТОЧНОЕ ЧИСЛО ПО СКОРОСТИ"</strong> в панели предохранителей грузовой кабины (справа по полёту).</p>
+            </div>
+        </section>
+
+        <!-- Calculator -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon sky">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="4" y="2" width="16" height="20" rx="2"/>
+                        <line x1="8" y1="6" x2="16" y2="6"/>
+                        <line x1="8" y1="10" x2="10" y2="10"/>
+                        <line x1="14" y1="10" x2="16" y2="10"/>
+                        <line x1="8" y1="14" x2="10" y2="14"/>
+                        <line x1="14" y1="14" x2="16" y2="14"/>
+                        <line x1="8" y1="18" x2="10" y2="18"/>
+                        <line x1="14" y1="18" x2="16" y2="18"/>
+                    </svg>
+                </div>
+                <span class="section-title sky">Калькулятор передаточного числа по воздушной скорости</span>
+            </div>
+            
+            <div class="calc-grid">
+                <div class="calc-field">
+                    <label class="calc-label">Угол по шкале тангажа (ϑ), град</label>
+                    <input type="number" id="theta" class="calc-input" value="8" step="0.1">
+                </div>
+                <div class="calc-field">
+                    <label class="calc-label">Приращение скорости (ΔV), км/ч</label>
+                    <input type="number" id="deltaV" class="calc-input" value="20" step="1">
+                </div>
+            </div>
+            
+            <div class="calc-result">
+                <div class="calc-result-label">Передаточное число i<sub>v</sub></div>
+                <div class="calc-result-value" id="result">0.40</div>
+                <div class="calc-result-unit">град / (км/ч)</div>
+            </div>
+            
+            <div id="status"></div>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+
+        const thetaInput = document.getElementById('theta');
+        const deltaVInput = document.getElementById('deltaV');
+        const resultEl = document.getElementById('result');
+        const statusEl = document.getElementById('status');
+
+        function calculate() {
+            const theta = parseFloat(thetaInput.value) || 0;
+            const deltaV = parseFloat(deltaVInput.value) || 20;
+            
+            if (deltaV === 0) {
+                resultEl.textContent = '—';
+                statusEl.textContent = 'Приращение скорости не может быть равно нулю';
+                statusEl.style.background = 'rgba(244, 63, 94, 0.1)';
+                statusEl.style.color = '#f43f5e';
+                return;
+            }
+            
+            const iv = theta / deltaV;
+            resultEl.textContent = iv.toFixed(2);
+            
+            // Check tolerance (0.4 ± 0.16 means 0.24 to 0.56)
+            if (iv >= 0.24 && iv <= 0.56) {
+                statusEl.textContent = 'В пределах допуска (0,4 ± 0,16)';
+                statusEl.style.background = 'rgba(16, 185, 129, 0.1)';
+                statusEl.style.color = '#10b981';
+            } else {
+                statusEl.textContent = 'Вне допуска! Требуется регулировка резистором "ПЕРЕДАТОЧНОЕ ЧИСЛО ПО СКОРОСТИ"';
+                statusEl.style.background = 'rgba(244, 63, 94, 0.1)';
+                statusEl.style.color = '#f43f5e';
+            }
+        }
+
+        thetaInput.addEventListener('input', calculate);
+        deltaVInput.addEventListener('input', calculate);
+        calculate();
+    </script>
+</body>
+</html>
