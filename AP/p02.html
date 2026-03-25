@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Технологическая карта 022.10.00 | АП-34Б</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      min-width: 0;
+    }
 
     :root{
       --bg-1:#0a0a0a;
@@ -26,6 +31,11 @@
       --red-text:#fca5a5;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-1) 100%);
@@ -33,10 +43,14 @@
       min-height: 100vh;
       line-height: 1.65;
       padding: 20px;
+      overflow-x: hidden;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     .container {
       max-width: 1200px;
+      width: 100%;
       margin: 0 auto;
     }
 
@@ -45,10 +59,12 @@
       padding: 40px 20px 30px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 30px;
+      overflow: hidden;
     }
 
     .badge {
       display: inline-block;
+      max-width: 100%;
       padding: 6px 16px;
       background: var(--green-bg);
       border: 1px solid var(--green-br);
@@ -59,6 +75,8 @@
       text-transform: uppercase;
       color: var(--green);
       margin-bottom: 12px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     h1 {
@@ -68,11 +86,16 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 12px;
+      line-height: 1.2;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     .subtitle {
       color: var(--muted);
       font-size: 14px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     section {
@@ -82,6 +105,8 @@
       padding: 24px;
       margin-bottom: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      width: 100%;
+      overflow: hidden;
     }
 
     h2 {
@@ -91,6 +116,8 @@
       text-transform: uppercase;
       letter-spacing: .04em;
       margin-bottom: 14px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     h3 {
@@ -99,11 +126,16 @@
       text-transform: uppercase;
       letter-spacing: .04em;
       margin: 20px 0 10px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     p {
       font-size: 14px;
       margin-bottom: 10px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
     }
 
     .warning {
@@ -114,6 +146,9 @@
       font-weight: 700;
       color: var(--red-text);
       margin-bottom: 16px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
     }
 
     .note {
@@ -123,13 +158,17 @@
       border-radius: 10px;
       color: #d1d5db;
       margin: 14px 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
     }
 
     .meta-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 12px;
       margin-top: 10px;
+      width: 100%;
     }
 
     .meta-item {
@@ -137,6 +176,8 @@
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 12px;
       padding: 14px;
+      min-width: 0;
+      overflow: hidden;
     }
 
     .meta-label {
@@ -145,12 +186,17 @@
       text-transform: uppercase;
       letter-spacing: .06em;
       margin-bottom: 4px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     .meta-value {
       color: var(--text);
       font-size: 14px;
       font-weight: 600;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      hyphens: auto;
     }
 
     .op {
@@ -159,6 +205,8 @@
       background: rgba(255,255,255,0.02);
       border: 1px solid rgba(255,255,255,0.06);
       margin-bottom: 12px;
+      width: 100%;
+      overflow: hidden;
     }
 
     .op-num {
@@ -166,17 +214,24 @@
       font-weight: 800;
       margin-bottom: 8px;
       font-size: 15px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
     .op-text {
       font-size: 14px;
       color: var(--text);
       white-space: pre-line;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
     }
 
     .table-like {
       display: grid;
       gap: 12px;
+      width: 100%;
     }
 
     .footer {
@@ -185,13 +240,69 @@
       color: #6b7280;
       margin-top: 30px;
       padding-bottom: 20px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
 
-    @media (max-width: 640px) {
-      body { padding: 14px; }
-      header { padding: 28px 12px 24px; }
-      section { padding: 18px; }
-      .op { padding: 12px; }
+    @media (max-width: 900px) {
+      body {
+        padding: 16px;
+      }
+
+      header {
+        padding: 32px 16px 24px;
+      }
+
+      section {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      header {
+        padding: 24px 12px 20px;
+        margin-bottom: 20px;
+      }
+
+      section {
+        padding: 16px;
+        border-radius: 14px;
+        margin-bottom: 14px;
+      }
+
+      .badge {
+        font-size: 10px;
+        padding: 6px 12px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .subtitle,
+      .meta-value,
+      .op-text,
+      p,
+      .note,
+      .warning {
+        font-size: 13px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .op {
+        padding: 12px;
+      }
     }
   </style>
 </head>
@@ -443,7 +554,7 @@
     </section>
 
     <div class="footer">
-      Код оформлен в стиле вашего примера
+      Код адаптирован под ПК и мобильный экран, без изменения текста
     </div>
 
   </div>
