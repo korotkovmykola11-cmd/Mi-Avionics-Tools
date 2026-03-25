@@ -1,1 +1,599 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>АП-34Б · текст из РТЭ</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;min-width:0}
+    :root{
+      --bg1:#0b1020;
+      --bg2:#111827;
+      --panel:rgba(17,24,39,.9);
+      --panel2:rgba(15,23,42,.88);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --border:rgba(148,163,184,.18);
+      --accent:#67e8f9;
+      --accent2:#a78bfa;
+      --good:#34d399;
+      --warn:#f59e0b;
+      --shadow:0 12px 30px rgba(0,0,0,.28);
+    }
 
+    html{
+      -webkit-text-size-adjust:100%;
+      text-size-adjust:100%;
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(135deg,var(--bg1),var(--bg2) 45%,#0f172a);
+      min-height:100vh;
+      line-height:1.6;
+      padding:18px;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+    }
+
+    .hero,.section,.toc{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      padding:28px 24px;
+      margin-bottom:18px;
+      position:sticky;
+      top:12px;
+      backdrop-filter:blur(10px);
+      z-index:10;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:7px 14px;
+      border-radius:999px;
+      background:rgba(52,211,153,.12);
+      border:1px solid rgba(52,211,153,.25);
+      color:#86efac;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin-top:12px;
+      font-size:clamp(26px,4vw,40px);
+      line-height:1.15;
+      background:linear-gradient(135deg,#fff,var(--accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .sub{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:14px;
+      max-width:900px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    button,.linkbtn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:700;
+      font-size:14px;
+      text-decoration:none;
+      color:var(--text);
+      background:var(--panel2);
+      border:1px solid var(--border);
+    }
+
+    button:hover,.linkbtn:hover{
+      transform:translateY(-1px);
+    }
+
+    .primary{
+      background:linear-gradient(135deg,rgba(103,232,249,.16),rgba(167,139,250,.18));
+      border-color:rgba(103,232,249,.25);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .toc{
+      padding:18px;
+      position:sticky;
+      top:180px;
+      max-height:calc(100vh - 200px);
+      overflow:auto;
+    }
+
+    .toc h2{
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--accent);
+      margin-bottom:12px;
+    }
+
+    .toc a{
+      display:block;
+      padding:9px 10px;
+      border-radius:12px;
+      color:var(--text);
+      text-decoration:none;
+      font-size:14px;
+      border:1px solid transparent;
+    }
+
+    .toc a:hover{
+      background:rgba(255,255,255,.04);
+      border-color:var(--border);
+    }
+
+    .content{
+      display:grid;
+      gap:16px;
+    }
+
+    .section{
+      padding:22px 20px;
+    }
+
+    .section h3{
+      font-size:18px;
+      color:#c4b5fd;
+      margin-bottom:14px;
+      word-break:break-word;
+    }
+
+    .line{
+      padding:8px 0;
+      border-bottom:1px dashed rgba(148,163,184,.12);
+      font-size:15px;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .line:last-child{
+      border-bottom:none;
+    }
+
+    .meta{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .card{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .card .k{
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      margin-bottom:4px;
+    }
+
+    .card .v{
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .searchbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    input[type="search"]{
+      flex:1;
+      min-width:220px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(2,6,23,.6);
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .highlight{
+      background:rgba(245,158,11,.22);
+      padding:0 .15em;
+      border-radius:4px;
+    }
+
+    .footer{
+      margin:18px 0 8px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+
+    @media (max-width:980px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+      .toc{
+        position:relative;
+        top:0;
+        max-height:none;
+      }
+      .hero{
+        position:relative;
+        top:0;
+      }
+    }
+
+    @media (max-width:640px){
+      body{
+        padding:10px;
+      }
+      .hero,.section,.toc{
+        border-radius:16px;
+      }
+      .section{
+        padding:16px;
+      }
+      .line{
+        font-size:14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <span class="badge">Один файл HTML · CSS · JS</span>
+      <h1>АП-34Б · текст из РТЭ</h1>
+      <p class="sub">
+        Оформление в одном файле. Содержимое вынесено в удобный читаемый вид без сокращения текста.
+        Добавлены поиск по тексту, быстрое копирование всего содержимого и навигация по разделам.
+      </p>
+
+      <div class="meta">
+        <div class="card"><div class="k">Документ</div><div class="v">РТЭ / АП-34Б</div></div>
+        <div class="card"><div class="k">Формат</div><div class="v">Один автономный HTML</div></div>
+        <div class="card"><div class="k">Внутри</div><div class="v">HTML + CSS + JS</div></div>
+        <div class="card"><div class="k">Режим</div><div class="v">Без сокращения текста</div></div>
+      </div>
+
+      <div class="searchbar">
+        <input id="searchInput" type="search" placeholder="Поиск по тексту..." />
+        <button class="primary" id="copyBtn">Копировать весь текст</button>
+        <button id="toggleBtn">Свернуть / развернуть всё</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <nav class="toc">
+        <h2>Содержание</h2>
+        <a href="#sec-1">2.4.16. Канал высоты автопилота АП-34Б разрешается включать в</a>
+        <a href="#sec-2">3.9.4. Произвести проверку работоспособности автопилота в такой</a>
+        <a href="#sec-3">4.13.3. Включение автопилота выполнять перед взлетом нажатием кнопок-</a>
+        <a href="#sec-4">4.13.4. Выполнение взлета и полета с включенным автопилотом проще,</a>
+        <a href="#sec-5">4.13.5. Работа автопилота проверяется на висении (по индикаторам на</a>
+        <a href="#sec-6">4.13.6. На установившихся режимах горизонтального полета, набора</a>
+        <a href="#sec-7">4.13.7. Развороты необходимо выполнять только при поставленных на</a>
+        <a href="#sec-8">4.13.8. Канал высоты предназначен для поддержания заданной</a>
+        <a href="#sec-9">4.13.9. Заход на посадку, торможение и выполнение посадки следует</a>
+        <a href="#sec-10">6.17.1. В случае возникновения низкочастотных колебаний вертолета в</a>
+        <a href="#sec-11">8.23.1. Автопилот АП-34Б. Четырехканальный электрогидравлический</a>
+      </nav>
+
+      <main class="content" id="content">
+        <section class="section" id="sec-1">
+          <h3>2.4.16. Канал высоты автопилота АП-34Б разрешается включать в</h3>
+          <div class="line">горизонтальном полете на высоте не ниже 50 м.</div>
+        </section>
+
+        <section class="section" id="sec-2">
+          <h3>3.9.4. Произвести проверку работоспособности автопилота в такой</h3>
+          <div class="line">последовательности:</div>
+          <div class="line">− нажать кнопки-лампы ВКЛ. на пульте управления автопилота по всем</div>
+          <div class="line">каналам; все лампы должны загореться; стрелки на индикаторе ИН-4 при</div>
+          <div class="line">нейтральном положении органов управления вертолетом должны</div>
+          <div class="line">находиться в среднем положении с допуском не более чем на толщину</div>
+          <div class="line">стрелки; отклонением ручки управления вертолетом убедиться, что стрелки</div>
+          <div class="line">К и Т на индикаторе ИН-4 реагируют на отклонение ручки (отклонения</div>
+          <div class="line">стрелок должны соответствовать отклонениям педалей и ручки); проверить,</div>
+          <div class="line">гаснут ли все лампы (отключается автопилот) при нажатии на кнопку ВЫКЛ.</div>
+          <div class="line">АП на ручке управления вертолетом;</div>
+          <div class="line">− проверить включение канала высоты нажатием кнопки-лампы ВКЛ.</div>
+          <div class="line">ВЫСОТА; кратковременно нажать вверх переключатель КОНТРОЛЬ, при</div>
+          <div class="line">этом стрелка В индикатора должна перемещаться вверх; переместить рычаг</div>
+          <div class="line">шаг-газ с нижнего упора на 1° вверх и кратковременно нажать</div>
+          <div class="line">переключатель КОНТРОЛЬ вниз, стрелка. В при этом должна перемещаться</div>
+          <div class="line">тоже вниз; проверить отключение канала высоты при нажатии кнопки</div>
+          <div class="line">ФРИКЦИОН на рычаге шаг-газ;</div>
+          <div class="line">− проверить канал направления автопилота; при нейтральном положении</div>
+          <div class="line">педалей и снятых с педалей ногах при нажатии кнопки-лампы ВКЛ.</div>
+          <div class="line">НАПРАВЛЕНИЕ она должна загореться, при этом стрелка Н на индикаторе</div>
+          <div class="line">должна быть в среднем положении; при повороте шкалы НАПРАВЛЕНИЕ не</div>
+          <div class="line">более чем на 1,5 оборота вправо или влево педаль должна перемещаться</div>
+          <div class="line">соответственно вправо или влево; при постановке педалей нейтрально</div>
+          <div class="line">стрелка Н на индикаторе и шкала НАПРАВЛЕНИЕ на пульте должны</div>
+          <div class="line">возвращаться в исходное положение;</div>
+          <div class="line">− нажать на пульте управления кнопку ОТКЛ. НАПРАВЛЕНИЕ, при этом</div>
+          <div class="line">лампа ВКЛ. НАПРАВЛЕНИЕ должна погаснуть.</div>
+          <div class="line">Предупреждение. При проверке работоспособности автопилота на земле не</div>
+          <div class="line">допускать страгивания или разворота вертолета. Во избежание страгивания или</div>
+          <div class="line">разворота вертолета отклонение педалей и ручки управления производить плавно</div>
+          <div class="line">на величину не более ±50 мм от нейтрального положения.</div>
+        </section>
+
+        <section class="section" id="sec-3">
+          <h3>4.13.3. Включение автопилота выполнять перед взлетом нажатием кнопок-</h3>
+          <div class="line">ламп соответствующих каналов и контролировать его работу по загоранию</div>
+          <div class="line">зеленых ламп включенных каналов.</div>
+        </section>
+
+        <section class="section" id="sec-4">
+          <h3>4.13.4. Выполнение взлета и полета с включенным автопилотом проще,</h3>
+          <div class="line">чем без автопилота, и не требует двойных движений ручкой управления.</div>
+          <div class="line">На висении автопилот стабилизирует вертолет по углам крена и тангажа, а</div>
+          <div class="line">при освобожденных педалях - и по курсу, что существенно облегчает технику</div>
+          <div class="line">пилотирования.</div>
+        </section>
+
+        <section class="section" id="sec-5">
+          <h3>4.13.5. Работа автопилота проверяется на висении (по индикаторам на</h3>
+          <div class="line">пульте автопилота).</div>
+          <div class="line">Нормальная работа автопилота характеризуется небольшими</div>
+          <div class="line">колебаниями стрелок К и Н индикатора около нейтрального положения.</div>
+          <div class="line">Примечания: 1. Стрелка Н индикатора должна колебаться только при</div>
+          <div class="line">освобожденных педалях. Если ноги летчика стоят на педалях и гашетки нажаты, то</div>
+          <div class="line">канал направления находится в режиме согласования и стрелка Н должна находиться</div>
+          <div class="line">в нейтральном положении.</div>
+          <div class="line">2. В случае если стрелка Т или К на режиме висения находится вблизи упоров,</div>
+          <div class="line">летчик-штурман по команде командира экипажа обязан поставить ее в нейтральное</div>
+          <div class="line">положение ручками центровки Т или К на пульте автопилота или выключить автопилот</div>
+          <div class="line">и повторно его включить.</div>
+        </section>
+
+        <section class="section" id="sec-6">
+          <h3>4.13.6. На установившихся режимах горизонтального полета, набора</h3>
+          <div class="line">высоты или снижения вертолет при полете с полностью освобожденным</div>
+          <div class="line">управлением сохраняет свое пространственное положение, медленно уходя</div>
+          <div class="line">с заданной скорости, так как автопилот стабилизирует не скорость полета, а</div>
+          <div class="line">угол тангажа. Поэтому при выполнении длительного полета с</div>
+          <div class="line">освобожденным управлением необходимо периодически восстанавливать</div>
+          <div class="line">заданный режим полета отклонением ручки управления и педалей.</div>
+          <div class="line">Освобождать управление при полете на высоте менее 50м не</div>
+          <div class="line">рекомендуется.</div>
+        </section>
+
+        <section class="section" id="sec-7">
+          <h3>4.13.7. Развороты необходимо выполнять только при поставленных на</h3>
+          <div class="line">педали ногах и нажатых гашетках.</div>
+          <div class="line">Предупреждение. Снимать ноги с педалей во время разворота</div>
+          <div class="line">запрещается, так как это вызывает сильное скольжение вертолета из-за</div>
+          <div class="line">стремления автопилота удержать вертолет на том курсе, на котором он</div>
+          <div class="line">был в момент освобождения педалей.</div>
+        </section>
+
+        <section class="section" id="sec-8">
+          <h3>4.13.8. Канал высоты предназначен для поддержания заданной</h3>
+          <div class="line">барометрической высоты установившегося горизонтального полета.</div>
+          <div class="line">Включать его разрешается после балансировки вертолета в режиме</div>
+          <div class="line">горизонтального полета на высоте не менее 50м. Контроль работы канала</div>
+          <div class="line">высоты производится по колебаниям стрелки В индикатора, а также по</div>
+          <div class="line">изменению величины общего шага несущего винта по указателю и</div>
+          <div class="line">характерному подрагиванию вертолета при парировании каналом высоты</div>
+          <div class="line">вертикальных перемещении.</div>
+          <div class="line">Нормальная работа канала высоты характеризуется выдерживанием</div>
+          <div class="line">высоты полета с точностью ±10м и колебаниями стрелки В индикатора около</div>
+          <div class="line">нейтрального положения.</div>
+        </section>
+
+        <section class="section" id="sec-9">
+          <h3>4.13.9. Заход на посадку, торможение и выполнение посадки следует</h3>
+          <div class="line">осуществлять обычным способом с включенным автопилотом, держа ноги на</div>
+          <div class="line">педалях.</div>
+          <div class="line">После заруливания выключить автопилот нажатием кнопки ВЫКЛ. АП.</div>
+        </section>
+
+        <section class="section" id="sec-10">
+          <h3>6.17.1. В случае возникновения низкочастотных колебаний вертолета в</h3>
+          <div class="line">полете выключить автопилот.</div>
+          <div class="line">Если через 3÷5 с после выключения автопилота не произойдет заметного</div>
+          <div class="line">снижения уровня вибраций, кратковременно изменить режим полета</div>
+          <div class="line">уменьшением общего шага несущего винта на 2÷3°.</div>
+          <div class="line">После исчезновения колебаний установить необходимый режим, включить</div>
+          <div class="line">автопилот и продолжить полет в пределах требований настоящей</div>
+          <div class="line">Инструкции без дополнительных ограничений. Если после включения</div>
+          <div class="line">автопилота снова возникли колебания, выключить автопилот, при</div>
+          <div class="line">необходимости изменить режим полета и дальнейшее выполнение задания</div>
+          <div class="line">прекратить.</div>
+        </section>
+
+        <section class="section" id="sec-11">
+          <h3>8.23.1. Автопилот АП-34Б. Четырехканальный электрогидравлический</h3>
+          <div class="line">автопилот предназначен для автоматической стабилизации вертолета по</div>
+          <div class="line">крену, курсу, тангажу, высоте и скорости полета. Четыре канала</div>
+          <div class="line">(направление, крен, тангаж, высота) автопилота обеспечивают:</div>
+          <div class="line">− стабилизацию положения вертолета относительно трех осей</div>
+          <div class="line">(продольной, вертикальной и поперечной);</div>
+          <div class="line">− стабилизацию высоты полета вертолета в горизонтальном полете и при</div>
+          <div class="line">висении;</div>
+          <div class="line">− стабилизацию приборной скорости вертолета (при наличии корректора -</div>
+          <div class="line">задатчика приборной скорости и блока сигнализации готовности).</div>
+          <div class="line">При этом воздействие КЗСП на автопилот происходит по каналу тангажа.</div>
+          <div class="line">Автопилот работает как в режиме автоматической стабилизации</div>
+          <div class="line">вертолета, так и в режиме комбинированного управления, когда летчик в</div>
+          <div class="line">любой момент времени может вмешаться в управление вертолетом при</div>
+          <div class="line">включенном автопилоте.</div>
+          <div class="line">Силовыми исполнительными элементами автопилота, воздействующими</div>
+          <div class="line">на органы управления, являются комбинированные гидроусилители КАУ-30Б</div>
+          <div class="line">и РА-60Б, установленные в системе управления вертолетом.</div>
+          <div class="line">Безопасность полета в случае отказа автопилота обеспечивается 20%</div>
+          <div class="line">ограничением перемещения органов управления от автопилота по всем</div>
+          <div class="line">четырем каналам, а также возможностью вмешательства летчика в</div>
+          <div class="line">управление параллельно с автопилотом (по каналам крена и тангажа).</div>
+          <div class="line">Датчиком углов крена и тангажа является правый авиагоризонт АГБ-3К, а</div>
+          <div class="line">датчиком угла курса - курсовая система ГМК-1А.</div>
+          <div class="line">В комплект автопилота входят:</div>
+          <div class="line">− пульт управления (рис. 8.18);</div>
+          <div class="line">− агрегат управления;</div>
+          <div class="line">− датчик угловой скорости направления;</div>
+          <div class="line">− датчик угловой скорости крена;</div>
+          <div class="line">− датчик угловой скорости тангажа;</div>
+          <div class="line">− блок усилителей;</div>
+          <div class="line">− индикатор нулевой ИН-4;</div>
+          <div class="line">− два компенсационных датчика;</div>
+          <div class="line">− корректор высоты КВ-11.</div>
+          <div class="line">Точность выдерживания режима полета в спокойной атмосфере:</div>
+          <div class="line">− направления ±2;</div>
+          <div class="line">− тангажа ±1°;</div>
+          <div class="line">− высоты±6м до 1000м(±12м более 1000м);</div>
+          <div class="line">− скорости ± 15 км/ч.</div>
+          <div class="line">Для того чтобы летчик мог управлять вертолетом по курсу при включенном</div>
+          <div class="line">автопилоте, на педалях ножного управления смонтированы надпедальники и</div>
+          <div class="line">микровыключатели, при нажатии на которые происходит перевод канала</div>
+          <div class="line">направления в режим-согласования. После окончания маневра и снятия ног с</div>
+          <div class="line">надпедальников канал направления автоматически включается. При</div>
+          <div class="line">включенном автопилоте перевод канала направления в режим согласования</div>
+          <div class="line">может осуществляться автоматически от микровыключателя АМ-800К,</div>
+          <div class="line">установленного на качалке подвижного упора системы СПУУ-52-1.</div>
+          <div class="line">Микровыключатель срабатывает при подходе правой педали в режиме</div>
+          <div class="line">"Перегонка" к упору, положение которого управляется механизмом МП-100М</div>
+          <div class="line">по сигналам системы СПУУ-52-1. Для управления ручкой шаг-газ необходимо</div>
+          <div class="line">нажать кнопку включения фрикциона, установленную на верхней части</div>
+          <div class="line">ручки. При нажатии кнопки канал высоты переводится в режим согласования,</div>
+          <div class="line">а фрикцион растормаживается. После перевода ручки шаг-газ в новое</div>
+          <div class="line">положение канал высоты необходимо снова включить кнопкой-лампой на</div>
+          <div class="line">пульте управления автопилотом.</div>
+          <div class="line">Питание автопилота и механизмов системы управления постоянным током</div>
+          <div class="line">напряжением 27В осуществляется от аккумуляторной шины и шины ВУ через</div>
+          <div class="line">автоматы защиты сети АВТОПИЛОТ-ОСНОВН., АВТОПИЛОТ-ФРИКЦ. и</div>
+          <div class="line">АВТОПИЛОТ ЭЛЕКТРОМУФТЫ. Все АЗС расположены на правой панели</div>
+          <div class="line">АЗС.</div>
+          <div class="line">Питание переменным трехфазным током напряжением 36 В и частотой 400</div>
+          <div class="line">Гц осуществляется от генераторных шин трехфазного переменного тока 36 В</div>
+          <div class="line">через предохранители ПМ-5 АВТОПИЛОТ, расположенные на щитке</div>
+          <div class="line">предохранителей.</div>
+          <div class="line">Выключение автопилота вручную производится:</div>
+          <div class="line">− одновременно всех каналов - нажатием кнопки ВЫКЛ. АП,</div>
+          <div class="line">расположенной на обеих ручках управления;</div>
+          <div class="line">− канала высоты - нажатием на одну из кнопок расстопоривания</div>
+          <div class="line">фрикциона рычага шаг-газ;</div>
+          <div class="line">− канала направления - нажатием одрого из надпедальников.− крена ±1°;</div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">
+      Файл автономный: внешний интернет, библиотеки и отдельные стили не требуются.
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const copyBtn = document.getElementById('copyBtn');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const sections = [...document.querySelectorAll('.section')];
+    const original = new Map();
+
+    document.querySelectorAll('.line, .section h3').forEach(el => {
+      original.set(el, el.innerHTML);
+    });
+
+    function clearHighlights() {
+      original.forEach((html, el) => {
+        el.innerHTML = html;
+      });
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim();
+      clearHighlights();
+      sections.forEach(sec => sec.style.display = 'block');
+
+      if (!q) return;
+
+      const re = new RegExp(escapeRegExp(q), 'gi');
+
+      sections.forEach(sec => {
+        let found = false;
+
+        sec.querySelectorAll('.line, h3').forEach(el => {
+          const text = el.textContent;
+          if (re.test(text)) {
+            found = true;
+            el.innerHTML = el.innerHTML.replace(re, m => `<span class="highlight">${m}</span>`);
+          }
+          re.lastIndex = 0;
+        });
+
+        sec.style.display = found ? 'block' : 'none';
+      });
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      const text = [...document.querySelectorAll('.section')]
+        .map(sec => {
+          const title = sec.querySelector('h3')?.textContent || '';
+          const lines = [...sec.querySelectorAll('.line')].map(x => x.textContent).join('\n');
+          return title + '\n' + lines;
+        })
+        .join('\n\n');
+
+      try {
+        await navigator.clipboard.writeText(text);
+        const old = copyBtn.textContent;
+        copyBtn.textContent = 'Скопировано';
+        setTimeout(() => {
+          copyBtn.textContent = old;
+        }, 1400);
+      } catch (e) {
+        alert('Не удалось скопировать автоматически.');
+      }
+    });
+
+    let collapsed = false;
+
+    toggleBtn.addEventListener('click', () => {
+      collapsed = !collapsed;
+      sections.forEach(sec => {
+        sec.querySelectorAll('.line').forEach(line => {
+          line.style.display = collapsed ? 'none' : 'block';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
