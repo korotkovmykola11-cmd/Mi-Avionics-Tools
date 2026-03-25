@@ -205,13 +205,6 @@
         
         .info-box p { font-size: 13px; color: #d1d5db; }
         
-        /* Grid */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
         /* Image container */
         .image-container {
             border-radius: 12px;
@@ -252,7 +245,6 @@
         
         .switch-item.highlight-red { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.3); }
         .switch-item.highlight-green { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
-        .switch-item.highlight-violet { background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4); }
         
         .switch-num {
             min-width: 32px;
@@ -356,22 +348,10 @@
             color: #fff;
         }
         
-        .step-content {
-            flex: 1;
-        }
-        
-        .step-content p {
-            font-size: 13px;
-            color: #d1d5db;
-        }
-        
-        .step-content strong {
-            color: #e5e7eb;
-        }
-        
-        .step-item.critical p {
-            color: #fda4af;
-        }
+        .step-content { flex: 1; }
+        .step-content p { font-size: 13px; color: #d1d5db; }
+        .step-content strong { color: #e5e7eb; }
+        .step-item.critical p { color: #fda4af; }
         
         /* IN-4 Visualization */
         .in4-grid {
@@ -381,21 +361,11 @@
             margin-bottom: 20px;
         }
         
-        .in4-card {
-            padding: 16px;
-            border-radius: 12px;
-        }
-        
+        .in4-card { padding: 16px; border-radius: 12px; }
         .in4-card.clockwise { background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.3); }
         .in4-card.counter { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.3); }
         
-        .in4-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        
+        .in4-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
         .in4-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
         .in4-card.clockwise .in4-title { color: #f43f5e; }
         .in4-card.counter .in4-title { color: #3b82f6; }
@@ -408,13 +378,7 @@
             margin-bottom: 12px;
         }
         
-        .in4-result {
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            font-size: 13px;
-        }
-        
+        .in4-result { padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; font-size: 13px; }
         .in4-card.clockwise .in4-result { color: #fda4af; }
         .in4-card.counter .in4-result { color: #93c5fd; }
         
@@ -427,23 +391,11 @@
             text-align: center;
         }
         
-        .formula {
-            font-size: 24px;
-            font-family: 'Times New Roman', serif;
-            color: #a78bfa;
-            margin-bottom: 12px;
-        }
-        
+        .formula { font-size: 24px; font-family: 'Times New Roman', serif; color: #a78bfa; margin-bottom: 12px; }
         .formula-desc { font-size: 12px; color: #9ca3af; }
         
         /* Calculator */
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        
+        .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
         .calc-field { display: flex; flex-direction: column; gap: 8px; }
         .calc-label { font-size: 12px; font-weight: 600; color: #9ca3af; }
         
@@ -471,13 +423,7 @@
         .calc-result-value { font-size: 32px; font-weight: 700; font-family: monospace; color: #c4b5fd; }
         .calc-result-unit { font-size: 14px; color: #9ca3af; margin-top: 4px; }
         
-        #status {
-            margin-top: 16px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 13px;
-        }
+        #status { margin-top: 16px; padding: 12px; border-radius: 8px; text-align: center; font-size: 13px; }
         
         @media (max-width: 640px) {
             .container { padding: 12px; }
@@ -537,65 +483,7 @@
             </div>
             
             <div class="image-container">
-                <svg viewBox="0 0 900 400" style="width: 100%; height: auto; background: #0d1117;">
-                    <!-- Background grid -->
-                    <defs>
-                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(75,85,99,0.1)" stroke-width="0.5"/>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)"/>
-                    
-                    <!-- Title -->
-                    <text x="450" y="35" font-family="Arial" font-size="16" fill="#e5e7eb" text-anchor="middle" font-weight="bold">Схема подключения пульта проверки к агрегату управления</text>
-                    
-                    <!-- Control Unit (left) -->
-                    <rect x="50" y="80" width="200" height="260" rx="8" fill="#1a2332" stroke="#4b5563" stroke-width="2"/>
-                    <text x="150" y="110" font-family="Arial" font-size="14" fill="#06b6d4" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
-                    <text x="150" y="130" font-family="Arial" font-size="11" fill="#9ca3af" text-anchor="middle">АУ</text>
-                    
-                    <!-- AU Connectors -->
-                    <rect x="220" y="160" width="30" height="25" rx="4" fill="#2a3441" stroke="#f59e0b" stroke-width="2"/>
-                    <text x="235" y="177" font-family="Arial" font-size="10" fill="#f59e0b" text-anchor="middle" font-weight="bold">Н</text>
-                    
-                    <rect x="220" y="200" width="30" height="25" rx="4" fill="#2a3441" stroke="#06b6d4" stroke-width="2"/>
-                    <text x="235" y="217" font-family="Arial" font-size="10" fill="#06b6d4" text-anchor="middle" font-weight="bold">К</text>
-                    
-                    <rect x="220" y="240" width="30" height="25" rx="4" fill="#2a3441" stroke="#10b981" stroke-width="2"/>
-                    <text x="235" y="257" font-family="Arial" font-size="10" fill="#10b981" text-anchor="middle" font-weight="bold">Т</text>
-                    
-                    <rect x="220" y="280" width="30" height="25" rx="4" fill="#2a3441" stroke="#f43f5e" stroke-width="2"/>
-                    <text x="235" y="297" font-family="Arial" font-size="10" fill="#f43f5e" text-anchor="middle" font-weight="bold">В</text>
-                    
-                    <!-- Test Panel (right) -->
-                    <rect x="650" y="80" width="200" height="260" rx="8" fill="#1a2332" stroke="#8b5cf6" stroke-width="2"/>
-                    <text x="750" y="110" font-family="Arial" font-size="14" fill="#8b5cf6" text-anchor="middle" font-weight="bold">ПУЛЬТ ПРОВЕРКИ</text>
-                    <text x="750" y="130" font-family="Arial" font-size="11" fill="#9ca3af" text-anchor="middle">6С2.702.007</text>
-                    
-                    <!-- Panel Connectors -->
-                    <rect x="650" y="160" width="30" height="25" rx="4" fill="#2a3441" stroke="#f59e0b" stroke-width="2"/>
-                    <text x="665" y="177" font-family="Arial" font-size="10" fill="#f59e0b" text-anchor="middle" font-weight="bold">Н</text>
-                    
-                    <rect x="650" y="200" width="30" height="25" rx="4" fill="#2a3441" stroke="#06b6d4" stroke-width="2"/>
-                    <text x="665" y="217" font-family="Arial" font-size="10" fill="#06b6d4" text-anchor="middle" font-weight="bold">К</text>
-                    
-                    <rect x="650" y="240" width="30" height="25" rx="4" fill="#2a3441" stroke="#10b981" stroke-width="2"/>
-                    <text x="665" y="257" font-family="Arial" font-size="10" fill="#10b981" text-anchor="middle" font-weight="bold">Т</text>
-                    
-                    <rect x="650" y="280" width="30" height="25" rx="4" fill="#2a3441" stroke="#f43f5e" stroke-width="2"/>
-                    <text x="665" y="297" font-family="Arial" font-size="10" fill="#f43f5e" text-anchor="middle" font-weight="bold">В</text>
-                    
-                    <!-- Cable K - Main connection highlighted -->
-                    <path d="M250 212 Q 350 212 400 230 Q 450 250 500 250 Q 550 250 600 230 Q 650 212 650 212" fill="none" stroke="#06b6d4" stroke-width="4" stroke-linecap="round"/>
-                    
-                    <!-- Cable label -->
-                    <rect x="410" y="235" width="80" height="30" rx="6" fill="#06b6d4"/>
-                    <text x="450" y="255" font-family="Arial" font-size="12" fill="#000" text-anchor="middle" font-weight="bold">Жгут "К"</text>
-                    
-                    <!-- Connection note -->
-                    <rect x="320" y="350" width="260" height="35" rx="6" fill="rgba(6, 182, 212, 0.15)" stroke="rgba(6, 182, 212, 0.4)" stroke-width="1"/>
-                    <text x="450" y="372" font-family="Arial" font-size="12" fill="#06b6d4" text-anchor="middle">Подключить жгут "К" к разъёму "К"</text>
-                </svg>
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0WxU2QsOgw8HrtmQJpJSNc35tWjs32.svg" alt="Схема подключения пульта 6С2.702.007">
                 <div class="image-caption">Подключение пульта 6С2.702.007 жгутом «К» к разъёму «К» агрегата управления</div>
             </div>
         </section>
@@ -759,7 +647,7 @@
             </div>
             
             <div class="in4-grid">
-                <!-- Counter-Clockwise (first as per procedure) -->
+                <!-- Counter-Clockwise -->
                 <div class="in4-card counter">
                     <div class="in4-header">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
@@ -772,27 +660,16 @@
                     <div class="in4-svg-container">
                         <svg viewBox="0 0 200 100" width="100%">
                             <rect x="0" y="0" width="200" height="100" rx="8" fill="#1a1a1a"/>
-                            
-                            <!-- H indicator box -->
                             <rect x="20" y="15" width="70" height="70" rx="6" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
                             <rect x="25" y="20" width="60" height="60" fill="#1a2332"/>
                             <line x1="25" y1="50" x2="85" y2="50" stroke="#333" stroke-width="1"/>
-                            
-                            <!-- Index moving RIGHT then returning -->
                             <line x1="55" y1="25" x2="55" y2="75" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
                             <line x1="70" y1="25" x2="70" y2="75" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
-                            
-                            <!-- Arrow showing movement -->
                             <path d="M60 35 L75 35" stroke="#3b82f6" stroke-width="2" fill="none"/>
                             <polygon points="75,35 70,32 70,38" fill="#3b82f6"/>
-                            
-                            <!-- Return arrow -->
                             <path d="M75 65 L60 65" stroke="#10b981" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
                             <polygon points="60,65 65,62 65,68" fill="#10b981"/>
-                            
                             <text x="55" y="95" font-family="Arial" font-size="10" fill="#9ca3af" text-anchor="middle">Н</text>
-                            
-                            <!-- Legend -->
                             <text x="110" y="35" font-family="Arial" font-size="9" fill="#3b82f6">1. Вправо</text>
                             <text x="110" y="55" font-family="Arial" font-size="9" fill="#10b981">2. Возврат</text>
                             <text x="110" y="75" font-family="Arial" font-size="9" fill="#9ca3af">в ноль</text>
@@ -817,27 +694,16 @@
                     <div class="in4-svg-container">
                         <svg viewBox="0 0 200 100" width="100%">
                             <rect x="0" y="0" width="200" height="100" rx="8" fill="#1a1a1a"/>
-                            
-                            <!-- H indicator box -->
                             <rect x="20" y="15" width="70" height="70" rx="6" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
                             <rect x="25" y="20" width="60" height="60" fill="#1a2332"/>
                             <line x1="25" y1="50" x2="85" y2="50" stroke="#333" stroke-width="1"/>
-                            
-                            <!-- Index moving LEFT then returning -->
                             <line x1="55" y1="25" x2="55" y2="75" stroke="#f43f5e" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
                             <line x1="40" y1="25" x2="40" y2="75" stroke="#f43f5e" stroke-width="3" stroke-linecap="round"/>
-                            
-                            <!-- Arrow showing movement -->
                             <path d="M50 35 L35 35" stroke="#f43f5e" stroke-width="2" fill="none"/>
                             <polygon points="35,35 40,32 40,38" fill="#f43f5e"/>
-                            
-                            <!-- Return arrow -->
                             <path d="M35 65 L50 65" stroke="#10b981" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
                             <polygon points="50,65 45,62 45,68" fill="#10b981"/>
-                            
                             <text x="55" y="95" font-family="Arial" font-size="10" fill="#9ca3af" text-anchor="middle">Н</text>
-                            
-                            <!-- Legend -->
                             <text x="110" y="35" font-family="Arial" font-size="9" fill="#f43f5e">1. Влево</text>
                             <text x="110" y="55" font-family="Arial" font-size="9" fill="#10b981">2. Возврат</text>
                             <text x="110" y="75" font-family="Arial" font-size="9" fill="#9ca3af">в ноль</text>
@@ -936,19 +802,17 @@
                 <div class="calc-result-unit">% х. разд. / град/с</div>
             </div>
             
-            <div id="status" style="margin-top: 16px; padding: 12px; border-radius: 8px; text-align: center; font-size: 13px;"></div>
+            <div id="status"></div>
         </section>
     </div>
 
     <script>
-        // Set current date
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
         });
 
-        // Calculator
         const deltaInput = document.getElementById('delta');
         const omegaInput = document.getElementById('omega');
         const resultEl = document.getElementById('result');
@@ -969,7 +833,6 @@
             const mu = delta / omega;
             resultEl.textContent = mu.toFixed(2);
             
-            // Check tolerance for ISODROM (7.5 ± 3 means 4.5 to 10.5)
             if (mu >= 4.5 && mu <= 10.5) {
                 statusEl.textContent = 'В пределах допуска (7,5 ± 3)';
                 statusEl.style.background = 'rgba(16, 185, 129, 0.1)';
@@ -983,8 +846,6 @@
 
         deltaInput.addEventListener('input', calculate);
         omegaInput.addEventListener('input', calculate);
-        
-        // Initial calculation
         calculate();
     </script>
 </body>
