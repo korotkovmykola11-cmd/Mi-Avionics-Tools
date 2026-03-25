@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проверка передаточного числа по изодрому ωy | БС-34 Ми-171</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -19,13 +15,8 @@
             line-height: 1.6;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         
-        /* Header */
         .header {
             text-align: center;
             padding: 40px 20px;
@@ -57,10 +48,7 @@
             margin-bottom: 10px;
         }
         
-        .header-subtitle {
-            color: #9ca3af;
-            font-size: 14px;
-        }
+        .header-subtitle { color: #9ca3af; font-size: 14px; }
         
         .header-meta {
             display: flex;
@@ -81,20 +69,15 @@
             color: #9ca3af;
         }
         
-        .meta-item strong {
-            color: #e5e7eb;
-        }
+        .meta-item strong { color: #e5e7eb; }
         
         .meta-item.highlight {
             background: rgba(244, 63, 94, 0.15);
             border: 1px solid rgba(244, 63, 94, 0.3);
         }
         
-        .meta-item.highlight strong {
-            color: #fda4af;
-        }
+        .meta-item.highlight strong { color: #fda4af; }
         
-        /* Section */
         .section {
             background: rgba(17, 24, 39, 0.95);
             border: 1px solid rgba(75, 85, 99, 0.3);
@@ -142,7 +125,6 @@
         .section-title.rose { color: #f43f5e; }
         .section-title.violet { color: #8b5cf6; }
         
-        /* Warning box */
         .warning-box {
             padding: 20px;
             background: rgba(244, 63, 94, 0.1);
@@ -173,12 +155,8 @@
             text-transform: uppercase;
         }
         
-        .warning-content p {
-            font-size: 14px;
-            color: #fda4af;
-        }
+        .warning-content p { font-size: 14px; color: #fda4af; }
         
-        /* Info box */
         .info-box {
             padding: 16px 20px;
             border-radius: 12px;
@@ -186,8 +164,6 @@
         }
         
         .info-box.amber { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-left: 3px solid #f59e0b; }
-        .info-box.blue { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-left: 3px solid #3b82f6; }
-        .info-box.green { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-left: 3px solid #10b981; }
         .info-box.violet { background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.2); border-left: 3px solid #8b5cf6; }
         
         .info-box-title {
@@ -199,34 +175,40 @@
         }
         
         .info-box.amber .info-box-title { color: #f59e0b; }
-        .info-box.blue .info-box-title { color: #3b82f6; }
-        .info-box.green .info-box-title { color: #10b981; }
         .info-box.violet .info-box-title { color: #8b5cf6; }
         
         .info-box p { font-size: 13px; color: #d1d5db; }
         
-        /* Image container */
-        .image-container {
+        /* Scheme Wrapper */
+        .scheme-wrapper {
+            padding: clamp(12px, 3vw, 28px);
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
             border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(75, 85, 99, 0.3);
+            border: 1px solid #e2e8f0;
+            overflow-x: auto;
         }
         
-        .image-container img {
+        .scheme-svg {
             width: 100%;
+            min-width: 480px;
+            max-width: 760px;
             height: auto;
             display: block;
+            margin: 0 auto;
         }
         
-        .image-caption {
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
+        .scheme-caption {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: rgba(245, 158, 11, 0.08);
+            border-radius: 8px;
+            border-left: 3px solid #f59e0b;
             font-size: 12px;
-            color: #9ca3af;
-            text-align: center;
+            color: #f59e0b;
         }
         
-        /* Switch positions */
+        .scheme-caption strong { color: #d97706; }
+        
         .switch-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -267,7 +249,6 @@
         .switch-item.highlight-red .switch-value { color: #fda4af; }
         .switch-item.highlight-green .switch-value { color: #6ee7b7; }
         
-        /* Table */
         .table-container { overflow-x: auto; }
         
         table {
@@ -306,12 +287,7 @@
         
         td strong { color: #a78bfa; }
         
-        /* Procedure steps */
-        .steps-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .steps-list { display: flex; flex-direction: column; gap: 12px; }
         
         .step-item {
             display: flex;
@@ -353,7 +329,6 @@
         .step-content strong { color: #e5e7eb; }
         .step-item.critical p { color: #fda4af; }
         
-        /* IN-4 Visualization */
         .in4-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -382,7 +357,6 @@
         .in4-card.clockwise .in4-result { color: #fda4af; }
         .in4-card.counter .in4-result { color: #93c5fd; }
         
-        /* Formula */
         .formula-box {
             padding: 20px;
             background: rgba(139, 92, 246, 0.06);
@@ -394,7 +368,6 @@
         .formula { font-size: 24px; font-family: 'Times New Roman', serif; color: #a78bfa; margin-bottom: 12px; }
         .formula-desc { font-size: 12px; color: #9ca3af; }
         
-        /* Calculator */
         .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
         .calc-field { display: flex; flex-direction: column; gap: 8px; }
         .calc-label { font-size: 12px; font-weight: 600; color: #9ca3af; }
@@ -471,20 +444,67 @@
             </div>
         </div>
 
-        <!-- Connection Diagram -->
+        <!-- Connection Diagram (Рис. 202) -->
         <section class="section">
             <div class="section-header">
                 <div class="section-icon cyan">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 20V10M12 20V4M6 20v-6"/>
+                        <rect width="8" height="8" x="2" y="2" rx="2"/>
+                        <rect width="8" height="8" x="14" y="2" rx="2"/>
+                        <rect width="8" height="8" x="8" y="14" rx="2"/>
                     </svg>
                 </div>
-                <span class="section-title cyan">Рис. 2 — Схема подключения пульта 6С2.702.007</span>
+                <span class="section-title cyan">Схема подключения (Рис. 202)</span>
             </div>
             
-            <div class="image-container">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-0WxU2QsOgw8HrtmQJpJSNc35tWjs32.svg" alt="Схема подключения пульта 6С2.702.007">
-                <div class="image-caption">Подключение пульта 6С2.702.007 жгутом «К» к разъёму «К» агрегата управления</div>
+            <div class="scheme-wrapper">
+                <svg class="scheme-svg" viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="40" y="70" width="200" height="130" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+                    <text x="140" y="115" font-family="Arial, sans-serif" font-size="15" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
+                    <text x="140" y="140" font-family="Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">6С2.702.007</text>
+                    
+                    <rect x="120" y="200" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+                    <rect x="135" y="220" width="10" height="14" fill="#2c3e50"/>
+                    
+                    <rect x="480" y="70" width="240" height="130" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
+                    <text x="600" y="115" font-family="Arial, sans-serif" font-size="15" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
+                    <text x="600" y="140" font-family="Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">6С2.399.000</text>
+                    
+                    <rect x="510" y="200" width="28" height="36" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+                    <rect x="517" y="236" width="14" height="16" fill="#2c3e50"/>
+                    
+                    <rect x="586" y="200" width="28" height="36" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+                    <rect x="593" y="236" width="14" height="16" fill="#2c3e50"/>
+                    
+                    <rect x="662" y="200" width="28" height="36" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
+                    <rect x="669" y="236" width="14" height="16" fill="#2c3e50"/>
+                    
+                    <path d="M 140 234 L 140 340 L 600 340 L 600 252" stroke="#1a1a1a" stroke-width="3.5" fill="none"/>
+                    
+                    <line x1="524" y1="252" x2="524" y2="360" stroke="#2c3e50" stroke-width="2.5"/>
+                    <line x1="676" y1="252" x2="676" y2="360" stroke="#2c3e50" stroke-width="2.5"/>
+                    
+                    <path d="M 524 360 L 524 375 Q 524 385 534 385 L 666 385 Q 676 385 676 375 L 676 360" stroke="#2c3e50" stroke-width="2" fill="none"/>
+                    <line x1="600" y1="385" x2="600" y2="405" stroke="#2c3e50" stroke-width="2"/>
+                    <polygon points="600,415 592,400 608,400" fill="#2c3e50"/>
+                    
+                    <rect x="125" y="265" width="30" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+                    <text x="140" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
+                    
+                    <rect x="507" y="265" width="34" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+                    <text x="524" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"АУ"</text>
+                    
+                    <rect x="583" y="265" width="34" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+                    <text x="600" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
+                    
+                    <rect x="659" y="265" width="34" height="16" fill="#f8fafc" rx="2" stroke="#94a3b8"/>
+                    <text x="676" y="277" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">"РА"</text>
+                    
+                    <text x="600" y="30" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">Рис. 202</text>
+                </svg>
+            </div>
+            <div class="scheme-caption">
+                <strong>Рис. 202.</strong> Схема подключения пульта 6С2.702.007 при проверке автопилота АП-34Б на вертолёте.
             </div>
         </section>
 
@@ -647,7 +667,6 @@
             </div>
             
             <div class="in4-grid">
-                <!-- Counter-Clockwise -->
                 <div class="in4-card counter">
                     <div class="in4-header">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
@@ -681,7 +700,6 @@
                     </div>
                 </div>
                 
-                <!-- Clockwise -->
                 <div class="in4-card clockwise">
                     <div class="in4-header">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2">
