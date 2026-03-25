@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Проверка работоспособности автопилота АП‑34Б | Ми‑8МТВ‑1</title>
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+      background:linear-gradient(135deg,#0a0a0a 0%,#111827 50%,#0a0a0a 100%);
+      color:#e5e7eb;
+      min-height:100vh;
+      line-height:1.6;
+      padding:20px;
+    }
+    .container {max-width:1200px; margin:auto;}
+    header {
+      text-align:center;
+      padding:40px 20px;
+      border-bottom:1px solid rgba(75,85,99,0.3);
+      margin-bottom:30px;
+    }
+    .badge {
+      display:inline-block;
+      padding:6px 16px;
+      background:rgba(16,185,129,0.15);
+      border:1px solid rgba(16,185,129,0.4);
+      border-radius:20px;
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      color:#6ee7b7;
+      margin-bottom:10px;
+    }
+    h1 {
+      font-size:clamp(24px,5vw,36px);
+      font-weight:700;
+      background:linear-gradient(135deg,#fff 0%,#9ca3af 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:10px;
+    }
+    .subtitle {color:#9ca3af; font-size:14px;}
+    section {
+      background:rgba(17,24,39,0.95);
+      border:1px solid rgba(75,85,99,0.3);
+      border-radius:16px;
+      padding:24px;
+      margin-bottom:20px;
+    }
+    h2 {
+      font-size:16px;
+      font-weight:700;
+      color:#a78bfa;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+    h3 {
+      font-size:14px;
+      color:#06b6d4;
+      text-transform:uppercase;
+      margin:20px 0 10px;
+    }
+    ol, ul {margin-left:20px; margin-bottom:10px;}
+    li {margin-bottom:6px;}
+    strong {color:#f59e0b;}
+    p {margin-bottom:8px; font-size:14px;}
+    .note {
+      background:rgba(245,158,11,0.08);
+      border-left:3px solid #f59e0b;
+      padding:12px;
+      border-radius:8px;
+      color:#d1d5db;
+      margin:10px 0;
+    }
+    .warning {
+      background:rgba(244,63,94,0.1);
+      border-left:3px solid #f43f5e;
+      padding:14px;
+      border-radius:8px;
+      font-weight:600;
+      color:#fca5a5;
+      margin:12px 0;
+    }
+    footer {
+      text-align:center;
+      font-size:12px;
+      color:#6b7280;
+      margin-top:30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">Технологическая карта</div>
+      <h1>Проверка работоспособности автопилота АП‑34Б</h1>
+      <p class="subtitle">Тип воздушного судна: Ми‑8МТВ‑1 | Пункт РО 022.10.00 | Страницы 209–210</p>
+    </header>
+
+    <section>
+      <h2>Общие указания</h2>
+      <div class="warning">При включении наземной гидроустановки на вертолёте могут находиться только непосредственные участники работ.</div>
+      <ol>
+        <li>Включить источники постоянного и переменного трёхфазного тока 36 В.</li>
+        <li>Подключить шланги наземной гидроустановки к бортовым клапанам основной гидросистемы.</li>
+        <li>Включить автопилот АП‑34Б и агрегаты, взаимодействующие с ним:
+          <ul>
+            <li>Автоматы защиты: ГИДРОСИСТ‑ОСНОВН., АВТОПИЛОТ‑ОСНОВН., АВТОПИЛОТ‑ФРИКЦ., АВТОПИЛОТ‑ЭЛЕКТРОМУФТЫ.</li>
+            <li>АВИАГОРИЗОНТ (предварительно нажать АРРЕТИР) и ГМК‑1 на правом щитке.</li>
+            <li>Выключатель ГИДРОСИСТЕМА‑ОСНОВН. — загорится табло «ОСНОВНАЯ ВКЛЮЧЕНА». Давление 4200–7300 кПа.</li>
+          </ul>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>А. Проверка механизмов согласования</h2>
+      <ol start="4">
+        <li>На пульте курсовой системы установить переключатель в положение ГПК.  
+        Повернуть задатчик курса влево и вправо — шкала «НАПРАВЛЕНИЕ» вращается по и против часовой стрелки.</li>
+        <li>Отклонить ручку управления вправо и влево — шкала «КРЕН» вращается против и по часовой стрелке.</li>
+        <li>Отклонить ручку управления от себя и на себя — шкала «ТАНГАЖ» вращается против и по часовой стрелке.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Б. Проверка включения и отключения автопилота</h2>
+      <ol start="7">
+        <li>Нажать кнопки‑лампочки ВКЛ. НАПРАВЛЕНИЕ, КРЕН‑ТАНГАЖ, ВЫСОТА — все загораются. Возможен лёгкий толчок на органах управления.</li>
+        <li>Нажать ВЫКЛ. АП на ручке левого лётчика — лампочки гаснут; повторить для правого.</li>
+        <li>Нажать ВКЛ. ВЫСОТА — лампочка горит; нажать фрикцион ШАГ‑ГАЗ (левый) — гаснет; повторить для правого.</li>
+        <li>Нажать ВКЛ. НАПРАВЛЕНИЕ и ВЫСОТА, затем ОТКЛ. НАПРАВЛЕНИЕ и ОТКЛ. ВЫСОТА — лампочки погаснут.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>В. Проверка прохождения сигнала угла (канал направления)</h2>
+      <ol start="11">
+        <li>При нейтральных педалях и снятых ногах нажать ВКЛ. НАПРАВЛЕНИЕ.  
+        Индекс «Н» ИН‑4 в среднем положении (± толщина индекса).</li>
+        <li>Повернуть шкалу НАПРАВЛЕНИЕ на 3 деления по часовой стрелке — индекс «Н» вправо; поставить ноги на педали — индекс в среднее положение.  
+        Повторить для вращения против часовой стрелки — индекс влево и возврат при установке ног.</li>
+      </ol>
+      <div class="note">
+        <strong>Примечание:</strong> На вертолётах с РА‑60Б шкалу вращать до начала перемещения педалей (режим «перегонки»).  
+        Правая нога вперёд — при вращении по часовой; левая — против. Угол ≤ 15°.  
+        На КАУ‑115А(АМ) перемещение педалей не проверяется.
+      </div>
+      <ol start="12">
+        <li>Снять ноги с педалей, нажать ВЫКЛ. АП — лампочка НАПРАВЛЕНИЕ гаснет.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Г. Проверка прохождения сигналов от компенсационных датчиков</h2>
+      <ol start="13">
+        <li>Нажать ВКЛ. КРЕН‑ТАНГАЖ — индексы «К» и «Т» в среднем положении.</li>
+        <li>Повернуть шкалу КРЕН по и против часовой стрелки на 3 деления — индекс «К» отклоняется туда и обратно.</li>
+        <li>Повернуть шкалу ТАНГАЖ по и против часовой стрелки на 3 деления — индекс «Т» вниз и вверх.</li>
+        <li>Нажать ВЫКЛ. АП — лампочка гаснет, индексы в среднем положении.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Д. Проверка канала высоты</h2>
+      <ol start="17">
+        <li>Ручка ШАГ‑ГАЗ — в среднее положение.</li>
+        <li>ВКЛ. ВЫСОТА — лампочка горит, индекс «В» в среднем положении.</li>
+        <li>КОНТРОЛЬ вверх/вниз — индекс «В» вверх и вниз.</li>
+        <li>ОТКЛ. ВЫСОТА — лампочка гаснет, индекс в среднем положении.</li>
+        <li>Выключить все автоматы и питание. Отсоединить шланги гидроустановки.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Контрольно‑проверочная аппаратура</h2>
+      <p>Применяются штатные средства контроля, предусмотренные эксплуатационной документацией. Специальных расходных материалов не требуется.</p>
+    </section>
+
+    <footer>
+      Автоматически сгенерировано · <span id="date"></span>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("date").textContent =
+      new Date().toLocaleDateString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+  </script>
+</body>
+</html>
