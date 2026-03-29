@@ -19,7 +19,6 @@
       overflow-x: hidden;
     }
 
-    /* Background Effects */
     .bg-layer {
       position: fixed;
       inset: 0;
@@ -57,10 +56,8 @@
       background: rgba(14, 165, 233, 0.05);
     }
 
-    /* Helicopter backgrounds */
     .helicopter {
       position: absolute;
-      opacity: 0.07;
       pointer-events: none;
       filter: grayscale(100%);
     }
@@ -70,6 +67,7 @@
       left: -100px;
       width: 700px;
       height: auto;
+      opacity: 0.12;
     }
 
     .helicopter-mi17 {
@@ -78,10 +76,9 @@
       width: 650px;
       height: auto;
       transform: rotate(-5deg);
-      opacity: 0.05;
+      opacity: 0.10;
     }
 
-    /* Glass morphism */
     .glass-card {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
       backdrop-filter: blur(12px);
@@ -97,14 +94,12 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    /* Layout */
     .container {
       max-width: 1024px;
       margin: 0 auto;
       padding: 32px 16px;
     }
 
-    /* Header */
     .header {
       display: flex;
       flex-wrap: wrap;
@@ -175,7 +170,6 @@
       color: #cbd5e1;
     }
 
-    /* Tools Grid */
     .tools-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -189,7 +183,6 @@
       }
     }
 
-    /* Tool Card */
     .tool-card {
       border-radius: 16px;
       padding: 20px;
@@ -278,7 +271,6 @@
       transition: transform 0.2s ease;
     }
 
-    /* Footer */
     .footer {
       margin-top: 32px;
       border-radius: 12px;
@@ -296,7 +288,6 @@
       color: #94a3b8;
     }
 
-    /* Mobile adjustments */
     @media (max-width: 640px) {
       .header {
         flex-direction: column;
@@ -307,35 +298,23 @@
       }
       
       .helicopter {
-        display: none;
+        opacity: 0.06 !important;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Background Layer -->
   <div class="bg-layer">
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
     <div class="bg-glow bg-glow-3"></div>
     
-    <!-- Mi-24 Helicopter -->
-    <img 
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Mil_Mi-24_Hind_Helicopter_%2851326367686%29.jpg/1280px-Mil_Mi-24_Hind_Helicopter_%2851326367686%29.jpg" 
-      alt="Mi-24" 
-      class="helicopter helicopter-mi24"
-    >
-    
-    <!-- Mi-17 Helicopter -->
-    <img 
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Russia_Helicopters%2C_742%2C_Mil_Mi-17V-5_%2837184597496%29.jpg/1280px-Russia_Helicopters%2C_742%2C_Mil_Mi-17V-5_%2837184597496%29.jpg" 
-      alt="Mi-17" 
-      class="helicopter helicopter-mi17"
-    >
+    <!-- Замени пути на свои локальные изображения -->
+    <img src="images/mi-24.jpg" alt="Mi-24" class="helicopter helicopter-mi24">
+    <img src="images/mi-17.jpg" alt="Mi-17" class="helicopter helicopter-mi17">
   </div>
 
   <div class="container">
-    <!-- Header -->
     <header class="header">
       <div class="glass-card header-card">
         <div class="header-top">
@@ -361,9 +340,7 @@
       </div>
     </header>
 
-    <!-- Tools Grid -->
     <main class="tools-grid">
-      <!-- СПУУ-52-3 -->
       <article class="glass-card tool-card">
         <div class="tool-content">
           <div class="tool-icon-wrap">
@@ -378,15 +355,13 @@
             <a href="./page-spu52-3.html" class="tool-btn">
               Открыть
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/>
-                <path d="m12 5 7 7-7 7"/>
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
               </svg>
             </a>
           </div>
         </div>
       </article>
 
-      <!-- СПУУ-52 -->
       <article class="glass-card tool-card">
         <div class="tool-content">
           <div class="tool-icon-wrap">
@@ -401,15 +376,13 @@
             <a href="./page-spu52.html" class="tool-btn">
               Открыть
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/>
-                <path d="m12 5 7 7-7 7"/>
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
               </svg>
             </a>
           </div>
         </div>
       </article>
 
-      <!-- ВУАП-1 -->
       <article class="glass-card tool-card">
         <div class="tool-content">
           <div class="tool-icon-wrap">
@@ -424,15 +397,13 @@
             <a href="./page-vuap-1.html" class="tool-btn">
               Открыть
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/>
-                <path d="m12 5 7 7-7 7"/>
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
               </svg>
             </a>
           </div>
         </div>
       </article>
 
-      <!-- АП-34Б -->
       <article class="glass-card tool-card">
         <div class="tool-content">
           <div class="tool-icon-wrap">
@@ -446,8 +417,7 @@
             <a href="./page-ap34b.html" class="tool-btn">
               Открыть
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/>
-                <path d="m12 5 7 7-7 7"/>
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
               </svg>
             </a>
           </div>
@@ -455,7 +425,6 @@
       </article>
     </main>
 
-    <!-- Footer -->
     <footer class="glass-card footer">
       <p>
         Если при открытии появляется 404 — значит имя файла или папки не совпадает.<br>
