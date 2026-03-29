@@ -714,9 +714,9 @@
             </div>
             
             <div class="formula-box">
-                <div class="formula">iv = V / DV [град / (км/ч)]</div>
+                <div class="formula">i = u / ΔV [град / (км/ч)]</div>
                 <div class="formula-desc">
-                    где <strong>V (град)</strong> - угол, отсчитанный по шкале тангажа; <strong>DV (км/ч)</strong> - задаваемое приращение воздушной скорости
+                    где <strong>u (град)</strong> - угол, отсчитанный по шкале тангажа; <strong>ΔV (км/ч)</strong> - задаваемое приращение воздушной скорости
                 </div>
             </div>
             
@@ -750,17 +750,17 @@
             
             <div class="calc-grid">
                 <div class="calc-field">
-                    <label class="calc-label">Угол по шкале тангажа (V), град</label>
+                    <label class="calc-label">Угол по шкале тангажа (u), град</label>
                     <input type="number" id="theta" class="calc-input" value="8" step="0.1">
                 </div>
                 <div class="calc-field">
-                    <label class="calc-label">Приращение скорости (DV), км/ч</label>
+                    <label class="calc-label">Приращение скорости (ΔV), км/ч</label>
                     <input type="number" id="deltaV" class="calc-input" value="20" step="1">
                 </div>
             </div>
             
             <div class="calc-result">
-                <div class="calc-result-label">Передаточное число iv</div>
+                <div class="calc-result-label">Передаточное число i</div>
                 <div class="calc-result-value" id="result">0.40</div>
                 <div class="calc-result-unit">град / (км/ч)</div>
             </div>
