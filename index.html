@@ -1,436 +1,958 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi Avionics Tools</title>
+  <meta name="description" content="Premium cinematic landing for Mi Avionics Tools" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --bg-1:#040815;
+      --bg-2:#08122a;
+      --bg-3:#0b1538;
+      --bg-4:#071523;
+
+      --text:#f7f2df;
+      --text-soft:#d8def5;
+      --text-muted:#9aa4cb;
+
+      --line:rgba(255,255,255,.12);
+
+      --orange-1:#ffad1f;
+      --orange-2:#ff5a2f;
+
+      --purple-1:#a76bff;
+      --purple-2:#e04cff;
+
+      --green-1:#15d8cf;
+      --green-2:#1fd06f;
+
+      --blue-1:#00baff;
+      --blue-2:#5d6cff;
+
+      --shadow-xl:0 30px 80px rgba(0,0,0,.45);
+
+      --radius-xl:34px;
+      --container:1280px;
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(to bottom, #0f172a 0%, #1e293b 50%, #064e3b 100%);
-      color: #e2e8f0;
-      overflow-x: hidden;
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
 
-    .bg-layer {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      overflow: hidden;
+    html{
+      scroll-behavior:smooth;
     }
 
-    .bg-glow {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
+    body{
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      min-height:100vh;
+      color:var(--text);
+      letter-spacing:-0.01em;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(0,140,255,.18), transparent 24%),
+        radial-gradient(circle at 82% 16%, rgba(170,80,255,.18), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(0,255,220,.08), transparent 26%),
+        linear-gradient(145deg, var(--bg-1) 0%, var(--bg-2) 32%, var(--bg-3) 68%, var(--bg-4) 100%);
     }
 
-    .bg-glow-1 {
-      top: -100px;
-      left: -100px;
-      width: 800px;
-      height: 600px;
-      background: rgba(34, 211, 238, 0.1);
+    a{
+      color:inherit;
+      text-decoration:none;
     }
 
-    .bg-glow-2 {
-      top: 80px;
-      right: -100px;
-      width: 600px;
-      height: 500px;
-      background: rgba(16, 185, 129, 0.1);
+    .page{
+      position:relative;
+      isolation:isolate;
+      min-height:100vh;
+      overflow:hidden;
     }
 
-    .bg-glow-3 {
-      bottom: -50px;
-      left: 33%;
-      width: 700px;
-      height: 400px;
-      background: rgba(14, 165, 233, 0.05);
+    .bg-base,
+    .noise,
+    .grid,
+    .fog,
+    .fog-pro,
+    .pro-light,
+    .overlay,
+    .particles,
+    .helicopters,
+    .diagram-layer{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
     }
 
-    .helicopter {
-      position: absolute;
-      pointer-events: none;
-      filter: grayscale(100%);
+    .bg-base{
+      z-index:-9;
+      overflow:hidden;
     }
 
-    .helicopter-mi24 {
-      bottom: -50px;
-      left: -100px;
-      width: 700px;
-      height: auto;
-      opacity: 0.12;
+    .bg-base::before,
+    .bg-base::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      filter:blur(110px);
+      opacity:.42;
+      animation:glowFloat 14s ease-in-out infinite alternate;
     }
 
-    .helicopter-mi17 {
-      top: -30px;
-      right: -100px;
-      width: 650px;
-      height: auto;
-      transform: rotate(-5deg);
-      opacity: 0.10;
+    .bg-base::before{
+      width:520px;
+      height:520px;
+      left:-120px;
+      top:-80px;
+      background:rgba(0,130,255,.25);
     }
 
-    .glass-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    .bg-base::after{
+      width:560px;
+      height:560px;
+      right:-140px;
+      top:20px;
+      background:rgba(168,86,255,.22);
+      animation-duration:18s;
     }
 
-    .glass-badge {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+    .noise{
+      z-index:-8;
+      opacity:.05;
+      background-image:
+        radial-gradient(circle at 20% 20%, #fff .7px, transparent .8px),
+        radial-gradient(circle at 80% 70%, #fff .65px, transparent .8px),
+        radial-gradient(circle at 60% 40%, #fff .5px, transparent .75px);
+      background-size:18px 18px, 26px 26px, 15px 15px;
+      mix-blend-mode:soft-light;
     }
 
-    .container {
-      max-width: 1024px;
-      margin: 0 auto;
-      padding: 32px 16px;
+    .grid{
+      z-index:-7;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.18));
+      -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.18));
     }
 
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 40px;
+    .fog{
+      z-index:-6;
+      background:
+        radial-gradient(circle at 18% 84%, rgba(255,255,255,.10), transparent 18%),
+        radial-gradient(circle at 80% 86%, rgba(255,255,255,.09), transparent 18%),
+        radial-gradient(circle at 50% 100%, rgba(255,255,255,.09), transparent 26%);
+      filter:blur(24px);
+      opacity:.9;
     }
 
-    .header-card {
-      padding: 20px;
-      border-radius: 16px;
+    .fog-pro{
+      z-index:-5;
+      background:
+        radial-gradient(circle at 30% 78%, rgba(255,255,255,.11), transparent 28%),
+        radial-gradient(circle at 70% 88%, rgba(255,255,255,.09), transparent 28%);
+      filter:blur(36px);
+      opacity:.72;
     }
 
-    .header-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
+    .pro-light{
+      z-index:-4;
+      background:
+        radial-gradient(circle at 20% 72%, rgba(0,140,255,.24), transparent 24%),
+        radial-gradient(circle at 82% 20%, rgba(180,80,255,.20), transparent 26%),
+        radial-gradient(circle at 52% 100%, rgba(0,255,200,.10), transparent 28%);
     }
 
-    .logo-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #22d3ee 0%, #10b981 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .particles{
+      z-index:-3;
+      overflow:hidden;
     }
 
-    .logo-icon svg {
-      width: 20px;
-      height: 20px;
-      color: white;
+    .particles span{
+      position:absolute;
+      display:block;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.85), rgba(255,255,255,0));
+      opacity:.18;
+      animation:rise linear infinite;
     }
 
-    .header-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: white;
+    .helicopters{
+      z-index:-2;
+      overflow:hidden;
+      mix-blend-mode:screen;
     }
 
-    .header-desc {
-      font-size: 0.875rem;
-      color: #cbd5e1;
-      line-height: 1.6;
+    .heli{
+      position:absolute;
+      background-repeat:no-repeat;
+      background-size:contain;
+      background-position:center;
+      filter:
+        saturate(1.45)
+        contrast(1.18)
+        brightness(.98)
+        hue-rotate(-6deg)
+        drop-shadow(0 42px 85px rgba(0,0,0,.62));
+      opacity:.88;
+      will-change:transform;
+      transition:transform .12s linear;
     }
 
-    .header-desc .highlight {
-      color: #22d3ee;
-      font-weight: 500;
+    .heli::after{
+      content:"";
+      position:absolute;
+      inset:-15%;
+      border-radius:50%;
+      filter:blur(82px);
+      z-index:-1;
     }
 
-    .github-badge {
-      padding: 10px 16px;
-      border-radius: 9999px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.875rem;
-      color: #e2e8f0;
+    .heli-mi17{
+      width:min(54vw, 900px);
+      height:min(34vw, 560px);
+      left:2%;
+      bottom:10%;
+      background-image:url("https://commons.wikimedia.org/wiki/Special:FilePath/Russian%20Air%20Force%20Mil%20Mi-17%20yellow%2062.jpg");
+      transform:translate3d(0,0,0) scale(1.04);
     }
 
-    .github-badge svg {
-      width: 16px;
-      height: 16px;
-      color: #cbd5e1;
+    .heli-mi17::after{
+      background:radial-gradient(circle, rgba(0,155,255,.34), transparent 70%);
     }
 
-    .tools-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+    .heli-mi24{
+      width:min(50vw, 860px);
+      height:min(31vw, 520px);
+      right:1%;
+      top:6%;
+      background-image:url("https://commons.wikimedia.org/wiki/Special:FilePath/Mi24CP%20%28modified%29.jpg");
+      transform:translate3d(0,0,0) scale(1.03);
     }
 
-    @media (min-width: 768px) {
-      .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+    .heli-mi24::after{
+      background:radial-gradient(circle, rgba(188,92,255,.32), transparent 70%);
+    }
+
+    .diagram-layer{
+      z-index:-1;
+      overflow:hidden;
+    }
+
+    .diagram-left,
+    .diagram-right{
+      position:absolute;
+      overflow:hidden;
+      opacity:.12;
+      mix-blend-mode:screen;
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .diagram-left{
+      left:4%;
+      bottom:11%;
+      width:min(18vw, 280px);
+      height:min(32vw, 490px);
+      background:linear-gradient(180deg, rgba(110,160,255,.24), rgba(110,160,255,.12));
+    }
+
+    .diagram-right{
+      right:4%;
+      top:7%;
+      width:min(31vw, 470px);
+      height:min(28vw, 430px);
+      background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.08));
+    }
+
+    .diagram-right svg{
+      width:100%;
+      height:100%;
+      opacity:.6;
+    }
+
+    .overlay{
+      z-index:0;
+      background:
+        linear-gradient(90deg, rgba(5,10,25,.42) 0%, rgba(5,10,25,.16) 48%, rgba(5,10,25,.36) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.02) 55%, rgba(0,0,0,.18) 100%);
+    }
+
+    .container{
+      position:relative;
+      z-index:2;
+      width:min(var(--container), calc(100% - 42px));
+      margin:0 auto;
+      padding:28px 0 26px;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:18px;
+      margin-bottom:34px;
+    }
+
+    .brand{
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+    }
+
+    .brand-icon{
+      width:60px;
+      height:60px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(145deg, var(--orange-1), var(--orange-2));
+      box-shadow:0 18px 38px rgba(255,120,0,.26);
+      flex:0 0 auto;
+    }
+
+    .brand-icon svg{
+      width:28px;
+      height:28px;
+      color:white;
+    }
+
+    .brand-text h1{
+      font-size:3.2rem;
+      line-height:1;
+      font-weight:950;
+      color:#fff4da;
+      letter-spacing:-.055em;
+      text-shadow:0 6px 24px rgba(0,0,0,.28);
+      margin-bottom:12px;
+    }
+
+    .brand-text p{
+      font-size:1.18rem;
+      line-height:1.45;
+      color:var(--text-soft);
+      margin-bottom:8px;
+    }
+
+    .brand-types{
+      font-size:1.16rem;
+      font-weight:850;
+      color:#2be6cf;
+      letter-spacing:-.02em;
+    }
+
+    .badge{
+      margin-top:6px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:13px 19px;
+      border-radius:999px;
+      background:rgba(255,255,255,.055);
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      color:#ebe8ff;
+      font-weight:800;
+      box-shadow:0 12px 28px rgba(0,0,0,.22);
+      white-space:nowrap;
+    }
+
+    .badge svg{
+      width:18px;
+      height:18px;
+      opacity:.92;
+    }
+
+    .panels{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    .panel{
+      position:relative;
+      min-height:650px;
+      padding:34px 32px;
+      border-radius:32px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:var(--shadow-xl);
+      backdrop-filter:blur(22px) saturate(1.15);
+      -webkit-backdrop-filter:blur(22px) saturate(1.15);
+    }
+
+    .panel::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      background:linear-gradient(120deg, rgba(255,255,255,.24), transparent 28%);
+      opacity:.12;
+      pointer-events:none;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.24),
+        inset 0 -30px 60px rgba(0,0,0,.24);
+      pointer-events:none;
+    }
+
+    .panel-left{
+      background:
+        radial-gradient(circle at 20% 10%, rgba(70,145,255,.16), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)),
+        rgba(10,30,64,.28);
+    }
+
+    .panel-right{
+      background:
+        radial-gradient(circle at 70% 10%, rgba(190,100,255,.16), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)),
+        rgba(24,20,56,.28);
+    }
+
+    .panel-glow{
+      position:absolute;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      filter:blur(82px);
+      opacity:.48;
+      pointer-events:none;
+    }
+
+    .panel-left .panel-glow{
+      left:-50px;
+      bottom:-50px;
+      background:rgba(0,150,255,.18);
+    }
+
+    .panel-right .panel-glow{
+      right:-50px;
+      top:-40px;
+      background:rgba(190,92,255,.18);
+    }
+
+    .stack{
+      position:relative;
+      z-index:1;
+      height:100%;
+      display:grid;
+      grid-template-rows:1fr 1fr;
+      gap:28px;
+    }
+
+    .tool{
+      display:flex;
+      align-items:flex-start;
+      gap:22px;
+      padding-top:42px;
+      position:relative;
+    }
+
+    .tool-icon{
+      width:64px;
+      height:64px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      box-shadow:0 16px 36px rgba(0,0,0,.24);
+    }
+
+    .tool-icon svg{
+      width:28px;
+      height:28px;
+      color:#fff;
+    }
+
+    .tool.orange .tool-icon{
+      background:linear-gradient(145deg, var(--orange-1), var(--orange-2));
+    }
+
+    .tool.purple .tool-icon{
+      background:linear-gradient(145deg, var(--purple-1), var(--purple-2));
+    }
+
+    .tool.green .tool-icon{
+      background:linear-gradient(145deg, var(--green-1), var(--green-2));
+    }
+
+    .tool.blue .tool-icon{
+      background:linear-gradient(145deg, var(--blue-1), var(--blue-2));
+    }
+
+    .tool-body h2{
+      font-size:2.08rem;
+      line-height:1.05;
+      font-weight:950;
+      color:#fff3d6;
+      letter-spacing:-.045em;
+      margin-bottom:14px;
+      text-shadow:0 4px 16px rgba(0,0,0,.22);
+    }
+
+    .tool-body p{
+      max-width:530px;
+      color:#dbe2f8;
+      font-size:1.16rem;
+      line-height:1.55;
+      margin-bottom:24px;
+    }
+
+    .btn{
+      position:relative;
+      overflow:hidden;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:14px 24px;
+      border-radius:17px;
+      color:white;
+      font-size:1.02rem;
+      font-weight:850;
+      box-shadow:0 16px 34px rgba(0,0,0,.22);
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      isolation:isolate;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.05);
+      box-shadow:0 20px 40px rgba(0,0,0,.28);
+    }
+
+    .btn::after{
+      content:"";
+      position:absolute;
+      top:-100%;
+      left:-20%;
+      width:60%;
+      height:300%;
+      transform:rotate(20deg);
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+      animation:shine 5.6s linear infinite;
+      z-index:-1;
+    }
+
+    .btn svg{
+      width:18px;
+      height:18px;
+    }
+
+    .btn.orange{
+      background:linear-gradient(145deg, var(--orange-1), var(--orange-2));
+    }
+
+    .btn.purple{
+      background:linear-gradient(145deg, var(--purple-1), var(--purple-2));
+    }
+
+    .btn.green{
+      background:linear-gradient(145deg, #12d6d8, #18cf69);
+    }
+
+    .btn.blue{
+      background:linear-gradient(145deg, #00bbff, #5f6bff);
+    }
+
+    .footer-note{
+      margin-top:22px;
+      text-align:center;
+      color:#edf0ff;
+      font-size:1.03rem;
+      opacity:.94;
+      text-shadow:0 3px 14px rgba(0,0,0,.28);
+    }
+
+    @keyframes rise{
+      from{
+        transform:translateY(50px) scale(.85);
+        opacity:0;
+      }
+      15%{
+        opacity:.18;
+      }
+      to{
+        transform:translateY(-110vh) scale(1.35);
+        opacity:0;
       }
     }
 
-    .tool-card {
-      border-radius: 16px;
-      padding: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .tool-card:hover {
-      transform: scale(1.02);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
-    }
-
-    .tool-content {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .tool-icon-wrap {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.3s ease;
-    }
-
-    .tool-card:hover .tool-icon-wrap {
-      background: linear-gradient(135deg, rgba(34, 211, 238, 0.3) 0%, rgba(16, 185, 129, 0.3) 100%);
-    }
-
-    .tool-icon-wrap svg {
-      width: 24px;
-      height: 24px;
-      color: #22d3ee;
-    }
-
-    .tool-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .tool-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 8px;
-    }
-
-    .tool-desc {
-      font-size: 0.875rem;
-      color: #cbd5e1;
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-
-    .tool-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.9);
-      color: #0f172a;
-      font-weight: 600;
-      font-size: 0.875rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .tool-btn:hover {
-      background: white;
-    }
-
-    .tool-btn:hover svg {
-      transform: translateX(2px);
-    }
-
-    .tool-btn svg {
-      width: 16px;
-      height: 16px;
-      transition: transform 0.2s ease;
-    }
-
-    .footer {
-      margin-top: 32px;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-    }
-
-    .footer p {
-      font-size: 0.875rem;
-      color: #cbd5e1;
-      line-height: 1.6;
-    }
-
-    .footer .muted {
-      color: #94a3b8;
-    }
-
-    @media (max-width: 640px) {
-      .header {
-        flex-direction: column;
+    @keyframes glowFloat{
+      from{
+        transform:translate3d(0,0,0) scale(1);
       }
-      
-      .header-title {
-        font-size: 1.25rem;
+      to{
+        transform:translate3d(34px,-18px,0) scale(1.08);
       }
-      
-      .helicopter {
-        opacity: 0.06 !important;
+    }
+
+    @keyframes shine{
+      0%{
+        transform:translateX(-140%) rotate(20deg);
+      }
+      100%{
+        transform:translateX(320%) rotate(20deg);
+      }
+    }
+
+    @media (max-width: 1180px){
+      .brand-text h1{
+        font-size:2.7rem;
+      }
+
+      .brand-text p{
+        font-size:1.05rem;
+      }
+
+      .tool-body h2{
+        font-size:1.78rem;
+      }
+
+      .tool-body p{
+        font-size:1.04rem;
+      }
+    }
+
+    @media (max-width: 980px){
+      .header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .panels{
+        grid-template-columns:1fr;
+      }
+
+      .panel{
+        min-height:auto;
+      }
+
+      .stack{
+        grid-template-rows:auto auto;
+      }
+
+      .heli-mi24{
+        width:72vw;
+        height:42vw;
+        right:-8vw;
+        top:2vh;
+        opacity:.60;
+      }
+
+      .heli-mi17{
+        width:72vw;
+        height:42vw;
+        left:-4vw;
+        bottom:6vh;
+        opacity:.62;
+      }
+
+      .diagram-right{
+        width:44vw;
+        height:34vw;
+        right:4%;
+      }
+    }
+
+    @media (max-width: 640px){
+      .container{
+        width:min(var(--container), calc(100% - 24px));
+        padding-top:18px;
+      }
+
+      .brand{
+        gap:12px;
+      }
+
+      .brand-icon{
+        width:52px;
+        height:52px;
+        border-radius:16px;
+      }
+
+      .brand-text h1{
+        font-size:2.08rem;
+      }
+
+      .brand-text p{
+        font-size:.97rem;
+      }
+
+      .brand-types{
+        font-size:1rem;
+      }
+
+      .badge{
+        padding:10px 14px;
+        font-size:.92rem;
+      }
+
+      .panel{
+        padding:24px 18px;
+        border-radius:26px;
+      }
+
+      .tool{
+        gap:16px;
+        padding-top:24px;
+      }
+
+      .tool-icon{
+        width:56px;
+        height:56px;
+        border-radius:16px;
+      }
+
+      .tool-body h2{
+        font-size:1.52rem;
+      }
+
+      .tool-body p{
+        font-size:.98rem;
+      }
+
+      .btn{
+        width:100%;
+        justify-content:center;
+      }
+
+      .heli{
+        opacity:.54;
+      }
+
+      .diagram-left,
+      .diagram-right{
+        opacity:.07;
       }
     }
   </style>
 </head>
 <body>
-  <div class="bg-layer">
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-    <div class="bg-glow bg-glow-3"></div>
-    
-    <!-- Замени пути на свои локальные изображения -->
-    <img src="images/mi-24.jpg" alt="Mi-24" class="helicopter helicopter-mi24">
-    <img src="images/mi-17.jpg" alt="Mi-17" class="helicopter helicopter-mi17">
-  </div>
+  <div class="page">
+    <div class="bg-base"></div>
+    <div class="noise"></div>
+    <div class="grid"></div>
+    <div class="fog"></div>
+    <div class="fog-pro"></div>
+    <div class="pro-light"></div>
 
-  <div class="container">
-    <header class="header">
-      <div class="glass-card header-card">
-        <div class="header-top">
-          <div class="logo-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
-            </svg>
-          </div>
-          <h1 class="header-title">Mi Avionics Tools</h1>
-        </div>
-        <p class="header-desc">
-          Инженерные инструменты и электронные технологические карты<br>
-          <span class="highlight">Ми-8 / Ми-17 / Ми-24</span>
-        </p>
-      </div>
+    <div class="particles" id="particles"></div>
 
-      <div class="glass-badge github-badge">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
-          <path d="M9 18c-4.51 2-5-2-7-2"/>
+    <div class="helicopters">
+      <div class="heli heli-mi17" id="mi17"></div>
+      <div class="heli heli-mi24" id="mi24"></div>
+    </div>
+
+    <div class="diagram-layer">
+      <div class="diagram-left"></div>
+
+      <div class="diagram-right">
+        <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g fill="none" stroke="rgba(32,32,46,.72)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="58" y1="52" x2="158" y2="52"/>
+            <line x1="108" y1="16" x2="108" y2="110"/>
+            <rect x="96" y="58" width="24" height="44" rx="8"/>
+            <line x1="108" y1="102" x2="108" y2="150"/>
+            <line x1="40" y1="170" x2="420" y2="170"/>
+            <line x1="290" y1="58" x2="436" y2="58"/>
+            <line x1="363" y1="20" x2="363" y2="106"/>
+            <ellipse cx="363" cy="74" rx="18" ry="24"/>
+            <circle cx="363" cy="64" r="6"/>
+            <line x1="318" y1="170" x2="460" y2="170"/>
+            <path d="M80 250 L330 250 L380 224 L432 224" />
+            <path d="M125 250 L125 292" />
+            <path d="M325 250 L325 292" />
+            <path d="M80 292 L338 292" />
+            <path d="M432 224 L458 206" />
+            <path d="M458 206 L477 218" />
+            <path d="M458 206 L458 182" />
+          </g>
         </svg>
-        Единый вход · GitHub Pages
       </div>
-    </header>
+    </div>
 
-    <main class="tools-grid">
-      <article class="glass-card tool-card">
-        <div class="tool-content">
-          <div class="tool-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m12 14 4-4"/>
-              <path d="M3.34 19a10 10 0 1 1 17.32 0"/>
-            </svg>
-          </div>
-          <div class="tool-info">
-            <h2 class="tool-title">СПУУ-52-3</h2>
-            <p class="tool-desc">Расчёт передаточных чисел и параметров: температура (ΔT), разряжение, высота по гипсометрической таблице.</p>
-            <a href="./page-spu52-3.html" class="tool-btn">
-              Открыть
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </article>
+    <div class="overlay"></div>
 
-      <article class="glass-card tool-card">
-        <div class="tool-content">
-          <div class="tool-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-          </div>
-          <div class="tool-info">
-            <h2 class="tool-title">СПУУ-52</h2>
-            <p class="tool-desc">Расчёт передаточных чисел и параметров: температура (ΔT), разряжение, высота по гипсометрической таблице.</p>
-            <a href="./page-spu52.html" class="tool-btn">
-              Открыть
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </article>
-
-      <article class="glass-card tool-card">
-        <div class="tool-content">
-          <div class="tool-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-            </svg>
-          </div>
-          <div class="tool-info">
-            <h2 class="tool-title">ВУАП-1</h2>
-            <p class="tool-desc">Инженерная инструкция по регламенту: коэффициенты усиления, крутизны, передаточные числа и центровка.</p>
-            <a href="./page-vuap-1.html" class="tool-btn">
-              Открыть
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </article>
-
-      <article class="glass-card tool-card">
-        <div class="tool-content">
-          <div class="tool-icon-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <main class="container">
+      <header class="header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
             </svg>
           </div>
-          <div class="tool-info">
-            <h2 class="tool-title">АП-34Б — автопилот</h2>
-            <p class="tool-desc">Проверки и регулировки автопилота АП-34Б: остаточный сигнал, коэффициенты усиления, скорость согласования, передаточные числа по углу, высоте, угловой и воздушной скорости, изодрому (ωᵧ).</p>
-            <a href="./page-ap34b.html" class="tool-btn">
-              Открыть
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-              </svg>
-            </a>
+
+          <div class="brand-text">
+            <h1>Mi Avionics Tools</h1>
+            <p>Инженерные инструменты и электронные технологические карты</p>
+            <div class="brand-types">Ми-8 / Ми-17 / Ми-24</div>
           </div>
         </div>
-      </article>
-    </main>
 
-    <footer class="glass-card footer">
-      <p>
-        Если при открытии появляется 404 — значит имя файла или папки не совпадает.<br>
-        <span class="muted">Просто скажи, что именно не открывается, и правка будет одна строка.</span>
-      </p>
-    </footer>
+        <div class="badge">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 1 0 10 10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          GitHub Pages
+        </div>
+      </header>
+
+      <section class="panels">
+        <div class="panel panel-left">
+          <div class="panel-glow"></div>
+
+          <div class="stack">
+            <article class="tool orange">
+              <div class="tool-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m12 14 4-4"/>
+                  <path d="M3.34 19a10 10 0 1 1 17.32 0"/>
+                </svg>
+              </div>
+
+              <div class="tool-body">
+                <h2>СПУУ-52-3</h2>
+                <p>Расчёт передаточных чисел и параметров: температура (ΔT), разряжение, высота по гипсометрической таблице.</p>
+                <a class="btn orange" href="./page-spu52-3.html">
+                  Открыть
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+
+            <article class="tool green">
+              <div class="tool-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="m16 8-8 8"/>
+                  <path d="m8 8 8 8"/>
+                </svg>
+              </div>
+
+              <div class="tool-body">
+                <h2>ВУАП-1</h2>
+                <p>Инженерная инструкция по регламенту: коэффициенты усиления, крутизны, передаточные числа и центровка.</p>
+                <a class="btn green" href="./page-vuap-1.html">
+                  Открыть
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="panel panel-right">
+          <div class="panel-glow"></div>
+
+          <div class="stack">
+            <article class="tool purple">
+              <div class="tool-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <path d="M3.3 7 12 12l8.7-5"/>
+                  <path d="M12 22V12"/>
+                </svg>
+              </div>
+
+              <div class="tool-body">
+                <h2>СПУУ-52</h2>
+                <p>Расчёт передаточных чисел и параметров: температура (ΔT), разряжение, высота по гипсометрической таблице.</p>
+                <a class="btn purple" href="./page-spu52.html">
+                  Открыть
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+
+            <article class="tool blue">
+              <div class="tool-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+                </svg>
+              </div>
+
+              <div class="tool-body">
+                <h2>АП-34Б — автопилот</h2>
+                <p>Проверки и регулировки автопилота АП-34Б: остаточный сигнал, коэффициенты усиления, скорость согласования, передаточные числа по углу, высоте, угловой и воздушной скорости, изодрому (ωᵧ).</p>
+                <a class="btn blue" href="./page-ap34b.html">
+                  Открыть
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        Если при открытии появляется 404 — значит имя файла или папки не совпадает.
+      </div>
+    </main>
   </div>
+
+  <script>
+    (() => {
+      const mi17 = document.getElementById("mi17");
+      const mi24 = document.getElementById("mi24");
+      const particles = document.getElementById("particles");
+
+      for (let i = 0; i < 26; i++) {
+        const p = document.createElement("span");
+        const size = Math.random() * 4 + 2;
+        p.style.width = size + "px";
+        p.style.height = size + "px";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.top = Math.random() * 100 + "vh";
+        p.style.animationDuration = (Math.random() * 14 + 10) + "s";
+        p.style.animationDelay = (Math.random() * 8) + "s";
+        particles.appendChild(p);
+      }
+
+      window.addEventListener("mousemove", (e) => {
+        const x = e.clientX / window.innerWidth - 0.5;
+        const y = e.clientY / window.innerHeight - 0.5;
+
+        if (mi17) {
+          mi17.style.transform = `translate(${x * 26}px, ${y * 18}px) scale(1.04)`;
+        }
+
+        if (mi24) {
+          mi24.style.transform = `translate(${x * -24}px, ${y * -16}px) scale(1.03)`;
+        }
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>
