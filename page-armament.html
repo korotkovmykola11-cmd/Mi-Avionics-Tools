@@ -663,70 +663,7 @@
             { number: 14, operation: "Выключить ранее включенные выключатели и АЗС. Обесточьте вертолет." }
           ]
         },
-        {
-          id: "aso2v-2",
-          title: "Проверка АСО-2В (2 комплекта)",
-          steps: [
-            { number: 1, operation: "Снять с балок кассеты и установить взамен них кассеты – пробники." },
-            { number: 2, operation: "Включить питание вертолета по = 27 В." },
-            { number: 3, operation: "На левом пульте АЗС включить ОПРЫСК. СТЕКОЛ и ВНЕШНЯЯ ПОДВЕСКА АВАР. СБРОС АСО-2В.", requirements: "На кассетах – пробниках должны загореться красные лампы." },
-            { number: 4, operation: "Установить редуктор датчика импульсов в исходное положение.", requirements: "Красная лампа на кассете должна погаснуть.", note: "ПРИМЕЧАНИЕ: Если после отработки полной серии красная лампа не загорелась, необходимо провернуть червяк по часовой стрелке до установки датчика импульсов в исходное положение. Красная лампа должна загореться и погаснуть." },
-            { number: 5, operation: "Установить переключатель СЕРИЯ на ПУ в положение 4, переключатель ИНТЕРВАЛ - в положение 2, левый выключатель балки - в положение 1 и нажать кнопку СБРОС.", requirements: "На ПУ должна загореться лампа 1 и поочередно с интервалом в 2 с должны загораться и гаснуть лампы с номерами 1...4 на кассете - пробнике. Одновременно с погасанием четвертой лампы должна погаснуть лампа 1 на пульте." },
-            { number: 6, operation: "Нажать кнопку \"СБРОС\" три раза.", requirements: "На ПУ при каждом нажатии должна загореться и после отработки серии гаснуть лампа 1, а на кассете – пробнике балки 1 должны последовательно загораться и гаснуть с интервалом 2 с по 4 лампы с номерами 5 ... 8, 9 ... 12, 13 ... 16." },
-            { number: 7, operation: "Установить переключатель СЕРИЯ на ПУ в положение 16, переключатель ИНТЕРВАЛ - в положение 4, и нажать кнопку СБРОС.", requirements: "На ПУ должна загореться лампа 1 и поочередно с интервалом в 4 с должны загораться и гаснуть лампы с номерами 17 ... 32 на кассете - пробнике. По окончании отработки серии должна загореться красная лампа на кассете - пробнике и погаснуть сигнальная лампа \"1\" на пульте." },
-            { number: 8, operation: "Установить датчик импульсов балки в исходное положение." },
-            { number: 9, operation: "Проверить работоспособность 2-й балки комплекта аналогично, выключив выключатель ЛЕВ. Б и включив ПР. Б." },
-            { number: 10, operation: "Проверить работоспособность балок второго комплекта, используя второй ПУ.", note: "ПРИМЕЧАНИЕ: При проверке одного из комплектов проверить параллельную работу балок." },
-            { number: 11, operation: "Установить датчики импульсов всех балок в исходное положение." },
-            { number: 12, operation: "Снять кассеты – пробники и установить взамен них штатные кассеты." },
-            { number: 13, operation: "Выключить ранее включенные выключатели и АЗС. Обесточьте вертолет." }
-          ]
-        },
-        {
-          id: "l166v",
-          title: "Проверка Л-166В",
-          steps: [
-            { number: 1, operation: "Подключить к вертолету наземное питание по переменному и постоянному току и проверить величины питающих напряжений", requirements: "= 27 В ± 10 %\n3 ф. ~ 208 В ± 5 %\n1 ф. ~ 115 В ± 5 %" },
-            { number: 2, operation: "На правом пульте АЗС включить МЕХАНИЗМ КРЕСЛА ЛЕТЧИК Л166." },
-            { number: 3, operation: "Установить переключатель ПИТАНИЕ на ПУ в положение КОНТРОЛЬ ЛАМП.", requirements: "Лампы РАБОТА и ОТКАЗ должны гореть" },
-            { number: 4, operation: "Установить переключатель ПИТАНИЕ в верхнее положение.", requirements: "Через 2 ... 5 мин. на ПУ должна загореться зеленая лампа РАБОТА (при исправности аппаратуры). При неисправности загорится красная лампа ОТКАЗ." },
-            { number: 5, operation: "После окончания проверки переключатель ПИТАНИЕ установить в нейтральное положение и обесточить вертолет." }
-          ]
-        },
-        {
-          id: "nrs-b8v20",
-          title: "Проверка системы НРС под током (Б8В20-А)",
-          steps: [
-            { number: 1, operation: "Подключить к вертолету наземное питание по постоянному току и проверить величину питающего напряжения", requirements: "= 27 В ± 10 %" },
-            { number: 2, operation: "Подключить разъемы жгута пульта ПКЦ-РС к контрольному разъему блока Б8В20-А." },
-            { number: 3, operation: "Подключить вилку питания ПКЦ-РС к розетке = 27 В. Включить тумблер СЕТЬ.", requirements: "Должна загореться лампа СЕТЬ (в противном случае поменяйте полярность подключения вилки питания)" },
-            { number: 4, operation: "На ПКЦ-РС нажать кнопку САМОКОНТРОЛЬ. ПРОВЕРКА", requirements: "Должны гореть все лампы на табло ПКЦ-РС" },
-            { number: 5, operation: "Выключить и включить тумблер СЕТЬ.", requirements: "Все лампы на табло ПКЦ-РС должны погаснуть" },
-            { number: 6, operation: "Перед проверкой убедиться, что установка необходимого режима выполнена в соответствии с гравировкой на разъемах.", requirements: "При многоканальном режиме разъем \"О\" должен находиться перед разъемом \"М\" (по полету), а при одноканальном – сзади." },
-            { number: 7, operation: "На правом пульте АЗС включить С-13 СИГНАЛ ВООРУЖ (СШ-45 СИГНАЛ ВООРУЖ) (на Ми-24П – СИГНАЛ., С-13 СТВОРКИ (СШ-45 СТВОРКИ) и УПРАВЛ)." },
-            { number: 8, operation: "На левом пульте АЗС включить БЛОКИ КОНТЕЙНЕРЫ (на Ми-24П – НРС) и ШАССИ СИГНАЛ." },
-            { number: 9, operation: "Включить АЗС НРС на РК ГУВ (при наличии)." },
-            { number: 10, operation: "На ПУВЛ переключатель рода работ установить в положение НРС, включить УПРАВЛ. ОГНЕМ.\nНа ПППЛ включить ПОДСВЕТ ЩИТКА СПЕЦОБОРУД.\nНа ЛПО включить ПРЕДОХРАНИТЕЛЬНЫЕ ВЫКЛЮЧАТЕЛИ.", requirements: "На ПУВЛ должны загореться табло положения ПУС ЛЕВ, ПРАВ (1, 2)." }
-          ]
-        },
-        {
-          id: "nrs-b8v20-single",
-          title: "Одноканальный режим (Б8В20-А)",
-          steps: [
-            { number: 1, operation: "На ПУВЛ переключатель ОЧЕРЕДЬ НРС (на Ми-24П – ОЧЕРЕДЬ) установить в положение КОРОТКАЯ." },
-            { number: 2, operation: "Нажать кнопку РС на ручке управления летчика 10 раз.", requirements: "После каждого нажатия на ПКЦ-РС должны последовательно загореться по 2 лампы." },
-            { number: 3, operation: "На ПКЦ-РС выключить и включить тумблер СЕТЬ", requirements: "Все лампы на табло ПКЦ-РС должны погаснуть" },
-            { number: 4, operation: "На левом пульте АЗС выключить и включить БЛОКИ КОНТЕЙНЕРЫ (на Ми-24П – НРС).", note: "ПРИМЕЧАНИЕ: В зависимости от модификации вертолета Ми-24П необходимо выключить и включить УПРАВЛ." },
-            { number: 5, operation: "Взвести ПУСы, нажав кнопку ВЗВЕДЕНИЕ ПУС на ПУВЛ.", requirements: "На ПУВЛ должны загореться табло положения ПУС ЛЕВ, ПРАВ (1, 2)." },
-            { number: 6, operation: "На ПУВЛ переключатель ОЧЕРЕДЬ НРС (на Ми-24П – ОЧЕРЕДЬ) установить в положение СРЕДНЯЯ." },
-            { number: 7, operation: "Нажать кнопку РС на ручке управления летчика 5 раз.", requirements: "После каждого нажатия на ПКЦ-РС должны загореться по 5 ламп." },
-            { number: 8, operation: "Повторить п.п. 3 ... 5." },
-            { number: 9, operation: "На ПУВЛ переключатель ОЧЕРЕДЬ НРС (на Ми-24П – ОЧЕРЕДЬ) установить в положение ДЛИННАЯ." },
-            { number: 10, operation: "Нажать кнопку РС на ручке управления летчика 2 раза.", requirements: "После каждого нажатия на ПКЦ-РС должны загореться по 10 ламп." },
-            { number: 11, operation: "Аналогично проверить работоспособность остальных блоков." }
-          ]
-        },
-        {
+      {
           id: "nrs-mi24d-no-blocks",
           title: "Проверка НРС без блоков Ми-24Д",
           steps: [
@@ -734,17 +671,17 @@
               number: 1,
               operation: "Подключить жгуты пульта проверки ПКЦРС: сначала к правому борту, затем к левому борту.",
               images: [
-                { src: "images/nrs/pkcrs-panel-overview.jpg", alt: "Пульт ПКЦРС" },
-                { src: "images/nrs/pkcrs-front-view.jpg", alt: "Пульт ПКЦРС фронтальный вид" },
-                { src: "images/nrs/connector-III.jpg", alt: "Разъём III" },
-                { src: "images/nrs/connectors-T-IV.jpg", alt: "Разъёмы T и IV" },
-                { src: "images/nrs/connectors-detail.jpg", alt: "Детали разъёмов" },
-                { src: "images/nrs/izdelie-b8-connector.jpg", alt: "Разъём Б-8М" },
-                { src: "images/nrs/izdelie-b8-connection.jpg", alt: "Подключение Б-8М" },
-                { src: "images/nrs/mi24d-both-sides.jpg", alt: "Ми-24Д оба борта" },
-                { src: "images/nrs/cable-harness.jpg", alt: "Жгут ПКЦРС" },
-                { src: "images/nrs/cable-connector-cap.jpg", alt: "Разъём с крышкой" },
-                { src: "images/nrs/cable-connector-side.jpg", alt: "Разъём сбоку" }
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1-MGP96pba4StjxBKPgXQ5ROorWoqei5.jpg", alt: "Пульт ПКЦРС" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5-yFU8WIhXfe9kpEbi2JL8l7H9spoLyT.jpg", alt: "Пульт ПКЦРС фронтальный вид" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2-pmAgZ8mwG5yKg3E3yZUzlNyB50ck3Q.jpg", alt: "Разъём III" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3-8UHuPv6rW2MdmmiNIvPOmBRC89ck14.jpg", alt: "Разъёмы T и IV" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4-1FGH0LVwjWberJOsPkK2QVaFyxTng0.jpg", alt: "Детали разъёмов" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/6-xDdiU5FaIsjHcLmhgJ3RQxan6JpeQX.jpg", alt: "Разъём Б-8М" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9-HtAWEUV0EEHjNCnYI8EJ6SWorEFqMM.jpg", alt: "Подключение Б-8М" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/11-Ixpmqml8L10LWp6vL45lSvypdyE6Fo.jpg", alt: "Ми-24Д оба борта" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/10-1jpf3EFllifZBaaQnGkFYVFaOfQJBs.jpg", alt: "Жгут ПКЦРС" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/7-URCIPQ2PCPWNaD3EzkpLwV0wyRs8qv.jpg", alt: "Разъём с крышкой" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8-q4b1Whrg1OFG593sb8naiCqANwS4YM.jpg", alt: "Разъём сбоку" }
               ]
             },
             {
@@ -752,14 +689,14 @@
               operation: "Проверка цепей пуска НРС в режиме КОРОТКАЯ.\n\nПри нажатии кнопки РС в положении переключателя КОРОТКАЯ:\n- с внешних БД (1 и 4): сход 4 ракет;\n- с внутренних БД (2 и 3): сход 3 ракет.\n\nРасположение балочных держателей: БД-1 и БД-4 — внешние, БД-2 и БД-3 — внутренние.\n\nПорядок срабатывания цепей при последовательных нажатиях:\n1-е нажатие: БД внешние — 4, БД внутренние — 3;\n2-е нажатие: БД внешние — 8, БД внутренние — 7;\n3-е нажатие: БД внешние — 12, БД внутренние — 11;\n4-е нажатие: БД внешние — 16, БД внутренние — 16;\n5-е нажатие: БД внешние — 19, БД внутренние — 20;\n6-е нажатие: БД внешние — 23, БД внутренние — 24;\n7-е нажатие: БД внешние — 27, БД внутренние — 28;\n8-е нажатие: БД внешние и внутренние — 32 (полный расход боекомплекта).",
               requirements: "Контролировать последовательность загорания индикаторов на панели ПКЦ-РС. Количество загоревшихся индикаторов должно соответствовать числу сошедших ракет.",
               images: [
-                { src: "images/nrs/pkc-rs-step1.jpg", alt: "ПКЦ-РС шаг 1" },
-                { src: "images/nrs/pkc-rs-step2.jpg", alt: "ПКЦ-РС шаг 2" },
-                { src: "images/nrs/pkc-rs-step3.jpg", alt: "ПКЦ-РС шаг 3" },
-                { src: "images/nrs/pkc-rs-step4.jpg", alt: "ПКЦ-РС шаг 4" },
-                { src: "images/nrs/pkc-rs-step5.jpg", alt: "ПКЦ-РС шаг 5" },
-                { src: "images/nrs/pkc-rs-step6.jpg", alt: "ПКЦ-РС шаг 6" },
-                { src: "images/nrs/pkc-rs-step7.jpg", alt: "ПКЦ-РС шаг 7" },
-                { src: "images/nrs/pkc-rs-step8.jpg", alt: "ПКЦ-РС шаг 8" }
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/12-cV2jnPv8yxtpgYezdb1nDiRMPnXZcg.jpg", alt: "ПКЦ-РС шаг 1" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/13-fU8roDtQfdhsNCVkNC1rULNa4kddwg.jpg", alt: "ПКЦ-РС шаг 2" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/14-x09UjoK3SwWS8PPcXrRT55fNdfp9pG.jpg", alt: "ПКЦ-РС шаг 3" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/15-pZu9FuD7PoXOAmic25Ly6eAWJSvhJi.jpg", alt: "ПКЦ-РС шаг 4" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1-4KXr8Y2jrLAKluGnonKmCrF0BNyCNv.jpg", alt: "ПКЦ-РС шаг 5" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2-dth5RmVKFu4SLFi5SlKuAhAyyqJnm3.jpg", alt: "ПКЦ-РС шаг 6" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3-EH3DtGAYWuIKNkVv09HG4AxkvCrHSV.jpg", alt: "ПКЦ-РС шаг 7" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4-SxT4QkZeAUBnmFkcDW4cBqp6QCXmtf.jpg", alt: "ПКЦ-РС шаг 8" }
               ]
             },
             {
@@ -767,10 +704,10 @@
               operation: "Проверка цепей пуска НРС в режиме СРЕДНЯЯ.\n\nПри нажатии кнопки РС в положении переключателя СРЕДНЯЯ:\n- с внешних БД (1 и 4): сход 8 ракет;\n- с внутренних БД (2 и 3): сход 7 ракет.\n\nРасположение балочных держателей: БД-1 и БД-4 — внешние, БД-2 и БД-3 — внутренние.\n\nПорядок срабатывания цепей при последовательных нажатиях:\n1-е нажатие: БД внешние — 8, БД внутренние — 7;\n2-е нажатие: БД внешние — 16, БД внутренние — 16;\n3-е нажатие: БД внешние — 24, БД внутренние — 23;\n4-е нажатие: 32 — полный расход боекомплекта.",
               requirements: "Контролировать последовательность загорания индикаторов на панели ПКЦ-РС. Количество загоревшихся индикаторов должно соответствовать числу сошедших ракет.",
               images: [
-                { src: "images/nrs/pkc-rs-medium-step1.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 1" },
-                { src: "images/nrs/pkc-rs-medium-step2.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 2" },
-                { src: "images/nrs/pkc-rs-medium-step3.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 3" },
-                { src: "images/nrs/pkc-rs-medium-step4.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 4" }
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1-7PAKU1s2GUIPCUq69FN7W2z4chFEU2.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 1" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2-RibZLxpSJPVkiPNk9JbBOYqmOCpao9.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 2" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3-oU0tNZGPAh5XRK5kNuJfFXuT8RMYVb.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 3" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4-wyDAht8LMYcxKwledPVMWbmAsQHuHb.jpg", alt: "ПКЦ-РС СРЕДНЯЯ шаг 4" }
               ]
             },
             {
@@ -778,8 +715,8 @@
               operation: "Проверка цепей пуска НРС в режиме ДЛИННАЯ.\n\nПри нажатии кнопки РС в положении переключателя ДЛИННАЯ:\n- с внешних БД (1 и 4): сход 16 ракет;\n- с внутренних БД (2 и 3): сход 16 ракет.\n\nРасположение балочных держателей: БД-1 и БД-4 — внешние, БД-2 и БД-3 — внутренние.\n\nПорядок срабатывания цепей при последовательных нажатиях:\n1-е нажатие: БД внешние — 16, БД внутренние — 16;\n2-е нажатие: 32 — полный расход боекомплекта.",
               requirements: "Контролировать последовательность загорания индикаторов на панели ПКЦ-РС. Количество загоревшихся индикаторов должно соответствовать числу сошедших ракет.",
               images: [
-                { src: "images/nrs/pkc-rs-long-step1.jpg", alt: "ПКЦ-РС ДЛИННАЯ шаг 1" },
-                { src: "images/nrs/pkc-rs-long-step2.jpg", alt: "ПКЦ-РС ДЛИННАЯ шаг 2" }
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1-9XFYttPGdPyzwpVM0rxCuMt5ZNHsVj.jpg", alt: "ПКЦ-РС ДЛИННАЯ шаг 1" },
+                { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2-yyVuRfv2WX76n7zrkABBhraXeTv6VG.jpg", alt: "ПКЦ-РС ДЛИННАЯ шаг 2" }
               ]
             }
           ]
