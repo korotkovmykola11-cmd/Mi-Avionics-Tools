@@ -365,6 +365,61 @@
       font-size: 2.5rem;
       margin-bottom: 1rem;
     }
+
+    /* PUVL Gallery Section */
+    .puvl-gallery {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-top: 2rem;
+      padding: 1.5rem;
+    }
+
+    .puvl-gallery h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .puvl-images {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .puvl-images {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .puvl-image-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .puvl-image-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .puvl-image-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .puvl-image-card .caption {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: #f8fafc;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -385,6 +440,21 @@
     <div class="no-results" id="noResults" style="display: none;">
       <div class="no-results-icon">🔍</div>
       <p>Ничего не найдено</p>
+    </div>
+
+    <!-- PUVL Gallery -->
+    <div class="puvl-gallery">
+      <h2>Пульт управления вооружением летчика (ПУВЛ)</h2>
+      <div class="puvl-images">
+        <div class="puvl-image-card" onclick="openPuvlLightbox(0)">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/20231016_153613-aOGK7E8Ijwq8WSqn15xrPfM4qDmyC2.jpg" alt="ПУВЛ - реальное фото">
+          <div class="caption">ПУВЛ - реальное фото</div>
+        </div>
+        <div class="puvl-image-card" onclick="openPuvlLightbox(1)">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/%D0%9F%D0%A3%D0%92%D0%9B-PUcB1RM2NkO2nYQ2rawMY64FC2dM3K.jpg" alt="ПУВЛ - схема с нумерацией">
+          <div class="caption">ПУВЛ - схема с нумерацией элементов</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -788,6 +858,12 @@
       ]
     };
 
+    // PUVL images data
+    const puvlImages = [
+      { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/20231016_153613-aOGK7E8Ijwq8WSqn15xrPfM4qDmyC2.jpg", alt: "ПУВЛ - реальное фото" },
+      { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/%D0%9F%D0%A3%D0%92%D0%9B-PUcB1RM2NkO2nYQ2rawMY64FC2dM3K.jpg", alt: "ПУВЛ - схема с нумерацией" }
+    ];
+
     // State
     let checkedSteps = JSON.parse(localStorage.getItem('checkedSteps') || '{}');
     let currentLightboxImages = [];
@@ -905,6 +981,10 @@
       currentImageIndex = index;
       updateLightbox();
       lightbox.classList.add('open');
+    }
+
+    function openPuvlLightbox(index) {
+      openLightbox(puvlImages, index);
     }
 
     function closeLightbox() {
