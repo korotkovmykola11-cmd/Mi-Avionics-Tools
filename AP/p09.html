@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>АП-34Б · Пункт 5.8 · Проверка передаточного числа по высоте</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap');
@@ -830,578 +831,546 @@ body {
 }
 </style>
 </head>
-
 <body>
 <div class="bg-grid"></div>
-
 <div class="container">
-
-  <header class="page-header">
-    <div class="header-main">
-      <button class="back-btn" onclick="history.back()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
-      <div class="header-text">
-        <h1>Пункт 5.8. Проверка передаточного числа по высоте</h1>
-        <div class="doc-ref">АП-34Б | МИ-8 | Таблица 3</div>
-      </div>
-    </div>
-    <div class="header-actions">
-      <div class="date-display" id="currentDate"></div>
-      <button class="print-btn" onclick="window.print()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+<header class="page-header">
+<div class="header-main">
+<button class="back-btn" onclick="history.back()">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
+</button>
+<div class="header-text">
+<h1>Пункт 5.8. Проверка передаточного числа по высоте</h1>
+<div class="doc-ref">АП-34Б | МИ-8 | Таблица 3</div>
+</div>
+</div>
+<div class="header-actions">
+<div class="date-display" id="currentDate"></div>
+<button class="print-btn" onclick="window.print()">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect height="8" width="12" x="6" y="14"></rect></svg>
         Печать
       </button>
-    </div>
-  </header>
-
-  <section class="card">
-    <div class="intro-block">
-      <div class="intro-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+</div>
+</header>
+<section class="card">
+<div class="intro-block">
+<div class="intro-title">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
         Перед проверкой
       </div>
-      <div class="intro-text">
-        Перед проверкой необходимо выписать из паспорта на <strong>АП-34Б</strong>, АП-34Б серия 2 &sect;9 "Заметки по эксплуатации" крутизну корректора высоты <strong>Ккв (В/м)</strong>.<br><br>
-        В паспорте или в ПКД смотри систему крутизны характеристики корректора высоты  для разных высот (800, 1000 м и т.д.).<br><br>
-        В случае отсутствия в паспорте этой записи, необходимо произвести замер крутизны корректора высоты.
+<div class="intro-text">
+        Перед проверкой необходимо выписать из паспорта АП-34Б серия 2, §9 «Заметки по эксплуатации», крутизну корректора высоты <strong>Ккв (В/м)</strong>.<br/><br/>
+        В паспорте или в ПКД смотреть значения крутизны характеристики корректора высоты  для разных высот (800, 1000 м и т.д.).<br/><br/>
+        Если в паспорте этой записи нет, необходимо произвести замер крутизны корректора высоты.
       </div>
-    </div>
-
-    <!-- Разъяснение положений переключателя "10" -->
-    <div class="mode-comparison">
-      <div class="mode-card mode-delta">
-        <div class="mode-card-title">
-          <span class="mode-card-symbol">δ</span>
+</div>
+<!-- Разъяснение положений переключателя "10" -->
+<div class="mode-comparison">
+<div class="mode-card mode-delta">
+<div class="mode-card-title">
+<span class="mode-card-symbol">δ</span>
           Положение "δ" (дельта)
         </div>
-        <div class="mode-card-desc">
-          Режим измерения <strong>отклонения</strong> (передаточного числа).<br>
+<div class="mode-card-desc">
+          Режим измерения <strong>отклонения</strong> (передаточного числа).<br/>
           Используется для проверки передаточного числа по высоте.
         </div>
-        <div class="mode-card-use">Применяется в п.33-35 при проверке</div>
-      </div>
-      <div class="mode-card mode-deltah">
-        <div class="mode-card-title">
-          <span class="mode-card-symbol">ΔН</span>
+<div class="mode-card-use">Применяется в п.33-35 при проверке</div>
+</div>
+<div class="mode-card mode-deltah">
+<div class="mode-card-title">
+<span class="mode-card-symbol">ΔН</span>
           Положение "ΔН" (дельта H)
         </div>
-        <div class="mode-card-desc">
-          Режим измерения <strong>остаточного сигнала</strong> по высоте.<br>
+<div class="mode-card-desc">
+          Режим измерения <strong>остаточного сигнала</strong> по высоте.<br/>
           Используется для проверки остаточного сигнала канала.
         </div>
-        <div class="mode-card-use">Применяется в п.31-32 (начальная настройка)</div>
-      </div>
-    </div>
-
-    <div class="expert-note">
-      <div class="pencil-text">
-        <span class="pencil-important">Пример 1 (малые высоты 80-100м):</span><br>
-        Напряжение получили 16 В по вольтметру "3" при 100 м:<br>
-        <span class="pencil-formula">16 : 100 = 0,16 В/м</span><br>
-        Для 8 метров: <span class="pencil-formula">8 × 0,16 = 1,28 В</span><br><br>
-        
-        <span class="pencil-important">Пример 2 (большие высоты 800-1000м):</span><br>
-        Напряжение получили 8,8 В по вольтметру "3" при 1000 м:<br>
-        <span class="pencil-formula">8,8 : 1000 = 0,0088 В/м</span><br>
+<div class="mode-card-use">Применяется в п.31-32 (начальная настройка)</div>
+</div>
+</div>
+<div class="expert-note">
+<div class="pencil-text">
+<span class="pencil-important">Пример 1 (малые высоты 80-100м):</span><br/>
+        Напряжение получили 16 В по прибору "3" при 100 м:<br/>
+<span class="pencil-formula">16 : 100 = 0,16 В/м</span><br/>
+        Для 8 метров: <span class="pencil-formula">8 × 0,16 = 1,28 В</span><br/><br/>
+<span class="pencil-important">Пример 2 (большие высоты 800-1000м):</span><br/>
+        Напряжение получили 8,8 В по прибору "3" при 1000 м:<br/>
+<span class="pencil-formula">8,8 : 1000 = 0,0088 В/м</span><br/>
         Для 8 метров: <span class="pencil-formula">0,0088 × 8 = 0,0704 В</span>
-        
-        <div class="pencil-calc">
-          <span class="pencil-important">** Пример проверки:</span><br>
-          50 × 0,16 / 1,28 = 6,25<br>
-          - где 50 — значение полученное по вольтметру "3"<br>
-          - где 0,16 — крутизна (Ккв)<br>
-          - где 1,28 — напряжение для высоты 8 метров<br><br>
+<div class="pencil-calc">
+<span class="pencil-important">** Пример проверки:</span><br/>
+          50 × 0,16 / 1,28 = 6,25<br/>
+          - где 50 — значение полученное по прибору "3"<br/>
+          - где 0,16 — крутизна (Ккв)<br/>
+          - где 1,28 — напряжение для высоты 8 метров<br/><br/>
           Иногда фигурирует <span class="pencil-formula">1,44 В</span> для высоты 7-8 м (при Ккв=0,18)
         </div>
-      </div>
-    </div>
-
-    <div class="why-block">
-      <div class="why-block-title">Почему именно 7-8 метров?</div>
-      <div class="why-block-text">
+</div>
+</div>
+<div class="why-block">
+<div class="why-block-title">Почему именно 7-8 метров?</div>
+<div class="why-block-text">
         7-8 метров — это стандартная высота висения вертолёта МИ-8 при взлёте, посадке и выполнении работ. Автопилот должен стабильно удерживать именно эту высоту, поэтому проверка передаточного числа проводится на рабочем режиме. Корректор высоты КВ-11 наиболее точно работает в диапазоне малых высот.
       </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>
+</div>
+</section>
+<section class="card">
+<div class="section-header">
+<div class="section-icon">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22v-5"></path><path d="M9 8V2"></path><path d="M15 8V2"></path><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"></path></svg>
+</div>
+<div class="section-title">Подключение и настройка</div>
+</div>
+<table class="op-table">
+<thead>
+<tr>
+<th>П.</th>
+<th>Содержание операции и технические требования</th>
+<th>Работы при отклонениях</th>
+<th>Контр.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="op-num">29</td>
+<td>Подсоединить <strong>КПУ-3</strong> и высотомер к корректору высоты (допускается водяной манометр — рис.3).<br/><br/>Подсоединить пульт 6С2.702.007 с помощью жгута к разъёму "К" агрегата управления (рис.202).</td>
+<td class="op-deviation">—</td>
+<td class="op-check"><input type="checkbox"/></td>
+</tr>
+</tbody>
+</table>
+<div class="switch-panel">
+<div class="switch-panel-title">Начальные положения переключателей (для остаточного сигнала)</div>
+<div class="switch-panel-subtitle">Переключатель "10" в положении "ΔН" для проверки остаточного сигнала</div>
+<div class="switch-grid">
+<div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">среднее</span></div>
+<div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
+<div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"ОСТ.СИГН."</span></div>
+<div class="switch-item switch-highlight"><span class="switch-num">"10"</span><span class="switch-pos">"ΔН"</span></div>
+<div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
+<div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
+</div>
+</div>
+<div class="expert-note">
+<div class="pencil-text">
+<span class="pencil-important">Нейтраль:</span> Ручка <span class="pencil-formula">Шаг-Газ</span> в среднем (нейтральном) положении!
       </div>
-      <div class="section-title">Подключение и настройка</div>
-    </div>
-
-    <table class="op-table">
-      <thead>
-        <tr>
-          <th>П.</th>
-          <th>Содержание операции и технические требования</th>
-          <th>Работы при отклонениях</th>
-          <th>Контр.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="op-num">29</td>
-          <td>Подсоединить к корректору высоты <strong>КПУ-3</strong> и высотомер (допускается водяной манометр — рис.3).<br><br>Подсоединить пульт 6С2.702.007 с помощью жгута к разъёму "К" агрегата управления (рис.202).</td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="switch-panel">
-      <div class="switch-panel-title">Начальные положения переключателей (для остаточного сигнала)</div>
-      <div class="switch-panel-subtitle">Переключатель "10" в положении "ΔН" для проверки остаточного сигнала</div>
-      <div class="switch-grid">
-        <div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">среднее</span></div>
-        <div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
-        <div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"ОСТ.СИГН."</span></div>
-        <div class="switch-item switch-highlight"><span class="switch-num">"10"</span><span class="switch-pos">"ΔН"</span></div>
-        <div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
-        <div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
-      </div>
-    </div>
-
-    <div class="expert-note">
-      <div class="pencil-text">
-        <span class="pencil-important">Нейтраль:</span> Ручка <span class="pencil-formula">Шаг-Газ</span> в среднем (нейтральном) положении!
-      </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      </div>
-      <div class="section-title">Замер крутизны корректора высоты (Ккв)</div>
-    </div>
-
-    <table class="op-table">
-      <thead>
-        <tr>
-          <th>П.</th>
-          <th>Содержание операции</th>
-          <th>Работы при отклонениях</th>
-          <th>Контр.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="op-num">30</td>
-          <td>
-            Включить канал высоты кнопкой-лампочкой <strong>"Вкл.высота"</strong> на пульте управления.<br><br>
-            Задать от <strong>КПУ-3</strong> в корректор высоты разряжение порядка <strong>80-100 м</strong> (или 800-1000 м) высоты.<br><br>
-            По высотомеру замерить заданное разряжение и соответствующее ему напряжение по вольтметру "3".<br><br>
+</div>
+</section>
+<section class="card">
+<div class="section-header">
+<div class="section-icon">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+</div>
+<div class="section-title">Замер крутизны корректора высоты (Ккв)</div>
+</div>
+<table class="op-table">
+<thead>
+<tr>
+<th>П.</th>
+<th>Содержание операции</th>
+<th>Работы при отклонениях</th>
+<th>Контр.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="op-num">30</td>
+<td>
+            Включить канал высоты кнопкой-лампочкой <strong>"Вкл.высота"</strong> на пульте управления.<br/><br/>
+            Задать от <strong>КПУ-3</strong> в корректор высоты разряжение порядка <strong>80-100 м</strong> (или 800-1000 м) высоты.<br/><br/>
+            По высотомеру замерить заданное разряжение и соответствующее ему напряжение по прибору "3".<br/><br/>
             Крутизну корректора высоты (Ккв) подсчитать по формуле.
           </td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="formula-card">
-      <div class="formula-card-title">Формула крутизны</div>
-      <div class="formula-display">
-        <span>Ккв</span>
-        <span>=</span>
-        <span class="frac">
-          <span class="num">U</span>
-          <span class="denom">H</span>
-        </span>
-        <span class="formula-unit">[В/м]</span>
+<td class="op-deviation">—</td>
+<td class="op-check"><input type="checkbox"/></td>
+</tr>
+</tbody>
+</table>
+<div class="formula-card">
+<div class="formula-card-title">Формула крутизны</div>
+<div class="formula-display">
+<span>Ккв</span>
+<span>=</span>
+<span class="frac">
+<span class="num">U</span>
+<span class="denom">H</span>
+</span>
+<span class="formula-unit">[В/м]</span>
+</div>
+<div class="formula-legend">
+<strong>U</strong> — напряжение на вольтметре "3" (вольт)<br/>
+<strong>H</strong> — заданное разряжение в метрах высоты
       </div>
-      <div class="formula-legend">
-        <strong>U</strong> — напряжение на вольтметре "3" (вольт)<br>
-        <strong>H</strong> — заданное разряжение в метрах высоты
+</div>
+</section>
+<section class="card">
+<div class="section-header">
+<div class="section-icon">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
+</div>
+<div class="section-title">Проверка передаточного числа</div>
+</div>
+<table class="op-table">
+<thead>
+<tr>
+<th>П.</th>
+<th>Содержание операции</th>
+<th>Работы при отклонениях</th>
+<th>Контр.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="op-num">31</td>
+<td>Установить ручку <strong>Шаг-Газ</strong> в среднее положение (нейтраль).<br/><br/>
+Выполнить масштабирование так же, как при проверке передаточного числа по углу и угловой скорости. <strong>Процедура описана в соответствующих проверках.</strong><br/><br/>
+Переключатель "10" установить в положение <strong>"ΔН"</strong>.<br/><br/>
+Зафиксировать показание прибора "3". Оно должно быть <strong>не более ±15</strong>.</td>
+<td class="op-deviation">—</td>
+<td class="op-check"><input type="checkbox"/></td>
+</tr>
+<tr>
+<td class="op-num">32</td>
+<td>Включить канал высоты кнопкой <strong>"Вкл. высота"</strong>.<br/><br/>
+Зафиксировать показание прибора "3".<br/><br/>
+Разность показаний прибора "3" до и после включения канала высоты должна быть <strong>не более 20</strong>.</td>
+<td class="op-deviation">Если разность &gt; 20, произвести центровку потенциометром <strong>"ЦЕНТР-ВЫСОТА"</strong> на передней панели агрегата управления</td>
+<td class="op-check"><input type="checkbox"/></td>
+</tr>
+<tr>
+<td class="op-num">33</td>
+<td>Переключатель "9" поставить в положение <strong>"КУ"</strong>.<br/><br/>
+Потенциометром "2" установить нуль на приборе "3".<br/><br/>
+Переключатель "10" оставить в положении <strong>"ΔН"</strong>. В этом положении задаётся напряжение <strong>U</strong>, соответствующее выбранной высоте <strong>7–8 м</strong>.</td>
+<td class="op-deviation">—</td>
+<td class="op-check"><input type="checkbox"/></td>
+</tr>
+<tr>
+<td class="op-num">34</td>
+<td>Поворотом ручки задатчика высоты <strong>"6"</strong> <u>по часовой стрелке</u> в положении переключателя "10" <strong>"ΔН"</strong> выставить по прибору "3" напряжение <strong>U</strong>, соответствующее высоте <strong>7–8 м</strong>.<br/><br/>
+<strong>U не является постоянной величиной.</strong> Оно зависит от крутизны конкретного корректора высоты <strong>КВ-11</strong> и рассчитывается по формуле:<br/>
+<strong>U = Ккв × H</strong><br/><br/>
+Пример: если <strong>Ккв = 0,16 В/м</strong>, а <strong>H = 8 м</strong>, то:<br/>
+<strong>U = 0,16 × 8 = 1,28 В</strong>.<br/>
+Для другого КВ-11 значение U может быть другим, например 1,44 В, 0,96 В и т.д.<br/><br/>
+После выставления U перевести переключатель "10" в положение <strong>"δ"</strong> и снять новое показание прибора "3" — это значение <strong>A</strong> для расчёта передаточного числа.<br/><br/>
+Пример: после перевода в "δ" получили <strong>A = 45 дел.</strong><br/>
+<strong>i = (A × Ккв) / U = (45 × 0,16) / 1,28 = 5,63</strong>.<br/><br/>
+Допуск: <strong>4,00–9,30</strong>. Вывод: <strong>5,63 — ГОДЕН</strong>.<br/><br/>
+Подвижный индекс "В" индикатора должен при этом отклониться <strong>вниз</strong>.</td>
+<td class="op-deviation">Если не в допуске — регулировка потенциометром <strong>"ВЫСОТА"</strong> на передней панели агрегата управления</td>
+<td class="op-check"><input type="checkbox"/></td>
+</tr>
+<tr>
+<td class="op-num">35</td>
+<td>Перед включением канала высоты задатчик "6" повернуть по часовой стрелке до упора.<br/><br/>
+Проделать описанную выше проверку, задавая сигнал высоты поворотом ручки задатчика высоты "6" в <u>противоположную сторону</u> (против часовой стрелки).<br/><br/>
+Порядок остаётся тем же: в положении <strong>"ΔН"</strong> выставить расчётное напряжение <strong>U</strong>, затем перевести переключатель "10" в положение <strong>"δ"</strong> и снять показание <strong>A</strong>.<br/><br/>
+Подвижный индекс "В" индикатора должен при этом отклониться <strong>вверх</strong>.</td>
+<td class="op-deviation">—</td>
+<td class="op-check"><input type="checkbox"/></td>
+</tr>
+</tbody>
+</table>
+<div class="switch-panel">
+<div class="switch-panel-title">Положения переключателей для проверки передаточного числа (п.33–35)</div>
+<div class="switch-panel-subtitle">Сначала "10" = "ΔН" для выставления U, затем "10" = "δ" для снятия A</div>
+<div class="switch-grid">
+<div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">нуль на "3"</span></div>
+<div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
+<div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"КУ"</span></div>
+<div class="switch-item switch-highlight"><span class="switch-num">"10"</span><span class="switch-pos">"ΔН" → "δ"</span></div>
+<div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
+<div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
+</div>
+</div>
+</section>
+<section class="card">
+<div class="section-header">
+<div class="section-icon">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+</div>
+<div class="section-title">Формула и Таблица 3</div>
+</div>
+<div class="why-block">
+<div class="why-block-title">Важно по напряжению U</div>
+<div class="why-block-text">
+    В расчёте передаточного числа поле <strong>U</strong> — это напряжение, которое было выставлено по прибору "3" в режиме <strong>"ΔН"</strong> для высоты 7–8 м. Это не постоянное значение: оно зависит от конкретного корректора высоты <strong>КВ-11</strong> и его крутизны <strong>Ккв</strong>. После перевода переключателя "10" в положение <strong>"δ"</strong> снимается уже показание <strong>A</strong>.
+  </div>
+</div><div class="formula-card">
+<div class="formula-card-title">Передаточное число по высоте</div>
+<div class="formula-display">
+<span>i</span>
+<span>=</span>
+<span class="frac">
+<span class="num">A · Ккв</span>
+<span class="denom">U</span>
+</span>
+<span class="formula-unit">[% х.разд. / метр]</span>
+</div>
+<div class="formula-legend">
+<strong>A</strong> (дел) — показание прибора "3"<br/>
+<strong>U</strong> (в) — напряжение по прибору "3", соответствующее заданной высоте<br/>
+<strong>Ккв</strong> (в/м) — крутизна сигнала корректора высоты
       </div>
+</div>
+<table class="data-table">
+<caption>Таблица 3 — Передаточное число по высоте (МИ-8)</caption>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Канал</th>
+<th>Высота H, м</th>
+<th>Показание "3", дел.</th>
+<th>Передаточное число</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="font-weight: 700; color: var(--accent-cyan);">МИ-8</td>
+<td><div class="channel-cell"><span class="channel-badge">В</span> Высота</div></td>
+<td class="val">7–8</td>
+<td class="val">(6,65 ± 2,65) · Н</td>
+<td class="val">6,65 ± 2,65</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="card">
+<div class="section-header">
+<div class="section-icon">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="8" rx="2" width="8" x="2" y="2"></rect><rect height="8" rx="2" width="8" x="14" y="2"></rect><rect height="8" rx="2" width="8" x="8" y="14"></rect></svg>
+</div>
+<div class="section-title">Схема подключения (Рис. 202)</div>
+</div>
+<div class="scheme-wrapper">
+<svg class="scheme-svg" viewbox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+<!-- ПУЛЬТ -->
+<rect fill="#f8f9fa" height="140" rx="4" stroke="#2c3e50" stroke-width="2.5" width="220" x="50" y="80"></rect>
+<text fill="#2c3e50" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" x="160" y="130">ПУЛЬТ</text>
+<text fill="#555" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" x="160" y="155">6С2.702.007</text>
+<!-- Разъём К на пульте -->
+<rect fill="#fff" height="20" rx="2" stroke="#2c3e50" stroke-width="2" width="40" x="140" y="220"></rect>
+<rect fill="#2c3e50" height="15" width="10" x="155" y="240"></rect>
+<!-- АГРЕГАТ УПРАВЛЕНИЯ -->
+<rect fill="#f8f9fa" height="140" rx="4" stroke="#2c3e50" stroke-width="2.5" width="260" x="500" y="80"></rect>
+<text fill="#2c3e50" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" x="630" y="130">АГРЕГАТ УПРАВЛЕНИЯ</text>
+<text fill="#555" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" x="630" y="155">6С2.399.000</text>
+<!-- Разъёмы на агрегате -->
+<rect fill="#fff" height="40" rx="2" stroke="#2c3e50" stroke-width="2" width="30" x="530" y="220"></rect>
+<rect fill="#2c3e50" height="18" width="14" x="538" y="260"></rect>
+<rect fill="#fff" height="40" rx="2" stroke="#2c3e50" stroke-width="2" width="30" x="615" y="220"></rect>
+<rect fill="#2c3e50" height="18" width="14" x="623" y="260"></rect>
+<rect fill="#fff" height="40" rx="2" stroke="#2c3e50" stroke-width="2" width="30" x="700" y="220"></rect>
+<rect fill="#2c3e50" height="18" width="14" x="708" y="260"></rect>
+<!-- Кабель (рисуем ДО надписей) -->
+<path d="M 160 255 L 160 370 L 630 370 L 630 278" fill="none" stroke="#1a1a1a" stroke-width="4"></path>
+<!-- Линии к борту -->
+<line stroke="#2c3e50" stroke-width="3" x1="545" x2="545" y1="278" y2="390"></line>
+<line stroke="#2c3e50" stroke-width="3" x1="715" x2="715" y1="278" y2="390"></line>
+<!-- Скобка -->
+<path d="M 545 390 L 545 405 Q 545 415 555 415 L 705 415 Q 715 415 715 405 L 715 390" fill="none" stroke="#2c3e50" stroke-width="2"></path>
+<line stroke="#2c3e50" stroke-width="2" x1="630" x2="630" y1="415" y2="435"></line>
+<polygon fill="#2c3e50" points="630,445 622,430 638,430"></polygon>
+<!-- Надписи разъёмов (рисуем ПОСЛЕ линий с белой подложкой) -->
+<rect fill="#f8fafc" height="18" rx="2" width="30" x="145" y="290"></rect>
+<text fill="#2c3e50" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" x="160" y="303">"К"</text>
+<rect fill="#f8fafc" height="18" rx="2" width="36" x="527" y="290"></rect>
+<text fill="#2c3e50" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" x="545" y="303">"АУ"</text>
+<rect fill="#f8fafc" height="18" rx="2" width="30" x="615" y="290"></rect>
+<text fill="#2c3e50" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" x="630" y="303">"К"</text>
+<rect fill="#f8fafc" height="18" rx="2" width="36" x="697" y="290"></rect>
+<text fill="#2c3e50" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" x="715" y="303">"РА"</text>
+<text fill="#2c3e50" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" x="630" y="30">Рис. 202</text>
+</svg>
+</div>
+<div class="scheme-caption">
+<strong>Рис. 202.</strong> Схема подключения пульта 6С2.702.007 при проверке автопилота АП-34Б на вертолёте.
     </div>
-  </section>
-
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-      </div>
-      <div class="section-title">Проверка передаточного числа</div>
+</section>
+<section class="card">
+<div class="section-header">
+<div class="section-icon">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path></svg>
+</div>
+<div class="section-title">Схема подключения КПУ-3 (Рис. 3)</div>
+</div>
+<div class="scheme-wrapper">
+<svg class="scheme-svg" viewbox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="150" cy="80" fill="#f8f9fa" rx="70" ry="45" stroke="#2c3e50" stroke-width="2.5"></ellipse>
+<text fill="#555" font-family="Arial" font-size="13" text-anchor="middle" x="150" y="75">ВЫСОТОМЕР</text>
+<text fill="#888" font-family="Arial" font-size="10" text-anchor="middle" x="150" y="95">(водяной манометр)</text>
+<line stroke="#2c3e50" stroke-width="3" x1="150" x2="150" y1="125" y2="180"></line>
+<rect fill="#f8f9fa" height="70" rx="5" stroke="#2c3e50" stroke-width="2.5" width="140" x="450" y="50"></rect>
+<text fill="#2c3e50" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" x="520" y="80">КВ-11</text>
+<text fill="#555" font-family="Arial" font-size="11" text-anchor="middle" x="520" y="100">Корректор высоты</text>
+<line stroke="#2c3e50" stroke-width="3" x1="220" x2="450" y1="80" y2="80"></line>
+<rect fill="#e5e7eb" height="16" rx="4" stroke="#9ca3af" stroke-width="1" width="100" x="280" y="72"></rect>
+<rect fill="#f8f9fa" height="60" rx="5" stroke="#2c3e50" stroke-width="2.5" width="140" x="80" y="200"></rect>
+<text fill="#555" font-family="Arial" font-size="11" text-anchor="middle" x="150" y="225">КОМПЛЕКТ</text>
+<text fill="#2c3e50" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" x="150" y="245">КПУ-3</text>
+<line stroke="#10b981" stroke-width="3" x1="150" x2="150" y1="200" y2="185"></line>
+<polygon fill="#10b981" points="150,175 143,190 157,190"></polygon>
+<text fill="#2c3e50" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" x="150" y="290">ОТ КПУ-3</text>
+<rect fill="rgba(59,130,246,0.05)" height="100" rx="5" stroke="rgba(59,130,246,0.2)" width="220" x="420" y="180"></rect>
+<text fill="#3b82f6" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" x="530" y="205">ПРИМЕЧАНИЕ:</text>
+<text fill="#555" font-family="Arial" font-size="9" text-anchor="middle" x="530" y="225">При использовании водяного</text>
+<text fill="#555" font-family="Arial" font-size="9" text-anchor="middle" x="530" y="240">манометра учитывать перевод:</text>
+<text fill="#2c3e50" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="530" y="265">1,2 мм вод.ст. = 1 м высоты</text>
+</svg>
+</div>
+<div class="scheme-caption">
+<strong>Рис. 3.</strong> Схема подключения КПУ-3 к высотомеру и корректору высоты КВ-11.
     </div>
-
-    <table class="op-table">
-      <thead>
-        <tr>
-          <th>П.</th>
-          <th>Содержание операции</th>
-          <th>Работы при отклонениях</th>
-          <th>Контр.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="op-num">31</td>
-          <td>Установить ручку <strong>Шаг-Газ</strong> в среднее положение (нейтраль).<br><br>Выполняем маштабирование такое-же,как в передаточном числе по углу и угловой скорости<strong>Процедура описана в этих проверках</strong>.<br><br> <br><br>Переключатель "10" в положении <strong>"ΔН"</strong>.<br><br>Зафиксировать показание прибора "3", которое должно быть <strong>не более ±15</strong>.</td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">32</td>
-          <td>Включить канал высоты кнопкой <strong>"Вкл.высота"</strong>.<br><br>Зафиксировать показание прибора "3".<br><br>Разность в показаниях до и после включения канала высоты должна быть <strong>не более 20</strong>.</td>
-          <td class="op-deviation">Если разность > 20, произвести центровку потенциометром <strong>"ЦЕНТР-ВЫСОТА"</strong> на передней панели агрегата управления</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">33</td>
-          <td>Переключатель "9" поставить в положение <strong>"КУ"</strong>, потенциометром "2" установить нуль на приборе "3".<br><br>Переключатель "10" поставить в положение <strong>"δ"</strong>.</td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">34</td>
-          <td>Поворотом ручки задатчика высоты <strong>"6"</strong> <u>по часовой стрелке</u> задать сигнал по вольтметру "3", соответствующий <strong>7-8 м</strong> высоты.<br><br>Подвижный индекс "В" индикатора должен при этом отклониться <strong>вниз</strong>.<br><br>Показания прибора "3" должны соответствовать <strong>таблице 3</strong>.</td>
-          <td class="op-deviation">Если не в допуске — регулировка потенциометром <strong>"ВЫСОТА"</strong> на передней панели агрегата управления</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-        <tr>
-          <td class="op-num">35</td>
-          <td>Перед включением канала высоты задатчик "6" повернуть по часовой стрелке до упора.<br><br>Проделать описанную выше проверку, задавая сигнал высоты поворотом ручки задатчика высоты "6" в <u>противоположную сторону</u> (против часовой стрелки).<br><br>Подвижный индекс "В" индикатора должен при этом отклониться <strong>вверх</strong>.</td>
-          <td class="op-deviation">—</td>
-          <td class="op-check"><input type="checkbox"></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="switch-panel">
-      <div class="switch-panel-title">Положения переключателей для проверки передаточного числа (п.33-35)</div>
-      <div class="switch-panel-subtitle">Переключатель "10" переводится в положение "δ" для измерения отклонения</div>
-      <div class="switch-grid">
-        <div class="switch-item"><span class="switch-num">"2"</span><span class="switch-pos">нуль на "3"</span></div>
-        <div class="switch-item"><span class="switch-num">"8"</span><span class="switch-pos">"В"</span></div>
-        <div class="switch-item"><span class="switch-num">"9"</span><span class="switch-pos">"КУ"</span></div>
-        <div class="switch-item switch-highlight"><span class="switch-num">"10"</span><span class="switch-pos">"δ"</span></div>
-        <div class="switch-item"><span class="switch-num">"12"</span><span class="switch-pos">"КОМПЛЕКТ"</span></div>
-        <div class="switch-item"><span class="switch-num">"13"</span><span class="switch-pos">"0"</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-      </div>
-      <div class="section-title">Формула и Таблица 3</div>
-    </div>
-
-    <div class="formula-card">
-      <div class="formula-card-title">Передаточное число по высоте</div>
-      <div class="formula-display">
-        <span>i</span>
-        <span>=</span>
-        <span class="frac">
-          <span class="num">A · Ккв</span>
-          <span class="denom">U</span>
-        </span>
-        <span class="formula-unit">[% х.разд. / метр]</span>
-      </div>
-      <div class="formula-legend">
-        <strong>A</strong> (дел) — показание прибора "3"<br>
-        <strong>U</strong> (в) — напряжение по вольтметру "3", соответствующее заданной высоте<br>
-        <strong>Ккв</strong> (в/м) — крутизна сигнала корректора высоты
-      </div>
-    </div>
-
-    <table class="data-table">
-      <caption>Таблица 3 — Передаточное число по высоте (МИ-8)</caption>
-      <thead>
-        <tr>
-          <th>Тип</th>
-          <th>Канал</th>
-          <th>Высота, м</th>
-          <th>Показания "3", дел.</th>
-          <th>Передаточное число</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight: 700; color: var(--accent-cyan);">МИ-8</td>
-          <td><div class="channel-cell"><span class="channel-badge">В</span> Высота</div></td>
-          <td class="val">7 - 8</td>
-          <td class="val">(6,65 ± 2,65) · Н</td>
-          <td class="val">6,65 ± 2,65</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="8" x="2" y="2" rx="2"/><rect width="8" height="8" x="14" y="2" rx="2"/><rect width="8" height="8" x="8" y="14" rx="2"/></svg>
-      </div>
-      <div class="section-title">Схема подключения (Рис. 202)</div>
-    </div>
-
-    <div class="scheme-wrapper">
-      <svg class="scheme-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
-        <!-- ПУЛЬТ -->
-        <rect x="50" y="80" width="220" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
-        <text x="160" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">ПУЛЬТ</text>
-        <text x="160" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.702.007</text>
-        
-        <!-- Разъём К на пульте -->
-        <rect x="140" y="220" width="40" height="20" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="155" y="240" width="10" height="15" fill="#2c3e50"/>
-        
-        <!-- АГРЕГАТ УПРАВЛЕНИЯ -->
-        <rect x="500" y="80" width="260" height="140" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5" rx="4"/>
-        <text x="630" y="130" font-family="Arial, sans-serif" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">АГРЕГАТ УПРАВЛЕНИЯ</text>
-        <text x="630" y="155" font-family="Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle">6С2.399.000</text>
-        
-        <!-- Разъёмы на агрегате -->
-        <rect x="530" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="538" y="260" width="14" height="18" fill="#2c3e50"/>
-        
-        <rect x="615" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="623" y="260" width="14" height="18" fill="#2c3e50"/>
-        
-        <rect x="700" y="220" width="30" height="40" fill="#fff" stroke="#2c3e50" stroke-width="2" rx="2"/>
-        <rect x="708" y="260" width="14" height="18" fill="#2c3e50"/>
-        
-        <!-- Кабель (рисуем ДО надписей) -->
-        <path d="M 160 255 L 160 370 L 630 370 L 630 278" stroke="#1a1a1a" stroke-width="4" fill="none"/>
-        
-        <!-- Линии к борту -->
-        <line x1="545" y1="278" x2="545" y2="390" stroke="#2c3e50" stroke-width="3"/>
-        <line x1="715" y1="278" x2="715" y2="390" stroke="#2c3e50" stroke-width="3"/>
-        
-        <!-- Скобка -->
-        <path d="M 545 390 L 545 405 Q 545 415 555 415 L 705 415 Q 715 415 715 405 L 715 390" stroke="#2c3e50" stroke-width="2" fill="none"/>
-        <line x1="630" y1="415" x2="630" y2="435" stroke="#2c3e50" stroke-width="2"/>
-        <polygon points="630,445 622,430 638,430" fill="#2c3e50"/>
-        
-        <!-- Надписи разъёмов (рисуем ПОСЛЕ линий с белой подложкой) -->
-        <rect x="145" y="290" width="30" height="18" fill="#f8fafc" rx="2"/>
-        <text x="160" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
-        
-        <rect x="527" y="290" width="36" height="18" fill="#f8fafc" rx="2"/>
-        <text x="545" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"АУ"</text>
-        
-        <rect x="615" y="290" width="30" height="18" fill="#f8fafc" rx="2"/>
-        <text x="630" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"К"</text>
-        
-        <rect x="697" y="290" width="36" height="18" fill="#f8fafc" rx="2"/>
-        <text x="715" y="303" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">"РА"</text>
-        
-        <text x="630" y="30" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">Рис. 202</text>
-      </svg>
-    </div>
-    <div class="scheme-caption">
-      <strong>Рис. 202.</strong> Схема подключения пульта 6С2.702.007 при проверке автопилота АП-34Б на вертолёте.
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/></svg>
-      </div>
-      <div class="section-title">Схема подключения КПУ-3 (Рис. 3)</div>
-    </div>
-
-    <div class="scheme-wrapper">
-      <svg class="scheme-svg" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="150" cy="80" rx="70" ry="45" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
-        <text x="150" y="75" font-family="Arial" font-size="13" fill="#555" text-anchor="middle">ВЫСОТОМЕР</text>
-        <text x="150" y="95" font-family="Arial" font-size="10" fill="#888" text-anchor="middle">(водяной манометр)</text>
-        
-        <line x1="150" y1="125" x2="150" y2="180" stroke="#2c3e50" stroke-width="3"/>
-        
-        <rect x="450" y="50" width="140" height="70" rx="5" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
-        <text x="520" y="80" font-family="Arial" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">КВ-11</text>
-        <text x="520" y="100" font-family="Arial" font-size="11" fill="#555" text-anchor="middle">Корректор высоты</text>
-        
-        <line x1="220" y1="80" x2="450" y2="80" stroke="#2c3e50" stroke-width="3"/>
-        <rect x="280" y="72" width="100" height="16" rx="4" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-        
-        <rect x="80" y="200" width="140" height="60" rx="5" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2.5"/>
-        <text x="150" y="225" font-family="Arial" font-size="11" fill="#555" text-anchor="middle">КОМПЛЕКТ</text>
-        <text x="150" y="245" font-family="Arial" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">КПУ-3</text>
-        
-        <line x1="150" y1="200" x2="150" y2="185" stroke="#10b981" stroke-width="3"/>
-        <polygon points="150,175 143,190 157,190" fill="#10b981"/>
-        
-        <text x="150" y="290" font-family="Arial" font-size="12" fill="#2c3e50" text-anchor="middle" font-weight="bold">ОТ КПУ-3</text>
-        
-        <rect x="420" y="180" width="220" height="100" rx="5" fill="rgba(59,130,246,0.05)" stroke="rgba(59,130,246,0.2)"/>
-        <text x="530" y="205" font-family="Arial" font-size="10" fill="#3b82f6" text-anchor="middle" font-weight="bold">ПРИМЕЧАНИЕ:</text>
-        <text x="530" y="225" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">При использовании водяного</text>
-        <text x="530" y="240" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">манометра учитывать перевод:</text>
-        <text x="530" y="265" font-family="Arial" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="bold">1,2 мм вод.ст. = 1 м высоты</text>
-      </svg>
-    </div>
-    <div class="scheme-caption">
-      <strong>Рис. 3.</strong> Схема подключения КПУ-3 к высотомеру и корректору высоты КВ-11.
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="section-header">
-      <div class="section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-      </div>
-      <div class="section-title">Пульт 6С2.702.007</div>
-    </div>
-
-    <div class="pult-image-container">
-      <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image.png-CHI3qhhgSbOPYZ5BHSyJKFQxO4MR2U.jpeg" alt="Пульт 6С2.702.007" class="pult-image">
-      <div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "12", "13", потенциометры "2", "14", "15", задатчик высоты "6", вольтметр "3"</div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="calc-panel">
-      <div class="calc-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/></svg>
+</section>
+<section class="card">
+<div class="section-header">
+<div class="section-icon">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+</div>
+<div class="section-title">Пульт 6С2.702.007</div>
+</div>
+<div class="pult-image-container">
+<img alt="Пульт 6С2.702.007" class="pult-image" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image.png-CHI3qhhgSbOPYZ5BHSyJKFQxO4MR2U.jpeg"/>
+<div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "12", "13", потенциометры "2", "14", "15", задатчик высоты "6", вольтметр "3"</div>
+</div>
+</section>
+<section class="card">
+<div class="calc-panel">
+<div class="calc-title">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="20" rx="2" width="16" x="4" y="2"></rect><line x1="8" x2="16" y1="6" y2="6"></line><line x1="16" x2="16" y1="14" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path></svg>
         Калькулятор
       </div>
-
-      <div class="calc-tabs">
-        <button class="calc-tab active" onclick="showCalcTab('kkv')">Ккв (малые H)</button>
-        <button class="calc-tab" onclick="showCalcTab('kkv2')">Ккв (большие H)</button>
-        <button class="calc-tab" onclick="showCalcTab('voltage')">U (напряжение)</button>
-        <button class="calc-tab" onclick="showCalcTab('ratio')">i (передаточное)</button>
-      </div>
-
-      <div class="calc-content active" id="calc-kkv">
-        <div class="calc-grid">
-          <div class="calc-field">
-            <label>U — Напряжение (В)</label>
-            <input class="calc-input" type="number" id="kkv-u" placeholder="16" value="16" step="0.01" oninput="calcKkv()">
-          </div>
-          <div class="calc-field">
-            <label>H — Высота замера (м)</label>
-            <input class="calc-input" type="number" id="kkv-h" placeholder="100" value="100" oninput="calcKkv()">
-          </div>
-        </div>
-        <div class="calc-result">
-          <div class="calc-result-info">
-            <div class="result-label">Ккв =</div>
-            <div class="result-value" id="kkv-result">0.1600</div>
-          </div>
-          <span class="result-badge pass">В/м</span>
-        </div>
-        <div class="calc-steps" id="kkv-steps">
-          Расчёт: <strong>16 / 100 = 0.1600</strong> В/м<br>
+<div class="calc-tabs">
+<button class="calc-tab active" onclick="showCalcTab('kkv', this)">Ккв</button>
+<button class="calc-tab" onclick="showCalcTab('kkv2', this)">Ккв по большой H</button>
+<button class="calc-tab" onclick="showCalcTab('voltage', this)">U для ΔН</button>
+<button class="calc-tab" onclick="showCalcTab('ratio', this)">i по A и U</button>
+</div>
+<div class="calc-content active" id="calc-kkv">
+<div class="calc-grid">
+<div class="calc-field">
+<label>U — Напряжение (В)</label>
+<input class="calc-input" id="kkv-u" oninput="calcKkv()" placeholder="16" step="0.01" type="number" value="16"/>
+</div>
+<div class="calc-field">
+<label>H — Высота замера (м)</label>
+<input class="calc-input" id="kkv-h" oninput="calcKkv()" placeholder="100" type="number" value="100"/>
+</div>
+</div>
+<div class="calc-result">
+<div class="calc-result-info">
+<div class="result-label">Ккв =</div>
+<div class="result-value" id="kkv-result">0.1600</div>
+</div>
+<span class="result-badge pass">В/м</span>
+</div>
+<div class="calc-steps" id="kkv-steps">
+          Расчёт: <strong>16 / 100 = 0.1600</strong> В/м<br/>
           Напряжение для 8м: <strong>0.1600 × 8 = 1.28</strong> В
         </div>
-      </div>
-
-      <div class="calc-content" id="calc-kkv2">
-        <div class="calc-grid">
-          <div class="calc-field">
-            <label>U — Напряжение (В)</label>
-            <input class="calc-input" type="number" id="kkv2-u" placeholder="8.8" value="8.8" step="0.01" oninput="calcKkv2()">
-          </div>
-          <div class="calc-field">
-            <label>H — Высота замера (м)</label>
-            <input class="calc-input" type="number" id="kkv2-h" placeholder="1000" value="1000" oninput="calcKkv2()">
-          </div>
-          <div class="calc-field">
-            <label>Целевая высота (м)</label>
-            <input class="calc-input" type="number" id="kkv2-target" placeholder="8" value="8" oninput="calcKkv2()">
-          </div>
-        </div>
-        <div class="calc-result">
-          <div class="calc-result-info">
-            <div class="result-label">Ккв =</div>
-            <div class="result-value" id="kkv2-result">0.0088</div>
-          </div>
-          <span class="result-badge pass">В/м</span>
-        </div>
-        <div class="calc-steps" id="kkv2-steps">
-          Расчёт: <strong>8.8 / 1000 = 0.0088</strong> В/м (для 1м)<br>
+</div>
+<div class="calc-content" id="calc-kkv2">
+<div class="calc-grid">
+<div class="calc-field">
+<label>U — Напряжение (В)</label>
+<input class="calc-input" id="kkv2-u" oninput="calcKkv2()" placeholder="8.8" step="0.01" type="number" value="8.8"/>
+</div>
+<div class="calc-field">
+<label>H — Высота замера (м)</label>
+<input class="calc-input" id="kkv2-h" oninput="calcKkv2()" placeholder="1000" type="number" value="1000"/>
+</div>
+<div class="calc-field">
+<label>Целевая высота (м)</label>
+<input class="calc-input" id="kkv2-target" oninput="calcKkv2()" placeholder="8" type="number" value="8"/>
+</div>
+</div>
+<div class="calc-result">
+<div class="calc-result-info">
+<div class="result-label">Ккв =</div>
+<div class="result-value" id="kkv2-result">0.0088</div>
+</div>
+<span class="result-badge pass">В/м</span>
+</div>
+<div class="calc-steps" id="kkv2-steps">
+          Расчёт: <strong>8.8 / 1000 = 0.0088</strong> В/м (для 1м)<br/>
           Напряжение для 8м: <strong>0.0088 × 8 = 0.0704</strong> В
         </div>
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>Высота</th>
-              <th>Крутизна, мм вод.ст./В</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>1.0 км</td><td>Не более 20</td></tr>
-            <tr><td>12 км</td><td>Не более 8</td></tr>
-            <tr><td>20 км</td><td>Не более 3</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="calc-content" id="calc-voltage">
-        <div class="calc-grid">
-          <div class="calc-field">
-            <label>Ккв (В/м)</label>
-            <input class="calc-input" type="number" id="volt-kkv" placeholder="0.16" value="0.16" step="0.0001" oninput="calcVoltage()">
-          </div>
-          <div class="calc-field">
-            <label>H — Целевая высота (м)</label>
-            <input class="calc-input" type="number" id="volt-h" placeholder="8" value="8" oninput="calcVoltage()">
-          </div>
-        </div>
-        <div class="calc-result">
-          <div class="calc-result-info">
-            <div class="result-label">U =</div>
-            <div class="result-value" id="volt-result">1.28</div>
-          </div>
-          <span class="result-badge pass">Вольт</span>
-        </div>
-        <div class="calc-steps" id="volt-steps">
-          Расчёт: <strong>0.16 × 8 = 1.28</strong> В
-        </div>
-      </div>
-
-      <div class="calc-content" id="calc-ratio">
-        <div class="calc-grid">
-          <div class="calc-field">
-            <label>A — Показание "3" (дел)</label>
-            <input class="calc-input" type="number" id="ratio-a" placeholder="50" value="50" oninput="calcRatio()">
-          </div>
-          <div class="calc-field">
-            <label>Ккв (В/м)</label>
-            <input class="calc-input" type="number" id="ratio-kkv" placeholder="0.16" value="0.16" step="0.0001" oninput="calcRatio()">
-          </div>
-          <div class="calc-field">
-            <label>U (В)</label>
-            <input class="calc-input" type="number" id="ratio-u" placeholder="1.28" value="1.28" step="0.01" oninput="calcRatio()">
-          </div>
-        </div>
-        <div class="calc-result">
-          <div class="calc-result-info">
-            <div class="result-label">i =</div>
-            <div class="result-value" id="ratio-result">6.25</div>
-          </div>
-          <span class="result-badge pass" id="ratio-badge">ГОДЕН</span>
-        </div>
-        <div class="calc-steps" id="ratio-steps">
-          Расчёт: <strong>50 × 0.16 / 1.28 = 6.25</strong><br>
-          Допуск: 4.00 - 9.30 (6.65 ± 2.65)
-        </div>
-      </div>
-    </div>
-  </section>
-
+<table class="info-table">
+<thead>
+<tr>
+<th>Высота</th>
+<th>Крутизна, мм вод.ст./В</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1.0 км</td><td>Не более 20</td></tr>
+<tr><td>12 км</td><td>Не более 8</td></tr>
+<tr><td>20 км</td><td>Не более 3</td></tr>
+</tbody>
+</table>
 </div>
-
+<div class="calc-content" id="calc-voltage">
+<div class="calc-grid">
+<div class="calc-field">
+<label>Ккв (В/м)</label>
+<input class="calc-input" id="volt-kkv" oninput="calcVoltage()" placeholder="0.16" step="0.0001" type="number" value="0.16"/>
+</div>
+<div class="calc-field">
+<label>H — высота для режима ΔН (м)</label>
+<input class="calc-input" id="volt-h" oninput="calcVoltage()" placeholder="8" type="number" value="8"/>
+</div>
+</div>
+<div class="calc-result">
+<div class="calc-result-info">
+<div class="result-label">U =</div>
+<div class="result-value" id="volt-result">1.28</div>
+</div>
+<span class="result-badge pass">В</span>
+</div>
+<div class="calc-steps" id="volt-steps">Расчёт напряжения для режима <strong>"ΔН"</strong>: <strong>0,16 × 8 = 1,28</strong> В</div>
+<div class="calc-steps calc-help">
+      Это значение U выставляется задатчиком высоты в положении переключателя "10" = "ΔН". Для каждого КВ-11 оно может отличаться, потому что зависит от Ккв.
+    </div></div>
+<div class="calc-content" id="calc-ratio">
+<div class="calc-grid">
+<div class="calc-field">
+<label>A — показание прибора "3" после перевода в δ (дел)</label>
+<input class="calc-input" id="ratio-a" oninput="calcRatio()" placeholder="45" type="number" value="45"/>
+</div>
+<div class="calc-field">
+<label>Ккв (В/м)</label>
+<input class="calc-input" id="ratio-kkv" oninput="calcRatio()" placeholder="0.16" step="0.0001" type="number" value="0.16"/>
+</div>
+<div class="calc-field">
+<label>U — напряжение, выставленное в ΔН (В)</label>
+<input class="calc-input" id="ratio-u" oninput="calcRatio()" placeholder="1.28" step="0.0001" type="number" value="1.28"/>
+</div>
+</div>
+<div class="calc-result">
+<div class="calc-result-info">
+<div class="result-label">i =</div>
+<div class="result-value" id="ratio-result">5.63</div>
+</div>
+<span class="result-badge pass" id="ratio-badge">ГОДЕН</span>
+</div>
+<div class="calc-steps" id="ratio-steps">Сначала в режиме <strong>"ΔН"</strong> выставляется U. Затем в режиме <strong>"δ"</strong> снимается A.<br/>
+Расчёт: <strong>45 × 0,16 / 1,28 = 5,63</strong><br/>
+Допуск: 4,00–9,30 (6,65 ± 2,65)</div>
+</div>
+</div>
+</section>
+</div>
 <script>
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'});
 
-function showCalcTab(tab) {
+function showCalcTab(tab, button) {
   document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.calc-content').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
+  if (button) button.classList.add('active');
   document.getElementById('calc-' + tab).classList.add('active');
 }
 
@@ -1438,15 +1407,30 @@ function calcVoltage() {
 }
 
 function calcRatio() {
-  const a = parseFloat(document.getElementById('ratio-a').value) || 0;
-  const kkv = parseFloat(document.getElementById('ratio-kkv').value) || 0;
-  const u = parseFloat(document.getElementById('ratio-u').value) || 1;
+  const aRaw = document.getElementById('ratio-a').value;
+  const kkvRaw = document.getElementById('ratio-kkv').value;
+  const uRaw = document.getElementById('ratio-u').value;
+  const a = parseFloat(aRaw);
+  const kkv = parseFloat(kkvRaw);
+  const u = parseFloat(uRaw);
+  const badge = document.getElementById('ratio-badge');
+
+  if (!isFinite(a) || !isFinite(kkv) || !isFinite(u) || u === 0) {
+    document.getElementById('ratio-result').textContent = '—';
+    document.getElementById('ratio-steps').innerHTML =
+      'Введите A, Ккв и U. Поле U — это напряжение, выставленное в режиме "ΔН". U не должно быть равно нулю.';
+    badge.className = 'result-badge fail';
+    badge.textContent = 'НЕТ ДАННЫХ';
+    return;
+  }
+
   const result = (a * kkv) / u;
   document.getElementById('ratio-result').textContent = result.toFixed(2);
-  document.getElementById('ratio-steps').innerHTML = 
+  document.getElementById('ratio-steps').innerHTML =
+    'Сначала в режиме <strong>"ΔН"</strong> выставляется U. Затем в режиме <strong>"δ"</strong> снимается A.<br>' +
     'Расчёт: <strong>' + a + ' × ' + kkv + ' / ' + u + ' = ' + result.toFixed(2) + '</strong><br>' +
-    'Допуск: 4.00 - 9.30 (6.65 ± 2.65)';
-  const badge = document.getElementById('ratio-badge');
+    'Допуск: 4,00–9,30 (6,65 ± 2,65)';
+
   if (result >= 4.0 && result <= 9.3) {
     badge.className = 'result-badge pass';
     badge.textContent = 'ГОДЕН';
@@ -1461,6 +1445,5 @@ calcKkv2();
 calcVoltage();
 calcRatio();
 </script>
-
 </body>
 </html>
