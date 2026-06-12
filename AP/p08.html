@@ -1005,6 +1005,11 @@ body {
 
         <p style="margin-top: 12px;">Отсчёт ведите по шкале <strong>100-0-100</strong> вольтметра "3".</p>
 
+        <div class="scaling-warning" style="background: rgba(59, 130, 246, 0.12); border-left-color: var(--accent-blue); color: #bfdbfe;">
+          <strong style="color: var(--accent-blue);">Цена деления:</strong><br>
+          При снятии показаний вольтметра "3" считайте по <strong>второй шкале пульта 6С2.702.007</strong>.
+        </div>
+
         <ol>
           <li>Ручкой <span class="switch-val">"0"</span> (переключатель "13") выставить <strong>равномерно плечи</strong> по вольтметру "3".</li>
           <li>Ручкой <span class="switch-val">"МАСШТАБ"</span> раздвинуть плечи до показаний <strong>+100</strong> и <strong>-100</strong> по вольтметру "3".</li>
@@ -1341,20 +1346,20 @@ body {
           <td rowspan="3" style="font-weight: 700; color: var(--accent-cyan); vertical-align: middle;">МИ-8</td>
           <td><div class="channel-cell"><span class="channel-badge channel-badge-n">Н</span> Направление</div></td>
           <td class="val">3</td>
-          <td class="val">24 ± 6</td>
-          <td class="val">8 ± 2</td>
+          <td class="val">50 ± 20</td>
+          <td class="val">16,7 ± 6,7</td>
         </tr>
         <tr>
           <td><div class="channel-cell"><span class="channel-badge channel-badge-k">К</span> Крен</div></td>
           <td class="val">3</td>
-          <td class="val">24 ± 6</td>
-          <td class="val">8 ± 2</td>
+          <td class="val">50 ± 20</td>
+          <td class="val">16,7 ± 6,7</td>
         </tr>
         <tr>
           <td><div class="channel-cell"><span class="channel-badge channel-badge-t">Т</span> Тангаж</div></td>
           <td class="val">3</td>
-          <td class="val">24 ± 6</td>
-          <td class="val">8 ± 2</td>
+          <td class="val">60 ± 24</td>
+          <td class="val">20 ± 8</td>
         </tr>
       </tbody>
     </table>
@@ -1431,7 +1436,7 @@ body {
 
     <div class="pult-image-container">
       <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image.png-CHI3qhhgSbOPYZ5BHSyJKFQxO4MR2U.jpeg" alt="Пульт 6С2.702.007" class="pult-image">
-      <div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "11", "12", "13", потенциометры "2", "14", "15", вольтметр "3"</div>
+      <div class="pult-caption">Пульт проверки АП-34Б 6С2.702.007 — переключатели "8", "9", "10", "11", "12", "13", потенциометры "2", "14", "15", вольтметр "3". Показания прибора "3" снимать по второй шкале.</div>
     </div>
   </section>
 
@@ -1446,7 +1451,7 @@ body {
       <div class="calc-grid">
         <div class="calc-field">
           <label>Канал</label>
-          <select class="calc-select" id="calc-channel" onchange="calcRatio()">
+          <select class="calc-select" id="calc-channel" onchange="setChannelDefault(); calcRatio();">
             <option value="n">Направление (Н)</option>
             <option value="k">Крен (К)</option>
             <option value="t">Тангаж (Т)</option>
@@ -1454,7 +1459,7 @@ body {
         </div>
         <div class="calc-field">
           <label>A — Показание "3" (дел)</label>
-          <input class="calc-input" type="number" id="calc-a" placeholder="24" value="24" oninput="calcRatio()">
+          <input class="calc-input" type="number" id="calc-a" placeholder="50" value="50" oninput="calcRatio()">
         </div>
         <div class="calc-field">
           <label>φ — Угол (°)</label>
@@ -1465,14 +1470,14 @@ body {
       <div class="calc-result">
         <div class="calc-result-info">
           <div class="result-label">i = A / φ =</div>
-          <div class="result-value" id="calc-result">8.00</div>
+          <div class="result-value" id="calc-result">16.67</div>
         </div>
         <span class="result-badge pass" id="calc-badge">ГОДЕН</span>
       </div>
 
       <div class="calc-steps" id="calc-steps">
-        Расчёт: <strong>24 / 3 = 8.00</strong><br>
-        Допуск для канала Направление: 6 - 10 (8 ± 2)
+        Расчёт: <strong>50 / 3 = 16.67</strong><br>
+        Допуск для канала Направление: 10 - 23.4 (16.7 ± 6.7)
       </div>
     </div>
   </section>
@@ -1489,6 +1494,15 @@ function showChannel(ch) {
   document.getElementById('ch-' + ch).classList.add('active');
 }
 
+
+function setChannelDefault() {
+  const channel = document.getElementById('calc-channel').value;
+  const aInput = document.getElementById('calc-a');
+  const defaults = { n: 50, k: 50, t: 60 };
+  aInput.value = defaults[channel];
+  aInput.placeholder = defaults[channel];
+}
+
 function calcRatio() {
   const channel = document.getElementById('calc-channel').value;
   const a = parseFloat(document.getElementById('calc-a').value) || 0;
@@ -1496,14 +1510,19 @@ function calcRatio() {
   const result = a / phi;
   
   const channelNames = { n: 'Направление', k: 'Крен', t: 'Тангаж' };
-  const min = 6, max = 10;
-  
+  const limits = {
+    n: { min: 10.0, max: 23.4, nominal: '16.7 ± 6.7' },
+    k: { min: 10.0, max: 23.4, nominal: '16.7 ± 6.7' },
+    t: { min: 12.0, max: 28.0, nominal: '20 ± 8' }
+  };
+  const limit = limits[channel];
+  const min = limit.min, max = limit.max;
+
   document.getElementById('calc-result').textContent = result.toFixed(2);
   document.getElementById('calc-steps').innerHTML = 
     'Расчёт: <strong>' + a + ' / ' + phi + ' = ' + result.toFixed(2) + '</strong><br>' +
-    'Допуск для канала ' + channelNames[channel] + ': ' + min + ' - ' + max + ' (8 ± 2)';
-  
-  const badge = document.getElementById('calc-badge');
+    'Допуск для канала ' + channelNames[channel] + ': ' + min + ' - ' + max + ' (' + limit.nominal + ')';
+    const badge = document.getElementById('calc-badge');
   if (result >= min && result <= max) {
     badge.className = 'result-badge pass';
     badge.textContent = 'ГОДЕН';
