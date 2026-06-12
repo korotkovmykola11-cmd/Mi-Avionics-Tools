@@ -828,7 +828,7 @@
                         </tr>
                         <tr>
                             <td><strong>4</strong></td>
-                            <td class="left">Наблюдать показания прибора "3" и направление отклонения подвижного индекса "Н" на ИН-4</td>
+                            <td class="left">Наблюдать показания прибора "3" и направление отклонения подвижного индекса "Н" на ИН-4.<br><br><strong style="color: #fcd34d;">При проверке передаточного числа отсчёт по прибору "3" вести по внутренней (второй) шкале.</strong></td>
                             <td><strong>"Н"</strong></td>
                             <td>"КУ"</td>
                         </tr>
@@ -1029,7 +1029,7 @@
                         <line x1="10" y1="9" x2="8" y2="9"/>
                     </svg>
                 </div>
-                <span class="section-title rose">Таблица 4 — Допуски передаточного числа по угловой скорости</span>
+                <span class="section-title rose">Таблица 4 — Допуски передаточного числа по угловой скорости (МИ-8)</span>
             </div>
             
             <div class="table-container" style="margin-bottom: 20px;">
@@ -1046,20 +1046,20 @@
                         <tr>
                             <td><strong>Направление</strong></td>
                             <td>3°/сек</td>
-                            <td>24 ± 5 дел.</td>
-                            <td>8,0 ± 1,7</td>
+                            <td>50 ± 20 дел.</td>
+                            <td>16,7 ± 6,7</td>
                         </tr>
                         <tr>
                             <td><strong>Крен</strong></td>
                             <td>3°/сек</td>
-                            <td>24 ± 5 дел.</td>
-                            <td>8,0 ± 1,7</td>
+                            <td>50 ± 20 дел.</td>
+                            <td>16,7 ± 6,7</td>
                         </tr>
                         <tr>
                             <td><strong>Тангаж</strong></td>
                             <td>3°/сек</td>
-                            <td>24 ± 5 дел.</td>
-                            <td>8,0 ± 1,7</td>
+                            <td>60 ± 24 дел.</td>
+                            <td>20 ± 8</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1093,8 +1093,16 @@
             
             <div class="calc-grid">
                 <div class="calc-field">
+                    <label class="calc-label">Канал</label>
+                    <select id="channel" class="calc-input">
+                        <option value="n">Направление (Н)</option>
+                        <option value="k">Крен (К)</option>
+                        <option value="t">Тангаж (Т)</option>
+                    </select>
+                </div>
+                <div class="calc-field">
                     <label class="calc-label">Показания прибора "3" (δ), дел.</label>
-                    <input type="number" id="delta" class="calc-input" value="24" step="0.1">
+                    <input type="number" id="delta" class="calc-input" value="50" step="0.1">
                 </div>
                 <div class="calc-field">
                     <label class="calc-label">Угловая скорость (ω), °/сек</label>
@@ -1104,7 +1112,7 @@
             
             <div class="calc-result">
                 <div class="calc-result-label">Передаточное число K</div>
-                <div class="calc-result-value" id="result">8.00</div>
+                <div class="calc-result-value" id="result">16.67</div>
                 <div class="calc-result-unit">дел./(°/сек)</div>
             </div>
             
@@ -1121,15 +1129,34 @@
         });
 
         // Calculator
+        const channelInput = document.getElementById('channel');
         const deltaInput = document.getElementById('delta');
         const omegaInput = document.getElementById('omega');
         const resultEl = document.getElementById('result');
         const statusEl = document.getElementById('status');
 
+        const channelDefaults = {
+            n: { name: 'Направление', delta: 50, nominal: 16.7, tolerance: 6.7 },
+            k: { name: 'Крен', delta: 50, nominal: 16.7, tolerance: 6.7 },
+            t: { name: 'Тангаж', delta: 60, nominal: 20.0, tolerance: 8.0 }
+        };
+
+        function setChannelDefault() {
+            const data = channelDefaults[channelInput.value];
+            deltaInput.value = data.delta;
+            deltaInput.placeholder = data.delta;
+            calculate();
+        }
+
+        function formatRu(value) {
+            return value.toFixed(1).replace('.', ',');
+        }
+
         function calculate() {
+            const data = channelDefaults[channelInput.value];
             const delta = parseFloat(deltaInput.value) || 0;
             const omega = parseFloat(omegaInput.value) || 1;
-            
+
             if (omega === 0) {
                 resultEl.textContent = '—';
                 statusEl.textContent = 'Угловая скорость не может быть равна нулю';
@@ -1137,25 +1164,27 @@
                 statusEl.style.color = '#f43f5e';
                 return;
             }
-            
+
             const k = delta / omega;
+            const min = data.nominal - data.tolerance;
+            const max = data.nominal + data.tolerance;
             resultEl.textContent = k.toFixed(2);
-            
-            // Check tolerance (8.0 ± 1.7 means 6.3 to 9.7)
-            if (k >= 6.3 && k <= 9.7) {
-                statusEl.textContent = '✓ В пределах допуска (8,0 ± 1,7)';
+
+            if (k >= min && k <= max) {
+                statusEl.textContent = '✓ ' + data.name + ': в пределах допуска (' + formatRu(data.nominal) + ' ± ' + formatRu(data.tolerance) + ')';
                 statusEl.style.background = 'rgba(16, 185, 129, 0.1)';
                 statusEl.style.color = '#10b981';
             } else {
-                statusEl.textContent = '✗ Вне допуска! Требуется регулировка';
+                statusEl.textContent = '✗ ' + data.name + ': вне допуска! Норма ' + formatRu(data.nominal) + ' ± ' + formatRu(data.tolerance);
                 statusEl.style.background = 'rgba(244, 63, 94, 0.1)';
                 statusEl.style.color = '#f43f5e';
             }
         }
 
+        channelInput.addEventListener('change', setChannelDefault);
         deltaInput.addEventListener('input', calculate);
         omegaInput.addEventListener('input', calculate);
-        
+
         // Initial calculation
         calculate();
     </script>
